@@ -1,3 +1,3 @@
 export function Styret() {
-	return <div>Styret!</div>;
+  return <div>Styret!</div>;
 }

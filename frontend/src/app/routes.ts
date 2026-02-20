@@ -15,62 +15,62 @@ import { Statistikk } from "./pages/Statistikk.tsx";
 import { Styret } from "./pages/Styret.tsx";
 
 export const router = createBrowserRouter([
-	{
-		path: "/",
-		Component: Layout,
-		children: [
-			{
-				index: true,
-				Component: Home,
-			},
-			{
-				path: "Resultater",
-				Component: Resultater,
-			},
-			{
-				path: "Bilder",
-				Component: Bilder,
-			},
-			{
-				path: "Statistikk",
-				Component: Statistikk,
-			},
-			{
-				path: "Lopskalender",
-				Component: Lopskalender,
-			},
-			{
-				path: "OmOss",
-				Component: OmOss,
-			},
-			{
-				path: "Historie",
-				Component: Historie,
-			},
-			{
-				path: "Løpsinformasjon",
-				Component: LopsInformasjon,
-			},
-			{
-				path: "LøypaToForTo",
-				Component: LoypaToForTo,
-			},
-			{
-				path: "Løypekart",
-				Component: Loypekart,
-			},
-			{
-				path: "NavnIBlåløypa",
-				Component: NavnILoypa,
-			},
-			{
-				path: "SlikStartetDet",
-				Component: Starten,
-			},
-			{
-				path: "Styret",
-				Component: Styret,
-			},
-		],
-	},
+  {
+    path: "/",
+    Component: Layout,
+    children: [
+      {
+        index: true,
+        Component: Home,
+      },
+      {
+        path: "Resultater",
+        Component: Resultater,
+      },
+      {
+        path: "Bilder",
+        Component: Bilder,
+      },
+      {
+        path: "Statistikk",
+        Component: Statistikk,
+      },
+      {
+        path: "Lopskalender",
+        Component: Lopskalender,
+      },
+      {
+        path: "OmOss",
+        Component: OmOss,
+      },
+      {
+        path: "Historie",
+        Component: Historie,
+      },
+      {
+        path: "Løpsinformasjon",
+        Component: LopsInformasjon,
+      },
+      {
+        path: "LøypaToForTo",
+        Component: LoypaToForTo,
+      },
+      {
+        path: "Løypekart",
+        Component: Loypekart,
+      },
+      {
+        path: "NavnIBlåløypa",
+        Component: NavnILoypa,
+      },
+      {
+        path: "SlikStartetDet",
+        Component: Starten,
+      },
+      {
+        path: "Styret",
+        Component: Styret,
+      },
+    ],
+  },
 ]);

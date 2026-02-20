@@ -1,3 +1,3 @@
 export function OmOss() {
-	return <div>Om oss!</div>;
+  return <div>Om oss!</div>;
 }

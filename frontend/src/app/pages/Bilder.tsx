@@ -1,3 +1,3 @@
 export function Bilder() {
-	return <div>Bilder!</div>;
+  return <div>Bilder!</div>;
 }

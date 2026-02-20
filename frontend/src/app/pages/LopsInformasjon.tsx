@@ -1,3 +1,3 @@
 export function LopsInformasjon() {
-	return <div>Løpsinformasjon!</div>;
+  return <div>Løpsinformasjon!</div>;
 }

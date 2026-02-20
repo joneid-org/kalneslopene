@@ -1,3 +1,3 @@
 export function Loypekart() {
-	return <div>Løypekart!</div>;
+  return <div>Løypekart!</div>;
 }

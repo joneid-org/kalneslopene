@@ -1,7 +1,3 @@
 export function Statistikk() {
-    return (
-        <div>
-            Statistikk!
-        </div>
-    );
+	return <div>Statistikk!</div>;
 }

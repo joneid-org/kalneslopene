@@ -1,167 +1,115 @@
-import { Link } from "react-router";
-import { forwardRef, useState } from "react";
-import DropDownMenu from "../components/DropDownMenu.tsx";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import HomeIcon from "@mui/icons-material/Home";
+import MenuIcon from "@mui/icons-material/Menu";
 import Button from "@mui/material/Button";
+import Collapse from "@mui/material/Collapse";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
-import MenuIcon from "@mui/icons-material/Menu";
-import Collapse from "@mui/material/Collapse";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
+import { useBoolean } from "@reactuses/core";
+import { forwardRef } from "react";
+import { Link } from "react-router";
+import DropDownMenu from "../components/DropDownMenu.tsx";
 
 export const Header = forwardRef<HTMLElement>(function Header(_props, ref) {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [omOssOpen, setOmOssOpen] = useState(false);
+	const {
+		value: mobileOpen,
+		setFalse,
+		toggle: toggleMobile,
+	} = useBoolean(false);
+	const { value: omOssOpen, toggle: toggleOmOss } = useBoolean(false);
 
-  const closeMobile = () => setMobileOpen(false);
-  const toggleMobile = () => setMobileOpen((v) => !v);
+	return (
+		<header ref={ref} className="border-b bg-white sticky top-0 z-50 shadow-sm">
+			<div className="flex items-center justify-between container mx-auto px-4 py-4">
+				<div className="min-w-0">
+					<Link to="/" className="flex items-center gap-2">
+						<HomeIcon />
+						<div className="min-w-0">
+							<h1 className="font-bold text-xl truncate">Torsdagsløpet</h1>
+						</div>
+					</Link>
+				</div>
 
-  const toggleOmOss = () => setOmOssOpen((v) => !v);
+				<div className="md:hidden">
+					<IconButton onClick={toggleMobile} size="large">
+						<MenuIcon />
+					</IconButton>
+				</div>
 
-  return (
-    <header ref={ref} className="border-b bg-white sticky top-0 z-50 shadow-sm">
-      <div className="flex items-center justify-between container mx-auto px-4 py-4">
-        {/* Header title */}
-        <div className="min-w-0">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="min-w-0">
-              <h1 className="font-bold text-xl truncate">Torsdagsløpet</h1>
-              <p className="text-xs pl-1 text-gray-600 truncate">
-                Kalnesskogen | Torsdag kl 18:00
-              </p>
-            </div>
-          </Link>
-        </div>
+				<nav className="hidden md:flex gap-1 items-center">
+					{[
+						{ path: "/Resultater", label: "Resultater" },
+						{ path: "/Bilder", label: "Bilder" },
+						{ path: "/Statistikk", label: "Statistikk" },
+						{ path: "/Lopskalender", label: "Løpskalender" },
+					].map(({ path, label }) => (
+						<Link key={label} to={path}>
+							<Button variant="text">{label}</Button>
+						</Link>
+					))}
+					<DropDownMenu />
+				</nav>
 
-        {/* Mobile menu button */}
-        <div className="md:hidden">
-          <IconButton
-            aria-label="Open menu"
-            onClick={toggleMobile}
-            size="large"
-          >
-            <MenuIcon />
-          </IconButton>
-        </div>
+				<Drawer
+					anchor="right"
+					open={mobileOpen}
+					onClose={setFalse}
+					slotProps={{ paper: { sx: { width: 280 } } }}
+				>
+					<nav aria-label="Mobile navigation">
+						<List>
+							{[
+								{ path: "/Resultater", label: "Resultater" },
+								{ path: "/Bilder", label: "Bilder" },
+								{ path: "/Statistikk", label: "Statistikk" },
+								{ path: "/Lopskalender", label: "Løpskalender" },
+							].map(({ path, label }) => (
+								<ListItemButton
+									key={label}
+									component={Link}
+									to={path}
+									onClick={setFalse}
+								>
+									<ListItemText primary={label} />
+								</ListItemButton>
+							))}
 
-        {/* Desktop button row */}
-        <nav className="hidden md:flex gap-1 items-center">
-          <Link to={"/Statistikk"}>
-            <Button variant="text">Resultater</Button>
-          </Link>
-          <Link to={"/Statistikk"}>
-            <Button variant="text">Bilder</Button>
-          </Link>
-          <Link to={"/Statistikk"}>
-            <Button variant="text">Statistikk</Button>
-          </Link>
-          <Link to={"/Lopskalender"}>
-            <Button variant="text">Løpskalender</Button>
-          </Link>
-          <DropDownMenu />
-        </nav>
+							<ListItemButton onClick={toggleOmOss} aria-expanded={omOssOpen}>
+								<ListItemText primary="Om oss" />
+								{omOssOpen ? <ExpandLess /> : <ExpandMore />}
+							</ListItemButton>
 
-        {/* Mobile drawer */}
-        <Drawer
-          anchor="right"
-          open={mobileOpen}
-          onClose={closeMobile}
-          PaperProps={{ sx: { width: 280 } }}
-        >
-          <nav aria-label="Mobile navigation">
-            <List>
-              <ListItemButton component={Link} to={"/Statistikk"} onClick={closeMobile}>
-                <ListItemText primary="Resultater" />
-              </ListItemButton>
-              <ListItemButton component={Link} to={"/Statistikk"} onClick={closeMobile}>
-                <ListItemText primary="Bilder" />
-              </ListItemButton>
-              <ListItemButton component={Link} to={"/Statistikk"} onClick={closeMobile}>
-                <ListItemText primary="Statistikk" />
-              </ListItemButton>
-              <ListItemButton component={Link} to={"/Lopskalender"} onClick={closeMobile}>
-                <ListItemText primary="Løpskalender" />
-              </ListItemButton>
-
-              {/* Om oss (nested) */}
-              <ListItemButton onClick={toggleOmOss} aria-expanded={omOssOpen}>
-                <ListItemText primary="Om oss" />
-                {omOssOpen ? <ExpandLess /> : <ExpandMore />}
-              </ListItemButton>
-
-              <Collapse in={omOssOpen} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  <ListItemButton
-                    sx={{ pl: 4 }}
-                    component={Link}
-                    to={"/OmOss"}
-                    onClick={closeMobile}
-                  >
-                    <ListItemText primary="Slik startet det" />
-                  </ListItemButton>
-
-                  <ListItemButton
-                    sx={{ pl: 4 }}
-                    component={Link}
-                    to={"/OmOss"}
-                    onClick={closeMobile}
-                  >
-                    <ListItemText primary="Løpsinformasjon" />
-                  </ListItemButton>
-
-                  <ListItemButton
-                    sx={{ pl: 4 }}
-                    component={Link}
-                    to={"/OmOss"}
-                    onClick={closeMobile}
-                  >
-                    <ListItemText primary="Løypekart" />
-                  </ListItemButton>
-
-                  <ListItemButton
-                    sx={{ pl: 4 }}
-                    component={Link}
-                    to={"/OmOss"}
-                    onClick={closeMobile}
-                  >
-                    <ListItemText primary="Navn i blåløypa" />
-                  </ListItemButton>
-
-                  <ListItemButton
-                    sx={{ pl: 4 }}
-                    component={Link}
-                    to={"/OmOss"}
-                    onClick={closeMobile}
-                  >
-                    <ListItemText primary="Løypa 200 for 200" />
-                  </ListItemButton>
-
-                  <ListItemButton
-                    sx={{ pl: 4 }}
-                    component={Link}
-                    to={"/OmOss"}
-                    onClick={closeMobile}
-                  >
-                    <ListItemText primary="Historiske tilbakeblikk" />
-                  </ListItemButton>
-
-                  <ListItemButton
-                    sx={{ pl: 4 }}
-                    component={Link}
-                    to={"/OmOss"}
-                    onClick={closeMobile}
-                  >
-                    <ListItemText primary="Styret" />
-                  </ListItemButton>
-                </List>
-              </Collapse>
-            </List>
-          </nav>
-        </Drawer>
-      </div>
-    </header>
-  );
+							<Collapse in={omOssOpen} timeout="auto" unmountOnExit>
+								<List component="div" disablePadding>
+									{[
+										{ path: "/SlikStartetDet", label: "Slik startet det" },
+										{ path: "/Løpsinformasjon", label: "Løpsinformasjon" },
+										{ path: "/Løypekart", label: "Løypekart" },
+										{ path: "/NavnIBlåløypa", label: "Navn i blåløypa" },
+										{ path: "/LøypaToForTo", label: "Løypa 200 for 200" },
+										{ path: "/Historie", label: "Historiske tilbakeblikk" },
+										{ path: "/Styret", label: "Styret" },
+									].map(({ path, label }) => (
+										<ListItemButton
+											key={label}
+											sx={{ pl: 4 }}
+											component={Link}
+											to={path}
+											onClick={setFalse}
+										>
+											<ListItemText primary={label} />
+										</ListItemButton>
+									))}
+								</List>
+							</Collapse>
+						</List>
+					</nav>
+				</Drawer>
+			</div>
+		</header>
+	);
 });

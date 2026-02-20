@@ -1,7 +1,3 @@
 export function Lopskalender() {
-    return (
-        <div>
-            Løpskalender!
-        </div>
-    );
+	return <div>Løpskalender!</div>;
 }

@@ -47,7 +47,7 @@
             devshell.startup.version_info.text = ''
               echo "---Kalneslopene development environment---"
               echo "bun: $(${bun}/bin/bun --version)"
-              echo "claude: $(${nodejs}/bin/node --version)"
+              echo "node: $(${nodejs}/bin/node --version)"
               echo "----------------------------------------"
             '';
           };

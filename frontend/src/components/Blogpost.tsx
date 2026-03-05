@@ -1,16 +1,12 @@
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-import Button from "@mui/material/Button";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import cardImage from "../../data/cardImage.jpg";
+import { Button } from "@/components/ui/button.tsx";
+import { Card, CardContent } from "@/components/ui/card.tsx";
+import cardImage from "../data/cardImage.jpg";
 
 export default function Blogpost() {
   return (
     <Card className="w-[90%] sm:w-[90%] md:w-[80%] lg:w-[70%] xl:w-[50%] flex flex-col my-[2vh]">
       <div className="relative">
-        <CardMedia className="h-[30vh]" component="img" image={cardImage} />
+        <img className="h-[30vh]" aria-label={"image"} src={cardImage} />
 
         <div
           className="
@@ -34,10 +30,7 @@ export default function Blogpost() {
           Nok en seier av Sarah Johnson under rekord oppmøte!
         </p>
         <div className="border border-gray-300 rounded-xl p-2">
-          <p>
-            <EmojiEventsIcon />
-            Ukens vinnere
-          </p>
+          <p>Ukens vinnere</p>
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <p className="font-light">Men&apos;s</p>
@@ -54,11 +47,9 @@ export default function Blogpost() {
         </div>
       </CardContent>
 
-      <CardActions className="flex justify-center mb-2">
-        <Button variant={"contained"} className="w-[98%]">
-          Se ukens resultater og bilder
-        </Button>
-      </CardActions>
+      <div className="flex justify-center mb-2">
+        <Button className="w-[98%]">Se ukens resultater og bilder</Button>
+      </div>
     </Card>
   );
 }

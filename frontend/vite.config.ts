@@ -1,5 +1,6 @@
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
+// biome-ignore lint/style/useNodejsImportProtocol: No explanation.
 import path from "path";
 import { defineConfig } from "vite";
 

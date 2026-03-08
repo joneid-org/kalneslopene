@@ -1,11 +1,11 @@
-import { forwardRef } from "react";
 import { HomeIcon } from "lucide-react";
+import { forwardRef } from "react";
 import { Link } from "react-router";
 import { DropDownMenu } from "@/components/DropDownMenu.tsx";
 import { DynamicDropDownMenu } from "@/components/DynamicDropDownMenu.tsx";
+import MobileNavBarMenu from "@/components/MobileNavBarMenu.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { getAvailableYears } from "@/data/mockdata.ts";
-import MobileNavBarMenu from "@/components/MobileNavBarMenu.tsx";
 
 const headerBarDynamic = [
   { path: "/Resultater", label: "Resultater" },

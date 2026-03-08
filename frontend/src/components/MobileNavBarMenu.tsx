@@ -1,14 +1,5 @@
 import { MenuIcon, X as XIcon } from "lucide-react";
 import { Link } from "react-router";
-import { getRacesByYear } from "@/data/mockdata.ts";
-
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTrigger,
-} from "@/components/ui/drawer.tsx";
 import {
   Accordion,
   AccordionContent,
@@ -16,6 +7,14 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTrigger,
+} from "@/components/ui/drawer.tsx";
+import { getRacesByYear } from "@/data/mockdata.ts";
 
 export interface MobileNavBarMenuProps {
   headerBarDynamic: { path: string; label: string }[];

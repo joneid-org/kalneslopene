@@ -1,6 +1,17 @@
-import { CalendarIcon, CloudyIcon, UsersIcon } from "lucide-react";
+import { CalendarIcon, CloudyIcon, MedalIcon, UsersIcon } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
-import { Card, CardContent } from "@/components/ui/card.tsx";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card.tsx";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+} from "@/components/ui/table.tsx";
 import cardImage from "../data/cardImage.jpg";
 
 export default function Blogpost() {
@@ -9,7 +20,7 @@ export default function Blogpost() {
       <div className="relative">
         <img
           className="w-full h-[30vh] object-cover"
-          aria-label={"image"}
+          alt="Løpsbilde"
           src={cardImage}
         />
 
@@ -31,41 +42,61 @@ export default function Blogpost() {
         <div className={"justify-between flex"}>
           <div className={"flex items-center"}>
             <CalendarIcon className="size-4" />
-            <p className="font-extralight text-xs m-1">Torsdag 5 februar</p>
+            <p className="font-extralight text-[10px] m-1">Torsdag 5 februar</p>
           </div>
           <div className={"flex items-center"}>
             <UsersIcon className="size-4" />
-            <p className="font-extralight text-xs m-1">48 løpere</p>
+            <p className="font-extralight text-[10px] m-1">48 løpere</p>
           </div>
           <div className={"flex items-center"}>
             <CloudyIcon className="size-4" />
-            <p className="font-extralight text-xs m-1">Nydelig vær</p>
+            <p className="font-extralight text-[10px] m-1">Nydelig vær</p>
           </div>
         </div>
 
-        <p className="m-1 my-2">
+        <p className="m-1 my-2 text-xs">
           Nok en seier av Sarah Johnson under rekord oppmøte!
         </p>
 
-        <div className="border border-gray-300 rounded-xl p-2">
-          <p>Ukens vinnere</p>
-          <div className="flex flex-col sm:flex-row my-2">
-            <div className="flex-1">
-              <p className="font-light">Men&apos;s</p>
-              <p>Daniel Andersen</p>
-              <p>19:02</p>
-            </div>
-
-            <div className="flex-1">
-              <p className="font-light">Women&apos;s</p>
-              <p>Elsa Skoglund</p>
-              <p>24:10</p>
-            </div>
-          </div>
-        </div>
+        <Card className="mt-3">
+          <CardHeader className="pb-1 pt-3 px-3">
+            <CardTitle className="text-xs flex items-center gap-1">
+              <MedalIcon className="size-4 text-yellow-500" />
+              Ukens vinnere
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="px-3 pb-3">
+            <Table>
+              <TableBody>
+                <TableRow>
+                  <TableCell className="font-medium text-xs py-1.5">
+                    Menn
+                  </TableCell>
+                  <TableCell className="text-xs py-1.5">
+                    Daniel Andersen
+                  </TableCell>
+                  <TableCell className="text-right font-mono text-xs py-1.5">
+                    19:02
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium text-xs py-1.5">
+                    Kvinner
+                  </TableCell>
+                  <TableCell className="text-xs py-1.5">
+                    Elsa Skoglund
+                  </TableCell>
+                  <TableCell className="text-right font-mono text-xs py-1.5">
+                    24:10
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
       </CardContent>
 
-      <div className="flex justify-center mb-2">
+      <div className="flex justify-center mb-2 mx-3">
         <Button className="w-[98%]">Se ukens resultater og bilder</Button>
       </div>
     </Card>

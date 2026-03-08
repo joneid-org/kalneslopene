@@ -14,12 +14,12 @@ import { getRacesByYear } from "@/data/mockdata.ts";
 
 type MenuBarDropDownButtonProps = {
   label: string;
-  basePath: string; // e.g. "/Resultater" or "/Bilder"
-  submenu1: number[]; // years
+  basePath: string;
+  years: number[];
 };
 
 export function DynamicDropDownMenu({
-  submenu1,
+  years,
   label,
   basePath,
 }: MenuBarDropDownButtonProps) {
@@ -31,7 +31,7 @@ export function DynamicDropDownMenu({
         </MenubarTrigger>
 
         <MenubarContent>
-          {submenu1.map((year) => (
+          {years.map((year) => (
             <MenubarSub key={year}>
               <MenubarSubTrigger>{year}</MenubarSubTrigger>
 

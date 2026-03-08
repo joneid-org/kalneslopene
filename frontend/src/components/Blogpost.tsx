@@ -1,3 +1,4 @@
+import { CalendarIcon, CloudyIcon, UsersIcon } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
 import { Card, CardContent } from "@/components/ui/card.tsx";
 import cardImage from "../data/cardImage.jpg";
@@ -6,7 +7,11 @@ export default function Blogpost() {
   return (
     <Card className="w-[90%] sm:w-[90%] md:w-[80%] lg:w-[70%] xl:w-[50%] flex flex-col my-[2vh]">
       <div className="relative">
-        <img className="h-[30vh]" aria-label={"image"} src={cardImage} />
+        <img
+          className="w-full h-[30vh] object-cover"
+          aria-label={"image"}
+          src={cardImage}
+        />
 
         <div
           className="
@@ -23,15 +28,28 @@ export default function Blogpost() {
         </div>
       </div>
       <CardContent>
-        <p className="font-extralight text-xs m-1">
-          Torsdag 5 februar, 48 løpere, nydelig vær
-        </p>
+        <div className={"justify-between flex"}>
+          <div className={"flex items-center"}>
+            <CalendarIcon className="size-4" />
+            <p className="font-extralight text-xs m-1">Torsdag 5 februar</p>
+          </div>
+          <div className={"flex items-center"}>
+            <UsersIcon className="size-4" />
+            <p className="font-extralight text-xs m-1">48 løpere</p>
+          </div>
+          <div className={"flex items-center"}>
+            <CloudyIcon className="size-4" />
+            <p className="font-extralight text-xs m-1">Nydelig vær</p>
+          </div>
+        </div>
+
         <p className="m-1 my-2">
           Nok en seier av Sarah Johnson under rekord oppmøte!
         </p>
+
         <div className="border border-gray-300 rounded-xl p-2">
           <p>Ukens vinnere</p>
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row my-2">
             <div className="flex-1">
               <p className="font-light">Men&apos;s</p>
               <p>Daniel Andersen</p>

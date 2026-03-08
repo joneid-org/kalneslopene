@@ -28,7 +28,15 @@ export const router = createBrowserRouter([
         Component: Resultater,
       },
       {
+        path: "Resultater/:year/:raceNumber",
+        Component: Resultater,
+      },
+      {
         path: "Bilder",
+        Component: Bilder,
+      },
+      {
+        path: "Bilder/:year/:raceNumber",
         Component: Bilder,
       },
       {

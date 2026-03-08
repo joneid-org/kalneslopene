@@ -10,21 +10,10 @@ import {
 
 type DropDownMenuProps = {
   label: string;
+  omOss: { path: string; label: string }[];
 };
 
-const OM_OSS = [
-  { path: "/SlikStartetDet", label: "Slik startet det" },
-  { path: "/Løpsinformasjon", label: "Løpsinformasjon" },
-  { path: "/Løypekart", label: "Løypekart" },
-  { path: "/NavnIBlåløypa", label: "Navn i blåløypa" },
-  { path: "/LøypaToForTo", label: "Løypa 200 for 200" },
-  { path: "/Historie", label: "Historiske tilbakeblikk" },
-  { path: "/Styret", label: "Styret" },
-];
-
-export function OmOssDropDownMenu({ label }: DropDownMenuProps) {
-
-
+export function OmOssDropDownMenu({ label, omOss }: DropDownMenuProps) {
   return (
     <Menubar className="border-0 bg-transparent p-0 shadow-none">
       <MenubarMenu>
@@ -33,7 +22,7 @@ export function OmOssDropDownMenu({ label }: DropDownMenuProps) {
         </MenubarTrigger>
 
         <MenubarContent>
-          {OM_OSS.map(({ path, label: itemLabel }) => (
+          {omOss.map(({ path, label: itemLabel }) => (
             <MenubarItem key={path} asChild>
               <Link to={path}>{itemLabel}</Link>
             </MenubarItem>

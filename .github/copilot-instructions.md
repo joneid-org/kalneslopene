@@ -22,6 +22,8 @@ Dette prosjektet er bygget med fokus på moderne webutvikling og brukervennlighe
 - Følg Tailwind CSS sine retningslinjer for klasseskriving.
 - Bruk shadcn/ui-komponenter der det er mulig for konsistent utseende.
 - Husk å skrive alt brukerrettet innhold på norsk.
+- Alle nødvendige pakker for shadcn/ui er allerede installert (`class-variance-authority`, `clsx`, `tailwind-merge`, `lucide-react`, `radix-ui`, `vaul`, `shadcn`). Ikke installer disse på nytt – stol på at de er tilgjengelige.
+- Når du legger til nye shadcn/ui-komponenter, bruk `npx shadcn add <komponent>` fra `frontend/`-mappen.
 
 ---
 

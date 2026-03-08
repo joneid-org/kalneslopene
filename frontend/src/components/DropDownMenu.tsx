@@ -10,10 +10,10 @@ import {
 
 type DropDownMenuProps = {
   label: string;
-  omOss: { path: string; label: string }[];
+  links: { path: string; label: string }[];
 };
 
-export function OmOssDropDownMenu({ label, omOss }: DropDownMenuProps) {
+export function DropDownMenu({ label, links }: DropDownMenuProps) {
   return (
     <Menubar className="border-0 bg-transparent p-0 shadow-none">
       <MenubarMenu>
@@ -22,7 +22,7 @@ export function OmOssDropDownMenu({ label, omOss }: DropDownMenuProps) {
         </MenubarTrigger>
 
         <MenubarContent>
-          {omOss.map(({ path, label: itemLabel }) => (
+          {links.map(({ path, label: itemLabel }) => (
             <MenubarItem key={path} asChild>
               <Link to={path}>{itemLabel}</Link>
             </MenubarItem>

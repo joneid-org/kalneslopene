@@ -1,23 +1,10 @@
 import {MenuIcon, X as XIcon} from "lucide-react";
 import {Link} from "react-router";
-import {Button} from "@/components/ui/button.tsx";
 import {getRacesByYear} from "@/data/mockdata.ts";
 
-import {
-    Drawer,
-    DrawerClose,
-    DrawerContent,
-    DrawerHeader,
-    DrawerTrigger,
-} from "@/components/ui/drawer.tsx";
-import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
-} from "@/components/ui/accordion.tsx";
-
-
+import {Drawer, DrawerClose, DrawerContent, DrawerHeader, DrawerTrigger,} from "@/components/ui/drawer.tsx";
+import {Accordion, AccordionContent, AccordionItem, AccordionTrigger,} from "@/components/ui/accordion.tsx";
+import {Button} from "@/components/ui/button.tsx";
 
 
 export interface MobileNavBarMenuProps {
@@ -28,27 +15,24 @@ export interface MobileNavBarMenuProps {
 }
 
 export default function MobileNavBarMenu({
-    headerBarDynamic,
-    headerBarStatic,
-    omOss,
-    years,
-}: MobileNavBarMenuProps) {
+                                             headerBarDynamic,
+                                             headerBarStatic,
+                                             omOss,
+                                             years,
+                                         }: MobileNavBarMenuProps) {
     return (
-        <Drawer direction="right">
+        <Drawer direction="left">
             <DrawerTrigger asChild>
-                <Button
-                    variant="outline"
-                    size="icon"
-                    aria-label="Åpne meny"
-                >
+                <Button variant={"outline"} size={"icon"}>
                     <MenuIcon/>
                 </Button>
+
             </DrawerTrigger>
 
             <DrawerContent className="flex flex-col overflow-y-auto">
                 <DrawerHeader className="flex items-end border-b pb-3">
                     <DrawerClose asChild>
-                            <XIcon />
+                        <XIcon/>
                     </DrawerClose>
                 </DrawerHeader>
 

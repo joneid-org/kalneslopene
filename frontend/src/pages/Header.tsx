@@ -1,7 +1,7 @@
 import {forwardRef} from "react";
 import {HomeIcon} from "lucide-react";
 import {Link} from "react-router";
-import {OmOssDropDownMenu} from "@/components/OmOssDropDownMenu.tsx";
+import {DropDownMenu} from "@/components/DropDownMenu.tsx";
 import {DynamicDropDownMenu} from "@/components/DynamicDropDownMenu.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {getAvailableYears} from "@/data/mockdata.ts";
@@ -30,17 +30,9 @@ const years = getAvailableYears();
 export const Header = forwardRef<HTMLElement>(function Header(_props, ref) {
     return (
         <header ref={ref} className="border-b bg-white sticky top-0 z-50 shadow-sm">
-            <div className="flex items-center justify-between container mx-auto px-4 py-4">
-                <div className="min-w-0">
-                    <Link to="/" className="flex items-center gap-2">
-                        <HomeIcon/>
-                        <div className="min-w-0">
-                            <h1 className="font-bold text-xl truncate">Torsdagsløpet</h1>
-                        </div>
-                    </Link>
-                </div>
+            <div className="flex items-center container mx-auto px-4 py-4">
 
-                <div className="md:hidden">
+                <div className="md:hidden pr-2">
                     <MobileNavBarMenu
                         headerBarDynamic={headerBarDynamic}
                         headerBarStatic={headerBarStatic}
@@ -49,22 +41,38 @@ export const Header = forwardRef<HTMLElement>(function Header(_props, ref) {
                     />
                 </div>
 
-                <nav className="hidden md:flex gap-1 items-center">
-                    {headerBarDynamic.map(({path, label}) => (
-                        <DynamicDropDownMenu
-                            key={label}
-                            label={label}
-                            basePath={path}
-                            years={years}
-                        />
-                    ))}
-                    {headerBarStatic.map(({path, label}) => (
-                        <Link key={label} to={path}>
-                            <Button variant={"outline"}>{label}</Button>
+                <div className={"flex container justify-between"}>
+                    <div className="min-w-0">
+                        <Link to="/" className="flex items-center gap-2">
+                            <Button variant={"outline"} size={"icon"}>
+
+                                <HomeIcon />
+
+                            </Button>
+                            <div className="min-w-0">
+                                <h1 className="font-bold text-xl truncate">Torsdagsløpet</h1>
+                            </div>
                         </Link>
-                    ))}
-                    <OmOssDropDownMenu label={"Om oss"} omOss={OM_OSS}/>
-                </nav>
+                    </div>
+
+                    <nav className="hidden md:flex gap-1 items-center">
+                        {headerBarDynamic.map(({path, label}) => (
+                            <DynamicDropDownMenu
+                                key={label}
+                                label={label}
+                                basePath={path}
+                                years={years}
+                            />
+                        ))}
+                        {headerBarStatic.map(({path, label}) => (
+                            <Link key={label} to={path}>
+                                <Button variant={"outline"}>{label}</Button>
+                            </Link>
+                        ))}
+                        <DropDownMenu label={"Om oss"} links={OM_OSS}/>
+                    </nav>
+                </div>
+
             </div>
         </header>
     );

@@ -1,4 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button.tsx";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog.tsx";
 import type { Photo } from "../data/mockdata.ts";
 
@@ -35,24 +36,28 @@ export default function PhotoDialog({
               </p>
             )}
             <div className="absolute inset-y-0 left-0 flex items-center">
-              <button
+              <Button
                 type="button"
-                className="p-1 text-white/70 hover:text-white disabled:opacity-20"
+                variant="ghost"
+                size="icon"
+                className="text-white/70 hover:text-white hover:bg-white/10 disabled:opacity-20"
                 disabled={index === 0}
                 onClick={() => onIndexChange(index - 1)}
               >
                 <ChevronLeft className="size-7" />
-              </button>
+              </Button>
             </div>
             <div className="absolute inset-y-0 right-0 flex items-center">
-              <button
+              <Button
                 type="button"
-                className="p-1 text-white/70 hover:text-white disabled:opacity-20"
+                variant="ghost"
+                size="icon"
+                className="text-white/70 hover:text-white hover:bg-white/10 disabled:opacity-20"
                 disabled={index === photos.length - 1}
                 onClick={() => onIndexChange(index + 1)}
               >
                 <ChevronRight className="size-7" />
-              </button>
+              </Button>
             </div>
             <p className="absolute bottom-6 inset-x-0 text-center text-xs text-white/50">
               {index + 1} / {photos.length}

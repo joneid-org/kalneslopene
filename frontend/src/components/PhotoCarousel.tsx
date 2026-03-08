@@ -1,6 +1,5 @@
 import { ChevronRight } from "lucide-react";
-import { useNavigate } from "react-router";
-import { Button } from "@/components/ui/button.tsx";
+import { Link } from "react-router";
 import {
   Card,
   CardContent,
@@ -29,8 +28,6 @@ export default function PhotoCarousel({
   week,
   onPhotoClick,
 }: PhotoCarouselProps) {
-  const navigate = useNavigate();
-
   if (photos.length === 0) return null;
 
   return (
@@ -40,15 +37,13 @@ export default function PhotoCarousel({
           <CardTitle className="text-sm md:text-base font-semibold">
             Bilder
           </CardTitle>
-          <Button
-            size="sm"
-            variant="ghost"
-            className="text-xs md:text-sm gap-1 h-7 md:h-9"
-            onClick={() => navigate(`/Bilder/${year}/${week}`)}
+          <Link
+            to={`/Bilder/${year}/${week}`}
+            className="flex items-center gap-1 text-xs md:text-sm px-2 md:px-3 py-1.5 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
           >
             Se alle
             <ChevronRight className="size-3.5 md:size-4" />
-          </Button>
+          </Link>
         </div>
       </CardHeader>
       <CardContent className="py-2 px-2 sm:px-4 md:px-6">

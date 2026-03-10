@@ -4,6 +4,7 @@ export interface Race {
   id: string;
   name: string;
   date: string;
+  time?: string;
   location: string;
   distance: string;
   participants: number;
@@ -41,7 +42,63 @@ export interface Photo {
 }
 
 export const races: Race[] = [
-  // 2026 Races
+  // 2026 Upcoming Races
+  {
+    id: "race-upcoming-1",
+    name: "Torsdagsløpet",
+    date: "2026-03-12",
+    time: "18:00",
+    location: "Kalneset",
+    distance: "5km",
+    participants: 0,
+    week: 11,
+    imageUrl: "",
+  },
+  {
+    id: "race-upcoming-2",
+    name: "Torsdagsløpet",
+    date: "2026-03-19",
+    time: "18:00",
+    location: "Kalneset",
+    distance: "5km",
+    participants: 0,
+    week: 12,
+    imageUrl: "",
+  },
+  {
+    id: "race-upcoming-3",
+    name: "Torsdagsløpet",
+    date: "2026-03-26",
+    time: "18:00",
+    location: "Kalneset",
+    distance: "5km",
+    participants: 0,
+    week: 13,
+    imageUrl: "",
+  },
+  {
+    id: "race-upcoming-4",
+    name: "Torsdagsløpet",
+    date: "2026-04-02",
+    time: "18:00",
+    location: "Kalneset",
+    distance: "5km",
+    participants: 0,
+    week: 14,
+    imageUrl: "",
+  },
+  {
+    id: "race-upcoming-5",
+    name: "Torsdagsløpet",
+    date: "2026-04-09",
+    time: "18:00",
+    location: "Kalneset",
+    distance: "5km",
+    participants: 0,
+    week: 15,
+    imageUrl: "",
+  },
+  // 2026 Past Races
   {
     id: "race-1",
     name: "Thursday Evening Run",
@@ -612,4 +669,13 @@ export const getPhotosByYear = (year: number): Photo[] => {
   const racesInYear = getRacesByYear(year);
   const raceIds = racesInYear.map((r) => r.id);
   return photos.filter((photo) => raceIds.includes(photo.raceId));
+};
+
+// Get upcoming races (today or in the future), sorted ascending
+export const getUpcomingRaces = (): Race[] => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return races
+    .filter((r) => new Date(r.date) >= today)
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 };

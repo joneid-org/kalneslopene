@@ -11,10 +11,7 @@ const headerBarDynamic = [
   { path: "/Resultater", label: "Resultater" },
   { path: "/Bilder", label: "Bilder" },
 ];
-const headerBarStatic = [
-  { path: "/Statistikk", label: "Statistikk" },
-  { path: "/Lopskalender", label: "Løpskalender" },
-];
+const headerBarStatic = [{ path: "/Statistikk", label: "Statistikk" }];
 const OM_OSS = [
   { path: "/SlikStartetDet", label: "Slik startet det" },
   { path: "/Løpsinformasjon", label: "Løpsinformasjon" },

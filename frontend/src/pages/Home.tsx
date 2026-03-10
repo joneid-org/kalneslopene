@@ -10,20 +10,15 @@ export function Home() {
       {/* Main content */}
       <div className="flex-1 px-2 py-4 sm:px-4 sm:py-6 md:px-8 md:py-8">
         <div className="flex flex-col lg:flex-row items-start gap-6">
-          {/* ── Main block — centred, 2/4 width ── */}
-          <div className="flex flex-col gap-8 lg:flex-1 min-w-0 w-full items-center">
-            <div className="w-full max-w-[50vw]">
-              {/* 3.1 Race information */}
+          {/* ── Main block ── */}
+          <div className="flex flex-col gap-8 lg:flex-1 min-w-0 w-full lg:items-center">
+            <div className="w-full lg:max-w-2xl">
               <RaceInfoBlock />
             </div>
-
-            <div className="w-full max-w-[50vw]">
-              {/* 3.2 News feed */}
+            <div className="w-full lg:max-w-2xl">
               <NewsFeed />
             </div>
-
-            <div className="w-full max-w-[50vw]">
-              {/* 3.3 Organisers */}
+            <div className="w-full lg:max-w-2xl">
               <OrganisersBlock />
             </div>
           </div>

@@ -1,15 +1,17 @@
 import type { LucideIcon } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card.tsx";
 
+type Color = "blue" | "orange" | "green" | "amber";
+
 type StatBoxProps = {
   icon: LucideIcon;
   value: string | number;
   label: string;
-  color: "blue" | "emerald" | "amber" | "pink" | "violet" | "rose";
+  color: Color;
 };
 
 const colorMap: Record<
-  StatBoxProps["color"],
+  Color,
   {
     bg: string;
     border: string;
@@ -27,13 +29,21 @@ const colorMap: Record<
     value: "text-blue-700",
     label: "text-blue-500",
   },
-  emerald: {
-    bg: "bg-emerald-50",
-    border: "border-emerald-100",
-    iconBg: "bg-emerald-100",
-    icon: "text-emerald-600",
-    value: "text-emerald-700",
-    label: "text-emerald-500",
+  orange: {
+    bg: "bg-orange-50",
+    border: "border-orange-100",
+    iconBg: "bg-orange-100",
+    icon: "text-orange-600",
+    value: "text-orange-700",
+    label: "text-orange-500",
+  },
+  green: {
+    bg: "bg-green-50",
+    border: "border-green-100",
+    iconBg: "bg-green-100",
+    icon: "text-green-600",
+    value: "text-green-700",
+    label: "text-green-500",
   },
   amber: {
     bg: "bg-amber-50",
@@ -42,30 +52,6 @@ const colorMap: Record<
     icon: "text-amber-600",
     value: "text-amber-700",
     label: "text-amber-500",
-  },
-  pink: {
-    bg: "bg-pink-50",
-    border: "border-pink-100",
-    iconBg: "bg-pink-100",
-    icon: "text-pink-600",
-    value: "text-pink-700",
-    label: "text-pink-500",
-  },
-  violet: {
-    bg: "bg-violet-50",
-    border: "border-violet-100",
-    iconBg: "bg-violet-100",
-    icon: "text-violet-600",
-    value: "text-violet-700",
-    label: "text-violet-500",
-  },
-  rose: {
-    bg: "bg-rose-50",
-    border: "border-rose-100",
-    iconBg: "bg-rose-100",
-    icon: "text-rose-600",
-    value: "text-rose-700",
-    label: "text-rose-500",
   },
 };
 
@@ -83,13 +69,11 @@ export default function StatBox({
           <Icon className={`size-4 md:size-6 ${c.icon}`} />
         </div>
         <p
-          className={`text-base sm:text-lg md:text-2xl font-bold ${c.value} tabular-nums leading-none`}
+          className={`text-base md:text-2xl font-bold tabular-nums leading-none ${c.value}`}
         >
           {value}
         </p>
-        <p
-          className={`text-[10px] md:text-xs ${c.label} font-medium uppercase tracking-wide`}
-        >
+        <p className={`text-xs font-medium uppercase tracking-wide ${c.label}`}>
           {label}
         </p>
       </CardContent>

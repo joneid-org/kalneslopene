@@ -99,7 +99,7 @@ export default function ResultsHeader({
           icon={UsersIcon}
           value={race.participants}
           label="Deltakere"
-          color="emerald"
+          color="green"
         />
         <StatBox
           icon={TrophyIcon}
@@ -129,8 +129,8 @@ export default function ResultsHeader({
                 <WinnerItem
                   result={fastestF}
                   label="Kvinner"
-                  iconColor="text-pink-600"
-                  bgColor="bg-pink-100"
+                  iconColor="text-orange-600"
+                  bgColor="bg-orange-100"
                 />
               )}
             </div>

@@ -20,11 +20,9 @@ export default function WinnerItem({
         <TimerIcon className={`size-3.5 md:size-5 ${iconColor}`} />
       </div>
       <div className="min-w-0">
-        <p className="text-[10px] md:text-xs text-muted-foreground">{label}</p>
-        <p className="text-xs md:text-base font-semibold truncate">
-          {result.runnerName}
-        </p>
-        <p className="text-xs md:text-sm tabular-nums text-muted-foreground">
+        <p className="text-xs text-muted-foreground">{label}</p>
+        <p className="text-sm font-semibold truncate">{result.runnerName}</p>
+        <p className="text-xs tabular-nums text-muted-foreground">
           {result.time}
         </p>
       </div>

@@ -1,0 +1,130 @@
+/*
+ * theme.css
+ * Single source of truth for typography, spacing and colour tokens.
+ * Mobile-first — desktop overrides inside @media (min-width: 768px).
+ */
+
+@layer base {
+  /* ─── Body ─────────────────────────────────────────────── */
+  body {
+    font-family:
+      system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 0.9375rem; /* 15 px mobile */
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* @apply bg-background text-foreground; */
+  }
+
+  @media (min-width: 768px) {
+    body {
+      font-size: 1rem;
+    } /* 16 px desktop */
+  }
+
+  /* ─── Headings ──────────────────────────────────────────── */
+  h1 {
+    font-size: 1.375rem; /* 22 px */
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+  h2 {
+    font-size: 1.125rem; /* 18 px */
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+  h3 {
+    font-size: 1rem; /* 16 px */
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  h4 {
+    font-size: 0.9375rem; /* 15 px */
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  @media (min-width: 768px) {
+    h1 {
+      font-size: 1.75rem;
+    } /* 28 px */
+    h2 {
+      font-size: 1.375rem;
+    } /* 22 px */
+    h3 {
+      font-size: 1.125rem;
+    } /* 18 px */
+    h4 {
+      font-size: 1rem;
+    } /* 16 px */
+  }
+
+  /* ─── Paragraph & inline ────────────────────────────────── */
+  p {
+    font-size: 0.9375rem; /* 15 px — matches body */
+    line-height: 1.6;
+  }
+  small {
+    font-size: 0.8125rem; /* 13 px */
+    line-height: 1.5;
+  }
+  label {
+    font-size: 0.9375rem;
+    font-weight: 500;
+  }
+
+  @media (min-width: 768px) {
+    p {
+      font-size: 1rem;
+    }
+    small {
+      font-size: 0.875rem;
+    } /* 14 px */
+    label {
+      font-size: 1rem;
+    }
+  }
+
+  /* ─── Colour tokens (light theme) ──────────────────────── */
+  :root {
+    --radius: 0.5rem;
+
+    /* Backgrounds */
+    --background: oklch(0.98 0.004 250);
+    --foreground: oklch(0.15 0.03 255);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.15 0.03 255);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.15 0.03 255);
+
+    /* Primary — blue */
+    --primary: oklch(0.5 0.18 255);
+    --primary-foreground: oklch(0.98 0.004 250);
+
+    /* Secondary — soft blue tint */
+    --secondary: oklch(0.94 0.03 250);
+    --secondary-foreground: oklch(0.3 0.1 255);
+
+    /* Muted */
+    --muted: oklch(0.94 0.008 250);
+    --muted-foreground: oklch(0.5 0.04 255);
+
+    /* Accent — neutral (used for button/nav hover states) */
+    --accent: oklch(0.94 0.005 250);
+    --accent-foreground: oklch(0.2 0.03 255);
+
+    --destructive: oklch(0.577 0.245 27.325);
+    --border: oklch(0.91 0.01 255);
+    --input: oklch(0.91 0.01 255);
+    --ring: oklch(0.5 0.18 255);
+
+    /* Chart — blue · orange · green */
+    --chart-1: oklch(0.5 0.18 255);
+    --chart-2: oklch(0.65 0.19 55);
+    --chart-3: oklch(0.55 0.16 152);
+    --chart-4: oklch(0.6 0.15 285);
+    --chart-5: oklch(0.6 0.18 25);
+  }
+}

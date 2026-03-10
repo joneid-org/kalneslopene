@@ -1,5 +1,13 @@
-import { CloudIcon, MapPinIcon, TrophyIcon, UsersIcon } from "lucide-react";
+import {
+  CloudIcon,
+  Images,
+  MapPinIcon,
+  TrophyIcon,
+  UsersIcon,
+} from "lucide-react";
+import { Link } from "react-router";
 import { Badge } from "@/components/ui/badge.tsx";
+import { Button } from "@/components/ui/button.tsx";
 import { Card, CardContent } from "@/components/ui/card.tsx";
 import type { Race, Result } from "../data/mockdata.ts";
 import StatBox from "./StatBox.tsx";
@@ -10,6 +18,7 @@ type ResultsHeaderProps = {
   title: string;
   fastestM?: Result;
   fastestF?: Result;
+  photosPath?: string;
 };
 
 export default function ResultsHeader({
@@ -17,6 +26,7 @@ export default function ResultsHeader({
   title,
   fastestM,
   fastestF,
+  photosPath,
 }: ResultsHeaderProps) {
   return (
     <>
@@ -33,6 +43,21 @@ export default function ResultsHeader({
           Uke {race.week}
         </Badge>
 
+        {photosPath && (
+          <Button
+            asChild
+            size="sm"
+            variant="secondary"
+            className="absolute top-3 right-3 md:top-4 md:right-4 bg-black/60 hover:bg-black/80 text-white border-0 backdrop-blur-sm text-xs gap-1.5"
+          >
+            <Link to={photosPath}>
+              <Images className="size-3.5" />
+              Se bilder
+            </Link>
+          </Button>
+        )}
+
+        {/* ...existing bottom text... */}
         <div className="absolute bottom-0 left-0 right-0 px-3 pb-3 md:px-5 md:pb-5 text-white">
           <p className="text-sm md:text-lg font-semibold leading-snug">
             {new Date(race.date).toLocaleDateString("nb-NO", {

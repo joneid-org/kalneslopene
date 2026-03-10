@@ -168,6 +168,11 @@ export default function Results({ year, week }: Props) {
           title={title}
           fastestM={fastestM}
           fastestF={fastestF}
+          photosPath={
+            racePhotos.length > 0
+              ? `/Bilder/${new Date(race.date).getFullYear()}/${race.week}`
+              : undefined
+          }
         />
       )}
 

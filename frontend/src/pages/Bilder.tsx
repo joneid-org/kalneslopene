@@ -1,22 +1,11 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useParams } from "react-router";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card.tsx";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel.tsx";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog.tsx";
+import NavigationButtons from "@/components/NavigationButtons.tsx";
+import PhotoDialog from "@/components/PhotoDialog.tsx";
+import PhotoGrid from "@/components/PhotoGrid.tsx";
+import PhotoHeader from "@/components/PhotoHeader.tsx";
 import type { Photo } from "@/data/mockdata.ts";
-import { getRacesByYear, photos } from "@/data/mockdata.ts";
+import { getRacesByYear, photos, races } from "@/data/mockdata.ts";
 
 export function Bilder() {
   const { year, raceNumber } = useParams<{
@@ -28,130 +17,88 @@ export function Bilder() {
   const parsedYear = year ? Number(year) : undefined;
   const parsedWeek = raceNumber ? Number(raceNumber) : undefined;
 
-  const race = (() => {
-    if (!parsedYear || !parsedWeek) return null;
-    const racesInYear = getRacesByYear(parsedYear);
-    return racesInYear.find((r) => r.week === parsedWeek) ?? null;
-  })();
+  const sortedRaces = useMemo(
+    () =>
+      [...races].sort(
+        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+      ),
+    [],
+  );
 
-  const racePhotos: Photo[] = race
-    ? photos.filter((p) => p.raceId === race.id)
-    : parsedYear
-      ? photos.filter((p) => {
-          const racesInYear = getRacesByYear(parsedYear);
-          return racesInYear.some((r) => r.id === p.raceId);
-        })
-      : photos;
+  const race = useMemo(() => {
+    if (!parsedYear || !parsedWeek) return null;
+    return (
+      getRacesByYear(parsedYear).find((r) => r.week === parsedWeek) ?? null
+    );
+  }, [parsedYear, parsedWeek]);
+
+  const currentIndex = useMemo(
+    () => (race ? sortedRaces.findIndex((r) => r.id === race.id) : -1),
+    [race, sortedRaces],
+  );
+
+  const prevRace = currentIndex > 0 ? sortedRaces[currentIndex - 1] : null;
+  const nextRace =
+    currentIndex !== -1 && currentIndex < sortedRaces.length - 1
+      ? sortedRaces[currentIndex + 1]
+      : null;
+
+  function raceToPath(r: { week: number; date: string }) {
+    const y = new Date(r.date).getFullYear();
+    return `/Bilder/${y}/${r.week}`;
+  }
+
+  const racePhotos: Photo[] = useMemo(() => {
+    if (race) return photos.filter((p) => p.raceId === race.id);
+    if (parsedYear) {
+      const racesInYear = getRacesByYear(parsedYear);
+      return photos.filter((p) => racesInYear.some((r) => r.id === p.raceId));
+    }
+    return photos;
+  }, [race, parsedYear]);
 
   const title = race
-    ? `Bilder – Uke ${race.week}, ${new Date(race.date).toLocaleDateString("nb-NO", { day: "numeric", month: "long", year: "numeric" })}`
+    ? `Uke ${race.week} — ${new Date(race.date).toLocaleDateString("nb-NO", { day: "numeric", month: "long", year: "numeric" })}`
     : parsedYear
       ? `Bilder – ${parsedYear}`
       : "Alle bilder";
 
-  return (
-    <div className="flex justify-center px-2 py-4 sm:px-4 sm:py-8">
-      <div className="w-full max-w-2xl space-y-3">
-        <Card>
-          <CardHeader className="py-3 px-4">
-            <CardTitle className="text-base font-semibold">{title}</CardTitle>
-            <p className="text-xs text-muted-foreground">
-              {racePhotos.length} bilder
-            </p>
-          </CardHeader>
-        </Card>
+  const photographers = useMemo(() => {
+    const names = racePhotos
+      .map((p) => p.photographer)
+      .filter((n): n is string => !!n);
+    return [...new Set(names)];
+  }, [racePhotos]);
 
-        {racePhotos.length > 0 ? (
-          <Card>
-            <CardContent className="py-3 px-2 sm:px-4">
-              <Carousel className="w-full" opts={{ align: "start" }}>
-                <CarouselContent className="-ml-2">
-                  {racePhotos.map((photo, idx) => (
-                    <CarouselItem
-                      key={photo.id}
-                      className="pl-2 basis-1/2 sm:basis-1/3"
-                    >
-                      <button
-                        type="button"
-                        className="w-full aspect-square overflow-hidden rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                        onClick={() => setLightboxIndex(idx)}
-                      >
-                        <img
-                          src={photo.url}
-                          alt={photo.caption}
-                          className="w-full h-full object-cover hover:opacity-90 transition-opacity"
-                        />
-                      </button>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                {racePhotos.length > 2 && (
-                  <>
-                    <CarouselPrevious className="left-1" />
-                    <CarouselNext className="right-1" />
-                  </>
-                )}
-              </Carousel>
-            </CardContent>
-          </Card>
-        ) : (
-          <p className="text-sm text-muted-foreground px-1">
-            Ingen bilder tilgjengelig.
-          </p>
+  return (
+    <div className="px-2 py-4 sm:px-4 sm:py-6 md:px-8 md:py-8">
+      <div className="w-full md:max-w-7xl md:mx-auto space-y-3 md:space-y-5">
+        {race && (
+          <NavigationButtons
+            prevRace={prevRace}
+            nextRace={nextRace}
+            raceToPath={raceToPath}
+          />
         )}
 
-        {/* Lightbox */}
-        <Dialog
-          open={lightboxIndex !== null}
-          onOpenChange={(open) => !open && setLightboxIndex(null)}
-        >
-          <DialogContent className="max-w-screen-sm p-2 sm:p-4 bg-black border-0">
-            <DialogTitle className="sr-only">
-              Bilde {(lightboxIndex ?? 0) + 1} av {racePhotos.length}
-            </DialogTitle>
-            {lightboxIndex !== null && (
-              <div className="relative">
-                <img
-                  src={racePhotos[lightboxIndex].url}
-                  alt={racePhotos[lightboxIndex].caption}
-                  className="w-full rounded-md object-contain max-h-[80vh]"
-                />
-                {racePhotos[lightboxIndex].caption && (
-                  <p className="text-center text-xs text-white/70 mt-2">
-                    {racePhotos[lightboxIndex].caption}
-                  </p>
-                )}
-                <div className="absolute inset-y-0 left-0 flex items-center">
-                  <button
-                    type="button"
-                    className="p-1 text-white/70 hover:text-white disabled:opacity-20"
-                    disabled={lightboxIndex === 0}
-                    onClick={() =>
-                      setLightboxIndex((i) => (i !== null ? i - 1 : null))
-                    }
-                  >
-                    <ChevronLeft className="size-7" />
-                  </button>
-                </div>
-                <div className="absolute inset-y-0 right-0 flex items-center">
-                  <button
-                    type="button"
-                    className="p-1 text-white/70 hover:text-white disabled:opacity-20"
-                    disabled={lightboxIndex === racePhotos.length - 1}
-                    onClick={() =>
-                      setLightboxIndex((i) => (i !== null ? i + 1 : null))
-                    }
-                  >
-                    <ChevronRight className="size-7" />
-                  </button>
-                </div>
-                <p className="absolute bottom-6 inset-x-0 text-center text-xs text-white/50">
-                  {lightboxIndex + 1} / {racePhotos.length}
-                </p>
-              </div>
-            )}
-          </DialogContent>
-        </Dialog>
+        <PhotoHeader
+          title={title}
+          photoCount={racePhotos.length}
+          photographers={photographers}
+          resultsPath={
+            race
+              ? `/Resultater/${new Date(race.date).getFullYear()}/${race.week}`
+              : undefined
+          }
+        />
+
+        <PhotoGrid photos={racePhotos} onPhotoClick={setLightboxIndex} />
+
+        <PhotoDialog
+          photos={racePhotos}
+          index={lightboxIndex}
+          onIndexChange={setLightboxIndex}
+        />
       </div>
     </div>
   );

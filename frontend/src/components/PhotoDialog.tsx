@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button.tsx";
+import { useEffect } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog.tsx";
 import type { Photo } from "../data/mockdata.ts";
 
@@ -14,12 +14,23 @@ export default function PhotoDialog({
   index,
   onIndexChange,
 }: PhotoDialogProps) {
+  useEffect(() => {
+    if (index === null) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft" && index > 0) onIndexChange(index - 1);
+      else if (e.key === "ArrowRight" && index < photos.length - 1)
+        onIndexChange(index + 1);
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [index, photos.length, onIndexChange]);
+
   return (
     <Dialog
       open={index !== null}
       onOpenChange={(open) => !open && onIndexChange(null)}
     >
-      <DialogContent className="max-w-screen-sm p-2 sm:p-4 bg-black border-0">
+      <DialogContent className="max-w-[95vw] md:max-w-[85vw] lg:max-w-[75vw] p-2 sm:p-4 bg-white border-0">
         <DialogTitle className="sr-only">
           Bilde {(index ?? 0) + 1} av {photos.length}
         </DialogTitle>
@@ -28,38 +39,34 @@ export default function PhotoDialog({
             <img
               src={photos[index].url}
               alt={photos[index].caption}
-              className="w-full rounded-md object-contain max-h-[80vh]"
+              className="w-full rounded-md object-contain max-h-[88vh]"
             />
             {photos[index].caption && (
-              <p className="text-center text-xs text-white/70 mt-2">
+              <p className="text-center text-xs text-black/70 mt-2">
                 {photos[index].caption}
               </p>
             )}
             <div className="absolute inset-y-0 left-0 flex items-center">
-              <Button
+              <button
                 type="button"
-                variant="ghost"
-                size="icon"
-                className="text-white/70 hover:text-white hover:bg-white/10 disabled:opacity-20"
+                className="p-1 text-black/70 hover:text-black disabled:opacity-20"
                 disabled={index === 0}
                 onClick={() => onIndexChange(index - 1)}
               >
                 <ChevronLeft className="size-7" />
-              </Button>
+              </button>
             </div>
             <div className="absolute inset-y-0 right-0 flex items-center">
-              <Button
+              <button
                 type="button"
-                variant="ghost"
-                size="icon"
-                className="text-white/70 hover:text-white hover:bg-white/10 disabled:opacity-20"
+                className="p-1 text-black/70 hover:text-black disabled:opacity-20"
                 disabled={index === photos.length - 1}
                 onClick={() => onIndexChange(index + 1)}
               >
                 <ChevronRight className="size-7" />
-              </Button>
+              </button>
             </div>
-            <p className="absolute bottom-6 inset-x-0 text-center text-xs text-white/50">
+            <p className="absolute bottom-6 inset-x-0 text-center text-xs text-black/70">
               {index + 1} / {photos.length}
             </p>
           </div>

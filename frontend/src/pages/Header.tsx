@@ -46,7 +46,7 @@ export const Header = forwardRef<HTMLElement>(function Header(_props, ref) {
                 <HomeIcon />
               </Button>
               <div className="min-w-0">
-                <h1 className="font-bold text-xl truncate">Torsdagsløpet</h1>
+                <h1 className="font-bold truncate">Torsdagsløpet</h1>
               </div>
             </Link>
           </div>

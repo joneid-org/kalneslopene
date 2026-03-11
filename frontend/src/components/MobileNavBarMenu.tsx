@@ -19,14 +19,12 @@ import { getRacesByYear } from "@/data/mockdata.ts";
 export interface MobileNavBarMenuProps {
   headerBarDynamic: { path: string; label: string }[];
   headerBarStatic: { path: string; label: string }[];
-  omOss: { path: string; label: string }[];
   years: number[];
 }
 
 export default function MobileNavBarMenu({
   headerBarDynamic,
   headerBarStatic,
-  omOss,
   years,
 }: MobileNavBarMenuProps) {
   return (
@@ -89,24 +87,6 @@ export default function MobileNavBarMenu({
                 </DrawerClose>
               </div>
             ))}
-
-            <AccordionItem value="om-oss">
-              <AccordionTrigger className="text-base font-medium">
-                Om oss
-              </AccordionTrigger>
-              <AccordionContent className="pl-3 flex flex-col">
-                {omOss.map(({ path, label }) => (
-                  <DrawerClose asChild key={path}>
-                    <Link
-                      to={path}
-                      className="py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      {label}
-                    </Link>
-                  </DrawerClose>
-                ))}
-              </AccordionContent>
-            </AccordionItem>
           </Accordion>
         </nav>
       </DrawerContent>

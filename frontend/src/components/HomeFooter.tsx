@@ -1,99 +1,96 @@
 import { Mail, MapPin, Phone } from "lucide-react";
-import { Link } from "react-router";
 import { Separator } from "@/components/ui/separator.tsx";
 
 const sponsors = [
-  { name: "Grimsgaard Sport", url: "#" },
-  { name: "Kalneset IF", url: "#" },
-  { name: "Løpernes Venner AS", url: "#" },
-];
-
-const quickLinks = [
-  { label: "Resultater", path: "/Resultater" },
-  { label: "Bilder", path: "/Bilder" },
-  { label: "Løpskalender", path: "/Lopskalender" },
-  { label: "Statistikk", path: "/Statistikk" },
-  { label: "Styret", path: "/Styret" },
+  { name: "Grimsgaard Sport", url: "#", initials: "GS" },
+  { name: "Kalneset IF", url: "#", initials: "KIF" },
+  { name: "Løpernes Venner AS", url: "#", initials: "LV" },
 ];
 
 export default function HomeFooter() {
   return (
-    <footer className="bg-card border-t mt-10">
-      <div className="px-4 py-8 md:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
-          {/* Contact */}
-          <div className="space-y-3">
-            <h3 className="font-semibold">Kontakt</h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li className="flex items-center gap-2">
-                <Mail className="size-3.5 shrink-0" />
-                <a
-                  href="mailto:kontakt@torsdagslop.no"
-                  className="hover:text-foreground transition-colors"
-                >
-                  kontakt@torsdagslop.no
-                </a>
-              </li>
-              <li className="flex items-center gap-2">
-                <Phone className="size-3.5 shrink-0" />
-                <span>+47 000 00 000</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <MapPin className="size-3.5 shrink-0 mt-0.5" />
-                <span>Kalneset, Grimstad</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Quick links */}
-          <div className="space-y-3">
-            <h3 className="font-semibold">Snarveier</h3>
-            <ul className="space-y-1.5">
-              {quickLinks.map(({ label, path }) => (
-                <li key={path}>
-                  <Link
-                    to={path}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Sponsors */}
-          <div className="space-y-3">
-            <h3 className="font-semibold">Sponsorer</h3>
-            <ul className="space-y-2">
-              {sponsors.map(({ name, url }) => (
-                <li key={name}>
-                  <a
-                    href={url}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-            <p className="text-xs text-muted-foreground">
-              Ønsker du å bli sponsor?{" "}
-              <a
-                href="mailto:kontakt@torsdagslop.no"
-                className="underline hover:text-foreground transition-colors"
-              >
-                Ta kontakt
-              </a>
-            </p>
-          </div>
+    <footer className="bg-card border-t">
+      {/* Main row — brand, contact, sponsors */}
+      <div className="max-w-5xl mx-auto px-6 py-5 grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {/* Brand */}
+        <div className="space-y-1">
+          <h2 className="text-sm font-bold tracking-tight">Torsdagsløpet</h2>
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            Fellesskap og frisk luft — hver torsdag på Kalneset siden 1993.
+          </p>
         </div>
 
-        <Separator className="my-6" />
+        {/* Contact */}
+        <div className="space-y-1.5">
+          <h3 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+            Kontakt
+          </h3>
+          <ul className="space-y-1">
+            <li>
+              <a
+                href="mailto:kontakt@torsdagslop.no"
+                className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors group"
+              >
+                <span className="flex items-center justify-center w-5 h-5 rounded-full bg-muted group-hover:bg-accent transition-colors shrink-0">
+                  <Mail className="size-2.5" />
+                </span>
+                kontakt@torsdagslop.no
+              </a>
+            </li>
+            <li className="flex items-center gap-2 text-xs text-muted-foreground">
+              <span className="flex items-center justify-center w-5 h-5 rounded-full bg-muted shrink-0">
+                <Phone className="size-2.5" />
+              </span>
+              +47 000 00 000
+            </li>
+            <li className="flex items-center gap-2 text-xs text-muted-foreground">
+              <span className="flex items-center justify-center w-5 h-5 rounded-full bg-muted shrink-0">
+                <MapPin className="size-2.5" />
+              </span>
+              Kalneset, Grimstad
+            </li>
+          </ul>
+        </div>
 
-        <p className="text-xs text-center text-muted-foreground">
-          © {new Date().getFullYear()} Torsdagsløpet · Drevet av frivillige
-        </p>
+        {/* Sponsors */}
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between">
+            <h3 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+              Sponsorer
+            </h3>
+            <a
+              href="mailto:kontakt@torsdagslop.no"
+              className="text-[10px] px-2 py-0.5 rounded-full border text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
+            >
+              Bli sponsor →
+            </a>
+          </div>
+          <div className="flex gap-2">
+            {sponsors.map(({ name, url, initials }) => (
+              <a
+                key={name}
+                href={url}
+                title={name}
+                className="flex-1 flex flex-col items-center justify-center gap-1 rounded-lg border bg-muted/40 hover:bg-muted transition-colors py-2 group"
+              >
+                <div className="w-8 h-8 rounded-full bg-background border flex items-center justify-center text-[10px] font-bold text-muted-foreground group-hover:text-foreground transition-colors">
+                  {initials}
+                </div>
+                <span className="text-[10px] text-center text-muted-foreground group-hover:text-foreground transition-colors leading-tight px-1">
+                  {name}
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <Separator />
+
+      {/* Bottom bar */}
+      <div className="max-w-5xl mx-auto px-6 py-2.5 flex items-center justify-between text-[10px] text-muted-foreground">
+        <span>© {new Date().getFullYear()} Torsdagsløpet</span>
+        <span>Drevet av frivillige ❤️</span>
       </div>
     </footer>
   );

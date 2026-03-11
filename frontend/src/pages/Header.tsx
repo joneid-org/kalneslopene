@@ -1,7 +1,6 @@
 import { HomeIcon } from "lucide-react";
 import { forwardRef } from "react";
 import { Link } from "react-router";
-import { DropDownMenu } from "@/components/DropDownMenu.tsx";
 import { DynamicDropDownMenu } from "@/components/DynamicDropDownMenu.tsx";
 import MobileNavBarMenu from "@/components/MobileNavBarMenu.tsx";
 import { Button } from "@/components/ui/button.tsx";
@@ -11,15 +10,10 @@ const headerBarDynamic = [
   { path: "/Resultater", label: "Resultater" },
   { path: "/Bilder", label: "Bilder" },
 ];
-const headerBarStatic = [{ path: "/Statistikk", label: "Statistikk" }];
-const OM_OSS = [
-  { path: "/SlikStartetDet", label: "Slik startet det" },
-  { path: "/Løpsinformasjon", label: "Løpsinformasjon" },
+const headerBarStatic = [
+  { path: "/Statistikk", label: "Statistikk" },
   { path: "/Løypekart", label: "Løypekart" },
-  { path: "/NavnIBlåløypa", label: "Navn i blåløypa" },
-  { path: "/LøypaToForTo", label: "Løypa 200 for 200" },
-  { path: "/Historie", label: "Historiske tilbakeblikk" },
-  { path: "/Styret", label: "Styret" },
+  { path: "/Historie", label: "Historie" },
 ];
 
 const years = getAvailableYears();
@@ -31,7 +25,6 @@ export const Header = forwardRef<HTMLElement>(function Header(_props, ref) {
           <MobileNavBarMenu
             headerBarDynamic={headerBarDynamic}
             headerBarStatic={headerBarStatic}
-            omOss={OM_OSS}
             years={years}
           />
         </div>
@@ -62,7 +55,6 @@ export const Header = forwardRef<HTMLElement>(function Header(_props, ref) {
                 <Button variant={"outline"}>{label}</Button>
               </Link>
             ))}
-            <DropDownMenu label={"Om oss"} links={OM_OSS} />
           </nav>
         </div>
       </div>

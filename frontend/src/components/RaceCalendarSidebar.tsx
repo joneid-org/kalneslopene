@@ -1,11 +1,8 @@
 import { CalendarDays, Clock, MapPin } from "lucide-react";
-import { Link } from "react-router";
 import { Badge } from "@/components/ui/badge.tsx";
-import { Button } from "@/components/ui/button.tsx";
 import {
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
@@ -78,11 +75,6 @@ export default function RaceCalendarSidebar() {
           </ul>
         )}
       </CardContent>
-      <CardFooter className="pt-3">
-        <Button asChild variant="outline" className="w-full" size="sm">
-          <Link to="/Lopskalender">Se løpskalender</Link>
-        </Button>
-      </CardFooter>
     </Card>
   );
 }

@@ -679,3 +679,196 @@ export const getUpcomingRaces = (): Race[] => {
     .filter((r) => new Date(r.date) >= today)
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 };
+
+const timeToSeconds = (time: string): number => {
+  const parts = time.split(":");
+  if (parts.length === 2)
+    return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+  return 0;
+};
+
+const fmt = (s: number) =>
+  `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+
+// ── Race-level / overall statistics ──────────────────────────────────────────
+
+export interface RaceOverallStats {
+  totalRaces: number;
+  totalUniqueRunners: number;
+  highestParticipation: { count: number; race: Race };
+  averageParticipation: number;
+  bestTimeEver: { time: string; runnerName: string; race: Race };
+  totalFinishes: number;
+}
+
+export const getRaceOverallStats = (year?: number): RaceOverallStats => {
+  const filteredRaces = year
+    ? races.filter(
+        (r) => new Date(r.date).getFullYear() === year && r.participants > 0,
+      )
+    : races.filter((r) => r.participants > 0);
+
+  const raceIds = new Set(filteredRaces.map((r) => r.id));
+  const filteredResults = results.filter((r) => raceIds.has(r.raceId));
+  const uniqueRunners = new Set(filteredResults.map((r) => r.runnerId));
+
+  const highestRace = filteredRaces.reduce(
+    (best, r) => (r.participants > best.participants ? r : best),
+    filteredRaces[0],
+  );
+
+  const avgParticipation =
+    filteredRaces.length > 0
+      ? Math.round(
+          filteredRaces.reduce((s, r) => s + r.participants, 0) /
+            filteredRaces.length,
+        )
+      : 0;
+
+  const fastest = filteredResults.reduce(
+    (best, cur) =>
+      timeToSeconds(cur.time) < timeToSeconds(best.time) ? cur : best,
+    filteredResults[0],
+  );
+
+  const fastestRace =
+    filteredRaces.find((r) => r.id === fastest?.raceId) ?? filteredRaces[0];
+
+  return {
+    totalRaces: filteredRaces.length,
+    totalUniqueRunners: uniqueRunners.size,
+    highestParticipation: {
+      count: highestRace?.participants ?? 0,
+      race: highestRace,
+    },
+    averageParticipation: avgParticipation,
+    bestTimeEver: {
+      time: fastest?.time ?? "-",
+      runnerName: fastest?.runnerName ?? "-",
+      race: fastestRace,
+    },
+    totalFinishes: filteredResults.length,
+  };
+};
+
+// ── Runner chart data ─────────────────────────────────────────────────────────
+
+export interface RunnerChartPoint {
+  label: string; // "Uke 7 '26"
+  date: string; // ISO date for sorting
+  [year: string]: string | number; // e.g. { "2026": 1335, "2025": 1380 }
+}
+
+export const getRunnerChartData = (
+  runnerId: string,
+  years: number[],
+): { points: RunnerChartPoint[]; years: number[] } => {
+  const all = results.filter((r) => r.runnerId === runnerId);
+
+  // collect data per race, keyed by "week+year" so we can align across seasons
+  const byWeek = new Map<string, RunnerChartPoint>();
+
+  for (const r of all) {
+    const race = races.find((rc) => rc.id === r.raceId);
+    if (!race) continue;
+    const y = new Date(race.date).getFullYear();
+    if (years.length > 0 && !years.includes(y)) continue;
+
+    const key = `${String(y).slice(2)}-W${String(race.week).padStart(2, "0")}`;
+    const label = `Uke ${race.week} '${String(y).slice(2)}`;
+
+    if (!byWeek.has(key)) {
+      byWeek.set(key, { label, date: race.date });
+    }
+    const point = byWeek.get(key)!;
+    point[String(y)] = timeToSeconds(r.time);
+  }
+
+  const points = Array.from(byWeek.values()).sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+  );
+
+  return { points, years };
+};
+
+export interface RunnerDetailedStats {
+  runnerId: string;
+  runnerName: string;
+  gender: "M" | "F";
+  ageGroup: string;
+  totalRaces: number;
+  totalDistanceKm: number;
+  pr: string;
+  seasonBest: Record<number, string>;
+  averageTime: string;
+  wins: number;
+  raceHistory: { race: Race; result: Result }[];
+}
+
+export const getRunnerDetailedStats = (
+  runnerId: string,
+  year?: number,
+): RunnerDetailedStats | null => {
+  const all = results.filter((r) => r.runnerId === runnerId);
+  if (all.length === 0) return null;
+
+  const first = all[0];
+
+  const seasonBest: Record<number, string> = {};
+  for (const r of all) {
+    const race = races.find((rc) => rc.id === r.raceId);
+    if (!race) continue;
+    const y = new Date(race.date).getFullYear();
+    if (
+      !seasonBest[y] ||
+      timeToSeconds(r.time) < timeToSeconds(seasonBest[y])
+    ) {
+      seasonBest[y] = r.time;
+    }
+  }
+
+  const filtered = year
+    ? all.filter((r) => {
+        const race = races.find((rc) => rc.id === r.raceId);
+        return race && new Date(race.date).getFullYear() === year;
+      })
+    : all;
+
+  const raceHistory = filtered
+    .map((result) => {
+      const race = races.find((r) => r.id === result.raceId);
+      if (!race) return null;
+      return { race, result };
+    })
+    .filter((x): x is { race: Race; result: Result } => x !== null)
+    .sort(
+      (a, b) =>
+        new Date(b.race.date).getTime() - new Date(a.race.date).getTime(),
+    );
+
+  const times = filtered.map((r) => timeToSeconds(r.time));
+  const prSeconds = Math.min(...all.map((r) => timeToSeconds(r.time)));
+  const avgSeconds =
+    times.length > 0
+      ? Math.round(times.reduce((s, t) => s + t, 0) / times.length)
+      : 0;
+
+  const totalDistanceKm = filtered.reduce((sum, r) => {
+    const race = races.find((rc) => rc.id === r.raceId);
+    return sum + parseFloat(race?.distance ?? "0");
+  }, 0);
+
+  return {
+    runnerId,
+    runnerName: first.runnerName,
+    gender: first.gender,
+    ageGroup: first.ageGroup,
+    totalRaces: filtered.length,
+    totalDistanceKm,
+    pr: fmt(prSeconds),
+    seasonBest,
+    averageTime: avgSeconds > 0 ? fmt(avgSeconds) : "-",
+    wins: filtered.filter((r) => r.position === 1).length,
+    raceHistory,
+  };
+};

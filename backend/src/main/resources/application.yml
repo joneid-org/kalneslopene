@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: kalneslopene
+  datasource:
+    url: jdbc:postgresql://localhost:5432/torsdagslopet
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    drop-first: false
+    enabled: true
+    change-log: classpath:db/changelog/changelog-master.yaml
+  jpa:
+    hibernate:
+      ddl-auto: none

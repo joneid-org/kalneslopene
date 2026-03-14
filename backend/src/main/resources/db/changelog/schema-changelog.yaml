@@ -1,0 +1,90 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-create-runner-table
+      author: ai
+      changes:
+        - createTable:
+            tableName: runner
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: gender
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 004-create-race-table
+      author: ai
+      changes:
+        - createTable:
+            tableName: race
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: weather
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 005-create-race-runner-table
+      author: ai
+      changes:
+        - createTable:
+            tableName: race_runner
+            columns:
+              - column:
+                  name: runner_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: race_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: result_time
+                  type: INTERVAL
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: race_runner
+            columnNames: runner_id, race_id
+            constraintName: pk_race_runner
+        - addForeignKeyConstraint:
+            baseTableName: race_runner
+            baseColumnNames: runner_id
+            referencedTableName: runner
+            referencedColumnNames: id
+            constraintName: fk_race_runner_runner
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: race_runner
+            baseColumnNames: race_id
+            referencedTableName: race
+            referencedColumnNames: id
+            constraintName: fk_race_runner_race
+            onDelete: CASCADE
+        - sql:
+            sql: ALTER TABLE race_runner ADD CONSTRAINT result_time_non_negative CHECK (result_time >= INTERVAL '0 seconds');

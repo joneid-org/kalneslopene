@@ -29,6 +29,7 @@
 
         bun = pkgs.bun;
         nodejs = pkgs.nodejs;
+        jdk = pkgs.jdk21_headless;
       in
       {
         devShells = rec {
@@ -38,17 +39,20 @@
             packages = [
               bun
               nodejs
+              jdk
             ];
             devshell.startup.link.text = ''
               mkdir -p "$PRJ_DATA_DIR/current"
               ln -sfn ${bun} "$PRJ_DATA_DIR/current/bun"
               ln -sfn ${nodejs} "$PRJ_DATA_DIR/current/nodejs"
+              ln -sfn ${jdk} "$PRJ_DATA_DIR/current/jdk"
             '';
             devshell.startup.version_info.text = ''
-              echo "---Kalneslopene development environment---"
+              echo "-----Kalneslopene development environment-----"
               echo "bun: $(${bun}/bin/bun --version)"
               echo "node: $(${nodejs}/bin/node --version)"
-              echo "----------------------------------------"
+              echo "$(${jdk}/bin/java --version)"
+              echo "----------------------------------------------"
             '';
           };
         };

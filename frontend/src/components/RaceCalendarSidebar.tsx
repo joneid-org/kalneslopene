@@ -1,6 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
 import { CalendarDays, Clock, Loader2, MapPin } from "lucide-react";
-import { QUERIES } from "@/api/queries.ts";
 import { Badge } from "@/components/ui/badge.tsx";
 import {
   Card,
@@ -8,8 +6,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
+import type { RaceDTO } from "@/model/DTO.ts";
 
-export default function RaceCalendarSidebar() {
+interface RaceCalendarSidebarProps {
+  races: RaceDTO[] | undefined;
+  isLoading: boolean;
+}
+
+export default function RaceCalendarSidebar({
+  races,
+  isLoading,
+}: RaceCalendarSidebarProps) {
   return (
     <Card className="w-full h-full flex flex-col">
       <CardHeader className="pb-3">
@@ -19,22 +26,20 @@ export default function RaceCalendarSidebar() {
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0 flex-1 overflow-y-auto">
-        <UpcomingRaces />
+        <UpcomingRaces races={races} isLoading={isLoading} />
       </CardContent>
     </Card>
   );
 }
 
-const UpcomingRaces = () => {
-  const { data, isLoading } = useQuery(QUERIES.upComingRaces);
-
+const UpcomingRaces = ({ races, isLoading }: RaceCalendarSidebarProps) => {
   if (isLoading)
     return (
       <div className="flex items-center justify-center py-8">
         <Loader2 className="size-5 animate-spin text-muted-foreground" />
       </div>
     );
-  if (data === undefined || data.length === 0)
+  if (!races || races.length === 0)
     return (
       <p className="text-sm text-muted-foreground px-6 pb-4">
         Ingen kommende løp.
@@ -42,7 +47,7 @@ const UpcomingRaces = () => {
     );
   return (
     <ul className="divide-y divide-border">
-      {data.map((race, index) => {
+      {races.map((race, index) => {
         const date = new Date(race.raceDate);
         const time = date.toLocaleTimeString("nb-NO", {
           hour: "2-digit",

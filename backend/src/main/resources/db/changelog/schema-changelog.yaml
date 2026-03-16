@@ -92,3 +92,20 @@ databaseChangeLog:
             onDelete: CASCADE
         - sql:
             sql: ALTER TABLE race_runner ADD CONSTRAINT result_time_non_negative CHECK (result_time >= INTERVAL '0 seconds');
+
+  - changeSet:
+      id: 006-create-newsfeed-table
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/create_newsfeed.sql
+            relativeToChangelogFile: false
+
+  - changeSet:
+      id: 007-create-organizer-table
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/create_organizer.sql
+            relativeToChangelogFile: false
+

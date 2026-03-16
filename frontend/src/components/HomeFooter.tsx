@@ -1,4 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
 import { Mail, MapPin, Phone } from "lucide-react";
+import { QUERIES } from "@/api/queries.ts";
 import { Separator } from "@/components/ui/separator.tsx";
 
 const sponsors = [
@@ -8,6 +10,8 @@ const sponsors = [
 ];
 
 export default function HomeFooter() {
+  const { data: organizer } = useQuery(QUERIES.organizers);
+
   return (
     <footer className="bg-card border-t">
       {/* Main row — brand, contact, sponsors */}
@@ -21,6 +25,7 @@ export default function HomeFooter() {
         </div>
 
         {/* Contact */}
+        {/*TODO: Organizer*/}
         <div className="space-y-1.5">
           <h3 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
             Kontakt
@@ -28,26 +33,26 @@ export default function HomeFooter() {
           <ul className="space-y-1">
             <li>
               <a
-                href="mailto:kontakt@torsdagslop.no"
+                href={`mailto:${organizer?.[0]?.email ?? "kontakt@torsdagslop.no"}`}
                 className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors group"
               >
                 <span className="flex items-center justify-center w-5 h-5 rounded-full bg-muted group-hover:bg-accent transition-colors shrink-0">
                   <Mail className="size-2.5" />
                 </span>
-                kontakt@torsdagslop.no
+                {organizer?.[0]?.email ?? "kontakt@torsdagslop.no"}
               </a>
             </li>
             <li className="flex items-center gap-2 text-xs text-muted-foreground">
               <span className="flex items-center justify-center w-5 h-5 rounded-full bg-muted shrink-0">
                 <Phone className="size-2.5" />
               </span>
-              +47 000 00 000
+              {organizer?.[0]?.phone ?? "00 00 00 00"}
             </li>
             <li className="flex items-center gap-2 text-xs text-muted-foreground">
               <span className="flex items-center justify-center w-5 h-5 rounded-full bg-muted shrink-0">
                 <MapPin className="size-2.5" />
               </span>
-              Kalneset, Grimstad
+              Kalnesskogen - Grålum, Sarpsborg
             </li>
           </ul>
         </div>

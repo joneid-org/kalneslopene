@@ -38,3 +38,20 @@ databaseChangeLog:
         - sqlFile:
             path: db/changelog/sql/upcoming_racedates.sql
             relativeToChangelogFile: false
+
+  - changeSet:
+      id: 011-seed-newsfeed
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/newsfeed_mockdata.sql
+            relativeToChangelogFile: false
+
+  - changeSet:
+      id: 012-seed-organizer
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/organizer_mockdata.sql
+            relativeToChangelogFile: false
+

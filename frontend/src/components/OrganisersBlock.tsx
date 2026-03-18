@@ -48,8 +48,15 @@ export default function OrganisersBlock() {
                     href={`mailto:${person.email}`}
                     className="flex items-center justify-center gap-1 text-[11px] text-muted-foreground hover:text-primary transition-colors"
                   >
-                    <Mail className="size-3 shrink-0" />
-                    {person.email}
+                    {person.email && (
+                      <a
+                        href={`mailto:${person.email}`}
+                        className="flex items-center justify-center gap-1 text-[11px] text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        <Mail className="size-3 shrink-0" />
+                        {person.email}
+                      </a>
+                    )}
                   </a>
                   <a
                     href={`tel:${person.phone}`}

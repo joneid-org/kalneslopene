@@ -5,7 +5,9 @@ import PhotoDialog from "@/components/PhotoDialog.tsx";
 import ResultsHeader from "@/components/ResultsHeader.tsx";
 import ResultsTable, { type RowData } from "@/components/ResultsTable.tsx";
 import type { Photo } from "../data/mockdata.ts";
-import { getRacesByYear, photos, races, results } from "../data/mockdata.ts";
+import { photos, races, results } from "../data/mockdata.ts";
+import { getAllRacesByYear } from "@/lib/utils.ts";
+import type { RaceDTO } from "@/model/DTO.ts";
 
 const DISTANCE_KM = 5;
 
@@ -27,40 +29,53 @@ function formatSecondsToTime(totalSeconds: number): string {
 
 type Props = {
   year?: number;
-  week?: number;
+  dateMonth?: string;
 };
 
-export default function Results({ year, week }: Props) {
+export default function Results({ year, dateMonth }: Props) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  // All races sorted oldest → newest (for prev/next)
-  const sortedRaces = useMemo(
+  const raceDTOs: RaceDTO[] = useMemo(
     () =>
-      [...races].sort(
-        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-      ),
+      races.map((r) => ({
+        id: r.id,
+        raceDate: new Date(r.date),
+        weather: r.weatherConditions ?? "",
+      })),
     [],
   );
 
-  const race = useMemo(() => {
-    if (!year || !week) return null;
-    return getRacesByYear(year).find((r) => r.week === week) ?? null;
-  }, [year, week]);
-
-  const currentIndex = useMemo(
-    () => (race ? sortedRaces.findIndex((r) => r.id === race.id) : -1),
-    [race, sortedRaces],
+  const sortedRaceDTOs = useMemo(
+    () =>
+      [...raceDTOs].sort((a, b) => a.raceDate.getTime() - b.raceDate.getTime()),
+    [raceDTOs],
   );
 
-  const prevRace = currentIndex > 0 ? sortedRaces[currentIndex - 1] : null;
+  const race: RaceDTO | null = useMemo(() => {
+    if (!year || !dateMonth) return null;
+    const raceDates = getAllRacesByYear(year, raceDTOs);
+    const idx = raceDates.indexOf(dateMonth);
+    if (idx === -1) return null;
+    const filtered = raceDTOs.filter((r) => r.raceDate.getFullYear() === year);
+    return filtered[idx] ?? null;
+  }, [year, dateMonth, raceDTOs]);
+
+  const currentIndex = useMemo(
+    () => (race ? sortedRaceDTOs.findIndex((r) => r.id === race.id) : -1),
+    [race, sortedRaceDTOs],
+  );
+
+  const prevRace = currentIndex > 0 ? sortedRaceDTOs[currentIndex - 1] : null;
   const nextRace =
-    currentIndex !== -1 && currentIndex < sortedRaces.length - 1
-      ? sortedRaces[currentIndex + 1]
+    currentIndex !== -1 && currentIndex < sortedRaceDTOs.length - 1
+      ? sortedRaceDTOs[currentIndex + 1]
       : null;
 
-  function raceToPath(race: { week: number; date: string }) {
-    const y = new Date(race.date).getFullYear();
-    return `/Resultater/${y}/${race.week}`;
+  function raceToPath(r: RaceDTO) {
+    const y = r.raceDate.getFullYear();
+    const day = String(r.raceDate.getDate()).padStart(2, "0");
+    const month = String(r.raceDate.getMonth() + 1).padStart(2, "0");
+    return `/Resultater/${y}/${day}-${month}`;
   }
 
   // Per-runner stats
@@ -151,7 +166,7 @@ export default function Results({ year, week }: Props) {
   );
 
   const title = race
-    ? `Uke ${race.week} — ${new Date(race.date).toLocaleDateString("nb-NO", { day: "numeric", month: "long", year: "numeric" })}`
+    ? `${dateMonth} — ${race.raceDate.toLocaleDateString("nb-NO", { day: "numeric", month: "long", year: "numeric" })}`
     : "Alle resultater";
 
   return (
@@ -170,7 +185,7 @@ export default function Results({ year, week }: Props) {
           fastestF={fastestF}
           photosPath={
             racePhotos.length > 0
-              ? `/Bilder/${new Date(race.date).getFullYear()}/${race.week}`
+              ? `/Bilder/${race.raceDate.getFullYear()}/${dateMonth}`
               : undefined
           }
         />
@@ -181,13 +196,13 @@ export default function Results({ year, week }: Props) {
         title={title}
         race={race}
         year={year}
-        week={week}
+        dateMonth={dateMonth}
       />
 
       <PhotoCarousel
         photos={racePhotos}
         year={year}
-        week={week}
+        dateMonth={dateMonth}
         onPhotoClick={setLightboxIndex}
       />
 

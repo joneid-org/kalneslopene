@@ -30,21 +30,25 @@ import {
 import { Separator } from "@/components/ui/separator.tsx";
 import {
   getAllUniqueRunners,
-  getAvailableYears,
   getRaceOverallStats,
   getRunnerDetailedStats,
+  races,
   type RaceOverallStats,
   type RunnerDetailedStats,
 } from "@/data/mockdata.ts";
+import { getAllYears } from "@/lib/utils.ts";
+import type { RaceDTO } from "@/model/DTO.ts";
 
 const currentYear = new Date().getFullYear();
 
 export function Statistikk() {
   const allRunners = getAllUniqueRunners();
-  const availableYears = getAvailableYears().filter((y) => {
-    // only years with actual past races
-    return y <= currentYear;
-  });
+  const raceDTOs: RaceDTO[] = races.map((r) => ({
+    id: r.id,
+    raceDate: new Date(r.date),
+    weather: r.weatherConditions ?? "",
+  }));
+  const availableYears = getAllYears(raceDTOs).filter((y) => y <= currentYear);
 
   // ── Race stats state ──
   const [raceYear, setRaceYear] = useState<number | undefined>(undefined);

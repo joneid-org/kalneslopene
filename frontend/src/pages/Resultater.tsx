@@ -8,10 +8,7 @@ export function Resultater() {
   }>();
   return (
     <div className="flex justify-center px-2 py-4 sm:px-4 sm:py-6 md:px-8 md:py-8">
-      <Results
-        year={year ? Number(year) : undefined}
-        week={raceNumber ? Number(raceNumber) : undefined}
-      />
+      <Results year={year ? Number(year) : undefined} dateMonth={raceNumber} />
     </div>
   );
 }

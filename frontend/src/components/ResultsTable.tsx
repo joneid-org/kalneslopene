@@ -30,7 +30,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table.tsx";
-import type { Race, Result } from "../data/mockdata.ts";
+import type { Result } from "../data/mockdata.ts";
+import type { RaceDTO } from "@/model/DTO.ts";
 
 const COLUMN_LABELS: Record<string, string> = {
   position: "#",
@@ -54,9 +55,9 @@ export type RowData = Result & {
 type ResultsTableProps = {
   tableData: RowData[];
   title: string;
-  race: Race | null;
+  race: RaceDTO | null;
   year?: number;
-  week?: number;
+  dateMonth?: string;
 };
 
 function useIsMobile() {

@@ -5,17 +5,28 @@ import PhotoDialog from "@/components/PhotoDialog.tsx";
 import PhotoGrid from "@/components/PhotoGrid.tsx";
 import PhotoHeader from "@/components/PhotoHeader.tsx";
 import type { Photo } from "@/data/mockdata.ts";
-import { getRacesByYear, photos, races } from "@/data/mockdata.ts";
+import { photos, races } from "@/data/mockdata.ts";
+import { getAllRacesByYear } from "@/lib/utils.ts";
+import type { RaceDTO } from "@/model/DTO.ts";
 
 export function Bilder() {
-  const { year, raceNumber } = useParams<{
+  const { year, raceId } = useParams<{
     year: string;
-    raceNumber: string;
+    raceId: string;
   }>();
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const parsedYear = year ? Number(year) : undefined;
-  const parsedWeek = raceNumber ? Number(raceNumber) : undefined;
+
+  const raceDTOs: RaceDTO[] = useMemo(
+    () =>
+      races.map((r) => ({
+        id: r.id,
+        raceDate: new Date(r.date),
+        weather: r.weatherConditions ?? "",
+      })),
+    [],
+  );
 
   const sortedRaces = useMemo(
     () =>
@@ -25,12 +36,16 @@ export function Bilder() {
     [],
   );
 
+  // Returns day-of-month numbers for races in the given year
+  const raceDaysInYear: number[] = useMemo(
+    () => (parsedYear ? getAllRacesByYear(parsedYear, raceDTOs) : []),
+    [parsedYear, raceDTOs],
+  );
+
   const race = useMemo(() => {
-    if (!parsedYear || !parsedWeek) return null;
-    return (
-      getRacesByYear(parsedYear).find((r) => r.week === parsedWeek) ?? null
-    );
-  }, [parsedYear, parsedWeek]);
+    if (!raceId) return null;
+    return sortedRaces.find((r) => r.id === raceId) ?? null;
+  }, [raceId, sortedRaces]);
 
   const currentIndex = useMemo(
     () => (race ? sortedRaces.findIndex((r) => r.id === race.id) : -1),
@@ -43,22 +58,30 @@ export function Bilder() {
       ? sortedRaces[currentIndex + 1]
       : null;
 
-  function raceToPath(r: { week: number; date: string }) {
+  function raceToPath(r: { id: string; week: number; date: string }) {
     const y = new Date(r.date).getFullYear();
-    return `/Bilder/${y}/${r.week}`;
+    return `/Bilder/${y}/${r.id}`;
   }
 
   const racePhotos: Photo[] = useMemo(() => {
     if (race) return photos.filter((p) => p.raceId === race.id);
     if (parsedYear) {
-      const racesInYear = getRacesByYear(parsedYear);
-      return photos.filter((p) => racesInYear.some((r) => r.id === p.raceId));
+      const idsInYear = raceDTOs
+        .filter((r) => {
+          const d = r.raceDate;
+          return (
+            d.getFullYear() === parsedYear &&
+            raceDaysInYear.includes(d.getDate())
+          );
+        })
+        .map((r) => r.id);
+      return photos.filter((p) => idsInYear.includes(p.raceId));
     }
     return photos;
-  }, [race, parsedYear]);
+  }, [race, parsedYear, raceDaysInYear, raceDTOs]);
 
   const title = race
-    ? `Uke ${race.week} — ${new Date(race.date).toLocaleDateString("nb-NO", { day: "numeric", month: "long", year: "numeric" })}`
+    ? `${new Date(race.date).toLocaleDateString("nb-NO", { day: "numeric", month: "long", year: "numeric" })}`
     : parsedYear
       ? `Bilder – ${parsedYear}`
       : "Alle bilder";
@@ -87,7 +110,7 @@ export function Bilder() {
           photographers={photographers}
           resultsPath={
             race
-              ? `/Resultater/${new Date(race.date).getFullYear()}/${race.week}`
+              ? `/Resultater/${new Date(race.date).getFullYear()}/${race.id}`
               : undefined
           }
         />

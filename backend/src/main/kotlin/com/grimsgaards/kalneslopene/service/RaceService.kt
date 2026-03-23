@@ -10,16 +10,16 @@ class RaceService(
     val raceRepository: RaceRepository
 ) {
     fun getUpcomingRaces(): List<RaceDTO> {
-        return raceRepository.findAllByRaceDateIsAfter(OffsetDateTime.now()).map { it.toDto() }
+        return raceRepository.findAllByRaceDateIsAfter(OffsetDateTime.now()).sortedByDescending { it.raceDate }
+            .map { it.toDto() }
     }
 
     fun getPreviousRaces(): List<RaceDTO> {
-        return raceRepository.findAllByRaceDateIsLessThanEqual(OffsetDateTime.now()).map { it.toDto() }
+        return raceRepository.findAllByRaceDateIsLessThanEqual(OffsetDateTime.now()).sortedByDescending { it.raceDate }
+            .map { it.toDto() }
     }
 
     fun getAll(): List<RaceDTO> {
-        return raceRepository.findAll().map { it.toDto() }
+        return raceRepository.findAll().sortedByDescending { it.raceDate }.map { it.toDto() }
     }
-
-
 }

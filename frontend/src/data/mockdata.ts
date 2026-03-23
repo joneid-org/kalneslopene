@@ -1,5 +1,4 @@
 // Mock data for the race results application
-
 export interface Race {
   id: string;
   name: string;
@@ -637,38 +636,13 @@ export const getOverallStats = () => {
   };
 };
 
-// Get all unique years from races
-export const getAvailableYears = (): number[] => {
-  const years = new Set<number>();
-  races.forEach((race) => {
-    const year = new Date(race.date).getFullYear();
-    years.add(year);
-  });
-  return Array.from(years).sort((a, b) => b - a); // Sort descending
-};
-
 // Get races by year
-export const getRacesByYear = (year: number): Race[] => {
-  return races
-    .filter((race) => {
-      const raceYear = new Date(race.date).getFullYear();
-      return raceYear === year;
-    })
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()); // Sort by date descending
-};
 
 // Get the latest race
 export const getLatestRace = (): Race => {
   return races.reduce((latest, current) => {
     return new Date(current.date) > new Date(latest.date) ? current : latest;
   }, races[0]);
-};
-
-// Get photos by year
-export const getPhotosByYear = (year: number): Photo[] => {
-  const racesInYear = getRacesByYear(year);
-  const raceIds = racesInYear.map((r) => r.id);
-  return photos.filter((photo) => raceIds.includes(photo.raceId));
 };
 
 // Get upcoming races (today or in the future), sorted ascending

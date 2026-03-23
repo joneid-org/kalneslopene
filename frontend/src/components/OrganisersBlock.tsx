@@ -44,10 +44,7 @@ export default function OrganisersBlock() {
                   {person.responsibility}
                 </p>
                 <div className="mt-2 space-y-1">
-                  <a
-                    href={`mailto:${person.email}`}
-                    className="flex items-center justify-center gap-1 text-[11px] text-muted-foreground hover:text-primary transition-colors"
-                  >
+                  <div className="flex items-center justify-center gap-1 text-[11px] text-muted-foreground hover:text-primary transition-colors">
                     {person.email && (
                       <a
                         href={`mailto:${person.email}`}
@@ -57,7 +54,7 @@ export default function OrganisersBlock() {
                         {person.email}
                       </a>
                     )}
-                  </a>
+                  </div>
                   <a
                     href={`tel:${person.phone}`}
                     className="flex items-center justify-center gap-1 text-[11px] text-muted-foreground hover:text-primary transition-colors"

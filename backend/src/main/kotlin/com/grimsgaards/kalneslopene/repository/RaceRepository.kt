@@ -10,4 +10,5 @@ import java.util.*
 interface RaceRepository : JpaRepository<RaceEntity, UUID> {
 
     fun findAllByRaceDateIsAfter(date: OffsetDateTime): List<RaceEntity>
-}
+    fun findAllByRaceDateIsLessThanEqual(date: OffsetDateTime): List<RaceEntity>
+    }

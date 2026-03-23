@@ -109,3 +109,18 @@ databaseChangeLog:
             path: db/changelog/sql/create_organizer.sql
             relativeToChangelogFile: false
 
+  - changeSet:
+      id: 008-add-timezone-to-newsfeed
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/alter_newsfeed.sql
+            relativeToChangelogFile: false
+  - changeSet:
+      id: 008-add-timezone-to-race
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/alter_races.sql
+            relativeToChangelogFile: false
+

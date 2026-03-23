@@ -16,4 +16,12 @@ class RaceController(
     fun getUpcomingRaces(): List<RaceDTO> {
         return raceService.getUpcomingRaces()
     }
+@GetMapping("/previousRaces")
+    fun getPreviousRaces(): List<RaceDTO> {
+        return raceService.getPreviousRaces()
+    }
+@GetMapping("/allRaces")
+    fun getAllRaces(): List<RaceDTO> {
+        return raceService.getAll()
+    }
 }

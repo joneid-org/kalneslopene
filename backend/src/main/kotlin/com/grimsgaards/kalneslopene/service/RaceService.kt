@@ -12,4 +12,14 @@ class RaceService(
     fun getUpcomingRaces(): List<RaceDTO> {
         return raceRepository.findAllByRaceDateIsAfter(OffsetDateTime.now()).map { it.toDto() }
     }
+
+    fun getPreviousRaces(): List<RaceDTO> {
+        return raceRepository.findAllByRaceDateIsLessThanEqual(OffsetDateTime.now()).map { it.toDto() }
+    }
+
+    fun getAll(): List<RaceDTO> {
+        return raceRepository.findAll().map { it.toDto() }
+    }
+
+
 }

@@ -4,9 +4,29 @@ import type { NewsFeedDTO, OrganizerDTO, RaceDTO } from "../model/DTO.ts";
 export const QUERIES = {
   upComingRaces: {
     queryKey: ["upcomingRaces"],
-    queryFn: () => kyClient.get("/api/races/upcomingRaces").json<RaceDTO[]>(),
-  },
 
+    queryFn: async () => {
+      const data = await kyClient
+        .get("/api/races/upcomingRaces")
+        .json<RaceDTO[]>();
+      return data.map((race) => ({
+        ...race,
+        raceDate: new Date(race.raceDate),
+      }));
+    },
+  },
+  previousRaces: {
+    queryKey: ["previousRaces"],
+    queryFn: async () => {
+      const data = await kyClient
+        .get("/api/races/previousRaces")
+        .json<RaceDTO[]>();
+      return data.map((race) => ({
+        ...race,
+        raceDate: new Date(race.raceDate),
+      }));
+    },
+  },
   allNews: {
     queryKey: ["latestNews"],
     queryFn: () =>

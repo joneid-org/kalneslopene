@@ -7,7 +7,7 @@ spring:
     password: admin
     driver-class-name: org.postgresql.Driver
   liquibase:
-    drop-first: false
+    drop-first: true
     enabled: true
     change-log: classpath:db/changelog/changelog-master.yaml
   jpa:

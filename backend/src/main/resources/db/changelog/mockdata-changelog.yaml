@@ -1,57 +1,40 @@
 databaseChangeLog:
   - changeSet:
-      id: 006-enable-pgcrypto-extension
-      author: ai
-      changes:
-        - sqlFile:
-            path: db/changelog/sql/enable_pgcrypto.sql
-            relativeToChangelogFile: false
-
-  - changeSet:
-      id: 007-seed-runners
-      author: ai
-      changes:
-        - sqlFile:
-            path: db/changelog/sql/seed_runners.sql
-            relativeToChangelogFile: false
-
-  - changeSet:
-      id: 008-seed-races
-      author: ai
-      changes:
-        - sqlFile:
-            path: db/changelog/sql/seed_races.sql
-            relativeToChangelogFile: false
-
-  - changeSet:
-      id: 009-seed-race-runner
-      author: ai
-      changes:
-        - sqlFile:
-            path: db/changelog/sql/seed_race_runner.sql
-            relativeToChangelogFile: false
-
-  - changeSet:
-      id: 010-seed-upcoming-races
-      author: ai
-      changes:
-        - sqlFile:
-            path: db/changelog/sql/upcoming_racedates.sql
-            relativeToChangelogFile: false
-
-  - changeSet:
-      id: 011-seed-newsfeed
+      id: 001-seed-runners
       author: emilie
       changes:
         - sqlFile:
-            path: db/changelog/sql/newsfeed_mockdata.sql
+            path: db/changelog/sql/mockdata/seed_runners.sql
             relativeToChangelogFile: false
 
   - changeSet:
-      id: 012-seed-organizer
+      id: 002-seed-races
       author: emilie
       changes:
         - sqlFile:
-            path: db/changelog/sql/organizer_mockdata.sql
+            path: db/changelog/sql/mockdata/seed_races.sql
             relativeToChangelogFile: false
 
+  - changeSet:
+      id: 003-seed-race-runner
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/mockdata/seed_race_runner.sql
+            relativeToChangelogFile: false
+
+  - changeSet:
+      id: 004-seed-newsfeed
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/mockdata/seed_newsfeed.sql
+            relativeToChangelogFile: false
+
+  - changeSet:
+      id: 005-seed-organizers
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/mockdata/seed_organizers.sql
+            relativeToChangelogFile: false

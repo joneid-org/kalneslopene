@@ -1,2 +1,0 @@
-ALTER TABLE newsfeed
-    ALTER COLUMN date TYPE TIMESTAMPTZ USING date AT TIME ZONE 'Europe/Oslo';

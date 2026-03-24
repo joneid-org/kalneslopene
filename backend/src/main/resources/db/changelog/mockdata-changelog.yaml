@@ -1,83 +1,40 @@
 databaseChangeLog:
   - changeSet:
-      id: 006-enable-pgcrypto-extension
-      author: ai
+      id: 001-seed-runners
+      author: emilie
       changes:
-        - sql:
-            sql: CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+        - sqlFile:
+            path: db/changelog/sql/mockdata/seed_runners.sql
+            relativeToChangelogFile: false
 
   - changeSet:
-      id: 007-seed-runners
-      author: ai
+      id: 002-seed-races
+      author: emilie
       changes:
-        - sql:
-            sql: |
-              INSERT INTO runner (id, name, gender)
-              SELECT
-                  gen_random_uuid(),
-                  'Runner ' || gs,
-                  CASE
-                      WHEN gs % 2 = 0 THEN 'Male'
-                      ELSE 'Female'
-                  END
-              FROM generate_series(1, 80) AS gs;
+        - sqlFile:
+            path: db/changelog/sql/mockdata/seed_races.sql
+            relativeToChangelogFile: false
 
   - changeSet:
-      id: 008-seed-races
-      author: ai
+      id: 003-seed-race-runner
+      author: emilie
       changes:
-        - sql:
-            sql: |
-              INSERT INTO race (id, date, weather)
-              SELECT
-                  gen_random_uuid(),
-                  TIMESTAMP '2026-01-08 18:00:00' + ((gs - 1) * INTERVAL '7 days'),
-                  CASE (gs % 8)
-                      WHEN 0 THEN 'Sol,Varmt'
-                      WHEN 1 THEN 'Overskyet'
-                      WHEN 2 THEN 'Vind,Overskyet'
-                      WHEN 3 THEN 'Regn,Kaldt'
-                      WHEN 4 THEN 'Sol'
-                      WHEN 5 THEN 'Tåke,Kaldt'
-                      WHEN 6 THEN 'Storm,Regn'
-                      ELSE 'Snø,Kaldt'
-                  END
-              FROM generate_series(1, 30) AS gs;
+        - sqlFile:
+            path: db/changelog/sql/mockdata/seed_race_runner.sql
+            relativeToChangelogFile: false
 
   - changeSet:
-      id: 009-seed-race-runner
-      author: ai
+      id: 004-seed-newsfeed
+      author: emilie
       changes:
-        - sql:
-            sql: |
-              WITH ranked_combinations AS (
-                  SELECT
-                      race_data.race_id,
-                      runner_data.runner_id,
-                      row_number() OVER (
-                          PARTITION BY race_data.race_id
-                          ORDER BY random()
-                      ) AS participant_rank,
-                      race_data.participant_target
-                  FROM (
-                      SELECT
-                          id AS race_id,
-                          30 + floor(random() * 21)::int AS participant_target
-                      FROM race
-                  ) AS race_data
-                  CROSS JOIN (
-                      SELECT id AS runner_id
-                      FROM runner
-                  ) AS runner_data
-              )
-              INSERT INTO race_runner (runner_id, race_id, result_time)
-              SELECT
-                  runner_id,
-                  race_id,
-                  make_interval(
-                      hours => 0,
-                      mins => 22 + floor(random() * 50)::int,
-                      secs => floor(random() * 60)::int
-                  )
-              FROM ranked_combinations
-              WHERE participant_rank <= participant_target;
+        - sqlFile:
+            path: db/changelog/sql/mockdata/seed_newsfeed.sql
+            relativeToChangelogFile: false
+
+  - changeSet:
+      id: 005-seed-organizers
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/mockdata/seed_organizers.sql
+            relativeToChangelogFile: false

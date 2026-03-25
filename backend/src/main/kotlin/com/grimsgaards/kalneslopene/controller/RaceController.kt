@@ -1,11 +1,9 @@
 package com.grimsgaards.kalneslopene.controller
 
 import com.grimsgaards.kalneslopene.model.dto.RaceDTO
+import com.grimsgaards.kalneslopene.model.dto.RacePatchDTO
 import com.grimsgaards.kalneslopene.service.RaceService
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
@@ -14,23 +12,29 @@ class RaceController(
     val raceService: RaceService
 ) {
 
-    @GetMapping("/upcomingRaces")
-    fun getUpcomingRaces(): List<RaceDTO> {
-        return raceService.getUpcomingRaces()
-    }
-
-    @GetMapping("/previousRaces")
-    fun getPreviousRaces(): List<RaceDTO> {
-        return raceService.getPreviousRaces()
-    }
-
-    @GetMapping("/allRaces")
+    @GetMapping("")
     fun getAllRaces(): List<RaceDTO> {
         return raceService.getAll()
     }
 
-    @GetMapping("/{id}")
-    fun getRaceById(@PathVariable id: UUID): RaceDTO {
-        return raceService.findByUuid(id)
+    @GetMapping("/{uuid}")
+    fun getRaceById(@PathVariable uuid: UUID): RaceDTO {
+        return raceService.findByUuid(uuid)
     }
+
+    @PatchMapping("/{uuid}")
+    fun updateRaceById(@PathVariable uuid: UUID, @RequestBody patch: RacePatchDTO): RaceDTO {
+        return raceService.updateRaceById(uuid, patch)
+    }
+
+    @DeleteMapping("/{uuid}")
+    fun deleteRaceById(@PathVariable uuid: UUID) {
+    return raceService.deleteRaceById(uuid)
+    }
+
+    @PostMapping("/createRaces")
+    fun createRaces(@RequestBody races: List<RaceDTO>): List<RaceDTO> {
+        return raceService.createRaces(races)
+    }
+
 }

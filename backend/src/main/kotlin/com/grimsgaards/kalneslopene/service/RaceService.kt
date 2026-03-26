@@ -1,7 +1,6 @@
 package com.grimsgaards.kalneslopene.service
 
 import com.grimsgaards.kalneslopene.model.dto.RaceDTO
-import com.grimsgaards.kalneslopene.model.dto.RacePatchDTO
 import com.grimsgaards.kalneslopene.model.entities.RaceEntity
 import com.grimsgaards.kalneslopene.repository.RaceRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -18,7 +17,8 @@ class RaceService(
     }
 
     fun findByUuid(uuid: UUID): RaceDTO {
-        return raceRepository.findByUuid(uuid).toDto()
+        return raceRepository.findByIdOrNull(uuid)?.toDto()
+            ?: throw NoSuchElementException("Race with id $uuid not found")
     }
 
     fun createRaces(races: List<RaceDTO>): List<RaceDTO> {
@@ -31,17 +31,17 @@ class RaceService(
         }).map { it.toDto() }
     }
 
-    fun updateRaceById(uuid: UUID, patch: RacePatchDTO): RaceDTO {
-        val existingRace = raceRepository.findByIdOrNull(uuid)
-            ?: throw NoSuchElementException("Race with id $uuid not found")
+    fun updateRace(race: RaceDTO): RaceDTO {
+        if (race.uuid === null) throw IllegalArgumentException("uuid is required for update")
 
-        val updatedRace = existingRace.copy(
-            raceDate = patch.raceDate ?: existingRace.raceDate,
-            raceTime = patch.raceTime ?: existingRace.raceTime,
-            weather = patch.weather ?: existingRace.weather
-        )
-
-        return raceRepository.save(updatedRace).toDto()
+        return raceRepository.save(
+            RaceEntity(
+                uuid = race.uuid,
+                raceDate = race.raceDate,
+                raceTime = race.raceTime,
+                weather = race.weather
+            )
+        ).toDto()
     }
 
     fun deleteRaceById(uuid: UUID) {

@@ -1,9 +1,11 @@
 package com.grimsgaards.kalneslopene.repository
 
-import com.grimsgaards.kalneslopene.model.entities.RaceEntity
+import com.grimsgaards.kalneslopene.model.entities.NewsfeedEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface RaceRepository : JpaRepository<RaceEntity, UUID>
+interface NewsfeedRepository : JpaRepository<NewsfeedEntity, UUID> {
+    fun findByUuid(uuid: UUID): NewsfeedEntity
+}

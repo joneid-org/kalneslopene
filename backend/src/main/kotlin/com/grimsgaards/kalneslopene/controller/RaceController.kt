@@ -1,7 +1,6 @@
 package com.grimsgaards.kalneslopene.controller
 
 import com.grimsgaards.kalneslopene.model.dto.RaceDTO
-import com.grimsgaards.kalneslopene.model.dto.RacePatchDTO
 import com.grimsgaards.kalneslopene.service.RaceService
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -22,9 +21,9 @@ class RaceController(
         return raceService.findByUuid(uuid)
     }
 
-    @PatchMapping("/{uuid}")
-    fun updateRaceById(@PathVariable uuid: UUID, @RequestBody patch: RacePatchDTO): RaceDTO {
-        return raceService.updateRaceById(uuid, patch)
+    @PatchMapping("")
+    fun updateRace(@RequestBody race: RaceDTO): RaceDTO {
+        return raceService.updateRace(race)
     }
 
     @DeleteMapping("/{uuid}")
@@ -34,6 +33,7 @@ class RaceController(
 
     @PostMapping("/createRaces")
     fun createRaces(@RequestBody races: List<RaceDTO>): List<RaceDTO> {
+
         return raceService.createRaces(races)
     }
 

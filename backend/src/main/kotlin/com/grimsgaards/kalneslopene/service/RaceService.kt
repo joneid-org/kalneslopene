@@ -1,6 +1,7 @@
 package com.grimsgaards.kalneslopene.service
 
 import com.grimsgaards.kalneslopene.model.dto.RaceDTO
+import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
 import com.grimsgaards.kalneslopene.model.entities.RaceEntity
 import com.grimsgaards.kalneslopene.repository.RaceRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -9,7 +10,7 @@ import java.util.*
 
 @Service
 class RaceService(
-    val raceRepository: RaceRepository
+    val raceRepository: RaceRepository,
 ) {
 
     fun getAll(): List<RaceDTO> {
@@ -48,5 +49,9 @@ class RaceService(
         return raceRepository.deleteById(uuid)
     }
 
+    fun findAllRunnersInRace(uuid: UUID): List<RaceRunnerDTO> {
+        val race = raceRepository.findByIdOrNull(uuid)
+        return race?.runners?.map { it.toDto() } ?: throw IllegalArgumentException("no race found with id $uuid")
+    }
 
 }

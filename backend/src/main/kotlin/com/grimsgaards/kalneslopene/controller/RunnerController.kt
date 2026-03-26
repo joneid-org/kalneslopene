@@ -1,5 +1,6 @@
 package com.grimsgaards.kalneslopene.controller
 
+import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
 import com.grimsgaards.kalneslopene.model.dto.RunnerDTO
 import com.grimsgaards.kalneslopene.service.RunnerService
 import org.springframework.web.bind.annotation.*
@@ -44,6 +45,11 @@ class RunnerController(
     @DeleteMapping("/{uuid}")
     fun deleteRunner(@PathVariable uuid: UUID) {
         runnerService.deleteRunner(uuid)
+    }
+
+    @GetMapping("/{uuid}/races")
+    fun getAllRacesByRunner(@PathVariable uuid: UUID): List<RaceRunnerDTO> {
+        return runnerService.findAllRacesByRunner(uuid)
     }
 
 }

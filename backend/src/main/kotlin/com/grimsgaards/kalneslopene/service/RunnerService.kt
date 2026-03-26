@@ -1,14 +1,16 @@
 package com.grimsgaards.kalneslopene.service
 
+import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
 import com.grimsgaards.kalneslopene.model.dto.RunnerDTO
 import com.grimsgaards.kalneslopene.model.entities.RunnerEntity
 import com.grimsgaards.kalneslopene.repository.RunnerRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
 class RunnerService(
-    val runnerRepository: RunnerRepository
+    val runnerRepository: RunnerRepository,
 ) {
     fun getAllRunners(): List<RunnerDTO> {
         return runnerRepository.findAll().map { it.toDto() }
@@ -54,5 +56,10 @@ class RunnerService(
 
     fun deleteRunner(uuid: UUID) {
         runnerRepository.deleteById(uuid)
+    }
+
+    fun findAllRacesByRunner(uuid: UUID): List<RaceRunnerDTO> {
+        val runner = runnerRepository.findByIdOrNull(uuid)
+        return runner?.races?.map { it.toDto() } ?: throw IllegalArgumentException("no runner found with id $uuid")
     }
 }

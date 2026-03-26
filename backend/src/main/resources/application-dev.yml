@@ -2,9 +2,9 @@ spring:
   application:
     name: kalneslopene
   datasource:
-    url: jdbc:postgresql://localhost:5432/torsdagslopet
-    username: postgres
-    password: admin
+    url: ${POSTGRES_URL}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
   liquibase:
     drop-first: false

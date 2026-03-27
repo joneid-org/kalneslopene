@@ -78,7 +78,7 @@ databaseChangeLog:
             constraintName: pk_race_runner
         - addForeignKeyConstraint:
             baseTableName: race_runner
-            baseColumnNames: runner_uui
+            baseColumnNames: runner_uuid
             referencedTableName: runner
             referencedColumnNames: uuid
             constraintName: fk_race_runner_runner

@@ -12,7 +12,7 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              INSERT INTO runner (id, name, gender)
+              INSERT INTO runner (uuid, name, gender)
               SELECT
                   gen_random_uuid(),
                   'Runner ' || gs,
@@ -28,7 +28,7 @@ databaseChangeLog:
       changes:
         - sql:
             sql: |
-              INSERT INTO race (id, date, weather)
+              INSERT INTO race (uuid, date, weather)
               SELECT
                   gen_random_uuid(),
                   TIMESTAMP '2026-01-08 18:00:00' + ((gs - 1) * INTERVAL '7 days'),
@@ -70,7 +70,7 @@ databaseChangeLog:
                       FROM runner
                   ) AS runner_data
               )
-              INSERT INTO race_runner (runner_id, race_id, result_time)
+              INSERT INTO race_runner (runner_uuid, race_uuid, result_time)
               SELECT
                   runner_id,
                   race_id,

@@ -10,14 +10,13 @@ import java.util.*
 class NewsfeedService(
     val newsfeedRepository: NewsfeedRepository
 ) {
-    fun getAllNewsfeed(): List<NewsfeedDTO> {
-        return newsfeedRepository.findAll().sortedByDescending { it.date }.map { it.toDto()}
-    }
-    fun getSpecifiedNumberOfNewsfeed(amount: Int) : List<NewsfeedDTO> {
-        return newsfeedRepository.findAll().sortedByDescending { it.date }.take(amount).map { it.toDto() }
+    val NUMBER_OF_NEWSFEEDS = 3
+
+    fun getSpecifiedNumberOfNewsfeed() : List<NewsfeedDTO> {
+        return newsfeedRepository.findAllSortedAndLimited(NUMBER_OF_NEWSFEEDS).map { it.toDto() }
     }
     fun findByUuid(uuid: UUID): NewsfeedDTO {
-        return newsfeedRepository.findByUuid(uuid).toDto()
+        return newsfeedRepository.findById(uuid).get().toDto()
     }
 
     fun createNewsfeed(newsfeed: NewsfeedDTO): NewsfeedDTO {
@@ -29,16 +28,18 @@ class NewsfeedService(
         )).toDto()
     }
 
-    fun updateNewsfeed(newsfeed: NewsfeedDTO): NewsfeedDTO {
-        if (newsfeed.uuid === null) throw IllegalArgumentException("uuid is required for update")
+    fun updateNewsfeed(updatedNewsfeed: NewsfeedDTO, uuid: UUID): NewsfeedDTO {
+        val existingNews = newsfeedRepository.findById(uuid)
+            .orElseThrow { NoSuchElementException("Newsfeed with uuid $uuid not found") }
 
-        return newsfeedRepository.save(NewsfeedEntity(
-            uuid = newsfeed.uuid,
-            tags = newsfeed.tags,
-            header = newsfeed.header,
-            content = newsfeed.content,
-            date = newsfeed.date
-        )).toDto()
+        existingNews.apply {
+            tags = updatedNewsfeed.tags
+            header = updatedNewsfeed.header
+            content = updatedNewsfeed.content
+            date = updatedNewsfeed.date
+        }
+
+        return newsfeedRepository.save(existingNews).toDto()
     }
 
     fun deleteNewsfeed(uuid: UUID) {

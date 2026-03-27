@@ -4,21 +4,25 @@ import com.grimsgaards.kalneslopene.model.dto.NewsfeedDTO
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.util.*
 
 @Entity
 @Table(name = "newsfeed")
 data class NewsfeedEntity(
-    @Id
-    val uuid: UUID = UUID.randomUUID(),
-    val tags: List<String>,
-    val header: String,
-    val content: String,
-    val date: LocalDateTime
+
+    var tags: List<String>,
+    var header: String,
+    var content: String,
+    var date: OffsetDateTime
 
 ) {
+
+    @Id
+    val uuid: UUID = UUID.randomUUID()
+
     fun toDto(): NewsfeedDTO {
         return NewsfeedDTO(uuid, tags, header, content, date)
     }
+
 }

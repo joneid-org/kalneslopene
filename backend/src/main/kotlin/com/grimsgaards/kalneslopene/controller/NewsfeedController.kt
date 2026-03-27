@@ -6,18 +6,14 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-@RequestMapping("/api/newsfeed")
+@RequestMapping("/api/newsfeeds")
 class NewsfeedController(
     val newsfeedService: NewsfeedService
 ) {
 
-    @GetMapping("")
-    fun getNewsFeedList(@RequestParam amount: Int?): List<NewsfeedDTO> {
-        return if (amount != null) {
-            newsfeedService.getSpecifiedNumberOfNewsfeed(amount)
-        } else {
-            newsfeedService.getAllNewsfeed()
-        }
+    @GetMapping
+    fun getNewsFeedList(): List<NewsfeedDTO> {
+        return newsfeedService.getSpecifiedNumberOfNewsfeed()
     }
 
     @GetMapping("/{uuid}")
@@ -25,9 +21,9 @@ class NewsfeedController(
         return newsfeedService.findByUuid(uuid)
     }
 
-    @PatchMapping("")
-    fun updateNewsFeed(@RequestBody newsfeed: NewsfeedDTO): NewsfeedDTO {
-        return newsfeedService.updateNewsfeed(newsfeed)
+    @PatchMapping("/{uuid}")
+    fun updateNewsFeed(@PathVariable uuid: UUID, @RequestBody newsfeed: NewsfeedDTO): NewsfeedDTO {
+        return newsfeedService.updateNewsfeed(newsfeed, uuid)
     }
 
     @PostMapping("/createNewsfeed")
@@ -39,7 +35,5 @@ class NewsfeedController(
     fun deleteNewsFeed(@PathVariable uuid: UUID) {
         return newsfeedService.deleteNewsfeed(uuid)
     }
-
-
 
 }

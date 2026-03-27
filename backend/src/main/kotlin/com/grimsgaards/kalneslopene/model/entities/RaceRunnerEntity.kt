@@ -2,7 +2,7 @@ package com.grimsgaards.kalneslopene.model.entities
 
 import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
 import jakarta.persistence.*
-import java.time.LocalTime
+import kotlin.time.Duration
 
 @Entity
 @Table(name = "race_runner")
@@ -21,7 +21,7 @@ data class RaceRunnerEntity(
     @JoinColumn(name = "race_uuid")
     val race: RaceEntity,
 
-    val resultTime: LocalTime,
+    val resultTime: Duration,
     val hideTime: Boolean = false,
 ) {
     fun toDto(): RaceRunnerDTO {

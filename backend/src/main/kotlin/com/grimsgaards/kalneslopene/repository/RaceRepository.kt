@@ -2,8 +2,11 @@ package com.grimsgaards.kalneslopene.repository
 
 import com.grimsgaards.kalneslopene.model.entities.RaceEntity
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface RaceRepository : JpaRepository<RaceEntity, UUID>
+interface RaceRepository : JpaRepository<RaceEntity, UUID> {
+    @Query("SELECT n FROM RaceEntity n ORDER BY n.raceDate DESC ")
+    fun findAllSorted() : List<RaceEntity>}

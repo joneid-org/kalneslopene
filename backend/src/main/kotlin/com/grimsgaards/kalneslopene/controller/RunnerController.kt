@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-@RequestMapping("/api/runner")
+@RequestMapping("/api/runners")
 class RunnerController(
     val runnerService: RunnerService
 ) {
@@ -17,8 +17,8 @@ class RunnerController(
         return runnerService.getAllRunners()
     }
 
-    @GetMapping("/name/{name}")
-    fun getRunnerByName(@PathVariable name: String): List<RunnerDTO> {
+    @GetMapping("/name")
+    fun getRunnerByName(@RequestParam name: String): List<RunnerDTO> {
         return runnerService.getRunnerByName(name)
     }
 
@@ -27,17 +27,12 @@ class RunnerController(
         return runnerService.getRunnerById(uuid)
     }
 
-    @PatchMapping("")
-    fun updateRunner(@RequestBody runner: RunnerDTO): RunnerDTO {
-        return runnerService.updateRunner(runner)
+    @PatchMapping("/{uuid}")
+    fun updateRunner(@RequestBody runner: RunnerDTO, @PathVariable uuid: UUID): RunnerDTO {
+        return runnerService.updateRunner(runner, uuid)
     }
 
-    @PostMapping("")
-    fun createRunner(@RequestBody runner: RunnerDTO): RunnerDTO {
-        return runnerService.createRunner(runner)
-    }
-
-    @PostMapping("/createMultipleRunners")
+    @PostMapping
     fun createMultipleRunners(@RequestBody runners: List<RunnerDTO>): List<RunnerDTO> {
         return runnerService.createMultipleRunners(runners)
     }

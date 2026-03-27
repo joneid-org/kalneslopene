@@ -11,34 +11,38 @@ class OrganizerService(
     val organizerRepository: OrganizerRepository
 ) {
     fun getAllOrganizers(): List<OrganizerDTO> {
-       return organizerRepository.findAll().map { it.toDto() }
+        return organizerRepository.findAll().map { it.toDto() }
     }
 
-    fun getOrganizer(id: UUID): OrganizerDTO {
-        return organizerRepository.findByUuid(id).toDto()
+    fun getOrganizer(uuid: UUID): OrganizerDTO {
+        return organizerRepository.findById(uuid).get().toDto()
     }
 
     fun createOrganizer(organizer: OrganizerDTO): OrganizerDTO {
-        return organizerRepository.save(OrganizerEntity(
-            name = organizer.name,
-            responsibility = organizer.responsibility,
-            initials = organizer.initials,
-            phone = organizer.phone,
-            email = organizer.email
-        )).toDto()
+        return organizerRepository.save(
+            OrganizerEntity(
+                name = organizer.name,
+                responsibility = organizer.responsibility,
+                initials = organizer.initials,
+                phone = organizer.phone,
+                email = organizer.email
+            )
+        ).toDto()
     }
 
-    fun updateOrganizer(organizer: OrganizerDTO): OrganizerDTO {
-        if (organizer.uuid === null) throw IllegalArgumentException("uuid is required for update")
+    fun updateOrganizer(updatedOrganizer: OrganizerDTO, uuid: UUID): OrganizerDTO {
+        val existingOrganizer = organizerRepository.findById(uuid)
+            .orElseThrow { NoSuchElementException("Organizer with uuid $uuid not found") }
 
-        return organizerRepository.save(OrganizerEntity(
-            uuid = organizer.uuid,
-            name = organizer.name,
-            responsibility = organizer.responsibility,
-            initials = organizer.initials,
-            phone = organizer.phone,
-            email = organizer.email
-        )).toDto()
+        existingOrganizer.apply {
+            name = updatedOrganizer.name
+            responsibility = updatedOrganizer.responsibility
+            initials = updatedOrganizer.initials
+            phone = updatedOrganizer.phone
+            email = updatedOrganizer.email
+        }
+
+        return organizerRepository.save(existingOrganizer).toDto()
     }
 
     fun deleteOrganizer(uuid: UUID) {

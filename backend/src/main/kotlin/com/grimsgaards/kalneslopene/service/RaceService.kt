@@ -14,7 +14,7 @@ class RaceService(
 ) {
 
     fun getAll(): List<RaceDTO> {
-        return raceRepository.findAll().sortedByDescending { it.raceDate }.map { it.toDto() }
+        return raceRepository.findAllSorted().map { it.toDto() }
     }
 
     fun findByUuid(uuid: UUID): RaceDTO {
@@ -32,17 +32,19 @@ class RaceService(
         }).map { it.toDto() }
     }
 
-    fun updateRace(race: RaceDTO): RaceDTO {
-        if (race.uuid === null) throw IllegalArgumentException("uuid is required for update")
+    fun updateRace(updatedRace: RaceDTO, uuid: UUID): RaceDTO {
 
-        return raceRepository.save(
-            RaceEntity(
-                uuid = race.uuid,
-                raceDate = race.raceDate,
-                raceTime = race.raceTime,
-                weather = race.weather
-            )
-        ).toDto()
+        val existingRace = raceRepository.findById(uuid)
+            .orElseThrow { NoSuchElementException("Race with uuid $uuid not found") }
+
+        existingRace.apply {
+            raceDate = updatedRace.raceDate
+            raceTime = updatedRace.raceTime
+            weather = updatedRace.weather
+        }
+
+        return raceRepository.save(existingRace).toDto()
+
     }
 
     fun deleteRaceById(uuid: UUID) {

@@ -3,7 +3,7 @@ package com.grimsgaards.kalneslopene.model.dto
 import java.util.*
 
 data class OrganizerDTO(
-    val uuid: UUID? = null,
+    val uuid: UUID?,
     val name: String,
     val responsibility: List<String>,
     val initials: String,

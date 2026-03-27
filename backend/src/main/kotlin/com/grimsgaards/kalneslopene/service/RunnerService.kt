@@ -16,21 +16,12 @@ class RunnerService(
         return runnerRepository.findAll().map { it.toDto() }
     }
 
-    fun getRunnerById(id: UUID): RunnerDTO {
-        return runnerRepository.findByUuid(id).toDto()
+    fun getRunnerById(uuid: UUID): RunnerDTO {
+        return runnerRepository.findById(uuid).get().toDto()
     }
 
     fun getRunnerByName(name: String): List<RunnerDTO> {
         return runnerRepository.findByNameStartsWith(name).map { it.toDto() }
-    }
-
-    fun createRunner(runner: RunnerDTO): RunnerDTO {
-        return runnerRepository.save(
-            RunnerEntity(
-                name = runner.name,
-                gender = runner.gender
-            )
-        ).toDto()
     }
 
     fun createMultipleRunners(runners: List<RunnerDTO>): List<RunnerDTO> {
@@ -42,16 +33,15 @@ class RunnerService(
         }).map { it.toDto() }
     }
 
-    fun updateRunner(runner: RunnerDTO): RunnerDTO {
-        if (runner.uuid === null) throw IllegalArgumentException("uuid is required for update")
+    fun updateRunner(updatedRunner: RunnerDTO, uuid: UUID): RunnerDTO {
+        val existingRunner = runnerRepository.findById(uuid)
+        .orElseThrow { NoSuchElementException("Runner with uuid $uuid not found") }
 
-        return runnerRepository.save(
-            RunnerEntity(
-                uuid = runner.uuid,
-                name = runner.name,
-                gender = runner.gender
-            )
-        ).toDto()
+        existingRunner.apply {
+            name = updatedRunner.name
+            gender = updatedRunner.gender
+        }
+        return runnerRepository.save(existingRunner).toDto()
     }
 
     fun deleteRunner(uuid: UUID) {

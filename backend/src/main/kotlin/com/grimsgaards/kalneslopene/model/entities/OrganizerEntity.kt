@@ -9,14 +9,16 @@ import java.util.*
 @Entity
 @Table(name = "organizer")
 data class OrganizerEntity(
-    @Id
-    val uuid: UUID = UUID.randomUUID(),
-    val name: String,
-    val responsibility: List<String>,
-    val initials: String,
-    val phone: String?,
-    val email: String?
+
+    var name: String,
+    var responsibility: List<String>,
+    var initials: String,
+    var phone: String?,
+    var email: String?
 ) {
+    @Id
+    val uuid: UUID = UUID.randomUUID()
+
     fun toDto(): OrganizerDTO {
         return OrganizerDTO(uuid, name, responsibility, initials, phone, email)
     }

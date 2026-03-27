@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-@RequestMapping("/api/organizer")
+@RequestMapping("/api/organizers")
 class OrganizerController(
     val organizerService: OrganizerService
 ) {
-    @GetMapping("")
+    @GetMapping
     fun getAllOrganizers(): List<OrganizerDTO> {
         return organizerService.getAllOrganizers()
     }
@@ -20,9 +20,9 @@ class OrganizerController(
         return organizerService.getOrganizer(uuid)
     }
 
-    @PatchMapping("")
-    fun updateOrganizer(@RequestBody organizer: OrganizerDTO): OrganizerDTO {
-        return organizerService.updateOrganizer(organizer)
+    @PatchMapping("/{uuid}")
+    fun updateOrganizer(@PathVariable uuid: UUID, @RequestBody organizer: OrganizerDTO): OrganizerDTO {
+        return organizerService.updateOrganizer(organizer, uuid)
     }
 
     @PostMapping("/createOrganizer")

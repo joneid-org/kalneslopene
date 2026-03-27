@@ -10,14 +10,16 @@ import java.util.*
 @Entity
 @Table(name = "runner")
 data class RunnerEntity(
-    @Id
-    val uuid: UUID = UUID.randomUUID(),
-    val name: String,
-    val gender: String,
+
+    var name: String,
+    var gender: String,
 
     @OneToMany(mappedBy = "runner")
     val races: MutableList<RaceRunnerEntity> = mutableListOf()
 ) {
+    @Id
+    val uuid: UUID = UUID.randomUUID()
+
     fun toDto(): RunnerDTO {
         return RunnerDTO(uuid, name, gender)
     }

@@ -1,10 +1,10 @@
 package com.grimsgaards.kalneslopene.model.dto
 
-import java.time.LocalTime
+import kotlin.time.Duration
 
 data class RaceRunnerDTO(
     val runner: RunnerDTO,
     val race: RaceDTO,
-    val resultTime: LocalTime,
+    val resultTime: Duration,
     val hideTime: Boolean = false
 )

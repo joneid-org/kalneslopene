@@ -6,6 +6,4 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface OrganizerRepository : JpaRepository<OrganizerEntity, UUID> {
-    fun findByUuid(uuid: UUID): OrganizerEntity
-}
+interface OrganizerRepository : JpaRepository<OrganizerEntity, UUID>

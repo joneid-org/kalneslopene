@@ -12,7 +12,7 @@ class RaceController(
     val raceService: RaceService,
 ) {
 
-    @GetMapping("")
+    @GetMapping
     fun getAllRaces(): List<RaceDTO> {
         return raceService.getAll()
     }
@@ -22,9 +22,9 @@ class RaceController(
         return raceService.findByUuid(uuid)
     }
 
-    @PatchMapping("")
-    fun updateRace(@RequestBody race: RaceDTO): RaceDTO {
-        return raceService.updateRace(race)
+    @PatchMapping("/{uuid}")
+    fun updateRace(@RequestBody race: RaceDTO, @PathVariable uuid: UUID): RaceDTO {
+        return raceService.updateRace(race, uuid)
     }
 
     @DeleteMapping("/{uuid}")

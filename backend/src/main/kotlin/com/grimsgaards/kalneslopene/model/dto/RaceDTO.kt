@@ -1,12 +1,12 @@
 package com.grimsgaards.kalneslopene.model.dto
 
 import java.time.LocalDate
-import java.time.LocalTime
+import java.time.OffsetDateTime
 import java.util.*
 
 data class RaceDTO(
-    val uuid: UUID? = null,
+    val uuid: UUID?,
     val raceDate: LocalDate,
-    val raceTime: LocalTime,
+    val raceTime: OffsetDateTime,
     val weather: String?
 )

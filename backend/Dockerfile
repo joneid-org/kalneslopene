@@ -1,10 +1,11 @@
-FROM openjdk:21-rc-slim-bullseye
-
+FROM openjdk:21-rc-slim-bullseye AS builder
 WORKDIR /app
+COPY . .
+RUN ./gradlew build -x test --no-daemon
 
-ARG JAR_FILE=build/libs/*.jar
-COPY ${JAR_FILE} app.jar
-
+FROM openjdk:21-rc-slim-bullseye
+WORKDIR /app
+COPY --from=builder /app/build/libs/*.jar /app/app.jar
 EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "app.jar"]

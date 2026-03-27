@@ -26,7 +26,6 @@ class RaceService(
         return raceRepository.saveAll(races.map {
             RaceEntity(
                 raceDate = it.raceDate,
-                raceTime = it.raceTime,
                 weather = it.weather
             )
         }).map { it.toDto() }
@@ -39,7 +38,6 @@ class RaceService(
 
         existingRace.apply {
             raceDate = updatedRace.raceDate
-            raceTime = updatedRace.raceTime
             weather = updatedRace.weather
         }
 

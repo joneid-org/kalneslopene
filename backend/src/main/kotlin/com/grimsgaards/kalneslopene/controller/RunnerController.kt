@@ -13,13 +13,12 @@ class RunnerController(
 ) {
 
     @GetMapping
-    fun getAllRunners(): List<RunnerDTO> {
-        return runnerService.getAllRunners()
-    }
-
-    @GetMapping("/name")
-    fun getRunnerByName(@RequestParam name: String): List<RunnerDTO> {
-        return runnerService.getRunnerByName(name)
+    fun getRunnerByName(@RequestParam name: String?): List<RunnerDTO> {
+        return if (name != null) {
+            runnerService.getRunnerByName(name)
+        } else {
+            runnerService.getAllRunners()
+        }
     }
 
     @GetMapping("/{uuid}")

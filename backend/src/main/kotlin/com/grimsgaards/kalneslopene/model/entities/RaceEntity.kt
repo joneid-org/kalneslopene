@@ -2,7 +2,6 @@ package com.grimsgaards.kalneslopene.model.entities
 
 import com.grimsgaards.kalneslopene.model.dto.RaceDTO
 import jakarta.persistence.*
-import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.util.*
 
@@ -10,8 +9,7 @@ import java.util.*
 @Table(name = "race")
 data class RaceEntity(
 
-    var raceDate: LocalDate,
-    var raceTime: OffsetDateTime,
+    var raceDate: OffsetDateTime,
     var weather: String?,
 
     @OneToMany(mappedBy = "race", cascade = [(CascadeType.ALL)])
@@ -21,6 +19,6 @@ data class RaceEntity(
     val uuid: UUID = UUID.randomUUID()
 
     fun toDto(): RaceDTO {
-        return RaceDTO(uuid, raceDate, raceTime, weather)
+        return RaceDTO(uuid, raceDate, weather)
     }
 }

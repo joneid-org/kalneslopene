@@ -1,9 +1,9 @@
-FROM openjdk:21-rc-slim-bullseye AS builder
+FROM openjdk:24-rc-slim-bullseye AS builder
 WORKDIR /app
 COPY . .
 RUN ./gradlew build -x test --no-daemon
 
-FROM openjdk:21-rc-slim-bullseye
+FROM openjdk:24-rc-slim-bullseye
 WORKDIR /app
 COPY --from=builder /app/build/libs/*.jar /app/app.jar
 EXPOSE 8080

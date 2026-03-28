@@ -1,0 +1,20 @@
+info:
+  name: Delete
+  type: http
+  seq: 2
+
+http:
+  method: DELETE
+  url: "{{url}}/api/organizers/:uuid"
+  params:
+    - name: uuid
+      value: d1000000-0000-0000-0000-000000000001
+      type: path
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+

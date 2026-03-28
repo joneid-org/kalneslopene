@@ -1,0 +1,28 @@
+info:
+  name: Create
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{url}}/api/organizers/createOrganizer"
+  body:
+    type: json
+    data: |-
+      {
+          "name": "Karianne Nilsen",
+          "responsibility": [
+              "Leder"
+          ],
+          "initials": "KN",
+          "phone": "97657321",
+          "email": "karianne@kalneslopene.no"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+

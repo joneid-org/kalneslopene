@@ -1,0 +1,35 @@
+info:
+  name: Update
+  type: http
+  seq: 2
+
+http:
+  method: PATCH
+  url: "{{url}}/api/organizers/:uuid"
+  params:
+    - name: uuid
+      value: d1000000-0000-0000-0000-000000000001
+      type: path
+  body:
+    type: json
+    data: |-
+      {
+          "uuid": "d1000000-0000-0000-0000-000000000001",
+          "name": "Emilie Nilsen",
+          "responsibility": [
+              "Leder",
+              "Tid",
+              "Kommunikasjon"
+          ],
+          "initials": "EN",
+          "phone": "97654321",
+          "email": "emilie@kalneslopene.no"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+

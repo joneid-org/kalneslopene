@@ -1,0 +1,37 @@
+info:
+  name: Create runners
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{url}}/api/runners"
+  body:
+    type: json
+    data: |-
+      [
+          {
+              "name": "Katrine Solberg",
+              "gender": "Kvinne"
+          },
+          {
+              "name": "Malin Solberg",
+              "gender": "Kvinne"
+          },
+          {
+              "name": "Sara Solberg",
+              "gender": "Kvinne"
+          },
+          {
+              "name": "Maria Solberg",
+              "gender": "Kvinne"
+          }
+      ]
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+

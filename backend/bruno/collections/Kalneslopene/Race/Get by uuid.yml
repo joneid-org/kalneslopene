@@ -1,0 +1,20 @@
+info:
+  name: Get by uuid
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{url}}/api/races/:uuid"
+  params:
+    - name: uuid
+      value: b1000000-0000-0000-0000-000000000040
+      type: path
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+

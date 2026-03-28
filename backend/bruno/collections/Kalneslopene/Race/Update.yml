@@ -1,0 +1,28 @@
+info:
+  name: Update
+  type: http
+  seq: 2
+
+http:
+  method: PATCH
+  url: "{{url}}/api/races/:uuid"
+  params:
+    - name: uuid
+      value: b1000000-0000-0000-0000-000000000040
+      type: path
+  body:
+    type: json
+    data: |-
+      {
+          "uuid": "b1000000-0000-0000-0000-000000000040",
+          "raceDate": "2026-06-18T18:00:00Z",
+          "weather": "Cloudy"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+

@@ -1,0 +1,25 @@
+info:
+  name: Create
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{url}}/api/races/createRaces"
+  body:
+    type: json
+    data: |-
+      [
+          {
+              "raceDate": "2026-04-18T18:00:00Z",
+              "weather": "Cloudy"
+          }
+      ]
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+

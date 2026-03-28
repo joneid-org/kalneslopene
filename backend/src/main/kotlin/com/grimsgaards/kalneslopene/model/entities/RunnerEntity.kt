@@ -1,0 +1,26 @@
+package com.grimsgaards.kalneslopene.model.entities
+
+import com.grimsgaards.kalneslopene.model.dto.RunnerDTO
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
+import jakarta.persistence.Table
+import java.util.*
+
+@Entity
+@Table(name = "runner")
+data class RunnerEntity(
+
+    var name: String,
+    var gender: String,
+
+    @OneToMany(mappedBy = "runner")
+    val races: MutableList<RaceRunnerEntity> = mutableListOf()
+) {
+    @Id
+    val uuid: UUID = UUID.randomUUID()
+
+    fun toDto(): RunnerDTO {
+        return RunnerDTO(uuid, name, gender)
+    }
+}

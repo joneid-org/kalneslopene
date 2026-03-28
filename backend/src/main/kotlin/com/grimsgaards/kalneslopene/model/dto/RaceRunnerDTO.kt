@@ -1,6 +1,6 @@
 package com.grimsgaards.kalneslopene.model.dto
 
-import kotlin.time.Duration
+import java.time.Duration
 
 data class RaceRunnerDTO(
     val runner: RunnerDTO,

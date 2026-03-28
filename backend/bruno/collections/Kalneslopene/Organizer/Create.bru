@@ -1,0 +1,28 @@
+meta {
+  name: Create
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{url}}/api/organizers/createOrganizer
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "name": "Karianne Nilsen",
+      "responsibility": [
+          "Leder"
+      ],
+      "initials": "KN",
+      "phone": "97657321",
+      "email": "karianne@kalneslopene.no"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

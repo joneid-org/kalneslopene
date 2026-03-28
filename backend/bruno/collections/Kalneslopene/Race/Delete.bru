@@ -1,0 +1,20 @@
+meta {
+  name: Delete
+  type: http
+  seq: 2
+}
+
+delete {
+  url: {{url}}/api/races/:uuid
+  body: none
+  auth: inherit
+}
+
+params:path {
+  uuid: febacb3b-9c60-4210-8d23-67b473c7de11
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

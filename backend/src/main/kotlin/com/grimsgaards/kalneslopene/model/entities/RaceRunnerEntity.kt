@@ -2,7 +2,9 @@ package com.grimsgaards.kalneslopene.model.entities
 
 import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
 import jakarta.persistence.*
-import kotlin.time.Duration
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
+import java.time.Duration
 
 @Entity
 @Table(name = "race_runner")
@@ -21,6 +23,7 @@ data class RaceRunnerEntity(
     @JoinColumn(name = "race_uuid")
     val race: RaceEntity,
 
+    @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
     val resultTime: Duration,
     val hideTime: Boolean = false,
 ) {

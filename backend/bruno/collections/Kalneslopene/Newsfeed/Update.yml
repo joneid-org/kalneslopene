@@ -1,0 +1,32 @@
+info:
+  name: Update
+  type: http
+  seq: 1
+
+http:
+  method: PATCH
+  url: "{{url}}/api/newsfeeds/:uuid"
+  params:
+    - name: uuid
+      value: c1000000-0000-0000-0000-000000000003
+      type: path
+  body:
+    type: json
+    data: |-
+      {
+        "uuid": "c1000000-0000-0000-0000-000000000003",
+        "tags": [
+          "resultater",
+          "diverse"
+        ],
+        "header": "Vårens første løp – strålende vær og ny deltakelsesrekord",
+        "content": "Med 38 påmeldte satte vi ny deltakelsesrekord denne torsdagen. Solen skinte og temperaturen var perfekt for løping. Trond Svensson satte personlig rekord med 26:01, mens Ingrid Fossum knuste sin tidligere beste tid med over to minutter. Neste uke er det klart for løp nummer to i vårsesongen.",
+        "date": "2026-03-05T19:45:00Z"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

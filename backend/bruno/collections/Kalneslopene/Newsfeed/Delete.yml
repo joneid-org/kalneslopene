@@ -1,0 +1,19 @@
+info:
+  name: Delete
+  type: http
+  seq: 1
+
+http:
+  method: DELETE
+  url: "{{url}}/api/newsfeeds/:uuid"
+  params:
+    - name: uuid
+      value: f4ae867f-cac4-4f44-96dc-6637034d4a15
+      type: path
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

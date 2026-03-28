@@ -1,0 +1,20 @@
+meta {
+  name: Delete
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{url}}/api/runners/:uuid
+  body: none
+  auth: inherit
+}
+
+params:path {
+  uuid: 8932f3bf-ba45-48be-899a-947efe108ef5
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

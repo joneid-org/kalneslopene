@@ -1,0 +1,26 @@
+meta {
+  name: Create
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{url}}/api/races/createRaces
+  body: json
+  auth: inherit
+}
+
+body:json {
+  [
+      {
+      
+      "raceDate": "2026-04-18T18:00:00Z",
+      "weather": "Cloudy"
+    }
+  ]
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

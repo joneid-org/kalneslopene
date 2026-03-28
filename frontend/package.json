@@ -42,7 +42,7 @@
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
-    "autoprefixer": "^10.4.24",
+    "autoprefixer": "^10.4.27",
     "globals": "^16.5.0",
     "postcss": "^8.5.6",
     "shadcn": "^3.8.5",

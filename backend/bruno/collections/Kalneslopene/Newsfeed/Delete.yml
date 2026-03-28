@@ -1,14 +1,14 @@
 info:
-  name: Get by uuid
+  name: Delete
   type: http
-  seq: 2
+  seq: 1
 
 http:
-  method: GET
+  method: DELETE
   url: "{{url}}/api/newsfeeds/:uuid"
   params:
     - name: uuid
-      value: c1000000-0000-0000-0000-000000000003
+      value: f4ae867f-cac4-4f44-96dc-6637034d4a15
       type: path
   auth: inherit
 

@@ -12,17 +12,9 @@ collections:
     path: "../kalneslopene/backend/bruno/Runner"
   - name: "Kalnes"
     path: "collections/Kalnes"
-  - name: "Organizer"
-    path: "collections/Organizer"
-  - name: "Race"
-    path: "collections/Race"
-  - name: "Runner"
-    path: "collections/Runner"
-  - name: "Newsfeed"
-    path: "collections/Newsfeed"
+  - name: "Kalneslopene"
+    path: "collections/Kalneslopene"
 
 specs:
 
 docs: ''
-
-activeEnvironmentUid: rs5rhz000000000000000

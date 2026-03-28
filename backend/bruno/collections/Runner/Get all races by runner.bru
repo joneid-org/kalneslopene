@@ -1,0 +1,20 @@
+meta {
+  name: Get all races by runner
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{url}}/api/runners/:uuid/races
+  body: none
+  auth: inherit
+}
+
+params:path {
+  uuid: a1000000-0000-0000-0000-000000000001
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,0 +1,27 @@
+info:
+  name: Create
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{url}}/api/newsfeeds/createNewsfeed"
+  body:
+    type: json
+    data: |-
+      {
+          "tags": [
+              "diverse",
+              "vår"
+          ],
+          "header": "Flott gjennomføring tross snø og kulde",
+          "content": "Torsdag is lit!",
+          "date": "2026-03-19T19:30:00Z"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

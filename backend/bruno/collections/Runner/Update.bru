@@ -1,0 +1,28 @@
+meta {
+  name: Update
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{url}}/api/runners/:uuid
+  body: json
+  auth: inherit
+}
+
+params:path {
+  uuid: a1000000-0000-0000-0000-000000000001
+}
+
+body:json {
+  {
+      "uuid": "a1000000-0000-0000-0000-000000000001",
+      "name": "Eirik Solberg",
+      "gender": "Kvinne"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

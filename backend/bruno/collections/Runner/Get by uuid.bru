@@ -1,0 +1,20 @@
+meta {
+  name: Get by uuid
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{url}}/api/runners/:uuid
+  body: none
+  auth: inherit
+}
+
+params:path {
+  uuid: a1000000-0000-0000-0000-000000000001
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

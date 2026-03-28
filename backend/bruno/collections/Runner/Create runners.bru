@@ -1,0 +1,37 @@
+meta {
+  name: Create runners
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{url}}/api/runners
+  body: json
+  auth: inherit
+}
+
+body:json {
+  [
+      {
+          "name": "Katrine Solberg",
+          "gender": "Kvinne"
+      },
+      {
+          "name": "Malin Solberg",
+          "gender": "Kvinne"
+      },
+      {
+          "name": "Sara Solberg",
+          "gender": "Kvinne"
+      },
+      {
+          "name": "Maria Solberg",
+          "gender": "Kvinne"
+      }
+  ]
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

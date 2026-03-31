@@ -1,6 +1,6 @@
 export type RaceDTO = {
   uuid?: string;
-  raceDate: string;
+  raceDate: Date;
   weather?: string;
 };
 
@@ -9,7 +9,7 @@ export type NewsFeedDTO = {
   tags: string[];
   header: string;
   content: string;
-  date: string;
+  date: Date;
 };
 
 export type OrganizerDTO = {

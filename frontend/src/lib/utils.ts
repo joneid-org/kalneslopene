@@ -54,9 +54,3 @@ export function toDateString(date: Date): string {
     })
     .replace(/\b([a-z])/, (c) => c.toUpperCase());
 }
-
-export function getContactPerson(
-  organizers: OrganizerDTO[],
-): OrganizerDTO | null {
-  return organizers.find((organizer) => organizer.contactPerson) || null;
-}

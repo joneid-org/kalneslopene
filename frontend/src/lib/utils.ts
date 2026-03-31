@@ -12,29 +12,29 @@ export function getYears(races: RaceDTO[]): number[] {
   ).sort((a, b) => b - a);
 }
 
-export function getRacesByYear(races: RaceDTO[], year: number): string[] {
-  const norwegianMonths = [
-    "januar",
-    "februar",
-    "mars",
-    "april",
-    "mai",
-    "juni",
-    "juli",
-    "august",
-    "september",
-    "oktober",
-    "november",
-    "desember",
-  ];
+const norwegianMonths = [
+  "Januar",
+  "Februar",
+  "Mars",
+  "April",
+  "Mai",
+  "Juni",
+  "Juli",
+  "August",
+  "September",
+  "Oktober",
+  "November",
+  "Desember",
+];
 
-  const dates = races
+export function formatDDMonth(date: Date): string {
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = norwegianMonths[date.getMonth()];
+  return `${day}. ${month}`;
+}
+
+export function getRacesDTOByYear(races: RaceDTO[], year: number): RaceDTO[] {
+  return races
     .filter((race) => race.raceDate.getFullYear() === year)
-    .map((race) => {
-      const day = String(race.raceDate.getDate()).padStart(2, "0");
-      const month = norwegianMonths[race.raceDate.getMonth()];
-      return `${day}.${month}`;
-    });
-
-  return Array.from(new Set(dates));
+    .sort((a, b) => a.raceDate.getTime() - b.raceDate.getTime());
 }

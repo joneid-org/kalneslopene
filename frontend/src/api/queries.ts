@@ -11,23 +11,41 @@ export const QUERIES = {
   race: {
     getAllRaces: {
       queryKey: ["race", "getAll"],
-      queryFn: () => kyClient.get("/api/races").json<RaceDTO[]>(),
+      queryFn: async () => {
+        const data = await kyClient.get("/api/races").json<RaceDTO[]>();
+        return data.map((race) => ({
+          ...race,
+          raceDate: new Date(race.raceDate),
+        }));
+      },
     },
     getRaceByUuid: (uuid: string) => ({
       queryKey: ["race", "getById", uuid],
-      queryFn: () => kyClient.get(`/api/races/${uuid}`).json<RaceDTO>(),
+      queryFn: async () => {
+        const data = await kyClient.get(`/api/races/${uuid}`).json<RaceDTO>();
+        return { ...data, raceDate: new Date(data.raceDate) };
+      },
     }),
     createRaces: (races: RaceDTO[]) => ({
       queryKey: ["race", "create"],
-      queryFn: () =>
-        kyClient
+      queryFn: async () => {
+        const data = await kyClient
           .post("/api/races/createRaces", { json: races })
-          .json<RaceDTO[]>(),
+          .json<RaceDTO[]>();
+        return data.map((race) => ({
+          ...race,
+          raceDate: new Date(race.raceDate),
+        }));
+      },
     }),
     updateRace: (uuid: string, race: RaceDTO) => ({
       queryKey: ["race", "update", uuid],
-      queryFn: () =>
-        kyClient.patch(`/api/races/${uuid}`, { json: race }).json<RaceDTO>(),
+      queryFn: async () => {
+        const data = await kyClient
+          .patch(`/api/races/${uuid}`, { json: race })
+          .json<RaceDTO>();
+        return { ...data, raceDate: new Date(data.raceDate) };
+      },
     }),
     deleteRace: (uuid: string) => ({
       queryKey: ["race", "delete", uuid],
@@ -35,8 +53,15 @@ export const QUERIES = {
     }),
     getAllRunnersInRace: (uuid: string) => ({
       queryKey: ["race", uuid, "runnersInRace"],
-      queryFn: () =>
-        kyClient.get(`/api/races/${uuid}/runners`).json<RaceRunnerDTO[]>(),
+      queryFn: async () => {
+        const data = await kyClient
+          .get(`/api/races/${uuid}/runners`)
+          .json<RaceRunnerDTO[]>();
+        return data.map((rr) => ({
+          ...rr,
+          race: { ...rr.race, raceDate: new Date(rr.race.raceDate) },
+        }));
+      },
     }),
   },
   organizer: {
@@ -100,32 +125,51 @@ export const QUERIES = {
     }),
     getAllRacesByRunner: (uuid: string) => ({
       queryKey: ["runner", uuid, "racesByRunner"],
-      queryFn: () =>
-        kyClient.get(`/api/runners/${uuid}/races`).json<RaceRunnerDTO[]>(),
+      queryFn: async () => {
+        const data = await kyClient
+          .get(`/api/runners/${uuid}/races`)
+          .json<RaceRunnerDTO[]>();
+        return data.map((rr) => ({
+          ...rr,
+          race: { ...rr.race, raceDate: new Date(rr.race.raceDate) },
+        }));
+      },
     }),
   },
   newsfeed: {
     getAllNewsFeeds: {
       queryKey: ["newsfeed", "getAll"],
-      queryFn: () => kyClient.get("/api/newsfeeds").json<NewsFeedDTO[]>(),
+      queryFn: async () => {
+        const data = await kyClient.get("/api/newsfeeds").json<NewsFeedDTO[]>();
+        return data.map((feed) => ({ ...feed, date: new Date(feed.date) }));
+      },
     },
     getNewsFeedByUuid: (uuid: string) => ({
       queryKey: ["newsfeed", "getById", uuid],
-      queryFn: () => kyClient.get(`/api/newsfeeds/${uuid}`).json<NewsFeedDTO>(),
+      queryFn: async () => {
+        const data = await kyClient
+          .get(`/api/newsfeeds/${uuid}`)
+          .json<NewsFeedDTO>();
+        return { ...data, date: new Date(data.date) };
+      },
     }),
     createNewsFeed: (newsfeed: NewsFeedDTO) => ({
       queryKey: ["newsfeed", "create"],
-      queryFn: () =>
-        kyClient
+      queryFn: async () => {
+        const data = await kyClient
           .post("/api/newsfeeds/createNewsfeed", { json: newsfeed })
-          .json<NewsFeedDTO>(),
+          .json<NewsFeedDTO>();
+        return { ...data, date: new Date(data.date) };
+      },
     }),
     updateNewsFeed: (uuid: string, newsfeed: NewsFeedDTO) => ({
       queryKey: ["newsfeed", "update", uuid],
-      queryFn: () =>
-        kyClient
+      queryFn: async () => {
+        const data = await kyClient
           .patch(`/api/newsfeeds/${uuid}`, { json: newsfeed })
-          .json<NewsFeedDTO>(),
+          .json<NewsFeedDTO>();
+        return { ...data, date: new Date(data.date) };
+      },
     }),
     deleteNewsFeed: (uuid: string) => ({
       queryKey: ["newsfeed", "delete", uuid],

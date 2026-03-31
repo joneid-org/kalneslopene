@@ -14,7 +14,7 @@ import {
   DrawerHeader,
   DrawerTrigger,
 } from "@/components/ui/drawer.tsx";
-import { getRacesByYear, getYears } from "@/lib/utils.ts";
+import { formatDDMonth, getRacesDTOByYear, getYears } from "@/lib/utils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 
 export interface MobileNavBarMenuProps {
@@ -60,13 +60,13 @@ export default function MobileNavBarMenu({
                           {year}
                         </AccordionTrigger>
                         <AccordionContent className="pl-3 flex flex-col">
-                          {getRacesByYear(races, year).map((date) => (
-                            <DrawerClose asChild key={date}>
+                          {getRacesDTOByYear(races, year).map((race) => (
+                            <DrawerClose asChild key={race.uuid}>
                               <Link
-                                to={`${basePath}/${year}/${date}`}
+                                to={`${basePath}/${race.uuid}`}
                                 className="py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                               >
-                                {date}
+                                {formatDDMonth(race.raceDate)}
                               </Link>
                             </DrawerClose>
                           ))}

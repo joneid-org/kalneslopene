@@ -44,3 +44,9 @@ export function getContactPerson(
 ): OrganizerDTO | null {
   return organizers.find((organizer) => organizer.contactPerson) || null;
 }
+
+export function getContactPerson(
+  organizers: OrganizerDTO[],
+): OrganizerDTO | null {
+  return organizers.find((organizer) => organizer.contactPerson) || null;
+}

@@ -10,7 +10,7 @@ import {
   MenubarSubTrigger,
   MenubarTrigger,
 } from "@/components/ui/menubar";
-import { getRacesByYear, getYears } from "@/lib/utils.ts";
+import { formatDDMonth, getRacesDTOByYear, getYears } from "@/lib/utils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 
 type MenuBarDropDownButtonProps = {
@@ -39,9 +39,11 @@ export function DynamicDropDownMenu({
               <MenubarSubTrigger>{year}</MenubarSubTrigger>
 
               <MenubarSubContent>
-                {getRacesByYear(races, year).map((date) => (
-                  <MenubarItem key={`${year}-${date}`} asChild>
-                    <Link to={`${basePath}/${year}/${date}`}>{date}</Link>
+                {getRacesDTOByYear(races, year).map((race) => (
+                  <MenubarItem key={race.uuid} asChild>
+                    <Link to={`${basePath}/${race.uuid}`}>
+                      {formatDDMonth(race.raceDate)}
+                    </Link>
                   </MenubarItem>
                 ))}
               </MenubarSubContent>

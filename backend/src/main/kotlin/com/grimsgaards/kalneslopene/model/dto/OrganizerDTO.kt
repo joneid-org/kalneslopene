@@ -8,5 +8,6 @@ data class OrganizerDTO(
     val responsibility: List<String>,
     val initials: String,
     val phone: String? = null,
-    val email: String? = null
+    val email: String? = null,
+    val contactPerson: Boolean
 )

@@ -1,11 +1,12 @@
-INSERT INTO organizer (uuid, name, responsibility, initials, phone, email) VALUES
+INSERT INTO organizer (uuid, name, responsibility, initials, phone, email, contactperson) VALUES
 (
     'd1000000-0000-0000-0000-000000000001',
     'Emilie Nilsen',
     ARRAY['Leder', 'Påmelding', 'Kommunikasjon'],
     'EN',
     '97654321',
-    'emilie@kalneslopene.no'
+    'emilie@kalneslopene.no',
+ true
 ),
 (
     'd1000000-0000-0000-0000-000000000002',
@@ -13,7 +14,8 @@ INSERT INTO organizer (uuid, name, responsibility, initials, phone, email) VALUE
     ARRAY['Tidtaking', 'Resultater'],
     'MH',
     '91234567',
-    'magnus@kalneslopene.no'
+    'magnus@kalneslopene.no',
+ false
 ),
 (
     'd1000000-0000-0000-0000-000000000003',
@@ -21,7 +23,8 @@ INSERT INTO organizer (uuid, name, responsibility, initials, phone, email) VALUE
     ARRAY['Løypemerking', 'Sikkerhet'],
     'TB',
     '98765432',
-    NULL
+    NULL,
+ false
 ),
 (
     'd1000000-0000-0000-0000-000000000004',
@@ -29,7 +32,8 @@ INSERT INTO organizer (uuid, name, responsibility, initials, phone, email) VALUE
     ARRAY['Utstyr', 'Teknisk ansvarlig'],
     'RS',
     '90123456',
-    'rune@kalneslopene.no'
+    'rune@kalneslopene.no',
+ false
 ),
 (
     'd1000000-0000-0000-0000-000000000005',
@@ -37,6 +41,7 @@ INSERT INTO organizer (uuid, name, responsibility, initials, phone, email) VALUE
     ARRAY['Sosiale medier', 'Fotografering'],
     'AL',
     NULL,
-    'astrid@kalneslopene.no'
+    'astrid@kalneslopene.no',
+ false
 );
 

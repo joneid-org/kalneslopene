@@ -14,12 +14,13 @@ data class OrganizerEntity(
     var responsibility: List<String>,
     var initials: String,
     var phone: String?,
-    var email: String?
+    var email: String?,
+    var contactperson: Boolean
 ) {
     @Id
     val uuid: UUID = UUID.randomUUID()
 
     fun toDto(): OrganizerDTO {
-        return OrganizerDTO(uuid, name, responsibility, initials, phone, email)
+        return OrganizerDTO(uuid, name, responsibility, initials, phone, email, contactperson)
     }
 }

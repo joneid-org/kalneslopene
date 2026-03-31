@@ -14,19 +14,22 @@ import {
   DrawerHeader,
   DrawerTrigger,
 } from "@/components/ui/drawer.tsx";
-import { getRacesByYear } from "@/data/mockdata.ts";
+import { getRacesByYear, getYears } from "@/lib/utils.ts";
+import type { RaceDTO } from "@/model/DTO.ts";
 
 export interface MobileNavBarMenuProps {
   headerBarDynamic: { path: string; label: string }[];
   headerBarStatic: { path: string; label: string }[];
-  years: number[];
+  races: RaceDTO[];
 }
 
 export default function MobileNavBarMenu({
   headerBarDynamic,
   headerBarStatic,
-  years,
+  races,
 }: MobileNavBarMenuProps) {
+  const years: number[] = getYears(races);
+
   return (
     <Drawer direction="left">
       <DrawerTrigger asChild>
@@ -57,13 +60,13 @@ export default function MobileNavBarMenu({
                           {year}
                         </AccordionTrigger>
                         <AccordionContent className="pl-3 flex flex-col">
-                          {getRacesByYear(year).map((race) => (
-                            <DrawerClose asChild key={race.id}>
+                          {getRacesByYear(races, year).map((date) => (
+                            <DrawerClose asChild key={date}>
                               <Link
-                                to={`${basePath}/${year}/${race.week}`}
+                                to={`${basePath}/${year}/${date}`}
                                 className="py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                               >
-                                {race.date}
+                                {date}
                               </Link>
                             </DrawerClose>
                           ))}

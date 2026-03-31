@@ -6,7 +6,6 @@ import { QUERIES } from "@/api/queries.ts";
 import { DynamicDropDownMenu } from "@/components/DynamicDropDownMenu.tsx";
 import MobileNavBarMenu from "@/components/MobileNavBarMenu.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { getAvailableYears } from "@/data/mockdata.ts";
 
 const headerBarDynamic = [
   { path: "/Resultater", label: "Resultater" },
@@ -18,7 +17,6 @@ const headerBarStatic = [
   { path: "/Historie", label: "Historie" },
 ];
 
-const years = getAvailableYears();
 export const Header = forwardRef<HTMLElement>(function Header(_props, ref) {
   const { data: races } = useQuery(QUERIES.race.getAllRaces);
 
@@ -29,7 +27,7 @@ export const Header = forwardRef<HTMLElement>(function Header(_props, ref) {
           <MobileNavBarMenu
             headerBarDynamic={headerBarDynamic}
             headerBarStatic={headerBarStatic}
-            years={years}
+            races={races ?? []}
           />
         </div>
 

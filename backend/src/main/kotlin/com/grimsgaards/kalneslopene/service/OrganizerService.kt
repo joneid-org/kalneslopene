@@ -25,7 +25,8 @@ class OrganizerService(
                 responsibility = organizer.responsibility,
                 initials = organizer.initials,
                 phone = organizer.phone,
-                email = organizer.email
+                email = organizer.email,
+                contactperson = organizer.contactPerson
             )
         ).toDto()
     }

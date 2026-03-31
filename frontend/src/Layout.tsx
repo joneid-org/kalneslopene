@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { Outlet } from "react-router";
-import HomeFooter from "./components/HomeFooter.tsx";
 import { Header } from "./pages/Header.tsx";
+import HomeFooter from "./pages/HomeFooter.tsx";
 
 export function Layout() {
   const headerRef = useRef<HTMLElement | null>(null);

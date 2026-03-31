@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import type { RaceDTO } from "@/model/DTO.ts";
+import type { OrganizerDTO, RaceDTO } from "@/model/DTO.ts";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -37,4 +37,10 @@ export function getRacesDTOByYear(races: RaceDTO[], year: number): RaceDTO[] {
   return races
     .filter((race) => race.raceDate.getFullYear() === year)
     .sort((a, b) => a.raceDate.getTime() - b.raceDate.getTime());
+}
+
+export function getContactPerson(
+  organizers: OrganizerDTO[],
+): OrganizerDTO | null {
+  return organizers.find((organizer) => organizer.contactPerson) || null;
 }

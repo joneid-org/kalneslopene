@@ -19,6 +19,7 @@ export type OrganizerDTO = {
   initials: string;
   phone?: string;
   email?: string;
+  contactPerson: boolean;
 };
 
 export type RunnerDTO = {

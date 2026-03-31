@@ -50,3 +50,13 @@ export function getContactPerson(
 ): OrganizerDTO | null {
   return organizers.find((organizer) => organizer.contactPerson) || null;
 }
+
+export function toDateString(date: Date): string {
+  return date
+    .toLocaleDateString("no-NO", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    })
+    .replace(/\b([a-z])/, (c) => c.toUpperCase());
+}

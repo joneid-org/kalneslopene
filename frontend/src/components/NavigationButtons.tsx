@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router";
+import { formatDate } from "@/lib/utils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 
 type Props = {
@@ -21,7 +22,7 @@ export default function NavigationButtons({
           className="flex items-center gap-1 text-xs md:text-sm px-2 md:px-3 py-1.5 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
         >
           <ChevronLeft className="size-3.5 md:size-4" />
-          {`Uke ${previousRace.uuid}, ${new Date(previousRace.raceDate).getFullYear()}`}
+          {formatDate(previousRace.raceDate)}
         </Link>
       ) : (
         <span />
@@ -31,7 +32,7 @@ export default function NavigationButtons({
           to={`${path}/${nextRace.uuid}`}
           className="flex items-center gap-1 text-xs md:text-sm px-2 md:px-3 py-1.5 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
         >
-          {`Uke ${nextRace.uuid}, ${new Date(nextRace.raceDate).getFullYear()}`}
+          {formatDate(nextRace.raceDate)}
           <ChevronRight className="size-3.5 md:size-4" />
         </Link>
       )}

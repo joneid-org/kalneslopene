@@ -21,7 +21,7 @@ export const router = createBrowserRouter([
         Component: Resultater,
       },
       {
-        path: "Resultater/:raceId",
+        path: "Resultater/:uuid",
         Component: Resultater,
       },
       {
@@ -29,7 +29,7 @@ export const router = createBrowserRouter([
         Component: Bilder,
       },
       {
-        path: "Bilder/:raceId",
+        path: "Bilder/:uuid",
         Component: Bilder,
       },
       {

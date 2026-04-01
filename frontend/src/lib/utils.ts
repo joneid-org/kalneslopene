@@ -3,6 +3,15 @@ import { twMerge } from "tailwind-merge";
 import { DISTANCE_KM } from "@/lib/constants.ts";
 import { formatSecondsToTime, mapResultTimeToNumber } from "@/lib/TimeUtils.ts";
 import type { OrganizerDTO, RaceDTO, RaceRunnerDTO } from "@/model/DTO.ts";
+import type { Photo } from "@/data/mockdata.ts";
+
+export function getPhotosByRaceId(
+  photos: Photo[],
+  uuid: string | undefined,
+): Photo[] {
+  if (!uuid) return [];
+  return photos.filter((p) => p.raceId === uuid);
+}
 
 function extractYear(raceDate: unknown): number {
   if (Array.isArray(raceDate)) return (raceDate as number[])[0];

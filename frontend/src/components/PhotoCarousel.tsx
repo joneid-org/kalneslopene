@@ -17,15 +17,13 @@ import type { Photo } from "../data/mockdata.ts";
 
 type PhotoCarouselProps = {
   photos: Photo[];
-  year?: number;
-  week?: number;
+  uuid: string;
   onPhotoClick: (idx: number) => void;
 };
 
 export default function PhotoCarousel({
   photos,
-  year,
-  week,
+  uuid,
   onPhotoClick,
 }: PhotoCarouselProps) {
   if (photos.length === 0) return null;
@@ -38,7 +36,7 @@ export default function PhotoCarousel({
             Bilder
           </CardTitle>
           <Link
-            to={`/Bilder/${year}/${week}`}
+            to={`/Bilder/${uuid}`}
             className="flex items-center gap-1 text-xs md:text-sm px-2 md:px-3 py-1.5 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
           >
             Se alle

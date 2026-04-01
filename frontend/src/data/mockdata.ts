@@ -25,14 +25,6 @@ export interface Result {
   gender: "M" | "F";
 }
 
-export interface Runner {
-  id: string;
-  name: string;
-  email: string;
-  ageGroup: string;
-  gender: "M" | "F";
-}
-
 export interface Photo {
   id: string;
   raceId: string;
@@ -499,73 +491,47 @@ export const results: Result[] = [
 export const photos: Photo[] = [
   {
     id: "p1",
-    raceId: "race-1",
+    raceId: "b1000000-0000-0000-0000-000000000028",
     url: "https://images.unsplash.com/photo-1692170226404-969b6e5cde95?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYXJhdGhvbiUyMHJ1bm5lcnMlMjByYWNlJTIwZmluaXNoJTIwbGluZXxlbnwxfHx8fDE3NzEwNzIzNjl8MA&ixlib=rb-4.1.0&q=80&w=1080",
     caption: "Marathon finish line celebration",
     photographer: "Ola Nordmann",
   },
   {
     id: "p2",
-    raceId: "race-1",
+    raceId: "b1000000-0000-0000-0000-000000000028",
     url: "https://images.unsplash.com/photo-1766970096331-78c8af007a3b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxydW5uZXJzJTIwY3Jvc3NpbmclMjBmaW5pc2glMjBsaW5lfGVufDF8fHx8MTc3MTA3MjM3MHww&ixlib=rb-4.1.0&q=80&w=1080",
     caption: "Runners crossing the finish line",
     photographer: "Ola Nordmann",
   },
   {
     id: "p3",
-    raceId: "race-1",
+    raceId: "b1000000-0000-0000-0000-000000000028",
     url: "https://images.unsplash.com/photo-1731991027003-386ac5ae9c72?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0cmFpbCUyMHJ1bm5pbmclMjByYWNlJTIwbW91bnRhaW5zfGVufDF8fHx8MTc3MTA3MjM2OXww&ixlib=rb-4.1.0&q=80&w=1080",
     caption: "Mountain trail scenic views",
     photographer: "Ola Nordmann",
   },
   {
     id: "p4",
-    raceId: "race-1",
+    raceId: "b1000000-0000-0000-0000-000000000028",
     url: "https://images.unsplash.com/photo-1769867628770-10a544d2a02c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHw1ayUyMHJhY2UlMjBwYXJ0aWNpcGFudHN8ZW58MXx8fHwxNzcxMDcyMzcwfDA&ixlib=rb-4.1.0&q=80&w=1080",
     caption: "5K participants starting strong",
     photographer: "Ola Nordmann",
   },
   {
     id: "p5",
-    raceId: "race-1",
+    raceId: "b1000000-0000-0000-0000-000000000028",
     url: "https://images.unsplash.com/photo-1745818016652-a890846ed361?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaXR5JTIwbWFyYXRob24lMjBydW5uZXJzJTIwY3Jvd2R8ZW58MXx8fHwxNzcxMDcyMzcwfDA&ixlib=rb-4.1.0&q=80&w=1080",
     caption: "Half marathon crowd",
     photographer: "Ola Nordmann",
   },
   {
     id: "p6",
-    raceId: "race-1",
+    raceId: "b1000000-0000-0000-0000-000000000028",
     url: "https://images.unsplash.com/photo-1657460684508-7c8fa5ba748b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxydW5uaW5nJTIwcmFjZSUyMHN0YXJ0JTIwbGluZXxlbnwxfHx8fDE3NzEwNzIzNzB8MA&ixlib=rb-4.1.0&q=80&w=1080",
     caption: "Race start excitement",
     photographer: "Ola Nordmann",
   },
 ];
-
-// Current logged-in runner (for demo purposes)
-export const currentRunner: Runner = {
-  id: "runner-1",
-  name: "Sarah Johnson",
-  email: "sarah.johnson@email.com",
-  ageGroup: "30-39",
-  gender: "F",
-};
-
-// Helper functions
-export const getRaceResults = (raceId: string) => {
-  return results
-    .filter((r) => r.raceId === raceId)
-    .sort((a, b) => a.position - b.position);
-};
-
-export const getRunnerResults = (runnerId: string) => {
-  return results.filter((r) => r.runnerId === runnerId);
-};
-
-export const getRunnerResultsByName = (runnerName: string) => {
-  return results.filter(
-    (r) => r.runnerName.toLowerCase() === runnerName.toLowerCase(),
-  );
-};
 
 export const getAllUniqueRunners = () => {
   const uniqueRunners = new Map<string, { id: string; name: string }>();
@@ -580,61 +546,6 @@ export const getAllUniqueRunners = () => {
   return Array.from(uniqueRunners.values()).sort((a, b) =>
     a.name.localeCompare(b.name),
   );
-};
-
-export const getRacePhotos = (raceId: string) => {
-  return photos.filter((p) => p.raceId === raceId);
-};
-
-export const getRunnerStats = (runnerId: string) => {
-  const runnerResults = getRunnerResults(runnerId);
-  const racesCompleted = runnerResults.length;
-  const bestTime = runnerResults.reduce((best, current) => {
-    // For comparison purposes, convert times to seconds
-    return current.position < best.position ? current : best;
-  }, runnerResults[0]);
-
-  return {
-    racesCompleted,
-    bestResult: bestTime,
-    totalDistance: runnerResults.reduce((total, result) => {
-      const race = races.find((r) => r.id === result.raceId);
-      const distance = parseFloat(race?.distance || "0");
-      return total + distance;
-    }, 0),
-  };
-};
-
-export const getOverallStats = () => {
-  const uniqueRunners = getAllUniqueRunners();
-  const totalRaces = races.length;
-
-  // Get fastest overall time (convert time strings to comparable format)
-  const timeToSeconds = (time: string) => {
-    const parts = time.split(":");
-    if (parts.length === 2) {
-      return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
-    }
-    return 0;
-  };
-
-  const fastestResult = results.reduce((fastest, current) => {
-    if (!fastest) return current;
-    return timeToSeconds(current.time) < timeToSeconds(fastest.time)
-      ? current
-      : fastest;
-  }, results[0]);
-
-  // Calculate average participation
-  const avgParticipation =
-    races.reduce((sum, race) => sum + race.participants, 0) / races.length;
-
-  return {
-    totalRunners: uniqueRunners.length,
-    totalRaces,
-    fastestTime: fastestResult,
-    avgParticipation: Math.round(avgParticipation),
-  };
 };
 
 // Get all unique years from races
@@ -655,20 +566,6 @@ export const getRacesByYear = (year: number): Race[] => {
       return raceYear === year;
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()); // Sort by date descending
-};
-
-// Get the latest race
-export const getLatestRace = (): Race => {
-  return races.reduce((latest, current) => {
-    return new Date(current.date) > new Date(latest.date) ? current : latest;
-  }, races[0]);
-};
-
-// Get photos by year
-export const getPhotosByYear = (year: number): Photo[] => {
-  const racesInYear = getRacesByYear(year);
-  const raceIds = racesInYear.map((r) => r.id);
-  return photos.filter((photo) => raceIds.includes(photo.raceId));
 };
 
 // Get upcoming races (today or in the future), sorted ascending

@@ -30,33 +30,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table.tsx";
-import type { Race, Result } from "../data/mockdata.ts";
-
-const COLUMN_LABELS: Record<string, string> = {
-  position: "#",
-  runnerName: "Navn",
-  time: "Resultat",
-  races: "Løp",
-  pace: "min/km",
-  pr: "PR",
-  yearBest: "Årsbeste",
-};
-
-const DESKTOP_ONLY_COLUMNS = ["races", "pace", "yearBest"];
-
-export type RowData = Result & {
-  races: number;
-  pace: string;
-  pr: string;
-  yearBest: string;
-};
+import { COLUMN_LABELS, DESKTOP_ONLY_COLUMNS } from "@/lib/constants.ts";
+import type { RowData } from "@/lib/utils.ts";
 
 type ResultsTableProps = {
+  title?: string;
   tableData: RowData[];
-  title: string;
-  race: Race | null;
-  year?: number;
-  week?: number;
 };
 
 function useIsMobile() {
@@ -106,7 +85,7 @@ export default function ResultsTable({ tableData, title }: ResultsTableProps) {
         cell: ({ getValue, row }) => (
           <span className="flex items-center gap-1.5">
             <span
-              className={`inline-block size-2 rounded-full shrink-0 ${row.original.gender === "M" ? "bg-blue-500" : "bg-red-500"}`}
+              className={`inline-block size-2 rounded-full shrink-0 ${row.original.gender === "Mann" ? "bg-blue-500" : "bg-red-500"}`}
             />
             <span className="block truncate max-w-32.5">
               {getValue<string>()}
@@ -122,13 +101,15 @@ export default function ResultsTable({ tableData, title }: ResultsTableProps) {
         ),
       },
       {
-        accessorKey: "races",
-        header: "Løp",
-        size: 44,
-      },
-      {
         accessorKey: "pace",
         header: "min/km",
+        cell: ({ getValue }) => (
+          <span className="tabular-nums">{getValue<string>()}</span>
+        ),
+      },
+      {
+        accessorKey: "races",
+        header: "Løp",
         cell: ({ getValue }) => (
           <span className="tabular-nums">{getValue<string>()}</span>
         ),

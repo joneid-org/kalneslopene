@@ -14,8 +14,10 @@ import {
   findFastestRunnerInRace,
   findFastetFemaleInRace,
   findFastetMaleInRace,
+  formatSecondsToTime,
   mapResultTimeToNumber,
 } from "@/lib/utils.ts";
+
 import type { RaceDTO } from "@/model/DTO.ts";
 import StatBox from "./StatBox.tsx";
 import WinnerItem from "./WinnerItem.tsx";
@@ -23,11 +25,13 @@ import WinnerItem from "./WinnerItem.tsx";
 type ResultsHeaderProps = {
   race: RaceDTO;
   photosPath?: string;
+  title?: string;
 };
 
 export default function ResultsHeader({
   race,
   photosPath,
+  title,
 }: ResultsHeaderProps) {
   const { data: raceRunners } = useQuery(
     QUERIES.race.getAllRunnersInRace(race.uuid ?? ""),
@@ -64,11 +68,7 @@ export default function ResultsHeader({
         {/* ...existing bottom text... */}
         <div className="absolute bottom-0 left-0 right-0 px-3 pb-3 md:px-5 md:pb-5 text-white">
           <p className="text-sm md:text-lg font-semibold leading-snug">
-            {race.raceDate.toLocaleDateString("no-NO", {
-              day: "2-digit",
-              month: "long",
-              year: "numeric",
-            })}
+            {title}
           </p>
           <div className="flex flex-wrap gap-x-3 mt-1 text-xs md:text-sm text-white/80">
             <span className="flex items-center gap-1">
@@ -101,7 +101,9 @@ export default function ResultsHeader({
         />
         <StatBox
           icon={TrophyIcon}
-          value={mapResultTimeToNumber(fastestRunnerInRace?.resultTime ?? "")}
+          value={formatSecondsToTime(
+            mapResultTimeToNumber(fastestRunnerInRace?.resultTime ?? ""),
+          )}
           label="Raskest"
           color="amber"
         />

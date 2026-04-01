@@ -1,5 +1,5 @@
 import { TimerIcon } from "lucide-react";
-import { mapResultTimeToNumber } from "@/lib/utils.ts";
+import { formatSecondsToTime, mapResultTimeToNumber } from "@/lib/utils.ts";
 import type { RaceRunnerDTO } from "@/model/DTO.ts";
 
 type WinnerItemProps = {
@@ -24,7 +24,7 @@ export default function WinnerItem({
         <p className="text-xs text-muted-foreground">{label}</p>
         <p className="text-sm font-semibold truncate">{result.runner.name}</p>
         <p className="text-xs tabular-nums text-muted-foreground">
-          {mapResultTimeToNumber(result.resultTime)}
+          {formatSecondsToTime(mapResultTimeToNumber(result.resultTime))}
         </p>
       </div>
     </div>

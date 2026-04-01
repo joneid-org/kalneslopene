@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import type { OrganizerDTO, RaceDTO } from "@/model/DTO.ts";
+import type { OrganizerDTO, RaceDTO, RaceRunnerDTO } from "@/model/DTO.ts";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -76,4 +76,48 @@ export function getNextRace(races: RaceDTO[], uuid?: string): RaceDTO | null {
       .filter((race) => race.raceDate > currentRace.raceDate)
       .sort((a, b) => a.raceDate.getTime() - b.raceDate.getTime())[0] ?? null
   );
+}
+
+export function mapResultTimeToNumber(resultTime: string): number {
+  const match = resultTime.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  if (!match) return 0;
+  const hours = parseInt(match[1] ?? "0", 10);
+  const minutes = parseInt(match[2] ?? "0", 10);
+  const seconds = parseInt(match[3] ?? "0", 10);
+  return hours * 3600 + minutes * 60 + seconds;
+}
+
+export function findFastetFemaleInRace(
+  results: RaceRunnerDTO[],
+): RaceRunnerDTO | undefined {
+  return results
+    .filter((r) => r.runner.gender === "Kvinne" && r.resultTime)
+    .sort(
+      (a, b) =>
+        mapResultTimeToNumber(a.resultTime ?? "") -
+        mapResultTimeToNumber(b.resultTime ?? ""),
+    )[0];
+}
+export function findFastetMaleInRace(
+  results: RaceRunnerDTO[],
+): RaceRunnerDTO | undefined {
+  return results
+    .filter((r) => r.runner.gender === "Mann" && r.resultTime)
+    .sort(
+      (a, b) =>
+        mapResultTimeToNumber(a.resultTime ?? "") -
+        mapResultTimeToNumber(b.resultTime ?? ""),
+    )[0];
+}
+
+export function findFastestRunnerInRace(
+  results: RaceRunnerDTO[],
+): RaceRunnerDTO | undefined {
+  return results
+    .filter((r) => r.resultTime)
+    .sort(
+      (a, b) =>
+        mapResultTimeToNumber(a.resultTime ?? "") -
+        mapResultTimeToNumber(b.resultTime ?? ""),
+    )[0];
 }

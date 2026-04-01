@@ -5,7 +5,7 @@ type Color = "blue" | "orange" | "green" | "amber";
 
 type StatBoxProps = {
   icon: LucideIcon;
-  value: string | number;
+  value: string | number | undefined;
   label: string;
   color: Color;
 };

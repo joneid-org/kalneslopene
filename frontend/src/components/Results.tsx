@@ -1,185 +1,49 @@
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
 import NavigationButtons from "@/components/NavigationButtons.tsx";
-import PhotoCarousel from "@/components/PhotoCarousel.tsx";
-import PhotoDialog from "@/components/PhotoDialog.tsx";
 import ResultsHeader from "@/components/ResultsHeader.tsx";
-import ResultsTable, { type RowData } from "@/components/ResultsTable.tsx";
 import { getNextRace, getPreviousRace } from "@/lib/utils.ts";
-import type { Photo } from "../data/mockdata.ts";
-import { getRacesByYear, photos, results } from "../data/mockdata.ts";
-
-const DISTANCE_KM = 5;
-
-function parseTimeToSeconds(time: string): number {
-  const parts = time.split(":").map((p) => Number(p));
-  if (parts.some((n) => Number.isNaN(n))) return Number.POSITIVE_INFINITY;
-  if (parts.length === 2) return parts[0] * 60 + parts[1];
-  if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
-  return Number.POSITIVE_INFINITY;
-}
-
-function formatSecondsToTime(totalSeconds: number): string {
-  if (!Number.isFinite(totalSeconds)) return "-";
-  const rounded = Math.round(totalSeconds);
-  const mm = Math.floor(rounded / 60);
-  const ss = rounded % 60;
-  return `${mm}:${String(ss).padStart(2, "0")}`;
-}
 
 type Props = {
-  year?: number;
-  week?: number;
   uuid?: string;
 };
 
-export default function Results({ year, week, uuid }: Props) {
-  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-
-  const race = useMemo(() => {
-    if (!year || !week) return null;
-    return getRacesByYear(year).find((r) => r.week === week) ?? null;
-  }, [year, week]);
-
-  // Per-runner stats
-  const byRunner = useMemo(
-    () =>
-      results.reduce<
-        Record<
-          string,
-          {
-            races: number;
-            personalBestSeconds: number;
-            bestThisYearSeconds: number;
-          }
-        >
-      >((acc, r) => {
-        const key = r.runnerId;
-        const t = parseTimeToSeconds(r.time);
-        if (!acc[key]) {
-          acc[key] = {
-            races: 1,
-            personalBestSeconds: t,
-            bestThisYearSeconds: t,
-          };
-          return acc;
-        }
-        acc[key].races += 1;
-        acc[key].personalBestSeconds = Math.min(
-          acc[key].personalBestSeconds,
-          t,
-        );
-        acc[key].bestThisYearSeconds = Math.min(
-          acc[key].bestThisYearSeconds,
-          t,
-        );
-        return acc;
-      }, {}),
-    [],
-  );
-
-  const tableData: RowData[] = useMemo(() => {
-    const filtered = race
-      ? results
-          .filter((r) => r.raceId === race.id)
-          .sort((a, b) => {
-            if (a.gender !== b.gender) return a.gender === "M" ? -1 : 1;
-            return a.position - b.position;
-          })
-      : results;
-
-    return filtered.map((r) => {
-      const stats = byRunner[r.runnerId];
-      const timeSeconds = parseTimeToSeconds(r.time);
-      const paceSeconds =
-        DISTANCE_KM > 0 ? timeSeconds / DISTANCE_KM : Number.NaN;
-      return {
-        ...r,
-        races: stats?.races ?? 0,
-        pace: formatSecondsToTime(paceSeconds),
-        pr: stats ? formatSecondsToTime(stats.personalBestSeconds) : "-",
-        yearBest: stats ? formatSecondsToTime(stats.bestThisYearSeconds) : "-",
-      };
-    });
-  }, [race, byRunner]);
-
-  // Fastest M and F
-  const fastestM = useMemo(
-    () =>
-      tableData
-        .filter((r) => r.gender === "M")
-        .sort(
-          (a, b) => parseTimeToSeconds(a.time) - parseTimeToSeconds(b.time),
-        )[0],
-    [tableData],
-  );
-  const fastestF = useMemo(
-    () =>
-      tableData
-        .filter((r) => r.gender === "F")
-        .sort(
-          (a, b) => parseTimeToSeconds(a.time) - parseTimeToSeconds(b.time),
-        )[0],
-    [tableData],
-  );
-
-  const racePhotos: Photo[] = useMemo(
-    () => (race ? photos.filter((p) => p.raceId === race.id) : []),
-    [race],
-  );
-
-  const title = race
-    ? `Uke ${race.week} — ${new Date(race.date).toLocaleDateString("nb-NO", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      })}`
-    : "Alle resultater";
-
+export default function Results({ uuid }: Props) {
   const { data: races } = useQuery(QUERIES.race.getAllRaces);
 
   const previous = getPreviousRace(races || [], uuid || undefined);
   const next = getNextRace(races || [], uuid || undefined);
   const path = "/Resultater/";
+  const race = races?.find((r) => r.uuid);
+
   return (
     <div className="w-full max-w-2xl md:max-w-4xl space-y-3 md:space-y-5">
       <NavigationButtons previousRace={previous} nextRace={next} path={path} />
 
       {race && (
-        <ResultsHeader
-          race={race}
-          title={title}
-          fastestM={fastestM}
-          fastestF={fastestF}
-          photosPath={
-            racePhotos.length > 0
-              ? `/Bilder/${new Date(race.date).getFullYear()}/${race.week}`
-              : undefined
-          }
-        />
+        <ResultsHeader race={race} photosPath={`/Bilder/${race.uuid}`} />
       )}
 
-      <ResultsTable
-        tableData={tableData}
-        title={title}
-        race={race}
-        year={year}
-        week={week}
-      />
+      {/*<ResultsTable*/}
+      {/*  tableData={tableData}*/}
+      {/*  title={title}*/}
+      {/*  race={race}*/}
+      {/*  year={year}*/}
+      {/*  week={week}*/}
+      {/*/>*/}
 
-      <PhotoCarousel
-        photos={racePhotos}
-        year={year}
-        week={week}
-        onPhotoClick={setLightboxIndex}
-      />
+      {/*<PhotoCarousel*/}
+      {/*  photos={racePhotos}*/}
+      {/*  year={year}*/}
+      {/*  week={week}*/}
+      {/*  onPhotoClick={setLightboxIndex}*/}
+      {/*/>*/}
 
-      <PhotoDialog
-        photos={racePhotos}
-        index={lightboxIndex}
-        onIndexChange={setLightboxIndex}
-      />
+      {/*<PhotoDialog*/}
+      {/*  photos={racePhotos}*/}
+      {/*  index={lightboxIndex}*/}
+      {/*  onIndexChange={setLightboxIndex}*/}
+      {/*/>*/}
     </div>
   );
 }

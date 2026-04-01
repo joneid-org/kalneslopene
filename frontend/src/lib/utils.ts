@@ -55,8 +55,25 @@ export function toDateString(date: Date): string {
     .replace(/\b([a-z])/, (c) => c.toUpperCase());
 }
 
-export function getContactPerson(
-  organizers: OrganizerDTO[],
-): OrganizerDTO | null {
-  return organizers.find((organizer) => organizer.contactPerson) || null;
+export function getPreviousRace(
+  races: RaceDTO[],
+  uuid?: string,
+): RaceDTO | null {
+  const currentRace = races.find((race) => race.uuid === uuid);
+  if (!currentRace) return null;
+  return (
+    races
+      .filter((race) => race.raceDate < currentRace.raceDate)
+      .sort((a, b) => b.raceDate.getTime() - a.raceDate.getTime())[0] ?? null
+  );
+}
+
+export function getNextRace(races: RaceDTO[], uuid?: string): RaceDTO | null {
+  const currentRace = races.find((race) => race.uuid === uuid);
+  if (!currentRace) return null;
+  return (
+    races
+      .filter((race) => race.raceDate > currentRace.raceDate)
+      .sort((a, b) => a.raceDate.getTime() - b.raceDate.getTime())[0] ?? null
+  );
 }

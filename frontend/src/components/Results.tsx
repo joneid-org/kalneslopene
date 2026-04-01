@@ -1,11 +1,14 @@
+import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
+import { QUERIES } from "@/api/queries.ts";
 import NavigationButtons from "@/components/NavigationButtons.tsx";
 import PhotoCarousel from "@/components/PhotoCarousel.tsx";
 import PhotoDialog from "@/components/PhotoDialog.tsx";
 import ResultsHeader from "@/components/ResultsHeader.tsx";
 import ResultsTable, { type RowData } from "@/components/ResultsTable.tsx";
+import { getNextRace, getPreviousRace } from "@/lib/utils.ts";
 import type { Photo } from "../data/mockdata.ts";
-import { getRacesByYear, photos, races, results } from "../data/mockdata.ts";
+import { getRacesByYear, photos, results } from "../data/mockdata.ts";
 
 const DISTANCE_KM = 5;
 
@@ -28,40 +31,16 @@ function formatSecondsToTime(totalSeconds: number): string {
 type Props = {
   year?: number;
   week?: number;
+  uuid?: string;
 };
 
-export default function Results({ year, week }: Props) {
+export default function Results({ year, week, uuid }: Props) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-
-  // All races sorted oldest → newest (for prev/next)
-  const sortedRaces = useMemo(
-    () =>
-      [...races].sort(
-        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-      ),
-    [],
-  );
 
   const race = useMemo(() => {
     if (!year || !week) return null;
     return getRacesByYear(year).find((r) => r.week === week) ?? null;
   }, [year, week]);
-
-  const currentIndex = useMemo(
-    () => (race ? sortedRaces.findIndex((r) => r.id === race.id) : -1),
-    [race, sortedRaces],
-  );
-
-  const prevRace = currentIndex > 0 ? sortedRaces[currentIndex - 1] : null;
-  const nextRace =
-    currentIndex !== -1 && currentIndex < sortedRaces.length - 1
-      ? sortedRaces[currentIndex + 1]
-      : null;
-
-  function raceToPath(race: { week: number; date: string }) {
-    const y = new Date(race.date).getFullYear();
-    return `/Resultater/${y}/${race.week}`;
-  }
 
   // Per-runner stats
   const byRunner = useMemo(
@@ -151,16 +130,21 @@ export default function Results({ year, week }: Props) {
   );
 
   const title = race
-    ? `Uke ${race.week} — ${new Date(race.date).toLocaleDateString("nb-NO", { day: "numeric", month: "long", year: "numeric" })}`
+    ? `Uke ${race.week} — ${new Date(race.date).toLocaleDateString("nb-NO", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })}`
     : "Alle resultater";
 
+  const { data: races } = useQuery(QUERIES.race.getAllRaces);
+
+  const previous = getPreviousRace(races || [], uuid || undefined);
+  const next = getNextRace(races || [], uuid || undefined);
+  const path = "/Resultater/";
   return (
     <div className="w-full max-w-2xl md:max-w-4xl space-y-3 md:space-y-5">
-      <NavigationButtons
-        prevRace={prevRace}
-        nextRace={nextRace}
-        raceToPath={raceToPath}
-      />
+      <NavigationButtons previousRace={previous} nextRace={next} path={path} />
 
       {race && (
         <ResultsHeader

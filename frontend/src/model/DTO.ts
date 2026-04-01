@@ -1,6 +1,6 @@
 export type RaceDTO = {
   uuid?: string;
-  raceDate: Date;
+  raceDate: string;
   weather?: string;
 };
 

@@ -12,39 +12,29 @@ export const QUERIES = {
     getAllRaces: {
       queryKey: ["race", "getAll"],
       queryFn: async () => {
-        const data = await kyClient.get("/api/races").json<RaceDTO[]>();
-        return data.map((race) => ({
-          ...race,
-          raceDate: new Date(race.raceDate),
-        }));
+        return await kyClient.get("/api/races").json<RaceDTO[]>();
       },
     },
     getRaceByUuid: (uuid: string) => ({
       queryKey: ["race", "getById", uuid],
       queryFn: async () => {
-        const data = await kyClient.get(`/api/races/${uuid}`).json<RaceDTO>();
-        return { ...data, raceDate: new Date(data.raceDate) };
+        return await kyClient.get(`/api/races/${uuid}`).json<RaceDTO>();
       },
     }),
     createRaces: (races: RaceDTO[]) => ({
       queryKey: ["race", "create"],
       queryFn: async () => {
-        const data = await kyClient
+        return await kyClient
           .post("/api/races/createRaces", { json: races })
           .json<RaceDTO[]>();
-        return data.map((race) => ({
-          ...race,
-          raceDate: new Date(race.raceDate),
-        }));
       },
     }),
     updateRace: (uuid: string, race: RaceDTO) => ({
       queryKey: ["race", "update", uuid],
       queryFn: async () => {
-        const data = await kyClient
+        return await kyClient
           .patch(`/api/races/${uuid}`, { json: race })
           .json<RaceDTO>();
-        return { ...data, raceDate: new Date(data.raceDate) };
       },
     }),
     deleteRace: (uuid: string) => ({
@@ -54,13 +44,9 @@ export const QUERIES = {
     getAllRunnersInRace: (uuid: string) => ({
       queryKey: ["race", uuid, "runnersInRace"],
       queryFn: async () => {
-        const data = await kyClient
+        return await kyClient
           .get(`/api/races/${uuid}/runners`)
           .json<RaceRunnerDTO[]>();
-        return data.map((rr) => ({
-          ...rr,
-          race: { ...rr.race, raceDate: new Date(rr.race.raceDate) },
-        }));
       },
     }),
   },
@@ -126,13 +112,9 @@ export const QUERIES = {
     getAllRacesByRunner: (uuid: string) => ({
       queryKey: ["runner", uuid, "racesByRunner"],
       queryFn: async () => {
-        const data = await kyClient
+        return await kyClient
           .get(`/api/runners/${uuid}/races`)
           .json<RaceRunnerDTO[]>();
-        return data.map((rr) => ({
-          ...rr,
-          race: { ...rr.race, raceDate: new Date(rr.race.raceDate) },
-        }));
       },
     }),
   },

@@ -8,8 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
-import { NORWEGIAN_MONTH_NAMES } from "@/lib/constants.ts";
-import { formatTimeStamp } from "@/lib/TimeUtils.ts";
+import { formatDDMonth, formatTimeStamp } from "@/lib/TimeUtils.ts";
 import { getUpcomingRaces } from "@/lib/utils.ts";
 
 export default function RaceCalendarSidebar() {
@@ -37,17 +36,19 @@ export default function RaceCalendarSidebar() {
               return (
                 <li
                   key={race.uuid}
-                  className="flex items-start gap-3 px-6 py-3"
+                  className="flex items-center gap-5 px-8 py-3"
                 >
                   {/* Date column */}
-                  <div className="flex flex-col items-center min-w-10 text-center">
+                  <div className="flex flex-col items-center w-10 shrink-0 text-center">
                     <span className="text-lg font-bold leading-none tabular-nums text-primary">
-                      {race.raceDate.getDate()}.
+                      {formatDDMonth(race.raceDate).split(".")[0]}
                     </span>
-                    <span className="text-xs text-muted-foreground capitalize">
-                      {NORWEGIAN_MONTH_NAMES[race.raceDate.getMonth()]}
+                    <span className="text-xs text-primary mt-0.5">
+                      {formatDDMonth(race.raceDate).split(". ")[1]}
                     </span>
                   </div>
+
+                  <div className="w-px self-stretch bg-border shrink-0" />
 
                   {/* Details */}
                   <div className="flex-1 min-w-0">
@@ -59,13 +60,11 @@ export default function RaceCalendarSidebar() {
                         </Badge>
                       )}
                     </div>
-                    <div className="flex items-center gap-3 mt-0.5 text-xs text-muted-foreground flex-wrap">
-                      {race.raceDate && (
-                        <span className="flex items-center gap-1">
-                          <Clock className="size-3" />
-                          Torsdag kl {formatTimeStamp(race.raceDate)}
-                        </span>
-                      )}
+                    <div className="flex items-center gap-5 mt-0.5 text-xs text-muted-foreground flex-wrap">
+                      <span className="flex items-center gap-1">
+                        <Clock className="size-3" />
+                        Torsdag kl {formatTimeStamp(race.raceDate)}
+                      </span>
                       <span className="flex items-center gap-1">
                         <MapPin className="size-3" />
                         Kalnesskogen

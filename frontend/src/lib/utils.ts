@@ -4,20 +4,49 @@ import { DISTANCE_KM } from "@/lib/constants.ts";
 import { formatSecondsToTime, mapResultTimeToNumber } from "@/lib/TimeUtils.ts";
 import type { OrganizerDTO, RaceDTO, RaceRunnerDTO } from "@/model/DTO.ts";
 
+function extractYear(raceDate: unknown): number {
+  if (Array.isArray(raceDate)) return (raceDate as number[])[0];
+  if (raceDate instanceof Date) return raceDate.getFullYear();
+  return Number(String(raceDate).split("-")[0]);
+}
+
+function raceDateToSortKey(raceDate: unknown): string {
+  if (Array.isArray(raceDate)) {
+    const [y, mo, d, h = 0, mi = 0] = raceDate as number[];
+    return `${y}-${String(mo).padStart(2, "0")}-${String(d).padStart(2, "0")}T${String(h).padStart(2, "0")}:${String(mi).padStart(2, "0")}`;
+  }
+  if (raceDate instanceof Date) return raceDate.toISOString();
+  return String(raceDate);
+}
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 export function getYears(races: RaceDTO[]): number[] {
+  const now = new Date().toISOString();
   return Array.from(
-    new Set(races.map((race) => race.raceDate.getFullYear())),
+    new Set(
+      races
+        .filter((race) => raceDateToSortKey(race.raceDate) <= now)
+        .map((race) => extractYear(race.raceDate)),
+    ),
   ).sort((a, b) => b - a);
 }
 
 export function getRacesDTOByYear(races: RaceDTO[], year: number): RaceDTO[] {
+  const now = new Date().toISOString();
   return races
-    .filter((race) => race.raceDate.getFullYear() === year)
-    .sort((a, b) => a.raceDate.getTime() - b.raceDate.getTime());
+    .filter(
+      (race) =>
+        extractYear(race.raceDate) === year &&
+        raceDateToSortKey(race.raceDate) <= now,
+    )
+    .sort((a, b) =>
+      raceDateToSortKey(b.raceDate).localeCompare(
+        raceDateToSortKey(a.raceDate),
+      ),
+    );
 }
 
 export function getContactPerson(
@@ -32,20 +61,35 @@ export function getPreviousRace(
 ): RaceDTO | null {
   const currentRace = races.find((race) => race.uuid === uuid);
   if (!currentRace) return null;
+  const currentKey = raceDateToSortKey(currentRace.raceDate);
   return (
     races
-      .filter((race) => race.raceDate < currentRace.raceDate)
-      .sort((a, b) => b.raceDate.getTime() - a.raceDate.getTime())[0] ?? null
+      .filter((race) => raceDateToSortKey(race.raceDate) < currentKey)
+      .sort((a, b) =>
+        raceDateToSortKey(b.raceDate).localeCompare(
+          raceDateToSortKey(a.raceDate),
+        ),
+      )[0] ?? null
   );
 }
 
 export function getNextRace(races: RaceDTO[], uuid?: string): RaceDTO | null {
+  const now = new Date().toISOString();
   const currentRace = races.find((race) => race.uuid === uuid);
   if (!currentRace) return null;
+  const currentKey = raceDateToSortKey(currentRace.raceDate);
   return (
     races
-      .filter((race) => race.raceDate > currentRace.raceDate)
-      .sort((a, b) => a.raceDate.getTime() - b.raceDate.getTime())[0] ?? null
+      .filter(
+        (race) =>
+          raceDateToSortKey(race.raceDate) > currentKey &&
+          raceDateToSortKey(race.raceDate) <= now,
+      )
+      .sort((a, b) =>
+        raceDateToSortKey(a.raceDate).localeCompare(
+          raceDateToSortKey(b.raceDate),
+        ),
+      )[0] ?? null
   );
 }
 
@@ -151,9 +195,7 @@ export function getBestRaceThisYearFromRunner(
   const best = raceRunner
     .filter(
       (rr) =>
-        !rr.hideTime &&
-        rr.resultTime &&
-        new Date(rr.race.raceDate).getFullYear() === year,
+        !rr.hideTime && rr.resultTime && extractYear(rr.race.raceDate) === year,
     )
     .sort(
       (a, b) =>
@@ -166,7 +208,12 @@ export function getBestRaceThisYearFromRunner(
 }
 
 export function getUpcomingRaces(races: RaceDTO[]): RaceDTO[] {
+  const now = new Date().toISOString();
   return races
-    .filter((r) => r.raceDate >= new Date())
-    .sort((a, b) => a.raceDate.getTime() - b.raceDate.getTime());
+    .filter((r) => raceDateToSortKey(r.raceDate) >= now)
+    .sort((a, b) =>
+      raceDateToSortKey(a.raceDate).localeCompare(
+        raceDateToSortKey(b.raceDate),
+      ),
+    );
 }

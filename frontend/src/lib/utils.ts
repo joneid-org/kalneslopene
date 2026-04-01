@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { DISTANCE_KM, NORWEGIAN_MONTH_NAMES } from "@/lib/constants.ts";
+import { DISTANCE_KM } from "@/lib/constants.ts";
+import { formatSecondsToTime, mapResultTimeToNumber } from "@/lib/TimeUtils.ts";
 import type { OrganizerDTO, RaceDTO, RaceRunnerDTO } from "@/model/DTO.ts";
 
 export function cn(...inputs: ClassValue[]) {
@@ -13,12 +14,6 @@ export function getYears(races: RaceDTO[]): number[] {
   ).sort((a, b) => b - a);
 }
 
-export function formatDDMonth(date: Date): string {
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = NORWEGIAN_MONTH_NAMES[date.getMonth()];
-  return `${day}. ${month}`;
-}
-
 export function getRacesDTOByYear(races: RaceDTO[], year: number): RaceDTO[] {
   return races
     .filter((race) => race.raceDate.getFullYear() === year)
@@ -29,16 +24,6 @@ export function getContactPerson(
   organizers: OrganizerDTO[],
 ): OrganizerDTO | null {
   return organizers.find((organizer) => organizer.contactPerson) || null;
-}
-
-export function toDateString(date: Date): string {
-  return date
-    .toLocaleDateString("no-NO", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    })
-    .replace(/\b([a-z])/, (c) => c.toUpperCase());
 }
 
 export function getPreviousRace(
@@ -64,15 +49,6 @@ export function getNextRace(races: RaceDTO[], uuid?: string): RaceDTO | null {
   );
 }
 
-export function mapResultTimeToNumber(resultTime: string): number {
-  const match = resultTime.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
-  if (!match) return 0;
-  const hours = parseInt(match[1] ?? "0", 10);
-  const minutes = parseInt(match[2] ?? "0", 10);
-  const seconds = parseInt(match[3] ?? "0", 10);
-  return hours * 3600 + minutes * 60 + seconds;
-}
-
 export function findFastetFemaleInRace(
   results: RaceRunnerDTO[],
 ): RaceRunnerDTO | undefined {
@@ -84,6 +60,7 @@ export function findFastetFemaleInRace(
         mapResultTimeToNumber(b.resultTime ?? ""),
     )[0];
 }
+
 export function findFastetMaleInRace(
   results: RaceRunnerDTO[],
 ): RaceRunnerDTO | undefined {
@@ -106,18 +83,6 @@ export function findFastestRunnerInRace(
         mapResultTimeToNumber(a.resultTime ?? "") -
         mapResultTimeToNumber(b.resultTime ?? ""),
     )[0];
-}
-
-export function formatSecondsToTime(totalSeconds: number): string {
-  if (!Number.isFinite(totalSeconds) || totalSeconds <= 0) return "-";
-  const rounded = Math.round(totalSeconds);
-  const hh = Math.floor(rounded / 3600);
-  const mm = Math.floor((rounded % 3600) / 60);
-  const ss = rounded % 60;
-  if (hh > 0) {
-    return `${hh}:${String(mm).padStart(2, "0")}:${String(ss).padStart(2, "0")}`;
-  }
-  return `${mm}:${String(ss).padStart(2, "0")}`;
 }
 
 export type RowData = {
@@ -200,20 +165,8 @@ export function getBestRaceThisYearFromRunner(
     : "-";
 }
 
-export function formatDate(date: Date | undefined): string | undefined {
-  return (
-    date?.toLocaleDateString("no-NO", {
-      day: "2-digit",
-      month: "long",
-    }) ?? undefined
-  );
-}
-export function formatDateFull(date: Date | undefined): string | undefined {
-  return (
-    date?.toLocaleDateString("no-NO", {
-      day: "2-digit",
-      month: "long",
-      year: "numeric",
-    }) ?? undefined
-  );
+export function getUpcomingRaces(races: RaceDTO[]): RaceDTO[] {
+  return races
+    .filter((r) => r.raceDate >= new Date())
+    .sort((a, b) => a.raceDate.getTime() - b.raceDate.getTime());
 }

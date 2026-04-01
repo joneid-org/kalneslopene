@@ -14,7 +14,8 @@ import {
   DrawerHeader,
   DrawerTrigger,
 } from "@/components/ui/drawer.tsx";
-import { formatDDMonth, getRacesDTOByYear, getYears } from "@/lib/utils.ts";
+import { formatDDMonth } from "@/lib/TimeUtils.ts";
+import { getRacesDTOByYear, getYears } from "@/lib/utils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 
 export interface MobileNavBarMenuProps {

@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router";
-import { formatDate } from "@/lib/utils.ts";
+import { formatDate } from "@/lib/TimeUtils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 
 type Props = {

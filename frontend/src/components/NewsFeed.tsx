@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
-import { toDateString } from "@/lib/utils.ts";
+import { formatDateFull } from "@/lib/TimeUtils.ts";
 
 export default function NewsFeed() {
   const { data: newsfeeds } = useQuery(QUERIES.newsfeed.getAllNewsFeeds);
@@ -35,7 +35,7 @@ export default function NewsFeed() {
                 {post.content}
               </p>
               <p className="text-xs text-muted-foreground/70">
-                {toDateString(post.date)}
+                {formatDateFull(post.date)}
               </p>
             </article>
 

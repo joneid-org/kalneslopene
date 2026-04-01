@@ -10,7 +10,8 @@ import {
   MenubarSubTrigger,
   MenubarTrigger,
 } from "@/components/ui/menubar";
-import { formatDDMonth, getRacesDTOByYear, getYears } from "@/lib/utils.ts";
+import { formatDDMonth } from "@/lib/TimeUtils.ts";
+import { getRacesDTOByYear, getYears } from "@/lib/utils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 
 type MenuBarDropDownButtonProps = {

@@ -1,8 +1,9 @@
 import { TimerIcon } from "lucide-react";
-import type { Result } from "../data/mockdata.ts";
+import { mapResultTimeToNumber } from "@/lib/utils.ts";
+import type { RaceRunnerDTO } from "@/model/DTO.ts";
 
 type WinnerItemProps = {
-  result: Result;
+  result: RaceRunnerDTO;
   label: string;
   iconColor: string;
   bgColor: string;
@@ -21,9 +22,9 @@ export default function WinnerItem({
       </div>
       <div className="min-w-0">
         <p className="text-xs text-muted-foreground">{label}</p>
-        <p className="text-sm font-semibold truncate">{result.runnerName}</p>
+        <p className="text-sm font-semibold truncate">{result.runner.name}</p>
         <p className="text-xs tabular-nums text-muted-foreground">
-          {result.time}
+          {mapResultTimeToNumber(result.resultTime)}
         </p>
       </div>
     </div>

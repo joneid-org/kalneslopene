@@ -6,49 +6,27 @@ import NavigationButtons from "@/components/NavigationButtons.tsx";
 import PhotoDialog from "@/components/PhotoDialog.tsx";
 import PhotoGrid from "@/components/PhotoGrid.tsx";
 import PhotoHeader from "@/components/PhotoHeader.tsx";
-import type { Photo } from "@/data/mockdata.ts";
-import { getRacesByYear, photos } from "@/data/mockdata.ts";
-import { getNextRace, getPreviousRace } from "@/lib/utils.ts";
+import { photos } from "@/data/mockdata.ts";
+import { formatDateFull } from "@/lib/TimeUtils.ts";
+import {
+  getNextRace,
+  getPhotosByRaceId,
+  getPreviousRace,
+} from "@/lib/utils.ts";
 
-type Props = {
-  uuid?: string;
-};
-
-export function Bilder({ uuid }: Props) {
-  const { year, raceNumber } = useParams<{
-    year: string;
-    raceNumber: string;
-  }>();
+export function Bilder() {
+  const { uuid } = useParams<{ uuid: string }>();
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  const parsedYear = year ? Number(year) : undefined;
-  const parsedWeek = raceNumber ? Number(raceNumber) : undefined;
+  const { data: races } = useQuery(QUERIES.race.getAllRaces);
 
-  const race = useMemo(() => {
-    if (!parsedYear || !parsedWeek) return null;
-    return (
-      getRacesByYear(parsedYear).find((r) => r.week === parsedWeek) ?? null
-    );
-  }, [parsedYear, parsedWeek]);
+  const previous = getPreviousRace(races ?? [], uuid);
+  const next = getNextRace(races ?? [], uuid);
+  const path = "/Bilder/";
+  const race = races?.find((r) => r.uuid === uuid);
+  const title = formatDateFull(race?.raceDate);
 
-  const racePhotos: Photo[] = useMemo(() => {
-    if (race) return photos.filter((p) => p.raceId === race.id);
-    if (parsedYear) {
-      const racesInYear = getRacesByYear(parsedYear);
-      return photos.filter((p) => racesInYear.some((r) => r.id === p.raceId));
-    }
-    return photos;
-  }, [race, parsedYear]);
-
-  const title = race
-    ? `Uke ${race.week} — ${new Date(race.date).toLocaleDateString("nb-NO", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      })}`
-    : parsedYear
-      ? `Bilder – ${parsedYear}`
-      : "Alle bilder";
+  const racePhotos = useMemo(() => getPhotosByRaceId(photos, uuid), [uuid]);
 
   const photographers = useMemo(() => {
     const names = racePhotos
@@ -57,11 +35,6 @@ export function Bilder({ uuid }: Props) {
     return [...new Set(names)];
   }, [racePhotos]);
 
-  const { data: races } = useQuery(QUERIES.race.getAllRaces);
-
-  const previous = getPreviousRace(races || [], uuid || undefined);
-  const next = getNextRace(races || [], uuid || undefined);
-  const path = "/Bilder/";
   return (
     <div className="px-2 py-4 sm:px-4 sm:py-6 md:px-8 md:py-8">
       <div className="w-full md:max-w-7xl md:mx-auto space-y-3 md:space-y-5">
@@ -74,14 +47,10 @@ export function Bilder({ uuid }: Props) {
         )}
 
         <PhotoHeader
-          title={title}
+          title={title ?? ""}
           photoCount={racePhotos.length}
           photographers={photographers}
-          resultsPath={
-            race
-              ? `/Resultater/${new Date(race.date).getFullYear()}/${race.week}`
-              : undefined
-          }
+          resultsPath={race ? `/Resultater/${race.uuid}` : undefined}
         />
 
         <PhotoGrid photos={racePhotos} onPhotoClick={setLightboxIndex} />

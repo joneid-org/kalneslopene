@@ -1,9 +1,12 @@
 import { useQueries, useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
 import NavigationButtons from "@/components/NavigationButtons.tsx";
+import PhotoCarousel from "@/components/PhotoCarousel.tsx";
+import PhotoDialog from "@/components/PhotoDialog.tsx";
 import ResultsHeader from "@/components/ResultsHeader.tsx";
 import ResultsTable from "@/components/ResultsTable.tsx";
+import { type Photo, photos } from "@/data/mockdata.ts";
 import { formatDateFull } from "@/lib/TimeUtils.ts";
 import { buildTableRows, getNextRace, getPreviousRace } from "@/lib/utils.ts";
 import type { RaceRunnerDTO } from "@/model/DTO.ts";
@@ -46,7 +49,6 @@ export default function Results({ uuid }: Props) {
   const next = getNextRace(races || [], uuid || undefined);
   const path = "/Resultater/";
   const race = races?.find((r) => r.uuid === uuid);
-
   const title = formatDateFull(race?.raceDate);
 
   const tableData = buildTableRows(
@@ -55,6 +57,12 @@ export default function Results({ uuid }: Props) {
     allRacesByRunner,
   );
 
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  const racePhotos: Photo[] = useMemo(
+    () => (race ? photos.filter((p) => p.raceId === race.uuid) : []),
+    [race],
+  );
   return (
     <div className="w-full max-w-2xl md:max-w-4xl space-y-3 md:space-y-5">
       <NavigationButtons previousRace={previous} nextRace={next} path={path} />
@@ -68,6 +76,18 @@ export default function Results({ uuid }: Props) {
       )}
 
       <ResultsTable tableData={tableData} title={title} />
+
+      <PhotoCarousel
+        photos={racePhotos}
+        uuid={uuid ?? ""}
+        onPhotoClick={setLightboxIndex}
+      />
+
+      <PhotoDialog
+        photos={racePhotos}
+        index={lightboxIndex}
+        onIndexChange={setLightboxIndex}
+      />
     </div>
   );
 }

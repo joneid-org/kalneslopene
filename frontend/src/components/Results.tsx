@@ -4,12 +4,9 @@ import { QUERIES } from "@/api/queries.ts";
 import NavigationButtons from "@/components/NavigationButtons.tsx";
 import ResultsHeader from "@/components/ResultsHeader.tsx";
 import ResultsTable from "@/components/ResultsTable.tsx";
-import {
-  buildTableRows,
-  formatDateFull,
-  getNextRace,
-  getPreviousRace,
-} from "@/lib/utils.ts";
+import { formatDateFull } from "@/lib/TimeUtils.ts";
+import { buildTableRows, getNextRace, getPreviousRace } from "@/lib/utils.ts";
+import type { RaceRunnerDTO } from "@/model/DTO.ts";
 
 type Props = {
   uuid?: string;
@@ -38,7 +35,7 @@ export default function Results({ uuid }: Props) {
   }, [raceRunners, runnerRaceQueries]);
 
   const allRacesByRunner = useMemo(() => {
-    const map: Record<string, (typeof runnerRaceQueries)[0]["data"]> = {};
+    const map: Record<string, RaceRunnerDTO[]> = {};
     (raceRunners ?? []).forEach((rr, index) => {
       map[rr.runner.uuid ?? ""] = runnerRaceQueries[index]?.data ?? [];
     });

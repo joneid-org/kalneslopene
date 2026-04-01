@@ -10,14 +10,12 @@ import { Link } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { Card, CardContent } from "@/components/ui/card.tsx";
+import { formatSecondsToTime, mapResultTimeToNumber } from "@/lib/TimeUtils.ts";
 import {
   findFastestRunnerInRace,
   findFastetFemaleInRace,
   findFastetMaleInRace,
-  formatSecondsToTime,
-  mapResultTimeToNumber,
 } from "@/lib/utils.ts";
-
 import type { RaceDTO } from "@/model/DTO.ts";
 import StatBox from "./StatBox.tsx";
 import WinnerItem from "./WinnerItem.tsx";

@@ -1,4 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
 import { CalendarDays, Clock, MapPin } from "lucide-react";
+import { QUERIES } from "@/api/queries.ts";
 import { Badge } from "@/components/ui/badge.tsx";
 import {
   Card,
@@ -6,10 +8,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
-import { getUpcomingRaces } from "@/data/mockdata.ts";
+import { NORWEGIAN_MONTH_NAMES } from "@/lib/constants.ts";
+import { formatTimeStamp } from "@/lib/TimeUtils.ts";
+import { getUpcomingRaces } from "@/lib/utils.ts";
 
 export default function RaceCalendarSidebar() {
-  const upcoming = getUpcomingRaces();
+  const { data: races } = useQuery(QUERIES.race.getAllRaces);
+  const upComingRaces = getUpcomingRaces(races ?? []);
 
   return (
     <Card className="w-full h-full flex flex-col">
@@ -20,33 +25,34 @@ export default function RaceCalendarSidebar() {
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0 flex-1 overflow-y-auto">
-        {upcoming.length === 0 ? (
+        {upComingRaces.length === 0 ? (
           <p className="text-sm text-muted-foreground px-6 pb-4">
             Ingen kommende løp registrert.
           </p>
         ) : (
           <ul className="divide-y divide-border">
-            {upcoming.map((race, idx) => {
-              const date = new Date(race.date);
+            {upComingRaces.map((race, idx) => {
               const isNext = idx === 0;
-              const weekNum = race.week;
 
               return (
-                <li key={race.id} className="flex items-start gap-3 px-6 py-3">
+                <li
+                  key={race.uuid}
+                  className="flex items-start gap-3 px-6 py-3"
+                >
                   {/* Date column */}
                   <div className="flex flex-col items-center min-w-10 text-center">
                     <span className="text-lg font-bold leading-none tabular-nums text-primary">
-                      {date.getDate()}
+                      {race.raceDate.getDate()}.
                     </span>
                     <span className="text-xs text-muted-foreground capitalize">
-                      {date.toLocaleDateString("nb-NO", { month: "short" })}
+                      {NORWEGIAN_MONTH_NAMES[race.raceDate.getMonth()]}
                     </span>
                   </div>
 
                   {/* Details */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-sm font-medium">{race.name}</span>
+                      <span className="text-sm font-medium">Blå løype</span>
                       {isNext && (
                         <Badge className="text-[10px] px-1.5 py-0 h-4 bg-green-100 text-green-700 border-green-200">
                           Neste
@@ -54,18 +60,15 @@ export default function RaceCalendarSidebar() {
                       )}
                     </div>
                     <div className="flex items-center gap-3 mt-0.5 text-xs text-muted-foreground flex-wrap">
-                      {race.time && (
+                      {race.raceDate && (
                         <span className="flex items-center gap-1">
                           <Clock className="size-3" />
-                          {race.time}
+                          Torsdag kl {formatTimeStamp(race.raceDate)}
                         </span>
                       )}
                       <span className="flex items-center gap-1">
                         <MapPin className="size-3" />
-                        {race.location}
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        Uke {weekNum}
+                        Kalnesskogen
                       </span>
                     </div>
                   </div>

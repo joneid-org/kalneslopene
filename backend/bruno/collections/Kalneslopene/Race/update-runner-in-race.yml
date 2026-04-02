@@ -1,0 +1,18 @@
+version: 1
+name: Update runner in race
+requests:
+  - name: Update single runner
+    method: PATCH
+    url: http://localhost:8080/api/races/{{raceUuid}}/runners/{{runnerUuid1}}
+    headers:
+      Content-Type: application/json
+    body:
+      type: json
+      value: |
+        {
+          "runner": { "uuid": "{{runnerUuid1}}" },
+          "race": { "uuid": "{{raceUuid}}" },
+          "resultTime": "PT00H20M00S",
+          "hideTime": true
+        }
+

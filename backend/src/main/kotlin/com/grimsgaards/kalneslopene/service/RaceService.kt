@@ -3,7 +3,10 @@ package com.grimsgaards.kalneslopene.service
 import com.grimsgaards.kalneslopene.model.dto.RaceDTO
 import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
 import com.grimsgaards.kalneslopene.model.entities.RaceEntity
+import com.grimsgaards.kalneslopene.model.entities.RaceRunnerEntity
+import com.grimsgaards.kalneslopene.model.entities.RaceRunnerKey
 import com.grimsgaards.kalneslopene.repository.RaceRepository
+import com.grimsgaards.kalneslopene.repository.RunnerRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.util.*
@@ -11,6 +14,7 @@ import java.util.*
 @Service
 class RaceService(
     val raceRepository: RaceRepository,
+    val runnerRepository: RunnerRepository,
 ) {
 
     fun getAll(): List<RaceDTO> {
@@ -54,4 +58,54 @@ class RaceService(
         return race?.runners?.map { it.toDto() } ?: throw IllegalArgumentException("no race found with id $uuid")
     }
 
+    fun addRunnersToRace(raceUuid: UUID, runners: List<RaceRunnerDTO>): List<RaceRunnerDTO> {
+        val race = raceRepository.findByIdOrNull(raceUuid)
+            ?: throw NoSuchElementException("Race $raceUuid not found")
+        val updatedEntities = runners.map { dto ->
+            val runner = runnerRepository.findByIdOrNull(requireNotNull(dto.runner.uuid) { "Runner UUID cannot be null" })
+                ?: throw NoSuchElementException("Runner ${dto.runner.uuid} not found")
+            val key = RaceRunnerKey(runnerUuid = runner.uuid, raceUuid = race.uuid)
+            val existing = race.runners.find { it.id == key }
+            if (existing != null) {
+                existing.resultTime = dto.resultTime
+                existing.hideTime = dto.hideTime
+                existing
+            } else {
+                val entity = RaceRunnerEntity(
+                    id = key,
+                    runner = runner,
+                    race = race,
+                    resultTime = dto.resultTime,
+                    hideTime = dto.hideTime
+                )
+                race.runners.add(entity)
+                entity
+            }
+        }
+        raceRepository.save(race)
+        return updatedEntities.map { it.toDto() }
+    }
+
+
+    fun updateRunnerInRace(raceUuid: UUID, runnerUuid: UUID, runnerDto: RaceRunnerDTO): RaceRunnerDTO {
+        val race = raceRepository.findByIdOrNull(raceUuid)
+            ?: throw NoSuchElementException("Race $raceUuid not found")
+        val runner = runnerRepository.findByIdOrNull(runnerUuid)
+            ?: throw NoSuchElementException("Runner $runnerUuid not found")
+        val key = RaceRunnerKey(runnerUuid = runner.uuid, raceUuid = race.uuid)
+        val entity = race.runners.find { it.id == key }
+            ?: throw NoSuchElementException("Runner $runnerUuid not found in race $raceUuid")
+        entity.resultTime = runnerDto.resultTime
+        entity.hideTime = runnerDto.hideTime
+        raceRepository.save(race)
+        return entity.toDto()
+    }
+
+    fun removeRunnersFromRace(raceUuid: UUID, runners: List<RaceRunnerDTO>) {
+        val race = raceRepository.findByIdOrNull(raceUuid)
+            ?: throw NoSuchElementException("Race $raceUuid not found")
+        val runnerUuids = runners.map { it.runner.uuid }
+        race.runners.removeIf { it.runner.uuid in runnerUuids }
+        raceRepository.save(race)
+    }
 }

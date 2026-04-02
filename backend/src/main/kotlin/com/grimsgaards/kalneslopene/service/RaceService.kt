@@ -3,9 +3,9 @@ package com.grimsgaards.kalneslopene.service
 import com.grimsgaards.kalneslopene.model.dto.RaceDTO
 import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
 import com.grimsgaards.kalneslopene.model.entities.RaceEntity
-import com.grimsgaards.kalneslopene.model.entities.RaceRunnerEntity
 import com.grimsgaards.kalneslopene.model.entities.RaceRunnerKey
 import com.grimsgaards.kalneslopene.repository.RaceRepository
+import com.grimsgaards.kalneslopene.repository.RaceRunnerRepository
 import com.grimsgaards.kalneslopene.repository.RunnerRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -15,6 +15,7 @@ import java.util.*
 class RaceService(
     val raceRepository: RaceRepository,
     val runnerRepository: RunnerRepository,
+    val raceRunnerRepository: RaceRunnerRepository,
 ) {
 
     fun getAll(): List<RaceDTO> {
@@ -58,20 +59,22 @@ class RaceService(
         return race?.runners?.map { it.toDto() } ?: throw IllegalArgumentException("no race found with id $uuid")
     }
 
+    @org.springframework.transaction.annotation.Transactional
     fun addRunnersToRace(raceUuid: UUID, runners: List<RaceRunnerDTO>): List<RaceRunnerDTO> {
         val race = raceRepository.findByIdOrNull(raceUuid)
             ?: throw NoSuchElementException("Race $raceUuid not found")
-        val updatedEntities = runners.map { dto ->
+        println("race.runners before: " + race.runners.map { it.id })
+        runners.forEach { dto ->
             val runner = runnerRepository.findByIdOrNull(requireNotNull(dto.runner.uuid) { "Runner UUID cannot be null" })
-                ?: throw NoSuchElementException("Runner ${dto.runner.uuid} not found")
+                ?: throw NoSuchElementException("Runner "+dto.runner.uuid+" not found")
             val key = RaceRunnerKey(runnerUuid = runner.uuid, raceUuid = race.uuid)
+            println("Checking if key exists in DB: $key -> ${raceRunnerRepository.existsById(key)}")
             val existing = race.runners.find { it.id == key }
             if (existing != null) {
                 existing.resultTime = dto.resultTime
                 existing.hideTime = dto.hideTime
-                existing
             } else {
-                val entity = RaceRunnerEntity(
+                val entity = com.grimsgaards.kalneslopene.model.entities.RaceRunnerEntity(
                     id = key,
                     runner = runner,
                     race = race,
@@ -79,11 +82,20 @@ class RaceService(
                     hideTime = dto.hideTime
                 )
                 race.runners.add(entity)
-                entity
+                println("Added new RaceRunnerEntity with key: $key")
             }
         }
-        raceRepository.save(race)
-        return updatedEntities.map { it.toDto() }
+        println("race.runners after: " + race.runners.map { it.id })
+        try {
+            println("race_runner count before save: ${raceRunnerRepository.count()}")
+
+            raceRepository.saveAndFlush(race)
+            println("race_runner count after save: ${raceRunnerRepository.count()}")
+        } catch (ex: Exception) {
+            println("Error saving race and runners: ${ex.message}")
+            throw ex
+        }
+        return race.runners.map { it.toDto() }
     }
 
 

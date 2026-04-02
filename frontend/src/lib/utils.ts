@@ -1,9 +1,14 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { DISTANCE_KM } from "@/lib/constants.ts";
-import { formatSecondsToTime, mapResultTimeToNumber } from "@/lib/TimeUtils.ts";
-import type { OrganizerDTO, RaceDTO, RaceRunnerDTO } from "@/model/DTO.ts";
 import type { Photo } from "@/data/mockdata.ts";
+import { DISTANCE_KM } from "@/lib/constants.ts";
+import {
+  extractYear,
+  formatSecondsToTime,
+  mapResultTimeToNumber,
+  raceDateToSortKey,
+} from "@/lib/timeUtils.ts";
+import type { OrganizerDTO, RaceDTO, RaceRunnerDTO } from "@/model/DTO.ts";
 
 export function getPhotosByRaceId(
   photos: Photo[],
@@ -11,21 +16,6 @@ export function getPhotosByRaceId(
 ): Photo[] {
   if (!uuid) return [];
   return photos.filter((p) => p.raceId === uuid);
-}
-
-function extractYear(raceDate: unknown): number {
-  if (Array.isArray(raceDate)) return (raceDate as number[])[0];
-  if (raceDate instanceof Date) return raceDate.getFullYear();
-  return Number(String(raceDate).split("-")[0]);
-}
-
-function raceDateToSortKey(raceDate: unknown): string {
-  if (Array.isArray(raceDate)) {
-    const [y, mo, d, h = 0, mi = 0] = raceDate as number[];
-    return `${y}-${String(mo).padStart(2, "0")}-${String(d).padStart(2, "0")}T${String(h).padStart(2, "0")}:${String(mi).padStart(2, "0")}`;
-  }
-  if (raceDate instanceof Date) return raceDate.toISOString();
-  return String(raceDate);
 }
 
 export function cn(...inputs: ClassValue[]) {

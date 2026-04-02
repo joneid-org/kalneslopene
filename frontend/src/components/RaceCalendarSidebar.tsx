@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
-import { formatDDMonth, formatTimeStamp } from "@/lib/TimeUtils.ts";
+import { formatDDMonth, formatTimeStamp } from "@/lib/timeUtils.ts";
 import { getUpcomingRaces } from "@/lib/utils.ts";
 
 export default function RaceCalendarSidebar() {

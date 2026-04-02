@@ -1,5 +1,5 @@
 import { TrendingUpIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -14,13 +14,18 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart.tsx";
-import { getRunnerChartData } from "@/data/mockdata.ts";
+import {
+  extractYear,
+  formatDDMonth,
+  mapResultTimeToNumber,
+} from "@/lib/timeUtils.ts";
+import type { RaceRunnerDTO } from "@/model/DTO.ts";
 
 const YEAR_COLORS: Record<number, string> = {
-  2026: "oklch(0.50 0.18 255)", // blue
-  2025: "oklch(0.55 0.16 152)", // green
-  2024: "oklch(0.65 0.19 55)", // orange
-  2023: "oklch(0.60 0.15 285)", // purple
+  2026: "oklch(0.50 0.18 255)",
+  2025: "oklch(0.55 0.16 152)",
+  2024: "oklch(0.65 0.19 55)",
+  2023: "oklch(0.60 0.15 285)",
 };
 const FALLBACK = [
   "oklch(0.50 0.18 255)",
@@ -31,16 +36,19 @@ const FALLBACK = [
 const fmt = (s: number) =>
   `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 
-const currentYear = new Date().getFullYear();
+type Props = { raceHistory: RaceRunnerDTO[]; availableYears: number[] };
 
-type Props = { runnerId: string; availableYears: number[] };
-
-export default function RunnerTimeChart({ runnerId, availableYears }: Props) {
+export default function RunnerTimeChart({
+  raceHistory,
+  availableYears,
+}: Props) {
   const [selectedYears, setSelectedYears] = useState<number[]>(() =>
-    availableYears.includes(currentYear)
-      ? [currentYear]
-      : availableYears.slice(0, 1),
+    availableYears.length > 0 ? [availableYears[0]] : [],
   );
+
+  useEffect(() => {
+    setSelectedYears(availableYears.length > 0 ? [availableYears[0]] : []);
+  }, [availableYears]);
 
   const toggleYear = (y: number) =>
     setSelectedYears((prev) =>
@@ -58,7 +66,33 @@ export default function RunnerTimeChart({ runnerId, availableYears }: Props) {
         : [...availableYears],
     );
 
-  const { points } = getRunnerChartData(runnerId, selectedYears);
+  // Build chart points from raceHistory
+  const filtered = raceHistory.filter(
+    (rr) =>
+      !rr.hideTime &&
+      rr.resultTime &&
+      selectedYears.includes(extractYear(rr.race.raceDate)),
+  );
+
+  type ChartPoint = {
+    label: string;
+    sortKey: string;
+    [year: string]: number | string;
+  };
+
+  const byDate = new Map<string, ChartPoint>();
+  for (const rr of filtered) {
+    const key = rr.race.raceDate as unknown as string;
+    const label = formatDDMonth(rr.race.raceDate);
+    const year = extractYear(rr.race.raceDate);
+    if (!byDate.has(key)) byDate.set(key, { label, sortKey: key });
+    const point = byDate.get(key);
+    if (point) point[String(year)] = mapResultTimeToNumber(rr.resultTime);
+  }
+
+  const points = Array.from(byDate.values()).sort((a, b) =>
+    a.sortKey.localeCompare(b.sortKey),
+  );
 
   const chartConfig: ChartConfig = Object.fromEntries(
     availableYears.map((y, i) => [
@@ -78,7 +112,6 @@ export default function RunnerTimeChart({ runnerId, availableYears }: Props) {
             <TrendingUpIcon className="size-4 text-primary" />
             Utvikling over tid
           </CardTitle>
-
           <div className="flex flex-wrap gap-1.5">
             <Button
               size="sm"
@@ -119,7 +152,6 @@ export default function RunnerTimeChart({ runnerId, availableYears }: Props) {
           </div>
         </div>
       </CardHeader>
-
       <CardContent>
         {points.length < 2 ? (
           <p className="text-sm text-muted-foreground py-8 text-center">

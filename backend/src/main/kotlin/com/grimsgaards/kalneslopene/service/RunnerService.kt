@@ -21,7 +21,7 @@ class RunnerService(
     }
 
     fun getRunnerByName(name: String): List<RunnerDTO> {
-        return runnerRepository.findByNameStartsWith(name).map { it.toDto() }
+        return runnerRepository.findByNameStartsWithIgnoreCase(name).map { it.toDto() }
     }
 
     fun createMultipleRunners(runners: List<RunnerDTO>): List<RunnerDTO> {

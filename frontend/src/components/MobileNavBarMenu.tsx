@@ -14,7 +14,7 @@ import {
   DrawerHeader,
   DrawerTrigger,
 } from "@/components/ui/drawer.tsx";
-import { formatDDMonth } from "@/lib/TimeUtils.ts";
+import { formatDDMonth } from "@/lib/timeUtils.ts";
 import { getRacesDTOByYear, getYears } from "@/lib/utils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 

@@ -93,6 +93,7 @@ export const QUERIES = {
       queryKey: ["runner", "getById", uuid],
       queryFn: () => kyClient.get(`/api/runners/${uuid}`).json<RunnerDTO>(),
     }),
+
     createRunners: (runners: RunnerDTO[]) => ({
       queryKey: ["runner", "create"],
       queryFn: () =>

@@ -10,7 +10,7 @@ import {
   MenubarSubTrigger,
   MenubarTrigger,
 } from "@/components/ui/menubar";
-import { formatDDMonth } from "@/lib/TimeUtils.ts";
+import { formatDDMonth } from "@/lib/timeUtils.ts";
 import { getRacesDTOByYear, getYears } from "@/lib/utils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 

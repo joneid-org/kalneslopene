@@ -7,5 +7,5 @@ import java.util.*
 
 @Repository
 interface RunnerRepository : JpaRepository<RunnerEntity, UUID> {
-    fun findByNameStartsWith(name: String): List<RunnerEntity>
+    fun findByNameStartsWithIgnoreCase(name: String): List<RunnerEntity>
 }

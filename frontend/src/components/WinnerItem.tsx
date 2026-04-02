@@ -1,6 +1,6 @@
 import { TimerIcon } from "lucide-react";
+import { formatSecondsToTime, mapResultTimeToNumber } from "@/lib/timeUtils.ts";
 import type { RaceRunnerDTO } from "@/model/DTO.ts";
-import { formatSecondsToTime, mapResultTimeToNumber } from "@/lib/TimeUtils.ts";
 
 type WinnerItemProps = {
   result: RaceRunnerDTO;

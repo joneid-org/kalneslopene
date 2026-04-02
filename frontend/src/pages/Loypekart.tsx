@@ -3,6 +3,7 @@ import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import { useState } from "react";
+import { blaaRoute } from "@/data/coordinater";
 import {
   MapContainer,
   Marker,
@@ -20,10 +21,8 @@ import {
 } from "@/components/ui/card.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import {
-  blaaRoute,
   categoryLabel,
   categoryVariant,
-  gronnRoute,
   MAP_CENTER,
   MAP_ZOOM,
   mapLegend,
@@ -45,14 +44,14 @@ function colorIcon(color: string) {
   return L.divIcon({
     className: "",
     html: `<div style="
-      width:28px;height:28px;border-radius:50% 50% 50% 0;
+      width:15px;height:15px;border-radius:50% 50% 50% 0;
       background:${color};border:2px solid white;
       box-shadow:0 2px 6px rgba(0,0,0,.4);
       transform:rotate(-45deg);
     "></div>`,
-    iconSize: [28, 28],
-    iconAnchor: [14, 28],
-    popupAnchor: [0, -30],
+    iconSize: [16, 16],
+    iconAnchor: [8, 16],
+    popupAnchor: [0, -18],
   });
 }
 
@@ -101,15 +100,6 @@ export function Loypekart() {
             <Polyline
               positions={blaaRoute}
               pathOptions={{ color: "#2563eb", weight: 4, opacity: 0.8 }}
-            />
-            <Polyline
-              positions={gronnRoute}
-              pathOptions={{
-                color: "#16a34a",
-                weight: 3,
-                opacity: 0.7,
-                dashArray: "6 4",
-              }}
             />
 
             {/* Pins */}

@@ -31,6 +31,21 @@ function parseDateParts(raceDate: unknown) {
   return { year, month, day, hours, minutes };
 }
 
+export function extractYear(raceDate: unknown): number {
+  if (Array.isArray(raceDate)) return (raceDate as number[])[0];
+  if (raceDate instanceof Date) return raceDate.getFullYear();
+  return Number(String(raceDate).split("-")[0]);
+}
+
+export function raceDateToSortKey(raceDate: unknown): string {
+  if (Array.isArray(raceDate)) {
+    const [y, mo, d, h = 0, mi = 0] = raceDate as number[];
+    return `${y}-${String(mo).padStart(2, "0")}-${String(d).padStart(2, "0")}T${String(h).padStart(2, "0")}:${String(mi).padStart(2, "0")}`;
+  }
+  if (raceDate instanceof Date) return raceDate.toISOString();
+  return String(raceDate);
+}
+
 export function formatDDMonth(raceDate: unknown): string {
   const { day, month } = parseDateParts(raceDate);
   const monthName = NORWEGIAN_MONTH_NAMES[(month ?? 1) - 1];

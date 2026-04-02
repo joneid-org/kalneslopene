@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { RACE_INFORMATION } from "@/lib/constants.ts";
-import { formatTimeStamp } from "@/lib/TimeUtils.ts";
+import { formatTimeStamp } from "@/lib/timeUtils.ts";
 import { getUpcomingRaces } from "@/lib/utils.ts";
 
 const practicalInformation = [

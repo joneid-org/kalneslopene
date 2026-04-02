@@ -24,7 +24,11 @@ Dette prosjektet er bygget med fokus på moderne webutvikling og brukervennlighe
 - Husk å skrive alt brukerrettet innhold på norsk.
 - Alle nødvendige pakker for shadcn/ui er allerede installert (`class-variance-authority`, `clsx`, `tailwind-merge`, `lucide-react`, `radix-ui`, `vaul`, `shadcn`). Ikke installer disse på nytt – stol på at de er tilgjengelige.
 - Når du legger til nye shadcn/ui-komponenter, bruk `npx shadcn add <komponent>` fra `frontend/`-mappen.
-
+- Bruk utils klassene. timeUtils for alt som har med konvertering og mapping av dato og tid. Utils for hjelpemetoder for å lage komponentlassene mindre. statisticsUtils for alt som har med statistikk å gjøre.
+- Ikke implementer noe med dato/tid som har med tidssone å gjøre.
+- Ved bruk av queries ønsker jeg at det skal gjøres så høyt opp som mulig, og resultatet skal sendes nedover til komponentene. Dette for å unngå mange kall til backenden.
+- I stedet for å ha flere nesten like hjelpemetoder, se om du kan gjøre det litt mer generisk.
+- 
 ---
 
 For spørsmål, se prosjektets README eller kontakt utviklerteamet.

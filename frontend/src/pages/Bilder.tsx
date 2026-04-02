@@ -7,7 +7,7 @@ import PhotoDialog from "@/components/PhotoDialog.tsx";
 import PhotoGrid from "@/components/PhotoGrid.tsx";
 import PhotoHeader from "@/components/PhotoHeader.tsx";
 import { photos } from "@/data/mockdata.ts";
-import { formatDateFull } from "@/lib/TimeUtils.ts";
+import { formatDateFull } from "@/lib/timeUtils.ts";
 import {
   getNextRace,
   getPhotosByRaceId,

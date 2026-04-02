@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
-import { formatDateFull } from "@/lib/TimeUtils.ts";
+import { formatDateFull } from "@/lib/timeUtils.ts";
 
 export default function NewsFeed() {
   const { data: newsfeeds } = useQuery(QUERIES.newsfeed.getAllNewsFeeds);

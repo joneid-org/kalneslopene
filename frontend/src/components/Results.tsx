@@ -7,7 +7,7 @@ import PhotoDialog from "@/components/PhotoDialog.tsx";
 import ResultsHeader from "@/components/ResultsHeader.tsx";
 import ResultsTable from "@/components/ResultsTable.tsx";
 import { type Photo, photos } from "@/data/mockdata.ts";
-import { formatDateFull } from "@/lib/TimeUtils.ts";
+import { formatDateFull } from "@/lib/timeUtils.ts";
 import { buildTableRows, getNextRace, getPreviousRace } from "@/lib/utils.ts";
 import type { RaceRunnerDTO } from "@/model/DTO.ts";
 

@@ -49,6 +49,33 @@ export const QUERIES = {
           .json<RaceRunnerDTO[]>();
       },
     }),
+    addRunnersToRace: (raceUuid: string, runners: RaceRunnerDTO[]) => ({
+      queryKey: ["race", raceUuid, "runnersInRace", "add"],
+      queryFn: () =>
+        kyClient
+          .post(`/api/races/${raceUuid}/runners`, { json: runners })
+          .json<RaceRunnerDTO[]>(),
+    }),
+    updateRunnerInRace: (
+      raceUuid: string,
+      runnerUuid: string,
+      runner: RaceRunnerDTO,
+    ) => ({
+      queryKey: ["race", raceUuid, "runnersInRace", "update", runnerUuid],
+      queryFn: () =>
+        kyClient
+          .patch(`/api/races/${raceUuid}/runners/${runnerUuid}`, {
+            json: runner,
+          })
+          .json<RaceRunnerDTO>(),
+    }),
+    removeRunnersFromRace: (raceUuid: string, runners: RaceRunnerDTO[]) => ({
+      queryKey: ["race", raceUuid, "runnersInRace", "remove"],
+      queryFn: () =>
+        kyClient
+          .delete(`/api/races/${raceUuid}/runners`, { json: runners })
+          .json<void>(),
+    }),
   },
   organizer: {
     getAllOrganizers: {

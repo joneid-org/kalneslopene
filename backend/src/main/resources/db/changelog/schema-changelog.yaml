@@ -34,3 +34,10 @@ databaseChangeLog:
         - sqlFile:
             path: db/changelog/sql/create/create_organizer.sql
             relativeToChangelogFile: false
+  - changeSet:
+      id: 006-make-race-weather-nullable
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_race_weather_nullable.sql
+            relativeToChangelogFile: false

@@ -18,8 +18,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
-import { Separator } from "@/components/ui/separator.tsx"; // Fix default marker icon paths broken by bundlers
+import { Separator } from "@/components/ui/separator.tsx";
+import {
+  blaaRoute,
+  categoryLabel,
+  categoryVariant,
+  gronnRoute,
+  MAP_CENTER,
+  MAP_ZOOM,
+  mapLegend,
+  pins,
+  type Pin,
+} from "@/data/loypekartData.ts";
 
+// Fix default marker icon paths broken by bundlers
 delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)
   ._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -44,128 +56,6 @@ function colorIcon(color: string) {
   });
 }
 
-type Pin = {
-  id: string;
-  label: string;
-  position: [number, number];
-  color: string;
-  category: "start" | "vending" | "poi" | "mal";
-  distance: string;
-  description: string;
-  tips?: string;
-};
-
-const pins: Pin[] = [
-  {
-    id: "start",
-    label: "Start / Mål",
-    position: [58.3452, 8.5931],
-    color: "#16a34a",
-    category: "start",
-    distance: "0 / 8 km",
-    description:
-      "Samlingspunktet for alle løpere. Her gis det informasjon om løypen, og tidtakingen starter og stopper her.",
-    tips: "Møt opp senest 10 minutter før start. Parkering er tilgjengelig like ved.",
-  },
-  {
-    id: "v1",
-    label: "Vendepunkt blå løype",
-    position: [58.3521, 8.6095],
-    color: "#2563eb",
-    category: "vending",
-    distance: "4 km",
-    description:
-      "Vendepunktet for blå løype (ca. 8 km). Herfra snur du og følger samme trase tilbake til mål.",
-    tips: "God mulighet til å sjekke tempoet — du er halvveis!",
-  },
-  {
-    id: "v2",
-    label: "Vendepunkt grønn løype",
-    position: [58.3488, 8.6008],
-    color: "#16a34a",
-    category: "vending",
-    distance: "2 km",
-    description:
-      "Vendepunktet for grønn løype (ca. 4 km). Perfekt for yngre løpere og mosjonister.",
-  },
-  {
-    id: "poi1",
-    label: "Utsiktspunkt",
-    position: [58.351, 8.5975],
-    color: "#d97706",
-    category: "poi",
-    distance: "ca. 2,5 km",
-    description:
-      "Et flott utsiktspunkt med fin sikt over Aust-Agder. Populært hvilestopp på treningsøkter.",
-    tips: "Stopp opp og nyt utsikten — du fortjener det!",
-  },
-  {
-    id: "poi2",
-    label: "Bratt bakke",
-    position: [58.3475, 8.5988],
-    color: "#dc2626",
-    category: "poi",
-    distance: "ca. 1,5 km",
-    description:
-      "Den beryktet bratte bakken som tester både ben og vilje. Mange velger å gå her — og det er helt greit!",
-    tips: "Kort og intens — hold igjen litt i bunn så du har krefter til toppen.",
-  },
-  {
-    id: "poi3",
-    label: "Skogsti",
-    position: [58.3535, 8.604],
-    color: "#7c3aed",
-    category: "poi",
-    distance: "ca. 3,5 km",
-    description:
-      "En fin seksjon gjennom tett granskog med mykt underlag. Behagelig å løpe, men pass på røtter i bakken.",
-  },
-];
-
-// Approximate route polyline (blå løype — full 8 km loop)
-const routeCoords: [number, number][] = [
-  [58.3452, 8.5931],
-  [58.3465, 8.595],
-  [58.3475, 8.5988],
-  [58.3488, 8.6008],
-  [58.351, 8.5975],
-  [58.3535, 8.604],
-  [58.3521, 8.6095],
-  [58.3505, 8.611],
-  [58.349, 8.608],
-  [58.347, 8.605],
-  [58.3455, 8.601],
-  [58.3452, 8.5931],
-];
-
-// Grønn løype branches off earlier
-const greenRoute: [number, number][] = [
-  [58.3452, 8.5931],
-  [58.3465, 8.595],
-  [58.3475, 8.5988],
-  [58.3488, 8.6008],
-  [58.3475, 8.5988],
-  [58.3465, 8.595],
-  [58.3452, 8.5931],
-];
-
-const categoryLabel: Record<Pin["category"], string> = {
-  start: "Start / Mål",
-  vending: "Vendepunkt",
-  poi: "Interessepunkt",
-  mal: "Mål",
-};
-
-const categoryVariant: Record<
-  Pin["category"],
-  "default" | "secondary" | "outline" | "destructive"
-> = {
-  start: "default",
-  vending: "secondary",
-  poi: "outline",
-  mal: "default",
-};
-
 export function Loypekart() {
   const [activePin, setActivePin] = useState<Pin | null>(null);
 
@@ -181,15 +71,7 @@ export function Loypekart() {
 
       {/* Legend */}
       <div className="flex flex-wrap gap-3 text-xs">
-        {(
-          [
-            { color: "#16a34a", label: "Start / Mål & grønn løype" },
-            { color: "#2563eb", label: "Blå løype (8 km)" },
-            { color: "#d97706", label: "Utsiktspunkt" },
-            { color: "#dc2626", label: "Krevende parti" },
-            { color: "#7c3aed", label: "Interessepunkt" },
-          ] as const
-        ).map(({ color, label }) => (
+        {mapLegend.map(({ color, label }) => (
           <div key={label} className="flex items-center gap-1.5">
             <span
               className="inline-block w-3 h-3 rounded-full border border-white shadow"
@@ -205,8 +87,8 @@ export function Loypekart() {
         {/* Map */}
         <div className="flex-1 rounded-xl overflow-hidden border shadow-sm min-h-105">
           <MapContainer
-            center={[58.349, 8.601]}
-            zoom={14}
+            center={MAP_CENTER}
+            zoom={MAP_ZOOM}
             style={{ height: "100%", minHeight: "420px", width: "100%" }}
             scrollWheelZoom={false}
           >
@@ -217,16 +99,11 @@ export function Loypekart() {
 
             {/* Routes */}
             <Polyline
-              positions={routeCoords}
-              pathOptions={{
-                color: "#2563eb",
-                weight: 4,
-                opacity: 0.8,
-                dashArray: undefined,
-              }}
+              positions={blaaRoute}
+              pathOptions={{ color: "#2563eb", weight: 4, opacity: 0.8 }}
             />
             <Polyline
-              positions={greenRoute}
+              positions={gronnRoute}
               pathOptions={{
                 color: "#16a34a",
                 weight: 3,
@@ -241,11 +118,7 @@ export function Loypekart() {
                 key={pin.id}
                 position={pin.position}
                 icon={colorIcon(pin.color)}
-                eventHandlers={{
-                  click: () => {
-                    setActivePin(pin);
-                  },
-                }}
+                eventHandlers={{ click: () => setActivePin(pin) }}
               >
                 <Tooltip direction="top" offset={[0, -30]} opacity={0.9}>
                   {pin.label}

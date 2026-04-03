@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
-import { RACE_INFORMATION } from "@/lib/constants.ts";
+import { DISTANCE_KM, RACE_INFORMATION } from "@/lib/constants.ts";
 import { formatTimeStamp } from "@/lib/timeUtils.ts";
 import { getUpcomingRaces } from "@/lib/utils.ts";
 
@@ -25,7 +25,7 @@ export default function RaceInfoBlock() {
   const nextRace = getUpcomingRaces(races ?? [])[0];
 
   const courseDetails = [
-    { label: "Distanse", value: "5.2 km", icon: Ruler },
+    { label: "Distanse", value: DISTANCE_KM.toString(), icon: Ruler },
     { label: "Start & mål", value: "Kalnesskogen", icon: MapPin },
     {
       label: "Starttid",

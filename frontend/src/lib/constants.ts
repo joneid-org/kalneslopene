@@ -1,4 +1,4 @@
-export const DISTANCE_KM = 5.2;
+export const DISTANCE_KM = 5.1;
 
 export const COLUMN_LABELS: Record<string, string> = {
   position: "#",

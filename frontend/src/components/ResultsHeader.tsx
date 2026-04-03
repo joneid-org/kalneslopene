@@ -84,13 +84,7 @@ export default function ResultsHeader({
       </div>
 
       {/* ── Stat boxes ── */}
-      <div className="grid grid-cols-3 gap-2 md:gap-4">
-        <StatBox
-          icon={MapPinIcon}
-          value="5,2 km"
-          label="Distanse"
-          color="blue"
-        />
+      <div className="grid grid-cols-2 gap-2 md:gap-4">
         <StatBox
           icon={UsersIcon}
           value={participants}

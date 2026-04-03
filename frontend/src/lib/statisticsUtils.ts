@@ -5,6 +5,45 @@ import {
 } from "@/lib/timeUtils.ts";
 import type { RaceDTO, RaceRunnerDTO } from "@/model/DTO.ts";
 
+export type PersonalRecord = {
+  runnerUuid: string;
+  runnerName: string;
+  gender: string;
+  pr: string;
+  prSeconds: number;
+  totalRaces: number;
+};
+
+export function getPersonalRecords(
+  allRacesByRunner: Record<string, RaceRunnerDTO[]>,
+): PersonalRecord[] {
+  return Object.entries(allRacesByRunner)
+    .map(([uuid, races]) => {
+      if (races.length === 0) return null;
+      const { name, gender } = races[0].runner;
+      const best = races
+        .filter((rr) => !rr.hideTime && rr.resultTime)
+        .sort(
+          (a, b) =>
+            mapResultTimeToNumber(a.resultTime) -
+            mapResultTimeToNumber(b.resultTime),
+        )[0];
+      const prSeconds = best ? mapResultTimeToNumber(best.resultTime) : 0;
+      return {
+        runnerUuid: uuid,
+        runnerName: name,
+        gender,
+        pr: best ? formatSecondsToTime(prSeconds) : "-",
+        prSeconds,
+        totalRaces: races.length,
+      };
+    })
+    .filter((r): r is PersonalRecord => r !== null && r.prSeconds > 0)
+    .sort((a, b) => a.prSeconds - b.prSeconds);
+}
+
+// ...existing code...
+
 // Totalt antall løp
 export function getNumberOfRaces(races: RaceDTO[]): number {
   return races.length;

@@ -13,6 +13,7 @@ const headerBarDynamic = [
 ];
 const headerBarStatic = [
   { path: "/Statistikk", label: "Statistikk" },
+  { path: "/PersonligeRekorder", label: "Rekorder" },
   { path: "/Løypekart", label: "Løypekart" },
   { path: "/Historie", label: "Historie" },
 ];

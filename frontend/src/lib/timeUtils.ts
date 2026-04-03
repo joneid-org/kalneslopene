@@ -98,6 +98,43 @@ export function mapResultTimeToNumber(resultTime: string): number {
   return hours * 3600 + minutes * 60 + seconds;
 }
 
+/** Convert a "mm:ss" or "hh:mm:ss" string to total seconds */
+export function timeToSeconds(time: string): number {
+  const parts = time.split(":").map(Number);
+  if (parts.length === 2) return (parts[0] ?? 0) * 60 + (parts[1] ?? 0);
+  return (parts[0] ?? 0) * 3600 + (parts[1] ?? 0) * 60 + (parts[2] ?? 0);
+}
+
+/** Generate ISO datetime strings "YYYY-MM-DDTHH:mm:ss" spaced every `intervalDays` days */
+export function generateRaceDates(
+  startDate: string,
+  endDate: string,
+  timeOfDay: string,
+  intervalDays: number,
+): string[] {
+  const dates: string[] = [];
+  const [sh, sm] = timeOfDay.split(":").map(Number);
+  const [sy, smo, sd] = startDate.split("-").map(Number);
+  const [ey, emo, ed] = endDate.split("-").map(Number);
+  const end = new Date(ey, emo - 1, ed);
+
+  let cur = new Date(sy, smo - 1, sd);
+  while (cur <= end) {
+    const y = cur.getFullYear();
+    const mo = String(cur.getMonth() + 1).padStart(2, "0");
+    const d = String(cur.getDate()).padStart(2, "0");
+    const h = String(sh).padStart(2, "0");
+    const mi = String(sm).padStart(2, "0");
+    dates.push(`${y}-${mo}-${d}T${h}:${mi}:00`);
+    cur = new Date(
+      cur.getFullYear(),
+      cur.getMonth(),
+      cur.getDate() + intervalDays,
+    );
+  }
+  return dates;
+}
+
 export function secondsToDuration(totalSeconds: number): string {
   if (!totalSeconds || totalSeconds <= 0) return "PT0S";
   const h = Math.floor(totalSeconds / 3600);

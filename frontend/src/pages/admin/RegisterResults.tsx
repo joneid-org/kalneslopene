@@ -47,7 +47,9 @@ import {
   formatDDMonth,
   formatSecondsToTime,
   formatTimeStamp,
+  mapResultTimeToNumber,
   raceDateToSortKey,
+  secondsToDuration,
 } from "@/lib/timeUtils.ts";
 import type { RaceDTO, RaceRunnerDTO, RunnerDTO } from "@/model/DTO.ts"; // ─── helpers ──────────────────────────────────────────────────────────────────
 
@@ -292,7 +294,7 @@ function PastRaceEditDialog({
             pendingRunners.map((q) => ({
               runner: q.runner,
               race,
-              resultTime: q.resultTime,
+              resultTime: secondsToDuration(q.resultTime),
               hideTime: q.hideTime,
             })),
           )
@@ -327,7 +329,11 @@ function PastRaceEditDialog({
   const startEditing = (rr: RaceRunnerDTO) => {
     setEditingRunnerUuid(rr.runner.uuid ?? null);
     setEditHideTime(rr.hideTime);
-    setEditTime(rr.hideTime ? "" : formatSecondsToTime(rr.resultTime));
+    setEditTime(
+      rr.hideTime
+        ? ""
+        : formatSecondsToTime(mapResultTimeToNumber(String(rr.resultTime))),
+    );
   };
 
   const handleSaveRunner = (rr: RaceRunnerDTO) => {
@@ -335,7 +341,7 @@ function PastRaceEditDialog({
     updateRunner.mutate({
       ...rr,
       race,
-      resultTime: editHideTime ? 0 : timeToSeconds(editTime),
+      resultTime: secondsToDuration(editHideTime ? 0 : timeToSeconds(editTime)),
       hideTime: editHideTime,
     });
   };
@@ -417,7 +423,9 @@ function PastRaceEditDialog({
                           <span className="tabular-nums font-mono text-muted-foreground text-xs">
                             {rr.hideTime
                               ? "Kun deltatt"
-                              : formatSecondsToTime(rr.resultTime)}
+                              : formatSecondsToTime(
+                                  mapResultTimeToNumber(String(rr.resultTime)),
+                                )}
                           </span>
                           <Button
                             size="sm"
@@ -590,6 +598,13 @@ export function RegisterResults() {
 
   const [editing, setEditing] = useState<RaceDTO | null>(null);
   const [deleting, setDeleting] = useState<RaceDTO | null>(null);
+  const [expandedRaceUuid, setExpandedRaceUuid] = useState<string | null>(null);
+
+  const toggleExpanded = (race: RaceDTO) => {
+    setExpandedRaceUuid((prev) =>
+      prev === race.uuid ? null : (race.uuid ?? null),
+    );
+  };
 
   const deleteMutation = useMutation({
     mutationFn: (uuid: string) =>
@@ -600,65 +615,121 @@ export function RegisterResults() {
     },
   });
 
-  const raceTable = (rows: RaceDTO[], showRunnerCount: boolean) => (
+  const raceTable = (rows: RaceDTO[], expandable: boolean) => (
     <Table>
       <TableHeader>
         <TableRow>
           <TableHead>Dato</TableHead>
           <TableHead>Tid</TableHead>
           <TableHead>Vær</TableHead>
-          {showRunnerCount && (
-            <TableHead className="text-right">Løpere</TableHead>
-          )}
+          {expandable && <TableHead className="text-right">Løpere</TableHead>}
           <TableHead className="w-20" />
         </TableRow>
       </TableHeader>
       <TableBody>
-        {rows.map((race) => (
-          <TableRow key={race.uuid}>
-            <TableCell>
-              <div className="flex items-center gap-2">
-                <CheckCircle2Icon className="size-3.5 text-green-600 shrink-0" />
-                <span className="font-medium">
-                  {formatDDMonth(race.raceDate)}
-                </span>
-              </div>
-            </TableCell>
-            <TableCell className="tabular-nums text-muted-foreground">
-              {formatTimeStamp(race.raceDate)}
-            </TableCell>
-            <TableCell className="text-muted-foreground">
-              {race.weather ?? (
-                <span className="italic text-xs">Ikke registrert</span>
+        {rows.map((race) => {
+          const isExpanded = expandedRaceUuid === race.uuid;
+          const runnersForRace =
+            runnerResults[past.findIndex((r) => r.uuid === race.uuid)]?.data ??
+            [];
+          return (
+            <>
+              <TableRow
+                key={race.uuid}
+                className={expandable ? "cursor-pointer hover:bg-muted/50" : ""}
+                onClick={expandable ? () => toggleExpanded(race) : undefined}
+              >
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2Icon className="size-3.5 text-green-600 shrink-0" />
+                    <span className="font-medium">
+                      {formatDDMonth(race.raceDate)}
+                    </span>
+                  </div>
+                </TableCell>
+                <TableCell className="tabular-nums text-muted-foreground">
+                  {formatTimeStamp(race.raceDate)}
+                </TableCell>
+                <TableCell className="text-muted-foreground">
+                  {race.weather ?? (
+                    <span className="italic text-xs">Ikke registrert</span>
+                  )}
+                </TableCell>
+                {expandable && (
+                  <TableCell className="text-right tabular-nums text-muted-foreground">
+                    {runnerCountByRace.get(race.uuid ?? "") ?? "–"}
+                  </TableCell>
+                )}
+                <TableCell>
+                  {/* biome-ignore lint/a11y/noStaticElementInteractions: stop row click propagation */}
+                  {/* biome-ignore lint/a11y/useKeyWithClickEvents: stop row click propagation */}
+                  <div
+                    className="flex items-center gap-1 justify-end"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="h-7 w-7 p-0"
+                      onClick={() => openEditing(race)}
+                    >
+                      <PencilIcon className="size-3.5" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="h-7 w-7 p-0 text-destructive hover:text-destructive"
+                      onClick={() => setDeleting(race)}
+                    >
+                      <Trash2Icon className="size-3.5" />
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+              {expandable && isExpanded && (
+                <TableRow
+                  key={`${race.uuid}-expanded`}
+                  className="bg-muted/30 hover:bg-muted/30"
+                >
+                  <TableCell colSpan={5} className="py-2 px-4">
+                    <div className="divide-y rounded-md border bg-background">
+                      {runnersForRace.length === 0 ? (
+                        <p className="text-xs text-muted-foreground italic py-2 px-3">
+                          Ingen løpere registrert.
+                        </p>
+                      ) : (
+                        runnersForRace.map((rr, i) => (
+                          <div
+                            key={rr.runner.uuid}
+                            className="flex items-center justify-between px-3 py-1.5 text-sm"
+                          >
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs tabular-nums text-muted-foreground w-5 text-right">
+                                {i + 1}.
+                              </span>
+                              <span className="font-medium">
+                                {rr.runner.name}
+                              </span>
+                            </div>
+                            <span className="tabular-nums font-mono text-xs text-muted-foreground">
+                              {rr.hideTime
+                                ? "Kun deltatt"
+                                : formatSecondsToTime(
+                                    mapResultTimeToNumber(
+                                      String(rr.resultTime),
+                                    ),
+                                  )}
+                            </span>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </TableCell>
+                </TableRow>
               )}
-            </TableCell>
-            {showRunnerCount && (
-              <TableCell className="text-right tabular-nums text-muted-foreground">
-                {runnerCountByRace.get(race.uuid ?? "") ?? "–"}
-              </TableCell>
-            )}
-            <TableCell>
-              <div className="flex items-center gap-1 justify-end">
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="h-7 w-7 p-0"
-                  onClick={() => openEditing(race)}
-                >
-                  <PencilIcon className="size-3.5" />
-                </Button>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="h-7 w-7 p-0 text-destructive hover:text-destructive"
-                  onClick={() => setDeleting(race)}
-                >
-                  <Trash2Icon className="size-3.5" />
-                </Button>
-              </div>
-            </TableCell>
-          </TableRow>
-        ))}
+            </>
+          );
+        })}
       </TableBody>
     </Table>
   );

@@ -1,128 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  ChevronLeftIcon,
-  NewspaperIcon,
-  PencilIcon,
-  PlusIcon,
-  Trash2Icon,
-} from "lucide-react";
+import { ChevronLeftIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
-import { kyClient } from "@/api/queryClient.ts";
-import { Badge } from "@/components/ui/badge.tsx";
+import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog.tsx";
+import { NewsfeedForm } from "@/components/admin/NewsfeedForm.tsx";
+import { NewsfeedsCard } from "@/components/admin/NewsfeedsCard.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card.tsx";
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog.tsx";
-import { Input } from "@/components/ui/input.tsx";
-import { Label } from "@/components/ui/label.tsx";
-import { Textarea } from "@/components/ui/textarea.tsx";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table.tsx";
-import { formatDateFull } from "@/lib/timeUtils.ts";
 import type { NewsFeedDTO } from "@/model/DTO.ts";
-
-// ─── NewsfeedForm ──────────────────────────────────────────────────────────────
-
-function NewsfeedForm({
-  initial,
-  onSubmit,
-  onCancel,
-  submitLabel,
-}: {
-  initial: Partial<NewsFeedDTO>;
-  onSubmit: (newsfeed: Omit<NewsFeedDTO, "uuid">) => void;
-  onCancel: () => void;
-  submitLabel: string;
-}) {
-  const [header, setHeader] = useState(initial.header ?? "");
-  const [content, setContent] = useState(initial.content ?? "");
-  const [tagsInput, setTagsInput] = useState((initial.tags ?? []).join(", "));
-  const [date, setDate] = useState(
-    initial.date
-      ? new Date(initial.date).toISOString().slice(0, 10)
-      : new Date().toISOString().slice(0, 10),
-  );
-
-  const handleSubmit = () => {
-    const tags = tagsInput
-      .split(",")
-      .map((t) => t.trim())
-      .filter(Boolean);
-    onSubmit({
-      header: header.trim(),
-      content: content.trim(),
-      tags,
-      date: new Date(date) as unknown as Date,
-    });
-  };
-
-  const isValid = header.trim() && content.trim() && date;
-
-  return (
-    <div className="space-y-4">
-      <div className="space-y-1.5">
-        <Label>Overskrift</Label>
-        <Input
-          placeholder="Tittel på nyhet"
-          value={header}
-          onChange={(e) => setHeader(e.target.value)}
-        />
-      </div>
-      <div className="space-y-1.5">
-        <Label>Innhold</Label>
-        <Textarea
-          placeholder="Skriv nyhetsinnholdet her..."
-          rows={5}
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-        />
-      </div>
-      <div className="space-y-1.5">
-        <Label>Dato</Label>
-        <Input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-        />
-      </div>
-      <div className="space-y-1.5">
-        <Label>Tagger</Label>
-        <Input
-          placeholder="løp, resultater, nyhet"
-          value={tagsInput}
-          onChange={(e) => setTagsInput(e.target.value)}
-        />
-        <p className="text-xs text-muted-foreground">Kommaseparert liste</p>
-      </div>
-      <DialogFooter>
-        <Button variant="outline" onClick={onCancel}>
-          Avbryt
-        </Button>
-        <Button disabled={!isValid} onClick={handleSubmit}>
-          {submitLabel}
-        </Button>
-      </DialogFooter>
-    </div>
-  );
-}
 
 // ─── Main component ────────────────────────────────────────────────────────────
 
@@ -137,9 +28,7 @@ export function CRUDNewsfeeds() {
   const [showAdd, setShowAdd] = useState(false);
   const addMutation = useMutation({
     mutationFn: (newsfeed: Omit<NewsFeedDTO, "uuid">) =>
-      kyClient
-        .post("/api/newsfeeds/createNewsfeed", { json: newsfeed })
-        .json<NewsFeedDTO>(),
+      QUERIES.newsfeed.createNewsFeed(newsfeed as NewsFeedDTO).queryFn(),
     onSuccess: () => {
       invalidate();
       setShowAdd(false);
@@ -149,9 +38,7 @@ export function CRUDNewsfeeds() {
   const [editing, setEditing] = useState<NewsFeedDTO | null>(null);
   const editMutation = useMutation({
     mutationFn: (newsfeed: NewsFeedDTO) =>
-      kyClient
-        .patch(`/api/newsfeeds/${newsfeed.uuid}`, { json: newsfeed })
-        .json<NewsFeedDTO>(),
+      QUERIES.newsfeed.updateNewsFeed(newsfeed.uuid!, newsfeed).queryFn(),
     onSuccess: () => {
       invalidate();
       setEditing(null);
@@ -161,7 +48,7 @@ export function CRUDNewsfeeds() {
   const [deleting, setDeleting] = useState<NewsFeedDTO | null>(null);
   const deleteMutation = useMutation({
     mutationFn: (uuid: string) =>
-      kyClient.delete(`/api/newsfeeds/${uuid}`).json<void>(),
+      QUERIES.newsfeed.deleteNewsFeed(uuid).queryFn(),
     onSuccess: () => {
       invalidate();
       setDeleting(null);
@@ -190,80 +77,11 @@ export function CRUDNewsfeeds() {
         </Button>
       </div>
 
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base flex items-center gap-2">
-            <NewspaperIcon className="size-4 text-primary" />
-            Alle nyheter
-            <Badge variant="secondary">{displayed.length}</Badge>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Dato</TableHead>
-                <TableHead>Overskrift</TableHead>
-                <TableHead className="hidden sm:table-cell">Tagger</TableHead>
-                <TableHead className="w-20" />
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {displayed.length === 0 && (
-                <TableRow>
-                  <TableCell
-                    colSpan={4}
-                    className="text-center text-muted-foreground py-6 text-sm italic"
-                  >
-                    Ingen nyheter registrert.
-                  </TableCell>
-                </TableRow>
-              )}
-              {displayed.map((feed) => (
-                <TableRow key={feed.uuid}>
-                  <TableCell className="text-muted-foreground tabular-nums whitespace-nowrap">
-                    {formatDateFull(feed.date)}
-                  </TableCell>
-                  <TableCell className="font-medium">{feed.header}</TableCell>
-                  <TableCell className="hidden sm:table-cell">
-                    <div className="flex flex-wrap gap-1">
-                      {feed.tags.map((tag) => (
-                        <Badge
-                          key={tag}
-                          variant="secondary"
-                          className="text-xs"
-                        >
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1 justify-end">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="h-7 w-7 p-0"
-                        onClick={() => setEditing(feed)}
-                      >
-                        <PencilIcon className="size-3.5" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="h-7 w-7 p-0 text-destructive hover:text-destructive"
-                        onClick={() => setDeleting(feed)}
-                      >
-                        <Trash2Icon className="size-3.5" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+      <NewsfeedsCard
+        newsfeeds={displayed}
+        onEdit={setEditing}
+        onDelete={setDeleting}
+      />
 
       {/* Add dialog */}
       <Dialog open={showAdd} onOpenChange={setShowAdd}>
@@ -309,32 +127,25 @@ export function CRUDNewsfeeds() {
           if (!o) setDeleting(null);
         }}
       >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Slett nyhet</DialogTitle>
-          </DialogHeader>
-          <p className="text-sm text-muted-foreground">
-            Er du sikker på at du vil slette nyheten{" "}
-            <span className="font-semibold text-foreground">
-              {deleting?.header}
-            </span>
-            ? Dette kan ikke angres.
-          </p>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleting(null)}>
-              Avbryt
-            </Button>
-            <Button
-              variant="destructive"
-              disabled={deleteMutation.isPending}
-              onClick={() =>
-                deleting?.uuid && deleteMutation.mutate(deleting.uuid)
-              }
-            >
-              Slett
-            </Button>
-          </DialogFooter>
-        </DialogContent>
+        {deleting && (
+          <ConfirmDeleteDialog
+            title="Slett nyhet"
+            description={
+              <>
+                Er du sikker på at du vil slette nyheten{" "}
+                <span className="font-semibold text-foreground">
+                  {deleting.header}
+                </span>
+                ? Dette kan ikke angres.
+              </>
+            }
+            isPending={deleteMutation.isPending}
+            onConfirm={() =>
+              deleting.uuid && deleteMutation.mutate(deleting.uuid)
+            }
+            onClose={() => setDeleting(null)}
+          />
+        )}
       </Dialog>
     </div>
   );

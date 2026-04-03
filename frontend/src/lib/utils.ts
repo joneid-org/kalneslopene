@@ -206,6 +206,10 @@ export function getBestRaceThisYearFromRunner(
     : "-";
 }
 
+export function isPast(race: RaceDTO): boolean {
+  return raceDateToSortKey(race.raceDate) < new Date().toISOString();
+}
+
 export function getUpcomingRaces(races: RaceDTO[]): RaceDTO[] {
   const now = new Date().toISOString();
   return races

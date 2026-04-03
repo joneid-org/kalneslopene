@@ -12,7 +12,7 @@ data class RaceEntity(
     var raceDate: LocalDateTime,
     var weather: String?,
 
-    @OneToMany(mappedBy = "race", cascade = [(CascadeType.ALL)], orphanRemoval = true)
+    @OneToMany(mappedBy = "race", cascade = [CascadeType.PERSIST], orphanRemoval = true)
     val runners: MutableList<RaceRunnerEntity> = mutableListOf()
 ) {
     @Id

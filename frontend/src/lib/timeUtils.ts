@@ -97,3 +97,15 @@ export function mapResultTimeToNumber(resultTime: string): number {
   const seconds = parseInt(match[3] ?? "0", 10);
   return hours * 3600 + minutes * 60 + seconds;
 }
+
+export function secondsToDuration(totalSeconds: number): string {
+  if (!totalSeconds || totalSeconds <= 0) return "PT0S";
+  const h = Math.floor(totalSeconds / 3600);
+  const m = Math.floor((totalSeconds % 3600) / 60);
+  const s = totalSeconds % 60;
+  let result = "PT";
+  if (h > 0) result += `${h}H`;
+  if (m > 0) result += `${m}M`;
+  if (s > 0) result += `${s}S`;
+  return result;
+}

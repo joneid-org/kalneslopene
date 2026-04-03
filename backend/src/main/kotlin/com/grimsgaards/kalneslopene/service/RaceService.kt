@@ -63,39 +63,31 @@ class RaceService(
     fun addRunnersToRace(raceUuid: UUID, runners: List<RaceRunnerDTO>): List<RaceRunnerDTO> {
         val race = raceRepository.findByIdOrNull(raceUuid)
             ?: throw NoSuchElementException("Race $raceUuid not found")
-        println("race.runners before: " + race.runners.map { it.id })
-        runners.forEach { dto ->
+
+        val savedEntities = runners.map { dto ->
             val runner = runnerRepository.findByIdOrNull(requireNotNull(dto.runner.uuid) { "Runner UUID cannot be null" })
-                ?: throw NoSuchElementException("Runner "+dto.runner.uuid+" not found")
+                ?: throw NoSuchElementException("Runner ${dto.runner.uuid} not found")
             val key = RaceRunnerKey(runnerUuid = runner.uuid, raceUuid = race.uuid)
-            println("Checking if key exists in DB: $key -> ${raceRunnerRepository.existsById(key)}")
-            val existing = race.runners.find { it.id == key }
+
+            val existing = raceRunnerRepository.findByIdOrNull(key)
             if (existing != null) {
                 existing.resultTime = dto.resultTime
                 existing.hideTime = dto.hideTime
+                raceRunnerRepository.save(existing)
             } else {
-                val entity = com.grimsgaards.kalneslopene.model.entities.RaceRunnerEntity(
-                    id = key,
-                    runner = runner,
-                    race = race,
-                    resultTime = dto.resultTime,
-                    hideTime = dto.hideTime
+                raceRunnerRepository.save(
+                    com.grimsgaards.kalneslopene.model.entities.RaceRunnerEntity(
+                        id = key,
+                        runner = runner,
+                        race = race,
+                        resultTime = dto.resultTime,
+                        hideTime = dto.hideTime
+                    )
                 )
-                race.runners.add(entity)
-                println("Added new RaceRunnerEntity with key: $key")
             }
         }
-        println("race.runners after: " + race.runners.map { it.id })
-        try {
-            println("race_runner count before save: ${raceRunnerRepository.count()}")
-
-            raceRepository.saveAndFlush(race)
-            println("race_runner count after save: ${raceRunnerRepository.count()}")
-        } catch (ex: Exception) {
-            println("Error saving race and runners: ${ex.message}")
-            throw ex
-        }
-        return race.runners.map { it.toDto() }
+        raceRunnerRepository.flush()
+        return savedEntities.map { it.toDto() }
     }
 
 

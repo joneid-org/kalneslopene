@@ -92,7 +92,15 @@ export default function HomeFooter() {
 
       <div className="max-w-5xl mx-auto px-6 py-2.5 flex items-center justify-between text-[10px] text-muted-foreground">
         <span>© {new Date().getFullYear()} Torsdagsløpet</span>
-        <span>Drevet av frivillige ❤️</span>
+        <div className="flex items-center gap-3">
+          <span>Drevet av frivillige ❤️</span>
+          <a
+            href="/admin"
+            className="text-muted-foreground/40 hover:text-muted-foreground transition-colors"
+          >
+            Admin
+          </a>
+        </div>
       </div>
     </footer>
   );

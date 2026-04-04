@@ -34,3 +34,13 @@ export type RaceRunnerDTO = {
   resultTime: string;
   hideTime: boolean;
 };
+
+export type MilestoneDTO = {
+  uuid?: string;
+  year: string;
+  icon: string;
+  title: string;
+  summary: string;
+  extra?: string;
+  details: string[];
+};

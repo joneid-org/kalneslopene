@@ -84,7 +84,12 @@ export function Loypekart() {
       {/* Map + info panel */}
       <div className="flex flex-col md:flex-row gap-4">
         {/* Map */}
-        <div className="flex-1 rounded-xl overflow-hidden border shadow-sm min-h-105" style={{ zIndex: 0 }}>          <MapContainer
+        <div
+          className="flex-1 rounded-xl overflow-hidden border shadow-sm min-h-105"
+          style={{ zIndex: 0 }}
+        >
+          {" "}
+          <MapContainer
             center={MAP_CENTER}
             zoom={MAP_ZOOM}
             style={{ height: "100%", minHeight: "420px", width: "100%" }}

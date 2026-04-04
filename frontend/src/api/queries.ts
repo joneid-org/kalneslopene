@@ -206,26 +206,25 @@ export const QUERIES = {
     getMilestoneByUuid: (uuid: string) => ({
       queryKey: ["milestone", "getById", uuid],
       queryFn: () =>
-          kyClient.get(`/api/milestones/${uuid}`).json<MilestoneDTO>(),
+        kyClient.get(`/api/milestones/${uuid}`).json<MilestoneDTO>(),
     }),
     createMilestone: (milestone: MilestoneDTO) => ({
       queryKey: ["milestone", "create"],
       queryFn: () =>
-          kyClient
-              .post("/api/milestones/createMilestone", { json: milestone })
-              .json<MilestoneDTO>(),
+        kyClient
+          .post("/api/milestones/createMilestone", { json: milestone })
+          .json<MilestoneDTO>(),
     }),
     updateMilestone: (uuid: string, milestone: MilestoneDTO) => ({
       queryKey: ["milestone", "update", uuid],
       queryFn: () =>
-          kyClient
-              .patch(`/api/milestones/${uuid}`, { json: milestone })
-              .json<MilestoneDTO>(),
+        kyClient
+          .patch(`/api/milestones/${uuid}`, { json: milestone })
+          .json<MilestoneDTO>(),
     }),
     deleteMilestone: (uuid: string) => ({
       queryKey: ["milestone", "delete", uuid],
-      queryFn: () =>
-          kyClient.delete(`/api/milestones/${uuid}`).json<void>(),
+      queryFn: () => kyClient.delete(`/api/milestones/${uuid}`).json<void>(),
     }),
   },
 } as const;

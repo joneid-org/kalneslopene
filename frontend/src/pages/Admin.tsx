@@ -1,6 +1,7 @@
 import {
   CalendarIcon,
   ClipboardListIcon,
+  LogOutIcon,
   NewspaperIcon,
   UserPlusIcon,
   UsersIcon,
@@ -13,6 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
+import { useAuth } from "@/context/AuthContext.tsx";
 
 const actions = [
   { label: "Administrer løp", icon: CalendarIcon, path: "/admin/races" },
@@ -28,15 +30,33 @@ const actions = [
 
 export function Admin() {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
+
+  function handleLogout() {
+    logout();
+    navigate("/logg-inn");
+  }
 
   return (
     <div className="flex justify-center px-4 py-8">
       <div className="w-full max-w-md space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Admin</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Administrer innhold på siden.
-          </p>
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Admin</h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              Innlogget som{" "}
+              <span className="font-medium">{user?.username}</span>
+            </p>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="gap-2 text-muted-foreground"
+            onClick={handleLogout}
+          >
+            <LogOutIcon className="size-4" />
+            Logg ut
+          </Button>
         </div>
 
         <Card>

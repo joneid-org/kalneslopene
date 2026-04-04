@@ -1,5 +1,7 @@
 import { kyClient } from "@/api/queryClient.ts";
 import type {
+  LoginRequest,
+  LoginResponse,
   MilestoneDTO,
   NewsFeedDTO,
   OrganizerDTO,
@@ -187,6 +189,15 @@ export const QUERIES = {
       queryFn: () => kyClient.delete(`/api/newsfeeds/${uuid}`).json<void>(),
     }),
   },
+  auth: {
+    login: (request: LoginRequest) => ({
+      queryKey: ["auth", "login"],
+      queryFn: () =>
+        kyClient
+          .post("/api/auth/login", { json: request })
+          .json<LoginResponse>(),
+    }),
+  },
   milestone: {
     getAllMilestones: {
       queryKey: ["milestone", "getAll"],
@@ -218,5 +229,3 @@ export const QUERIES = {
     }),
   },
 } as const;
-
-

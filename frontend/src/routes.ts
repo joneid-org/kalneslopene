@@ -4,6 +4,7 @@ import { Bilder } from "./pages/Bilder.tsx";
 import { Historie } from "./pages/Historie.tsx";
 import { Home } from "./pages/Home.tsx";
 import { Layout } from "./Layout.tsx";
+import { Login } from "./pages/Login.tsx";
 import { Loypekart } from "./pages/Loypekart.tsx";
 import { Resultater } from "./pages/Resultater.tsx";
 import { PersonligeRekorder } from "./pages/PersonligeRekorder.tsx";
@@ -13,6 +14,7 @@ import { CRUDRunners } from "./pages/admin/CRUDRunners.tsx";
 import { CRUDOrganizers } from "./pages/admin/CRUDOrganizers.tsx";
 import { CRUDNewsfeeds } from "./pages/admin/CRUDNewsfeeds.tsx";
 import { RegisterResults } from "./pages/admin/RegisterResults.tsx";
+import { AuthGuard } from "./components/AuthGuard.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -56,28 +58,37 @@ export const router = createBrowserRouter([
         Component: Loypekart,
       },
       {
-        path: "admin",
-        Component: Admin,
+        path: "logg-inn",
+        Component: Login,
       },
       {
-        path: "admin/races",
-        Component: CRUDRaces,
-      },
-      {
-        path: "admin/results",
-        Component: RegisterResults,
-      },
-      {
-        path: "admin/runners",
-        Component: CRUDRunners,
-      },
-      {
-        path: "admin/organizers",
-        Component: CRUDOrganizers,
-      },
-      {
-        path: "admin/newsfeeds",
-        Component: CRUDNewsfeeds,
+        Component: AuthGuard,
+        children: [
+          {
+            path: "admin",
+            Component: Admin,
+          },
+          {
+            path: "admin/races",
+            Component: CRUDRaces,
+          },
+          {
+            path: "admin/results",
+            Component: RegisterResults,
+          },
+          {
+            path: "admin/runners",
+            Component: CRUDRunners,
+          },
+          {
+            path: "admin/organizers",
+            Component: CRUDOrganizers,
+          },
+          {
+            path: "admin/newsfeeds",
+            Component: CRUDNewsfeeds,
+          },
+        ],
       },
     ],
   },

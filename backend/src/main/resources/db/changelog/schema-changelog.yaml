@@ -34,3 +34,10 @@ databaseChangeLog:
         - sqlFile:
             path: db/changelog/sql/create/create_organizer.sql
             relativeToChangelogFile: false
+  - changeSet:
+      id: 006-create_milestone_table
+      author: kristian
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/create/create_milestone.sql
+            relativeToChangelogFile: false

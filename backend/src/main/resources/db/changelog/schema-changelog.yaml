@@ -48,3 +48,17 @@ databaseChangeLog:
         - sqlFile:
             path: db/changelog/sql/create/create_milestone.sql
             relativeToChangelogFile: false
+  - changeSet:
+      id: 008-create_user_table
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/create/create_user.sql
+            relativeToChangelogFile: false
+  - changeSet:
+      id: 009-seed_users
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/mockdata/seed_users.sql
+            relativeToChangelogFile: false

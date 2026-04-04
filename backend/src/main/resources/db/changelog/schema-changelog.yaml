@@ -41,3 +41,10 @@ databaseChangeLog:
         - sqlFile:
             path: db/changelog/sql/migrate/migrate_race_weather_nullable.sql
             relativeToChangelogFile: false
+  - changeSet:
+      id: 006-create_milestone_table
+      author: kristian
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/create/create_milestone.sql
+            relativeToChangelogFile: false

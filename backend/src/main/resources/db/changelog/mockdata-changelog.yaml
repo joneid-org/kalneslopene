@@ -38,3 +38,10 @@ databaseChangeLog:
         - sqlFile:
             path: db/changelog/sql/mockdata/seed_organizers.sql
             relativeToChangelogFile: false
+  - changeSet:
+      id: 006-seed-milestones
+      author: kristian
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/mockdata/seed_milestones.sql
+            relativeToChangelogFile: false

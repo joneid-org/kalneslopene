@@ -163,3 +163,93 @@ export const mapLegend = [
 
 export const MAP_CENTER: [number, number] = [59.302, 11.028];
 export const MAP_ZOOM = 14;
+
+export type RoutePhoto = {
+  id: string;
+  title: string;
+  caption: string;
+  imageUrl: string;
+};
+
+export const routePhotos: RoutePhoto[] = [
+  {
+    id: "rp-start",
+    title: "Start / Mål",
+    caption:
+      "Samlingspunktet for alle løpere. Her møtes vi, strekker bena og gjør klar til start. Tidtakingen starter og stopper akkurat her, og det er alltid god stemning både før og etter løpet.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1657460684508-7c8fa5ba748b?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    id: "rp-raymondsvingen",
+    title: "Raymondsvingen",
+    caption:
+      "Den første svingen etter 360 meter, der løypa dreier til høyre ut av Lundestadveien. Oppkalt etter den joviale og trofaste løperen Raymond Westberg, som gjerne er blant de første inn i svingen.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    id: "rp-sletnersletta",
+    title: "Sletnersletta",
+    caption:
+      "Strekningen fra 1 til 1,4 km – en av de flate partiene i løypa. Oppkalt etter Dag Inge Sletner, som har gjort en formidabel innsats for å holde løypa fremkommelig gjennom alle årstider.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1448387473223-5c37445527e7?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    id: "rp-baustadkollen",
+    title: "Baustadkollen",
+    caption:
+      "En liten forhøyning ved ca. 1,55 km med bratt terreng på begge sider. Herfra er det god mulighet til å sette fart nedover. Oppkalt etter den energiske løperen Alexander Baustad.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    id: "rp-bergerudpassasjen",
+    title: "Bergerudpassasjen",
+    caption:
+      "Et krevende parti mellom 1,6 og 1,7 km som krevde betydelig arbeid med grus og drenering. Oppkalt etter Svein Bergerud, som gjør en formidabel jobb med vedlikehold av løypene i Kalnesskogen.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1476611338391-6f395a0dd82e?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    id: "rp-paulsrudholtet",
+    title: "Paulsrudholtet",
+    caption:
+      "Kanskje den aller flotteste delen av løypa, fra 1720 til 1920 meter. Tett skog, myk skogsbunn og akkurat passe med røtter. Oppkalt etter Torsdagsløpets grunnlegger Bjørn Paulsrud.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    id: "rp-tomtrappa",
+    title: "Tomtrappa",
+    caption:
+      "En 20 meter lang stigning som minner om en trapp, etter 1920 meter. Oppkalt etter Tom Sognlien – mannen som har løpt over 1000 Torsdagsløp.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    id: "rp-proitztoppen",
+    title: "Prøitztoppen",
+    caption:
+      "En topp med flott utsikt ved ca. 2,9 km. Oppkalt etter Per Prøitz, nåværende leder for Torsdagsløpet, som alltid møter løperne med et smil ved startstreken.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    id: "rp-hundebakken",
+    title: "Hundebakken",
+    caption:
+      "Et av de mest kjente stedene i løypa – en krevende bakke som tester bena sent i løpet, ved ca. 3,4 km. Et sted mange løpere har et forhold til etter år med Torsdagsløp.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?auto=format&fit=crop&w=900&q=80",
+  },
+  {
+    id: "rp-helgekneika",
+    title: "Helgekneika",
+    caption:
+      "En smal sti oppover mellom 4,27 og 4,44 km, rett før du kommer ut på Lundestadveien og spurter mot mål. Oppkalt etter den alltid oppmuntrende Helge Rosnes.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=900&q=80",
+  },
+];

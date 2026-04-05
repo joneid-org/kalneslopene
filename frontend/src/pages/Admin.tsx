@@ -1,6 +1,7 @@
 import {
   CalendarIcon,
   ClipboardListIcon,
+  FileUpIcon,
   LogOutIcon,
   NewspaperIcon,
   UserPlusIcon,
@@ -22,6 +23,11 @@ const actions = [
     label: "Registrer resultater",
     icon: ClipboardListIcon,
     path: "/admin/results",
+  },
+  {
+    label: "Registrer resultat fra fil",
+    icon: FileUpIcon,
+    path: "/admin/results/import",
   },
   { label: "Legg til løper", icon: UserPlusIcon, path: "/admin/runners" },
   { label: "Legg til organisator", icon: UsersIcon, path: "/admin/organizers" },

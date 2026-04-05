@@ -9,6 +9,7 @@ import com.grimsgaards.kalneslopene.repository.RaceRunnerRepository
 import com.grimsgaards.kalneslopene.repository.RunnerRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
@@ -59,7 +60,7 @@ class RaceService(
         return race?.runners?.map { it.toDto() } ?: throw IllegalArgumentException("no race found with id $uuid")
     }
 
-    @org.springframework.transaction.annotation.Transactional
+    @Transactional
     fun addRunnersToRace(raceUuid: UUID, runners: List<RaceRunnerDTO>): List<RaceRunnerDTO> {
         val race = raceRepository.findByIdOrNull(raceUuid)
             ?: throw NoSuchElementException("Race $raceUuid not found")

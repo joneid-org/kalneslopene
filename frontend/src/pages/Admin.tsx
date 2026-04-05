@@ -4,6 +4,7 @@ import {
   FileUpIcon,
   LogOutIcon,
   NewspaperIcon,
+  TimerIcon,
   UserPlusIcon,
   UsersIcon,
 } from "lucide-react";
@@ -23,6 +24,11 @@ const actions = [
     label: "Registrer resultater",
     icon: ClipboardListIcon,
     path: "/admin/results",
+  },
+  {
+    label: "Live tidtaking",
+    icon: TimerIcon,
+    path: "/admin/live-timing",
   },
   {
     label: "Registrer resultat fra fil",

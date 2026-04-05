@@ -15,6 +15,7 @@ import { CRUDOrganizers } from "./pages/admin/CRUDOrganizers.tsx";
 import { CRUDNewsfeeds } from "./pages/admin/CRUDNewsfeeds.tsx";
 import { RegisterResults } from "./pages/admin/RegisterResults.tsx";
 import { ImportResultsFromFile } from "./pages/admin/ImportResultsFromFile.tsx";
+import { LiveTiming } from "./pages/admin/LiveTiming.tsx";
 import { AuthGuard } from "./components/AuthGuard.tsx";
 
 export const router = createBrowserRouter([
@@ -80,6 +81,10 @@ export const router = createBrowserRouter([
           {
             path: "admin/results/import",
             Component: ImportResultsFromFile,
+          },
+          {
+            path: "admin/live-timing",
+            Component: LiveTiming,
           },
           {
             path: "admin/runners",

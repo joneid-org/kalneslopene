@@ -8,11 +8,11 @@ export default function OrganisersBlock() {
   const mainContact = getContactPerson(organizers ?? []);
 
   return (
-    <section className="space-y-4 pb-4">
-      <div className="flex flex-wrap gap-4">
+    <section className="space-y-5 pb-4">
+      <div className="flex flex-wrap gap-5">
         {organizers?.map((organizer) => (
-          <div key={organizer.name} className="flex items-center gap-2.5 group">
-            <div className="size-9 rounded-full bg-blue-600 flex items-center justify-center text-xs font-extrabold text-white shadow-sm group-hover:bg-blue-500 transition-colors">
+          <div key={organizer.name} className="flex items-center gap-3 group">
+            <div className="size-10 rounded-full bg-blue-600 flex items-center justify-center text-xs font-extrabold text-white group-hover:bg-blue-500 transition-colors">
               {organizer.initials}
             </div>
             <div>
@@ -26,7 +26,6 @@ export default function OrganisersBlock() {
           </div>
         ))}
       </div>
-
       {mainContact?.email && (
         <a
           href={`mailto:${mainContact.email}`}

@@ -31,7 +31,12 @@ export function DynamicDropDownMenu({
     <Menubar className="border-0 bg-transparent p-0 shadow-none">
       <MenubarMenu>
         <MenubarTrigger asChild>
-          <Button variant="outline">{label}</Button>
+          <Button
+            variant="ghost"
+            className="text-gray-600 hover:text-gray-900 font-medium"
+          >
+            {label}
+          </Button>
         </MenubarTrigger>
 
         <MenubarContent>

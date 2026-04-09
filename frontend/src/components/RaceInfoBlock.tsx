@@ -1,76 +1,106 @@
 import { useQuery } from "@tanstack/react-query";
-import { CheckCircle, Clock, MapPin, Ruler, ShoppingBag } from "lucide-react";
-import { QUERIES } from "@/api/queries.ts";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card.tsx";
-import { Separator } from "@/components/ui/separator.tsx";
-import { DISTANCE_KM, RACE_INFORMATION } from "@/lib/constants.ts";
-import { formatTimeStamp } from "@/lib/timeUtils.ts";
+  Car,
+  CheckCircle,
+  Clock,
+  MapPin,
+  Mic,
+  Ruler,
+  UserCheck,
+  Wallet,
+} from "lucide-react";
+import { QUERIES } from "@/api/queries.ts";
+import { DISTANCE_KM } from "@/lib/constants.ts";
+import { formatDDMonth, formatTimeStamp } from "@/lib/timeUtils.ts";
 import { getUpcomingRaces } from "@/lib/utils.ts";
 
-const practicalInformation = [
-  "Gratis",
-  "For alle aldre og nivåer",
-  "Stor parkeringsplass",
-  "Ingen forhåndspåmelding",
-  "Tid ropes opp ved målgang",
+const practicalInfo = [
+  { icon: Wallet, label: "Gratis", color: "text-green-600", bg: "bg-green-50" },
+  {
+    icon: UserCheck,
+    label: "Alle aldre",
+    color: "text-blue-600",
+    bg: "bg-blue-50",
+  },
+  {
+    icon: Car,
+    label: "Stor parkering",
+    color: "text-orange-500",
+    bg: "bg-orange-50",
+  },
+  {
+    icon: CheckCircle,
+    label: "Ingen påmelding",
+    color: "text-purple-600",
+    bg: "bg-purple-50",
+  },
+  {
+    icon: Mic,
+    label: "Tid ropes opp",
+    color: "text-pink-600",
+    bg: "bg-pink-50",
+  },
 ];
 
 export default function RaceInfoBlock() {
   const { data: races } = useQuery(QUERIES.race.getAllRaces);
   const nextRace = getUpcomingRaces(races ?? [])[0];
 
-  const courseDetails = [
-    { label: "Distanse", value: DISTANCE_KM.toString(), icon: Ruler },
-    { label: "Start & mål", value: "Kalnesskogen", icon: MapPin },
-    {
-      label: "Starttid",
-      value: nextRace ? formatTimeStamp(nextRace.raceDate) : "-",
-      icon: Clock,
-    },
-  ];
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base flex items-center gap-2">
-          <MapPin className="size-4 text-primary" />
-          Løpsinformasjon
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="grid grid-cols-3 gap-3">
-          {courseDetails.map(({ label, value, icon: Icon }) => (
-            <div
-              key={label}
-              className="flex flex-col items-center text-center p-3 rounded-lg bg-muted/40 gap-1"
-            >
-              <Icon className="size-4 text-primary mb-0.5" />
-              <p className="font-semibold text-sm">{value}</p>
-              <p className="text-xs text-muted-foreground">{label}</p>
+    <section className="space-y-6">
+      {/* ── Course details strip ── */}
+      <div className="flex flex-wrap gap-4">
+        <div className="flex items-center gap-2 text-sm text-gray-700">
+          <div className="size-8 rounded-xl bg-blue-100 flex items-center justify-center shrink-0">
+            <Ruler className="size-4 text-blue-600" />
+          </div>
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">
+              Distanse
+            </p>
+            <p className="font-bold text-gray-900">{DISTANCE_KM} km</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 text-sm text-gray-700">
+          <div className="size-8 rounded-xl bg-emerald-100 flex items-center justify-center shrink-0">
+            <MapPin className="size-4 text-emerald-600" />
+          </div>
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">
+              Sted
+            </p>
+            <p className="font-bold text-gray-900">Kalnesskogen</p>
+          </div>
+        </div>
+        {nextRace && (
+          <div className="flex items-center gap-2 text-sm text-gray-700">
+            <div className="size-8 rounded-xl bg-orange-100 flex items-center justify-center shrink-0">
+              <Clock className="size-4 text-orange-500" />
             </div>
-          ))}
-        </div>
-        <p className="text-sm text-muted-foreground">{RACE_INFORMATION}</p>
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">
+                {formatDDMonth(nextRace.raceDate)}
+              </p>
+              <p className="font-bold text-gray-900">
+                kl {formatTimeStamp(nextRace.raceDate)}
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
 
-        <Separator />
-
-        <div className="flex items-center gap-2">
-          <ShoppingBag className="size-4 text-primary" />
-          <h4 className="font-semibold">Praktisk informasjon</h4>
-        </div>
-        <ul className="space-y-2">
-          {practicalInformation.map((item) => (
-            <li key={item} className="flex items-start gap-2 text-sm">
-              <CheckCircle className="size-3.5 text-green-600 mt-0.5 shrink-0" />
-              {item}
-            </li>
-          ))}
-        </ul>
-      </CardContent>
-    </Card>
+      {/* ── Practical info — icon pills ── */}
+      <div className="flex flex-wrap gap-2">
+        {practicalInfo.map(({ icon: Icon, label, color, bg }) => (
+          <div
+            key={label}
+            className={`flex items-center gap-2 ${bg} ${color} text-xs font-semibold px-3 py-2 rounded-full`}
+          >
+            <Icon className="size-3.5 shrink-0" />
+            {label}
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }

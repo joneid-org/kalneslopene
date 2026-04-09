@@ -1,5 +1,5 @@
+import { ChevronDown } from "lucide-react";
 import { Link } from "react-router";
-import { Button } from "@/components/ui/button";
 import {
   Menubar,
   MenubarContent,
@@ -30,8 +30,9 @@ export function DynamicDropDownMenu({
   return (
     <Menubar className="border-0 bg-transparent p-0 shadow-none">
       <MenubarMenu>
-        <MenubarTrigger asChild>
-          <Button variant="outline">{label}</Button>
+        <MenubarTrigger className="px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md cursor-pointer data-[state=open]:bg-gray-100 data-[state=open]:text-gray-900 flex items-center gap-1 border-0 bg-transparent shadow-none focus:ring-0">
+          {label}
+          <ChevronDown className="size-3.5 opacity-60" />
         </MenubarTrigger>
 
         <MenubarContent>

@@ -1,7 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card.tsx";
 
-type Color = "blue" | "orange" | "green" | "amber";
+type Color = "blue" | "orange" | "green" | "amber" | "red";
 
 type StatBoxProps = {
   icon: LucideIcon;
@@ -53,6 +53,14 @@ const colorMap: Record<
     value: "text-amber-700",
     label: "text-amber-500",
   },
+  red: {
+    bg: "bg-red-50",
+    border: "border-red-100",
+    iconBg: "bg-red-100",
+    icon: "text-red-600",
+    value: "text-red-700",
+    label: "text-red-500",
+  },
 };
 
 export default function StatBox({
@@ -64,18 +72,18 @@ export default function StatBox({
   const c = colorMap[color];
   return (
     <Card className={`${c.bg} border ${c.border}`}>
-      <CardContent className="flex flex-col items-center justify-center py-3 md:py-5 px-2 md:px-4 gap-1 md:gap-2">
-        <div className={`${c.iconBg} rounded-full p-1.5 md:p-2.5`}>
-          <Icon className={`size-4 md:size-6 ${c.icon}`} />
+      <CardContent className="flex items-center justify-center gap-2 py-1.5 px-3">
+        <div className={`${c.iconBg} rounded-full p-1`}>
+          <Icon className={`size-3.5 ${c.icon}`} />
         </div>
-        <p
-          className={`text-base md:text-2xl font-bold tabular-nums leading-none ${c.value}`}
-        >
-          {value}
-        </p>
-        <p className={`text-xs font-medium uppercase tracking-wide ${c.label}`}>
-          {label}
-        </p>
+        <div className="flex flex-col leading-tight">
+          <p className={`text-sm font-bold tabular-nums ${c.value}`}>{value}</p>
+          <p
+            className={`text-[10px] font-medium uppercase tracking-wide ${c.label}`}
+          >
+            {label}
+          </p>
+        </div>
       </CardContent>
     </Card>
   );

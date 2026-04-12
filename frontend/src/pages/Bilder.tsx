@@ -36,8 +36,8 @@ export function Bilder() {
   }, [racePhotos]);
 
   return (
-    <div className="px-2 py-4 sm:px-4 sm:py-6 md:px-8 md:py-8">
-      <div className="w-full md:max-w-7xl md:mx-auto space-y-3 md:space-y-5">
+    <div className="w-full sm:max-w-[75vw] lg:max-w-[60vw] mx-auto px-2 py-4 sm:px-4 sm:py-6 md:px-8 md:py-8">
+      <div className="w-full space-y-3 md:space-y-5">
         {race && (
           <NavigationButtons
             previousRace={previous}

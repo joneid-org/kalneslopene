@@ -64,7 +64,7 @@ export default function Results({ uuid }: Props) {
     [race],
   );
   return (
-    <div className="w-full max-w-2xl md:max-w-4xl space-y-3 md:space-y-5">
+    <div className="w-full space-y-3 md:space-y-5">
       <NavigationButtons previousRace={previous} nextRace={next} path={path} />
 
       {race && (

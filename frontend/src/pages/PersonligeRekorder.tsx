@@ -62,7 +62,7 @@ export function PersonligeRekorder() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
+    <div className="w-full sm:max-w-[75vw] lg:max-w-[60vw] mx-auto px-4 py-8 space-y-6">
       <div className="space-y-1">
         <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
           <MedalIcon className="size-6 text-yellow-500" />

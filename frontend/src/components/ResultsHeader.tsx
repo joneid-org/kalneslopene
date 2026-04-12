@@ -1,24 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import {
-  CloudIcon,
-  Images,
-  MapPinIcon,
-  TrophyIcon,
-  UsersIcon,
-} from "lucide-react";
+import { Images, Mars, UsersIcon, Venus } from "lucide-react";
 import { Link } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
 import { Button } from "@/components/ui/button.tsx";
-import { Card, CardContent } from "@/components/ui/card.tsx";
-import { formatSecondsToTime, mapResultTimeToNumber } from "@/lib/timeUtils.ts";
-import {
-  findFastestRunnerInRace,
-  findFastetFemaleInRace,
-  findFastetMaleInRace,
-} from "@/lib/utils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 import StatBox from "./StatBox.tsx";
-import WinnerItem from "./WinnerItem.tsx";
 
 type ResultsHeaderProps = {
   race: RaceDTO;
@@ -35,9 +21,12 @@ export default function ResultsHeader({
     QUERIES.race.getAllRunnersInRace(race.uuid ?? ""),
   );
   const participants = raceRunners?.length;
-  const fastestMaleInRace = findFastetMaleInRace(raceRunners ?? []);
-  const fastestFemaleInRace = findFastetFemaleInRace(raceRunners ?? []);
-  const fastestRunnerInRace = findFastestRunnerInRace(raceRunners ?? []);
+  const maleCount = raceRunners?.filter(
+    (r) => r.runner.gender === "Mann",
+  ).length;
+  const femaleCount = raceRunners?.filter(
+    (r) => r.runner.gender === "Kvinne",
+  ).length;
 
   return (
     <>
@@ -69,66 +58,24 @@ export default function ResultsHeader({
             {title}
           </p>
           <div className="flex flex-wrap gap-x-3 mt-1 text-xs md:text-sm text-white/80">
-            <span className="flex items-center gap-1">
-              <MapPinIcon className="size-3 md:size-3.5" />
-              Kalnesskogen
-            </span>
             {race.weather && (
-              <span className="flex items-center gap-1">
-                <CloudIcon className="size-3 md:size-3.5" />
-                {race.weather}
-              </span>
+              <span className="flex items-center gap-1">{race.weather}</span>
             )}
           </div>
         </div>
       </div>
 
       {/* ── Stat boxes ── */}
-      <div className="grid grid-cols-2 gap-2 md:gap-4">
+      <div className="grid grid-cols-3 gap-2 md:gap-4">
         <StatBox
           icon={UsersIcon}
           value={participants}
           label="Deltakere"
           color="green"
         />
-        <StatBox
-          icon={TrophyIcon}
-          value={formatSecondsToTime(
-            mapResultTimeToNumber(fastestRunnerInRace?.resultTime ?? ""),
-          )}
-          label="Raskest"
-          color="amber"
-        />
+        <StatBox icon={Mars} value={maleCount} label="Menn" color="blue" />
+        <StatBox icon={Venus} value={femaleCount} label="Kvinner" color="red" />
       </div>
-
-      {/* ── Winners summary ── */}
-      {(fastestFemaleInRace || fastestMaleInRace) && (
-        <Card>
-          <CardContent className="py-3 md:py-5 px-4 md:px-6">
-            <p className="text-xs md:text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-2 md:mb-3">
-              Ukens vinnere
-            </p>
-            <div className="grid grid-cols-2 gap-3 md:gap-6">
-              {fastestMaleInRace && (
-                <WinnerItem
-                  result={fastestMaleInRace}
-                  label="Menn"
-                  iconColor="text-blue-600"
-                  bgColor="bg-blue-100"
-                />
-              )}
-              {fastestFemaleInRace && (
-                <WinnerItem
-                  result={fastestFemaleInRace}
-                  label="Kvinner"
-                  iconColor="text-orange-600"
-                  bgColor="bg-orange-100"
-                />
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      )}
     </>
   );
 }

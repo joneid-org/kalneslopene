@@ -119,7 +119,7 @@ export default function ResultsTable({ tableData, title }: ResultsTableProps) {
       },
       {
         accessorKey: "yearBest",
-        header: "ÅRSB.",
+        header: "ÅRSBESTE",
         cell: ({ getValue }) => (
           <span className="tabular-nums">{getValue<string>()}</span>
         ),
@@ -242,7 +242,7 @@ export default function ResultsTable({ tableData, title }: ResultsTableProps) {
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
                     key={cell.id}
-                    className="px-1 md:px-4 py-0.5 md:py-2.5 align-top"
+                    className={`px-1 md:px-4 py-0.5 md:py-2.5 align-top${row.original.isPR && cell.column.id === "pr" ? " bg-emerald-100 text-emerald-700 font-semibold rounded" : ""}`}
                     style={
                       cell.column.id === "runnerName"
                         ? {

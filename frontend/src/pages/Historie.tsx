@@ -37,7 +37,7 @@ export function Historie() {
   );
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8 space-y-12">
+    <div className="w-full sm:max-w-[75vw] lg:max-w-[60vw] mx-auto px-4 py-8 space-y-12">
       {/* Hero */}
       <section className="text-center space-y-3">
         <Badge variant="outline" className="text-xs tracking-widest uppercase">

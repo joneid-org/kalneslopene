@@ -138,6 +138,7 @@ export type RowData = {
   races: number;
   pr: string;
   yearBest: string;
+  isPR: boolean;
 };
 
 export function buildTableRows(
@@ -160,16 +161,21 @@ export function buildTableRows(
         ? timeSeconds / DISTANCE_KM
         : Number.NaN;
     const runnerHistory = allRacesByRunner[rr.runner.uuid ?? ""] ?? [];
+    const prTime = getBestRaceFromRunner(runnerHistory);
+    const formattedTime = rr.hideTime
+      ? "Deltatt"
+      : formatSecondsToTime(timeSeconds);
     return {
       position: index + 1,
       runnerName: rr.runner.name,
       gender: rr.runner.gender,
-      time: rr.hideTime ? "Deltatt" : formatSecondsToTime(timeSeconds),
+      time: formattedTime,
       hideTime: rr.hideTime,
       pace: formatSecondsToTime(paceSeconds),
       races: raceCountByRunner[rr.runner.uuid ?? ""] ?? 0,
-      pr: getBestRaceFromRunner(runnerHistory),
+      pr: prTime,
       yearBest: getBestRaceThisYearFromRunner(runnerHistory, currentYear),
+      isPR: !rr.hideTime && timeSeconds > 0 && formattedTime === prTime,
     };
   });
 }

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { HomeIcon } from "lucide-react";
+import { Footprints } from "lucide-react";
 import { forwardRef } from "react";
 import { Link } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
@@ -23,7 +23,7 @@ export const Header = forwardRef<HTMLElement>(function Header(_props, ref) {
 
   return (
     <header ref={ref} className="border-b bg-white sticky top-0 z-50 shadow-sm">
-      <div className="flex items-center container mx-auto px-4 py-4">
+      <div className="flex items-center container mx-auto px-4 py-2">
         <div className="md:hidden pr-2">
           <MobileNavBarMenu
             headerBarDynamic={headerBarDynamic}
@@ -32,19 +32,22 @@ export const Header = forwardRef<HTMLElement>(function Header(_props, ref) {
           />
         </div>
 
-        <div className={"flex container justify-between"}>
+        <div className={"flex container justify-between items-center"}>
           <div className="min-w-0">
-            <Link to="/" className="flex items-center gap-2">
-              <Button variant={"outline"} size={"icon"}>
-                <HomeIcon />
-              </Button>
-              <div className="min-w-0">
-                <h1 className="font-bold truncate">Torsdagsløpet</h1>
+            <Link to="/" className="flex items-center gap-2 group">
+              <div className="relative flex items-center justify-center size-8 rounded-xl bg-linear-to-br from-blue-500 to-blue-700 text-white shadow-sm group-hover:shadow-blue-300 group-hover:scale-105 transition-all shrink-0">
+                <Footprints className="size-4 rotate-12" />
+                <span className="absolute -top-0.5 -right-0.5 size-2 rounded-full bg-yellow-400 border border-white" />
+              </div>
+              <div className="min-w-0 leading-tight md:hidden">
+                <h1 className="font-black text-sm text-gray-900 truncate leading-tight tracking-tight">
+                  Torsdagsløpet
+                </h1>
               </div>
             </Link>
           </div>
 
-          <nav className="hidden md:flex gap-1 items-center">
+          <nav className="hidden md:flex gap-0.5 items-center">
             {headerBarDynamic.map(({ path, label }) => (
               <DynamicDropDownMenu
                 key={label}
@@ -55,7 +58,9 @@ export const Header = forwardRef<HTMLElement>(function Header(_props, ref) {
             ))}
             {headerBarStatic.map(({ path, label }) => (
               <Link key={label} to={path}>
-                <Button variant={"outline"}>{label}</Button>
+                <Button variant={"ghost"} size="sm">
+                  {label}
+                </Button>
               </Link>
             ))}
           </nav>

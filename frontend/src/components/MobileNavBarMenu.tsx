@@ -34,7 +34,7 @@ export default function MobileNavBarMenu({
   return (
     <Drawer direction="left">
       <DrawerTrigger asChild>
-        <Button variant={"outline"} size={"icon"}>
+        <Button variant={"ghost"} size={"icon"}>
           <MenuIcon />
         </Button>
       </DrawerTrigger>

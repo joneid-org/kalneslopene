@@ -3,6 +3,7 @@ import { Newspaper } from "lucide-react";
 import { QUERIES } from "@/api/queries.ts";
 import { Separator } from "@/components/ui/separator.tsx";
 import {
+  CompactListStory,
   CompactStory,
   FeaturedStory,
   NEWS_IMAGES,
@@ -32,11 +33,22 @@ export default function NewsFeed() {
         img={NEWS_IMAGES[newsfeeds.length % NEWS_IMAGES.length] ?? ""}
       />
 
-      {/* Older posts — horizontal scroll row */}
+      {/* Older posts */}
       {older.length > 0 && (
         <>
           <Separator />
-          <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide">
+          {/* Mobile: compact vertical list */}
+          <div className="flex flex-col sm:hidden">
+            {older.map((post, idx) => (
+              <CompactListStory
+                key={post.uuid}
+                post={post}
+                img={NEWS_IMAGES[idx % NEWS_IMAGES.length] ?? ""}
+              />
+            ))}
+          </div>
+          {/* Desktop: horizontal scroll row */}
+          <div className="hidden sm:flex gap-3 overflow-x-auto pb-1 scrollbar-hide">
             {older.map((post, idx) => (
               <CompactStory
                 key={post.uuid}

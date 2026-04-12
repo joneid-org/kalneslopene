@@ -216,3 +216,56 @@ export function CompactStory({
     </>
   );
 }
+
+/** Super compact vertical list item for mobile */
+export function CompactListStory({
+  post,
+  img,
+}: {
+  post: NewsFeedDTO;
+  img: string;
+}) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <button
+        type="button"
+        className="flex items-center gap-3 w-full text-left py-2.5 border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors"
+        onClick={() => setOpen(true)}
+      >
+        <div className="size-10 shrink-0 rounded-md overflow-hidden">
+          <img
+            src={img}
+            alt={post.header}
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex flex-wrap gap-1 mb-0.5">
+            {post.tags.map((tag) => (
+              <span
+                key={tag}
+                className={`${tagBg(tag)} text-white text-[8px] font-black uppercase tracking-widest px-1.5 py-0 rounded-full`}
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+          <p className="text-xs font-semibold text-gray-900 leading-snug line-clamp-2">
+            {post.header}
+          </p>
+          <time className="text-[10px] text-gray-400">
+            {formatDateFull(post.date)}
+          </time>
+        </div>
+      </button>
+      <StoryDialog
+        post={post}
+        img={img}
+        open={open}
+        onClose={() => setOpen(false)}
+      />
+    </>
+  );
+}

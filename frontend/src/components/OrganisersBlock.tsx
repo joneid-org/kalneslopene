@@ -16,19 +16,19 @@ export default function OrganisersBlock() {
 
   const O_TEXT =
     "Torsdagsløpet er et frivillig drevet mosjonsløp som har arrangert\n" +
-    "          ukentlige løp siden 2018. Vi er en gjeng entusiaster som brenner for\n" +
+    "          ukentlige løp siden 1978. Vi er en gjeng entusiaster som brenner for\n" +
     "          løping og fellesskap.";
   return (
     <Card>
       <CardHeader className="pb-2">
         <CardTitle className="text-base flex items-center gap-2">
           <Users className="size-4 text-primary" />
-          Om arrangørene
+          Arrangørteamet
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="text-sm text-muted-foreground">{O_TEXT}</p>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
           {organizers?.map((organizer) => (
             <div
               key={organizer.name}

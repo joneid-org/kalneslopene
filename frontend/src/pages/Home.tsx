@@ -21,7 +21,7 @@ export function Home() {
          ══════════════════════════════════════ */}
       <section
         className="relative overflow-hidden"
-        style={{ height: "52vh", minHeight: "320px", maxHeight: "560px" }}
+        style={{ height: "18vh", minHeight: "220px", maxHeight: "560px" }}
       >
         <img
           src={cardImage}

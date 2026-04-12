@@ -1,12 +1,5 @@
 import { useQueries, useQuery } from "@tanstack/react-query";
-import {
-  ActivityIcon,
-  CalendarIcon,
-  FilterIcon,
-  TimerIcon,
-  TrophyIcon,
-  UsersIcon,
-} from "lucide-react";
+import { FilterIcon, TimerIcon, TrophyIcon, UsersIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
 import StatBox from "@/components/StatBox.tsx";
@@ -15,8 +8,6 @@ import { Card, CardContent } from "@/components/ui/card.tsx";
 import {
   getAverageParticipants,
   getCourseRecord,
-  getMaxParticipantsInSingleRace,
-  getNumberOfRaces,
   getNumberOfUniqueRunners,
   getNumberOfUniqueRunnersThisYear,
 } from "@/lib/statisticsUtils.ts";
@@ -54,20 +45,9 @@ export default function RaceStatistics() {
     [allRaceRunners, selectedYear],
   );
 
-  const filteredRaces = useMemo(
-    () =>
-      selectedYear
-        ? (races ?? []).filter((r) => extractYear(r.raceDate) === selectedYear)
-        : (races ?? []),
-    [races, selectedYear],
-  );
-
-  const totalRaces = getNumberOfRaces(filteredRaces);
   const totalUniqueRunners = selectedYear
     ? getNumberOfUniqueRunnersThisYear(allRaceRunners, selectedYear)
     : getNumberOfUniqueRunners(allRaceRunners);
-  const totalFinishes = filtered.length;
-  const highestParticipation = getMaxParticipantsInSingleRace(filtered);
   const averageParticipation = getAverageParticipants(filtered);
   const courseRecord = getCourseRecord(filtered);
 
@@ -112,29 +92,12 @@ export default function RaceStatistics() {
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         <StatBox
-          icon={CalendarIcon}
-          value={totalRaces}
-          label="Arrangerte løp"
-          color="blue"
-        />
-        <StatBox
           icon={UsersIcon}
           value={totalUniqueRunners}
           label="Unike løpere"
           color="green"
         />
-        <StatBox
-          icon={ActivityIcon}
-          value={totalFinishes}
-          label="Løpere har fullført"
-          color="orange"
-        />
-        <StatBox
-          icon={UsersIcon}
-          value={highestParticipation}
-          label="Deltakerrekord"
-          color="orange"
-        />
+
         <StatBox
           icon={FilterIcon}
           value={averageParticipation}

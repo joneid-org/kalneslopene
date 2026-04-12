@@ -21,9 +21,9 @@ export default function NewsFeed() {
     );
   }
 
-  const latest = newsfeeds[newsfeeds.length - 1];
+  const latest = newsfeeds[0];
   if (!latest) return null;
-  const older = newsfeeds.slice(0, newsfeeds.length - 1);
+  const older = newsfeeds.slice(1);
 
   return (
     <div className="flex flex-col gap-4">

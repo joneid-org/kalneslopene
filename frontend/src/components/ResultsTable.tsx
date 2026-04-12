@@ -81,7 +81,7 @@ export default function ResultsTable({ tableData, title }: ResultsTableProps) {
       },
       {
         accessorKey: "runnerName",
-        header: "Navn",
+        header: "NAVN",
         cell: ({ getValue, row }) => (
           <span className="flex items-center gap-1.5">
             <span
@@ -95,35 +95,35 @@ export default function ResultsTable({ tableData, title }: ResultsTableProps) {
       },
       {
         accessorKey: "time",
-        header: "Resultat",
+        header: "TID",
         cell: ({ getValue }) => (
           <span className="tabular-nums">{getValue<string>()}</span>
         ),
       },
       {
         accessorKey: "pace",
-        header: "min/km",
-        cell: ({ getValue }) => (
-          <span className="tabular-nums">{getValue<string>()}</span>
-        ),
-      },
-      {
-        accessorKey: "races",
-        header: "Løp",
-        cell: ({ getValue }) => (
-          <span className="tabular-nums">{getValue<string>()}</span>
-        ),
-      },
-      {
-        accessorKey: "pr",
-        header: "PR",
+        header: "MIN/KM",
         cell: ({ getValue }) => (
           <span className="tabular-nums">{getValue<string>()}</span>
         ),
       },
       {
         accessorKey: "yearBest",
-        header: "Årsbeste",
+        header: "ÅRSBESTE",
+        cell: ({ getValue }) => (
+          <span className="tabular-nums">{getValue<string>()}</span>
+        ),
+      },
+      {
+        accessorKey: "pr",
+        header: "PERS",
+        cell: ({ getValue }) => (
+          <span className="tabular-nums">{getValue<string>()}</span>
+        ),
+      },
+      {
+        accessorKey: "races",
+        header: "LØP",
         cell: ({ getValue }) => (
           <span className="tabular-nums">{getValue<string>()}</span>
         ),

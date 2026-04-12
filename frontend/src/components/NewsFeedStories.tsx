@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router";
+import { ExternalLink } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { QUERIES } from "@/api/queries.ts";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -16,7 +19,7 @@ import {
 } from "@/components/ui/dialog.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { formatDateFull } from "@/lib/timeUtils.ts";
-import type { NewsFeedDTO } from "@/model/DTO.ts";
+import type { NewsFeedDTO, RaceDTO } from "@/model/DTO.ts";
 
 export const TAG_BG: Record<string, string> = {
   resultat: "bg-blue-600",
@@ -37,6 +40,23 @@ export const NEWS_IMAGES = [
   "https://images.unsplash.com/photo-1766970096331-78c8af007a3b?w=600&q=75",
 ];
 
+function sameDate(a: unknown, b: Date): boolean {
+  const aStr = String(a).slice(0, 10);
+  const bStr = `${b.getFullYear()}-${String(b.getMonth() + 1).padStart(2, "0")}-${String(b.getDate()).padStart(2, "0")}`;
+  return aStr === bStr;
+}
+
+function findRaceForPost(
+  races: RaceDTO[],
+  post: NewsFeedDTO,
+): RaceDTO | undefined {
+  const hasResultTag = post.tags.some((t) =>
+    ["resultat", "resultater"].includes(t.toLowerCase()),
+  );
+  if (!hasResultTag) return undefined;
+  return races.find((r) => sameDate(r.raceDate, post.date));
+}
+
 export function StoryDialog({
   post,
   img,
@@ -48,6 +68,9 @@ export function StoryDialog({
   open: boolean;
   onClose: () => void;
 }) {
+  const { data: races } = useQuery(QUERIES.race.getAllRaces);
+  const matchedRace = findRaceForPost(races ?? [], post);
+
   return (
     <Dialog
       open={open}
@@ -68,16 +91,30 @@ export function StoryDialog({
         </div>
         <div className="px-6 pb-6 pt-4 overflow-y-auto">
           <DialogHeader>
-            <div className="flex flex-wrap gap-1.5 mb-2">
-              {post.tags.map((tag) => (
-                <Link key={tag} to={`/nyheter/tag/${tag.toLowerCase()}`}>
-                  <span
-                    className={`${tagBg(tag)} text-white text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full hover:opacity-80 transition-opacity cursor-pointer`}
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+              <div className="flex flex-wrap gap-1.5">
+                {post.tags.map((tag) => (
+                  <Link key={tag} to={`/nyheter/tag/${tag.toLowerCase()}`}>
+                    <span
+                      className={`${tagBg(tag)} text-white text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full hover:opacity-80 transition-opacity cursor-pointer`}
+                    >
+                      {tag}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+              {matchedRace?.uuid && (
+                <Link to={`/Resultater/${matchedRace.uuid}`} onClick={onClose}>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="gap-1.5 text-blue-600 border-blue-200 hover:bg-blue-50 shrink-0"
                   >
-                    {tag}
-                  </span>
+                    <ExternalLink className="size-3.5" />
+                    Se resultater
+                  </Button>
                 </Link>
-              ))}
+              )}
             </div>
             <DialogTitle className="text-2xl font-black text-gray-900 leading-tight text-left">
               {post.header}

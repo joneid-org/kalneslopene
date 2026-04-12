@@ -16,7 +16,7 @@ export function Home() {
     <div>
       <div className="flex flex-col lg:flex-row items-start gap-6">
         {/* ── Main block ── */}
-        <div className="flex flex-col gap-6 lg:flex-1 min-w-0 w-full lg:items-center">
+        <div className="flex flex-col gap-6 w-full min-w-0">
           {/* Hero + practical info unified block */}
           <div className="w-full">
             <section
@@ -91,10 +91,10 @@ export function Home() {
             </section>
           </div>
 
-          <div className="w-full lg:max-w-2xl px-2 sm:px-4 md:px-8">
+          <div className="w-full sm:max-w-[75vw] lg:max-w-[60vw] mx-auto px-2 sm:px-4 md:px-8">
             <NewsFeed />
           </div>
-          <div className="w-full lg:max-w-2xl px-2 sm:px-4 md:px-8 pb-8">
+          <div className="w-full sm:max-w-[75vw] lg:max-w-[60vw] mx-auto px-2 sm:px-4 md:px-8 pb-8">
             <OrganisersBlock />
           </div>
         </div>

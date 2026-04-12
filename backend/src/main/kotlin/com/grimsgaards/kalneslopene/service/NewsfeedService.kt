@@ -10,7 +10,7 @@ import java.util.*
 class NewsfeedService(
     val newsfeedRepository: NewsfeedRepository
 ) {
-    val NUMBER_OF_NEWSFEEDS = 3
+    val NUMBER_OF_NEWSFEEDS = 10
 
     fun getSpecifiedNumberOfNewsfeed() : List<NewsfeedDTO> {
         return newsfeedRepository.findAllSortedAndLimited(NUMBER_OF_NEWSFEEDS).map { it.toDto() }

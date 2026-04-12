@@ -39,7 +39,7 @@ export const Header = forwardRef<HTMLElement>(function Header(_props, ref) {
                 <Footprints className="size-4 rotate-12" />
                 <span className="absolute -top-0.5 -right-0.5 size-2 rounded-full bg-yellow-400 border border-white" />
               </div>
-              <div className="min-w-0 leading-tight md:hidden">
+              <div className="min-w-0 leading-tight">
                 <h1 className="font-black text-sm text-gray-900 truncate leading-tight tracking-tight">
                   Torsdagsløpet
                 </h1>

@@ -77,21 +77,29 @@ export default function ResultsTable({ tableData, title }: ResultsTableProps) {
         cell: ({ getValue }) => (
           <span className="font-medium">{getValue<number>()}</span>
         ),
-        size: 36,
+        size: 24,
       },
       {
         accessorKey: "runnerName",
         header: "NAVN",
         cell: ({ getValue, row }) => (
-          <span className="flex items-center gap-1.5">
+          <span className="flex items-start gap-1 w-full">
             <span
-              className={`inline-block size-2 rounded-full shrink-0 ${row.original.gender === "Mann" ? "bg-blue-500" : "bg-red-500"}`}
+              className={`inline-block size-1.5 rounded-full shrink-0 mt-[3px] ${row.original.gender === "Mann" ? "bg-blue-500" : "bg-red-500"}`}
             />
-            <span className="block truncate max-w-32.5">
+            <span
+              className="leading-tight"
+              style={{
+                wordBreak: "break-word",
+                overflowWrap: "anywhere",
+                whiteSpace: "normal",
+              }}
+            >
               {getValue<string>()}
             </span>
           </span>
         ),
+        size: 90,
       },
       {
         accessorKey: "time",
@@ -99,6 +107,7 @@ export default function ResultsTable({ tableData, title }: ResultsTableProps) {
         cell: ({ getValue }) => (
           <span className="tabular-nums">{getValue<string>()}</span>
         ),
+        size: 44,
       },
       {
         accessorKey: "pace",
@@ -106,13 +115,15 @@ export default function ResultsTable({ tableData, title }: ResultsTableProps) {
         cell: ({ getValue }) => (
           <span className="tabular-nums">{getValue<string>()}</span>
         ),
+        size: 44,
       },
       {
         accessorKey: "yearBest",
-        header: "ÅRSBESTE",
+        header: "ÅRSB.",
         cell: ({ getValue }) => (
           <span className="tabular-nums">{getValue<string>()}</span>
         ),
+        size: 44,
       },
       {
         accessorKey: "pr",
@@ -120,6 +131,7 @@ export default function ResultsTable({ tableData, title }: ResultsTableProps) {
         cell: ({ getValue }) => (
           <span className="tabular-nums">{getValue<string>()}</span>
         ),
+        size: 44,
       },
       {
         accessorKey: "races",
@@ -127,6 +139,7 @@ export default function ResultsTable({ tableData, title }: ResultsTableProps) {
         cell: ({ getValue }) => (
           <span className="tabular-nums">{getValue<string>()}</span>
         ),
+        size: 28,
       },
     ],
     [],
@@ -163,6 +176,23 @@ export default function ResultsTable({ tableData, title }: ResultsTableProps) {
                   Vis kolonner
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <DropdownMenuCheckboxItem
+                  className="text-xs font-semibold"
+                  checked={DESKTOP_ONLY_COLUMNS.every(
+                    (c) => columnVisibility[c] === true,
+                  )}
+                  onCheckedChange={(val) => {
+                    setColumnVisibility((prev) => ({
+                      ...prev,
+                      ...Object.fromEntries(
+                        DESKTOP_ONLY_COLUMNS.map((c) => [c, val]),
+                      ),
+                    }));
+                  }}
+                >
+                  Vis alle
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuSeparator />
                 {table
                   .getAllColumns()
                   .filter((col) => col.getCanHide())
@@ -183,49 +213,53 @@ export default function ResultsTable({ tableData, title }: ResultsTableProps) {
       </CardHeader>
 
       <CardContent className="p-0 mt-2">
-        <div className="overflow-x-auto">
-          <Table className="text-xs sm:text-sm md:text-base">
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <TableHead
-                      key={header.id}
-                      className="px-2 md:px-4 py-2 md:py-3 whitespace-nowrap"
-                      style={
-                        header.column.columnDef.size
-                          ? { width: header.column.columnDef.size }
-                          : undefined
-                      }
-                    >
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      className="px-2 md:px-4 py-1.5 md:py-2.5"
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+        <Table className="text-[10px] sm:text-xs md:text-sm table-fixed w-full">
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead
+                    key={header.id}
+                    className="px-1 md:px-4 py-1 md:py-3 text-[9px] sm:text-xs whitespace-nowrap"
+                    style={
+                      header.column.columnDef.size
+                        ? { width: header.column.columnDef.size }
+                        : undefined
+                    }
+                  >
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows.map((row) => (
+              <TableRow key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell
+                    key={cell.id}
+                    className="px-1 md:px-4 py-0.5 md:py-2.5 align-top"
+                    style={
+                      cell.column.id === "runnerName"
+                        ? {
+                            wordBreak: "break-word",
+                            overflowWrap: "anywhere",
+                            whiteSpace: "normal",
+                          }
+                        : { whiteSpace: "nowrap" }
+                    }
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </CardContent>
     </Card>
   );

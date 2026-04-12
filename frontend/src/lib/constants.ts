@@ -2,12 +2,12 @@ export const DISTANCE_KM = 5.1;
 
 export const COLUMN_LABELS: Record<string, string> = {
   position: "#",
-  runnerName: "Navn",
-  time: "Resultat",
-  pace: "min/km",
-  races: "Løp",
-  pr: "PR",
-  yearBest: "Årsbeste",
+  runnerName: "NAVN",
+  time: "TID",
+  pace: "MIN/KM",
+  yearBest: "ÅRSBESTE",
+  pr: "PERS",
+  races: "LØP",
 };
 
 export const DESKTOP_ONLY_COLUMNS = ["races", "pace", "pr", "yearBest"];

@@ -13,7 +13,7 @@ export default function HomeFooter() {
   const { data: organizers } = useQuery(QUERIES.organizer.getAllOrganizers);
   const mainContact = getContactPerson(organizers ?? []);
   const SLOGAN =
-    "Fellesskap og frisk luft — hver torsdag i Kalnesskogen, siden 1978.";
+    "Fellesskap og frisk luft — hver uke i Kalnesskogen, siden 1978.";
 
   return (
     <footer className="bg-card border-t">
@@ -51,7 +51,7 @@ export default function HomeFooter() {
               <span className="flex items-center justify-center w-5 h-5 rounded-full bg-muted shrink-0">
                 <MapPin className="size-2.5" />
               </span>
-              Gamle Kongevei 1712, 1712 Grålum
+              Lundestadveien, 1712 Grålum
             </li>
           </ul>
         </div>
@@ -61,12 +61,12 @@ export default function HomeFooter() {
             <h3 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
               Sponsorer
             </h3>
-            <a
-              href={`mailto:${mainContact?.email}`}
-              className="text-[10px] px-2 py-0.5 rounded-full border text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
-            >
-              Bli sponsor →
-            </a>
+            {/*<a*/}
+            {/*  href={`mailto:${mainContact?.email}`}*/}
+            {/*  className="text-[10px] px-2 py-0.5 rounded-full border text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"*/}
+            {/*>*/}
+            {/*  Bli sponsor →*/}
+            {/*</a>*/}
           </div>
           <div className="flex gap-2">
             {sponsors.map(({ name, url, initials }) => (

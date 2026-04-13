@@ -13,20 +13,9 @@ export type Pin = {
 
 export const pins: Pin[] = [
   {
-    id: "start",
-    label: "Start / Mål",
-    position: [59.29831, 11.03969],
-    color: "#16a34a",
-    category: "start",
-    distance: "0 / 5,1 km",
-    description:
-      "Samlingspunktet for alle løpere. Her gis det informasjon om løypen, og tidtakingen starter og stopper her.",
-    tips: "Møt opp senest 10 minutter før start. Parkering er tilgjengelig like ved.",
-  },
-  {
     id: "raymondsvingen",
     label: "Raymondsvingen",
-    position: [59.29961, 11.03656],
+    position: [59.29729, 11.03352],
     color: "#2563eb",
     category: "poi",
     distance: "360 m",
@@ -36,7 +25,7 @@ export const pins: Pin[] = [
   {
     id: "sletnersletta",
     label: "Sletnersletta",
-    position: [59.30096, 11.03855],
+    position: [59.30125, 11.03849],
     color: "#2563eb",
     category: "poi",
     distance: "1 - 1,4 km",
@@ -46,7 +35,7 @@ export const pins: Pin[] = [
   {
     id: "baustadkollen",
     label: "Baustadkollen",
-    position: [59.30264, 11.03622],
+    position: [59.30566, 11.03313],
     color: "#2563eb",
     category: "poi",
     distance: "ca. 1,55 km",
@@ -56,7 +45,7 @@ export const pins: Pin[] = [
   {
     id: "bergerudpassasjen",
     label: "Bergerudpassasjen",
-    position: [59.3029, 11.03544],
+    position: [59.3063, 11.03169],
     color: "#2563eb",
     category: "poi",
     distance: "1,6 - 1,7 km",
@@ -66,7 +55,7 @@ export const pins: Pin[] = [
   {
     id: "paulsrudholtet",
     label: "Paulsrudholtet",
-    position: [59.30356, 11.03484],
+    position: [59.30764, 11.02931],
     color: "#2563eb",
     category: "poi",
     distance: "1,72 - 1,92 km",
@@ -76,7 +65,7 @@ export const pins: Pin[] = [
   {
     id: "tomtrappa",
     label: "Tomtrappa",
-    position: [59.30414, 11.03428],
+    position: [59.3082, 11.02896],
     color: "#2563eb",
     category: "poi",
     distance: "ca. 1,92 km",
@@ -84,9 +73,19 @@ export const pins: Pin[] = [
       "Etter 1920 meter i løypa svinger vi omtrent 90 grader til venstre, og løper 20 meter oppover noe som kan minne om en trapp. Denne trappa har fått navn etter mannen som har løpt over 1000 torsdagsløp, nemlig Tom Sognlien. Synes du det er litt tungt å løpe opp denne stigningen kan du jo tenke på at det er fullt mulig å gjøre det over 1000 ganger.",
   },
   {
+    id: "liansvingen",
+    label: "Liansvingen",
+    position: [59.30727, 11.02132],
+    color: "#2563eb",
+    category: "poi",
+    distance: "ca. 2,4 km",
+    description:
+      "En av de få stedene i løypa som lenge har hatt et allment kjent navn blant løperne. Et godt referansepunkt halvveis ut i skogen.",
+  },
+  {
     id: "proitztoppen",
     label: "Prøitztoppen",
-    position: [59.30677, 11.03058],
+    position: [59.30282, 11.02042],
     color: "#2563eb",
     category: "poi",
     distance: "ca. 2,9 km",
@@ -96,7 +95,7 @@ export const pins: Pin[] = [
   {
     id: "hundebakken",
     label: "Hundebakken",
-    position: [59.30199, 11.02512],
+    position: [59.29985, 11.0225],
     color: "#2563eb",
     category: "poi",
     distance: "ca. 3,4 km",
@@ -105,35 +104,14 @@ export const pins: Pin[] = [
     tips: "Du er over halvveis - gi det du har igjen!",
   },
   {
-    id: "liansvingen",
-    label: "Liansvingen",
-    position: [59.30068, 11.02328],
-    color: "#2563eb",
-    category: "poi",
-    distance: "ca. 2,4 km",
-    description:
-      "En av de få stedene i løypa som lenge har hatt et allment kjent navn blant løperne. Et godt referansepunkt halvveis ut i skogen.",
-  },
-  {
     id: "helgekneika",
     label: "Helgekneika",
-    position: [59.29912, 11.02589],
+    position: [59.29805, 11.02632],
     color: "#2563eb",
     category: "poi",
     distance: "4,27 - 4,44 km",
     description:
       "Fra 4270 til 4440 meter i den blå løypa løper vi oppover en smal sti før vi kommer ut på Lundestadveien og skal spurte mot mål. Denne stien er en trivelig del av løypa, men på dette stadiet av løpet kjenner vi gjerne at kroppen er sliten og at vi trenger en oppmuntring. Derfor passer det bra å gi denne strekningen, som vi kan kalle en kneik, navn etter Helge Rosnes. Den trofaste torsdagsløperen er alltid oppmuntrende og støttende overfor sine løpekolleger, noe mange setter stor pris på.",
-  },
-  {
-    id: "v1",
-    label: "Vendepunkt blå løype",
-    position: [59.30732, 11.02124],
-    color: "#16a34a",
-    category: "vending",
-    distance: "ca. 4 km",
-    description:
-      "Vendepunktet for blå løype. Herfra snur du og følger samme trase tilbake til mål.",
-    tips: "God mulighet til å sjekke tempoet - du er snart ferdig!",
   },
 ];
 
@@ -155,10 +133,7 @@ export const categoryVariant: Record<
 };
 
 export const mapLegend = [
-  { color: "#16a34a", label: "Start / Mål & vendepunkt" },
   { color: "#2563eb", label: "Navngitte steder i blåløypa" },
-  { color: "#dc2626", label: "Krevende parti" },
-  { color: "#d97706", label: "Utsiktspunkt" },
 ] as const;
 
 export const MAP_CENTER: [number, number] = [59.302, 11.028];

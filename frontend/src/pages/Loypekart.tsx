@@ -4,7 +4,6 @@ import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import { ChevronLeftIcon, ChevronRightIcon, XIcon } from "lucide-react";
 import { useState } from "react";
-import { blaaRoute } from "@/data/coordinater";
 import {
   MapContainer,
   Marker,
@@ -25,20 +24,21 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogPortal,
   DialogOverlay,
+  DialogPortal,
 } from "@/components/ui/dialog.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
+import { blaaRoute } from "@/data/coordinater";
 import {
   categoryLabel,
   categoryVariant,
   MAP_CENTER,
   MAP_ZOOM,
   mapLegend,
+  type Pin,
   pins,
   routePhotos,
-  type Pin,
-} from "@/data/loypekartData.ts";
+} from "@/data/loypekartData.ts"; // Fix default marker icon paths broken by bundlers
 
 // Fix default marker icon paths broken by bundlers
 delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)
@@ -118,7 +118,7 @@ export function Loypekart() {
             scrollWheelZoom={false}
           >
             <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+              // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
 
@@ -214,7 +214,7 @@ export function Loypekart() {
 
       <div className="space-y-3">
         <h2 className="text-xl font-semibold tracking-tight">
-          Bilder fra løypa
+          Løypa 200 for 200
         </h2>
         <p className="text-sm text-muted-foreground">
           Naviger gjennom bildene for å se steder langs ruten.

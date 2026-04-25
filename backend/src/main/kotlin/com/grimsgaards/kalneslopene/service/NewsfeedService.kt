@@ -24,7 +24,9 @@ class NewsfeedService(
             tags = newsfeed.tags,
             header = newsfeed.header,
             content = newsfeed.content,
-            date = newsfeed.date
+            date = newsfeed.date,
+            headerImage = newsfeed.headerImage,
+            images = newsfeed.images,
         )).toDto()
     }
 
@@ -37,6 +39,8 @@ class NewsfeedService(
             header = updatedNewsfeed.header
             content = updatedNewsfeed.content
             date = updatedNewsfeed.date
+            headerImage = updatedNewsfeed.headerImage
+            images = updatedNewsfeed.images
         }
 
         return newsfeedRepository.save(existingNews).toDto()

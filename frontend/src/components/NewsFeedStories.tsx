@@ -1,7 +1,9 @@
+/** biome-ignore-all lint/suspicious/noArrayIndexKey: <explanation> */
+
+import { useQuery } from "@tanstack/react-query";
+import { ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
-import { ExternalLink } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
 import { QUERIES } from "@/api/queries.ts";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Button } from "@/components/ui/button.tsx";
@@ -78,6 +80,8 @@ export function StoryDialog({
 }) {
   const { data: races } = useQuery(QUERIES.race.getAllRaces);
   const matchedRace = findRaceForPost(races ?? [], post);
+  const heroImg = post.headerImage ?? img;
+  const galleryImages = post.images ?? [];
 
   return (
     <Dialog
@@ -92,7 +96,7 @@ export function StoryDialog({
       >
         <div className="h-56 shrink-0 overflow-hidden">
           <img
-            src={img}
+            src={heroImg}
             alt={post.header}
             className="w-full h-full object-cover"
           />
@@ -135,6 +139,25 @@ export function StoryDialog({
           <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">
             {post.content}
           </p>
+          {galleryImages.length > 0 && (
+            <>
+              <Separator className="my-4" />
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {galleryImages.map((src, idx) => (
+                  <div
+                    key={idx}
+                    className="rounded-md overflow-hidden border aspect-square"
+                  >
+                    <img
+                      src={src}
+                      alt={`Bilde ${idx + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </DialogContent>
     </Dialog>
@@ -149,6 +172,7 @@ export function FeaturedStory({
   img: string;
 }) {
   const [open, setOpen] = useState(false);
+  const displayImg = post.headerImage ?? img;
 
   return (
     <>
@@ -192,7 +216,7 @@ export function FeaturedStory({
           </div>
           <div className="h-52 sm:h-auto overflow-hidden order-1 sm:order-2 mb-4 sm:mb-0">
             <img
-              src={img}
+              src={displayImg}
               alt={post.header}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
@@ -217,13 +241,14 @@ export function CompactStory({
   img: string;
 }) {
   const [open, setOpen] = useState(false);
+  const displayImg = post.headerImage ?? img;
 
   return (
     <>
       <Card className="shrink-0 w-56 overflow-hidden group hover:shadow-md transition-all">
         <div className="h-28 overflow-hidden">
           <img
-            src={img}
+            src={displayImg}
             alt={post.header}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
@@ -271,6 +296,7 @@ export function CompactListStory({
   img: string;
 }) {
   const [open, setOpen] = useState(false);
+  const displayImg = post.headerImage ?? img;
 
   return (
     <>
@@ -281,7 +307,7 @@ export function CompactListStory({
       >
         <div className="size-10 shrink-0 rounded-md overflow-hidden">
           <img
-            src={img}
+            src={displayImg}
             alt={post.header}
             className="w-full h-full object-cover"
           />

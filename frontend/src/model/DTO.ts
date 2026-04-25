@@ -10,6 +10,8 @@ export type NewsFeedDTO = {
   header: string;
   content: string;
   date: Date;
+  headerImage?: string;
+  images?: string[];
 };
 
 export type OrganizerDTO = {

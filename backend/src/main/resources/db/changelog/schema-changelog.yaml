@@ -62,3 +62,10 @@ databaseChangeLog:
         - sqlFile:
             path: db/changelog/sql/mockdata/seed_users.sql
             relativeToChangelogFile: false
+  - changeSet:
+      id: 010-migrate_newsfeed_add_images
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_newsfeed_add_images.sql
+            relativeToChangelogFile: false

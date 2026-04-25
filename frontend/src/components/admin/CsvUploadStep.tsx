@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/a11y/useKeyWithClickEvents: <explanation> */
+/** biome-ignore-all lint/a11y/useKeyWithClickEvents: fordi. */
 import { useQuery } from "@tanstack/react-query";
 import { UploadIcon } from "lucide-react";
 import { useRef, useState } from "react";

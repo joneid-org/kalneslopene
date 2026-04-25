@@ -1,0 +1,14 @@
+#cloud-config
+users:
+  - name: devops
+    groups: users, admin
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ${ssh_public_key}
+package_update: true
+package_upgrade: true
+packages:
+  - docker.io
+runcmd:
+  - curl -sSL https://dokploy.com/install.sh | sh

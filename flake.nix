@@ -30,6 +30,7 @@
         bun = pkgs.bun;
         nodejs = pkgs.nodejs;
         jdk = pkgs.jdk21_headless;
+        opentofu = pkgs.opentofu;
       in
       {
         devShells = rec {
@@ -40,6 +41,7 @@
               bun
               nodejs
               jdk
+              opentofu
             ];
             devshell.startup.link.text = ''
               mkdir -p "$PRJ_DATA_DIR/current"
@@ -51,6 +53,7 @@
               echo "-----Kalneslopene development environment-----"
               echo "bun: $(${bun}/bin/bun --version)"
               echo "node: $(${nodejs}/bin/node --version)"
+              echo "opentofu: $(${opentofu}/bin/tofu --version)"
               echo "$(${jdk}/bin/java --version)"
               echo "----------------------------------------------"
             '';

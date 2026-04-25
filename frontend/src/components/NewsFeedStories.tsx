@@ -21,13 +21,21 @@ import { Separator } from "@/components/ui/separator.tsx";
 import { formatDateFull } from "@/lib/timeUtils.ts";
 import type { NewsFeedDTO, RaceDTO } from "@/model/DTO.ts";
 
-export const TAG_BG: Record<string, string> = {
-  resultat: "bg-blue-600",
-  resultater: "bg-blue-600",
-  info: "bg-orange-500",
-  jubileum: "bg-purple-500",
-  arrangement: "bg-pink-500",
-};
+export const PREDEFINED_TAGS: {
+  label: string;
+  value: string;
+  color: string;
+}[] = [
+  { label: "Resultater", value: "resultater", color: "bg-blue-600" },
+  { label: "Bilder", value: "bilder", color: "bg-purple-600" },
+  { label: "Kommende løp", value: "kommende løp", color: "bg-green-600" },
+  { label: "Ukens løp", value: "ukens løp", color: "bg-orange-500" },
+];
+
+export const TAG_BG: Record<string, string> = Object.fromEntries(
+  PREDEFINED_TAGS.map((t) => [t.value, t.color]),
+);
+
 export function tagBg(tag: string) {
   return TAG_BG[tag.toLowerCase()] ?? "bg-black";
 }

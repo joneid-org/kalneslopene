@@ -26,6 +26,8 @@ class SecurityConfig {
                 auth
                     .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/auth/setup/needed").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/auth/setup").permitAll()
                     .anyRequest().hasRole("USER")
             }
             .httpBasic { }

@@ -249,6 +249,18 @@ export const QUERIES = {
           .post("/api/auth/login", { json: request })
           .json<LoginResponse>(),
     }),
+    isSetupNeeded: {
+      queryKey: ["auth", "setup", "needed"],
+      queryFn: () =>
+        kyClient.get("/api/auth/setup/needed").json<{ needed: boolean }>(),
+    },
+    setup: (request: { username: string; password: string }) => ({
+      queryKey: ["auth", "setup"],
+      queryFn: () =>
+        kyClient
+          .post("/api/auth/setup", { json: request })
+          .json<LoginResponse>(),
+    }),
   },
   milestone: {
     getAllMilestones: {

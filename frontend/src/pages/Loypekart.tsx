@@ -181,9 +181,7 @@ export function Loypekart() {
               </CardHeader>
               <Separator />
               <CardContent className="pt-4 space-y-3">
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {activePin.description}
-                </p>
+                <p className="text-secondary">{activePin.description}</p>
                 {activePin.tips && (
                   <div className="rounded-md bg-muted px-3 py-2 text-sm border-l-2 border-primary">
                     <span className="font-medium text-xs uppercase tracking-wide text-primary">

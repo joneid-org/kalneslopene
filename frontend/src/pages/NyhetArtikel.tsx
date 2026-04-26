@@ -64,11 +64,7 @@ export function NyhetArtikel() {
           <div className="flex flex-wrap gap-1.5">
             {post.tags.map((tag) => (
               <Link key={tag} to={`/nyheter/tag/${tag.toLowerCase()}`}>
-                <span
-                  className={`${tagBg(tag, tags)} text-white text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full hover:opacity-80 transition-opacity cursor-pointer`}
-                >
-                  {tag}
-                </span>
+                <span className={`${tagBg(tag, tags)} tag-pill`}>{tag}</span>
               </Link>
             ))}
           </div>
@@ -87,9 +83,7 @@ export function NyhetArtikel() {
         </div>
 
         {/* Title */}
-        <h1 className="text-2xl sm:text-3xl font-black text-gray-900 leading-tight mb-1">
-          {post.header}
-        </h1>
+        <h1 className="page-title mb-1">{post.header}</h1>
         <time className="text-xs text-gray-400 font-medium block mb-4">
           {formatDateFull(post.date)}
         </time>

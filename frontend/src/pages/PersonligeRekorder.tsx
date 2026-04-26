@@ -62,9 +62,9 @@ export function PersonligeRekorder() {
   };
 
   return (
-    <div className="w-full max-w-[80vw] mx-auto px-4 py-8 space-y-6">
+    <div className="page-content section-stack">
       <div className="space-y-1">
-        <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
+        <h1 className="page-title flex items-center gap-2">
           <MedalIcon className="size-6 text-yellow-500" />
           Personlige rekorder
         </h1>

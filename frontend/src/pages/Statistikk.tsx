@@ -3,7 +3,7 @@ import RunnerStatistics from "@/components/RunnerStatistics.tsx";
 
 export function Statistikk() {
   return (
-    <div className="w-full max-w-[80vw] mx-auto px-2 py-4 sm:px-4 sm:py-6 md:px-8 md:py-8">
+    <div className="page-content">
       <div className="flex flex-col lg:flex-row gap-8 lg:items-start">
         <div className="flex-1 min-w-0">
           <RaceStatistics />

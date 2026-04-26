@@ -7,7 +7,7 @@ export function Resultater() {
   }>();
 
   return (
-    <div className="w-full max-w-[80vw] mx-auto px-2 py-4 sm:px-4 sm:py-6 md:px-8 md:py-8">
+    <div className="page-content">
       <Results uuid={uuid} />
     </div>
   );

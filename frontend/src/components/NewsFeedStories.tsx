@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/suspicious/noArrayIndexKey: <explanation> */
+/** biome-ignore-all lint/suspicious/noArrayIndexKey: fordi */
 
 import { useQuery } from "@tanstack/react-query";
 import { ExternalLink } from "lucide-react";
@@ -112,9 +112,7 @@ export function StoryDialog({
               <div className="flex flex-wrap gap-1.5">
                 {post.tags.map((tag) => (
                   <Link key={tag} to={`/nyheter/tag/${tag.toLowerCase()}`}>
-                    <span
-                      className={`${tagBg(tag, tags)} text-white text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full hover:opacity-80 transition-opacity cursor-pointer`}
-                    >
+                    <span className={`${tagBg(tag, tags)} tag-pill`}>
                       {tag}
                     </span>
                   </Link>
@@ -189,9 +187,7 @@ export function FeaturedStory({
               <div className="flex flex-wrap gap-1.5 mb-1">
                 {post.tags.map((tag) => (
                   <Link key={tag} to={`/nyheter/tag/${tag.toLowerCase()}`}>
-                    <span
-                      className={`${tagBg(tag, tags)} text-white text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full hover:opacity-80 transition-opacity cursor-pointer`}
-                    >
+                    <span className={`${tagBg(tag, tags)} tag-pill`}>
                       {tag}
                     </span>
                   </Link>
@@ -251,7 +247,7 @@ export function CompactStory({
 
   return (
     <Link to={`/nyheter/${post.uuid}`} className="block group">
-      <Card className="overflow-hidden hover:shadow-md transition-all h-full flex flex-col gap-0 py-0">
+      <Card className="overflow-hidden card-hover h-full flex flex-col gap-0 py-0">
         <div className="aspect-video overflow-hidden shrink-0">
           <img
             src={displayImg}

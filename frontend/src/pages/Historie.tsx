@@ -37,15 +37,13 @@ export function Historie() {
   );
 
   return (
-    <div className="w-full max-w-[80vw] mx-auto px-4 py-8 space-y-12">
+    <div className="page-content section-stack">
       {/* Hero */}
       <section className="text-center space-y-3">
         <Badge variant="outline" className="text-xs tracking-widest uppercase">
           Siden 1993
         </Badge>
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
-          Historien om Torsdagsløpet
-        </h1>
+        <h1 className="page-title">Historien om Torsdagsløpet</h1>
         <p className="text-muted-foreground text-base max-w-xl mx-auto">
           Over 30 år med fellesskap, frisk luft og gode bein på Kalneskrysset.
           Her er historien bak løpet — fra de første forsiktige stegene til en
@@ -120,9 +118,7 @@ export function Historie() {
                         />
                       </div>
 
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        {summary}
-                      </p>
+                      <p className="text-secondary">{summary}</p>
 
                       {/* Expandable section */}
                       {isOpen && (
@@ -145,7 +141,7 @@ export function Historie() {
                           </dl>
                           {/* Extra narrative */}
                           {extra && (
-                            <p className="text-sm text-muted-foreground leading-relaxed border-l-2 border-primary pl-3 italic">
+                            <p className="text-secondary border-l-2 border-primary pl-3 italic">
                               {extra}
                             </p>
                           )}

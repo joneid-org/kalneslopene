@@ -26,7 +26,8 @@ class OrganizerService(
                 initials = organizer.initials,
                 phone = organizer.phone,
                 email = organizer.email,
-                contactperson = organizer.contactPerson
+                contactperson = organizer.contactPerson,
+                image = organizer.image,
             )
         ).toDto()
     }
@@ -41,6 +42,7 @@ class OrganizerService(
             initials = updatedOrganizer.initials
             phone = updatedOrganizer.phone
             email = updatedOrganizer.email
+            image = updatedOrganizer.image
         }
 
         return organizerRepository.save(existingOrganizer).toDto()

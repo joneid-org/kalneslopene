@@ -9,5 +9,6 @@ data class OrganizerDTO(
     val initials: String,
     val phone: String? = null,
     val email: String? = null,
-    val contactPerson: Boolean
+    val contactPerson: Boolean,
+    val image: String? = null,
 )

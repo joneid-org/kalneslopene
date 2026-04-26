@@ -33,6 +33,7 @@ export type OrganizerDTO = {
   phone?: string;
   email?: string;
   contactPerson: boolean;
+  image?: string;
 };
 
 export type RunnerDTO = {

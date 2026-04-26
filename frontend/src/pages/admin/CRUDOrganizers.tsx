@@ -13,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog.tsx";
+import { useOrganizerOrder } from "@/lib/organizerOrder.ts";
 import type { OrganizerDTO } from "@/model/DTO.ts";
 
 // ─── Main component ────────────────────────────────────────────────────────────
@@ -24,6 +25,7 @@ export function CRUDOrganizers() {
     qc.invalidateQueries({ queryKey: ["organizer", "getAll"] });
 
   const { data: organizers } = useQuery(QUERIES.organizer.getAllOrganizers);
+  const { ordered, move } = useOrganizerOrder(organizers ?? []);
 
   const [showAdd, setShowAdd] = useState(false);
   const addMutation = useMutation({
@@ -74,9 +76,10 @@ export function CRUDOrganizers() {
       </div>
 
       <OrganizersCard
-        organizers={organizers ?? []}
+        organizers={ordered}
         onEdit={setEditing}
         onDelete={setDeleting}
+        onReorder={move}
       />
 
       {/* Add dialog */}

@@ -76,3 +76,10 @@ databaseChangeLog:
         - sqlFile:
             path: db/changelog/sql/migrate/migrate_newsfeed_settings_and_tags.sql
             relativeToChangelogFile: false
+  - changeSet:
+      id: 012-migrate_organizer_add_image
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_organizer_add_image.sql
+            relativeToChangelogFile: false

@@ -8,11 +8,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
+import { applySavedOrder } from "@/lib/organizerOrder.ts";
 import { getContactPerson } from "@/lib/utils.ts";
 
 export default function OrganisersBlock() {
   const { data: organizers } = useQuery(QUERIES.organizer.getAllOrganizers);
   const mainContact = getContactPerson(organizers ?? []);
+  const ordered = applySavedOrder(organizers ?? []);
 
   const O_TEXT =
     "Torsdagsløpet er et frivillig drevet mosjonsløp som har arrangert\n" +
@@ -29,14 +31,22 @@ export default function OrganisersBlock() {
       <CardContent className="space-y-4">
         <p className="text-sm text-muted-foreground">{O_TEXT}</p>
         <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
-          {organizers?.map((organizer) => (
+          {ordered.map((organizer) => (
             <div
               key={organizer.name}
               className="flex flex-col items-center text-center gap-2 p-3 rounded-lg bg-muted/40"
             >
-              <div className="size-10 rounded-full bg-primary/10 flex items-center justify-center text-sm font-semibold text-primary shrink-0">
-                {organizer.initials}
-              </div>
+              {organizer.image ? (
+                <img
+                  src={organizer.image}
+                  alt={organizer.name}
+                  className="size-14 rounded-full object-cover border-2 border-muted shrink-0"
+                />
+              ) : (
+                <div className="size-14 rounded-full bg-primary/10 flex items-center justify-center text-sm font-semibold text-primary shrink-0">
+                  {organizer.initials}
+                </div>
+              )}
               <div>
                 <p className="text-sm font-medium leading-tight">
                   {organizer.name}

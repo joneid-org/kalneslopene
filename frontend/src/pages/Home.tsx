@@ -6,6 +6,7 @@ import { formatDDMonth, formatTimeStamp } from "@/lib/timeUtils.ts";
 import { getUpcomingRaces } from "@/lib/utils.ts";
 import NewsFeed from "../components/NewsFeed.tsx";
 import OrganisersBlock from "../components/OrganisersBlock.tsx";
+import SponsorsBlock from "../components/SponsorsBlock.tsx";
 import cardImage from "../data/Messenger_creation_56DB2467-9FDC-4ED1-9316-C458D96DC9A5.jpeg";
 
 export function Home() {
@@ -94,8 +95,9 @@ export function Home() {
           <div className="w-full sm:max-w-[80vw] mx-auto px-2 sm:px-4 md:px-8">
             <NewsFeed />
           </div>
-          <div className="w-full sm:max-w-[80vw] mx-auto px-2 sm:px-4 md:px-8 pb-8">
+          <div className="w-full sm:max-w-[80vw] mx-auto px-2 sm:px-4 md:px-8 pb-8 flex flex-col gap-6">
             <OrganisersBlock />
+            <SponsorsBlock />
           </div>
         </div>
       </div>

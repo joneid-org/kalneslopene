@@ -1,96 +1,66 @@
 import { useQuery } from "@tanstack/react-query";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MessageCircle, Phone } from "lucide-react";
 import { QUERIES } from "@/api/queries.ts";
 import { Separator } from "@/components/ui/separator.tsx";
 import { getContactPerson } from "@/lib/utils.ts";
 
-const sponsors = [
-  { name: "Kiwi", url: "https://kiwi.no/", initials: "Kiwi" },
-  { name: "XXL", url: "https://www.xxl.no/", initials: "XXL" },
-];
-
 export default function HomeFooter() {
   const { data: organizers } = useQuery(QUERIES.organizer.getAllOrganizers);
   const mainContact = getContactPerson(organizers ?? []);
-  const SLOGAN =
-    "Fellesskap og frisk luft — hver uke i Kalnesskogen, siden 1978.";
 
   return (
     <footer className="bg-card border-t">
-      <div className="max-w-5xl mx-auto px-6 py-5 grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="space-y-1">
-          <h2 className="text-sm font-bold tracking-tight">Torsdagsløpet</h2>
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            {SLOGAN}
-          </p>
-        </div>
-
-        <div className="space-y-1.5">
-          <h3 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
-            Kontakt
-          </h3>
-          <ul className="space-y-1">
-            <li>
-              <a
-                href={`mailto:${mainContact?.email}`}
-                className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors group"
-              >
-                <span className="flex items-center justify-center w-5 h-5 rounded-full bg-muted group-hover:bg-accent transition-colors shrink-0">
-                  <Mail className="size-2.5" />
-                </span>
-                {mainContact?.email}
-              </a>
-            </li>
-            <li className="flex items-center gap-2 text-xs text-muted-foreground">
-              <span className="flex items-center justify-center w-5 h-5 rounded-full bg-muted shrink-0">
-                <Phone className="size-2.5" />
-              </span>
-              +47 {mainContact?.phone}
-            </li>
-            <li className="flex items-center gap-2 text-xs text-muted-foreground">
-              <span className="flex items-center justify-center w-5 h-5 rounded-full bg-muted shrink-0">
-                <MapPin className="size-2.5" />
-              </span>
-              Lundestadveien, 1712 Grålum
-            </li>
-          </ul>
-        </div>
-
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between">
-            <h3 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
-              Sponsorer
-            </h3>
-            {/*<a*/}
-            {/*  href={`mailto:${mainContact?.email}`}*/}
-            {/*  className="text-[10px] px-2 py-0.5 rounded-full border text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"*/}
-            {/*>*/}
-            {/*  Bli sponsor →*/}
-            {/*</a>*/}
-          </div>
-          <div className="flex gap-2">
-            {sponsors.map(({ name, url, initials }) => (
-              <a
-                key={name}
-                href={url}
-                title={name}
-                className="flex-1 flex flex-col items-center justify-center gap-1 rounded-lg border bg-muted/40 hover:bg-muted transition-colors py-2 group"
-              >
-                <div className="w-8 h-8 rounded-full bg-background border flex items-center justify-center text-[10px] font-bold text-muted-foreground group-hover:text-foreground transition-colors">
-                  {initials}
-                </div>
-                <span className="text-[10px] text-center text-muted-foreground group-hover:text-foreground transition-colors leading-tight px-1">
-                  {name}
-                </span>
-              </a>
-            ))}
-          </div>
+      <div className="w-full sm:max-w-[80vw] mx-auto px-6 py-5 flex flex-col items-center gap-2">
+        <h3 className=" font-semibold uppercase tracking-widest ">Kontakt</h3>
+        <p>
+          Har du spørsmål, innspill eller ønsker å bidra? Send oss en melding!
+        </p>
+        <div className="flex flex-wrap justify-center gap-2">
+          <a
+            href={`mailto:${mainContact?.email}`}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border bg-muted/40 hover:bg-muted transition-colors text-xs text-muted-foreground hover:text-foreground"
+          >
+            <Mail className="size-3.5" />
+            E-post
+          </a>
+          <a
+            href={`tel:+47${mainContact?.phone}`}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border bg-muted/40 hover:bg-muted transition-colors text-xs text-muted-foreground hover:text-foreground"
+          >
+            <Phone className="size-3.5" />
+            Ring oss
+          </a>
+          <a
+            href="https://www.facebook.com/torsdagslopet"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border bg-muted/40 hover:bg-muted transition-colors text-xs text-muted-foreground hover:text-foreground"
+          >
+            <svg
+              className="size-3.5"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.313 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z" />
+            </svg>
+            Facebook
+          </a>
+          <a
+            href="https://m.me/torsdagslopet"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border bg-muted/40 hover:bg-muted transition-colors text-xs text-muted-foreground hover:text-foreground"
+          >
+            <MessageCircle className="size-3.5" />
+            Messenger
+          </a>
         </div>
       </div>
 
       <Separator />
 
-      <div className="max-w-5xl mx-auto px-6 py-2.5 flex items-center justify-between text-[10px] text-muted-foreground">
+      <div className="w-full sm:max-w-[80vw] mx-auto px-6 py-2.5 flex items-center justify-between text-[10px] text-muted-foreground">
         <span>© {new Date().getFullYear()} Torsdagsløpet</span>
         <div className="flex items-center gap-3">
           <span>Drevet av frivillige ❤️</span>

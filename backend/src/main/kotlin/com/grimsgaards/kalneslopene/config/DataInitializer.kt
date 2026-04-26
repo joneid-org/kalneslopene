@@ -17,6 +17,7 @@ class DataInitializer(
     private val logger = LoggerFactory.getLogger(DataInitializer::class.java)
 
     override fun run(args: ApplicationArguments) {
+        logger.info("Initializing Data")
         if (userRepository.count() == 0L) {
             val username = System.getenv("INITIAL_USER")
             val rawPassword = System.getenv("INITIAL_PASSWORD")

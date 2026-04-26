@@ -14,6 +14,17 @@ export type NewsFeedDTO = {
   images?: string[];
 };
 
+export type NewsfeedTagDTO = {
+  uuid?: string;
+  label: string;
+  value: string;
+  color: string;
+};
+
+export type NewsfeedSettingsDTO = {
+  maxArticles: number;
+};
+
 export type OrganizerDTO = {
   uuid?: string;
   name: string;

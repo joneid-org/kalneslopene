@@ -21,13 +21,10 @@ import {
 } from "@/components/ui/dialog.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { formatDateFull } from "@/lib/timeUtils.ts";
-import type { NewsFeedDTO, RaceDTO } from "@/model/DTO.ts";
+import type { NewsFeedDTO, NewsfeedTagDTO, RaceDTO } from "@/model/DTO.ts";
 
-export const PREDEFINED_TAGS: {
-  label: string;
-  value: string;
-  color: string;
-}[] = [
+/** Static fallback used before API tags are loaded */
+export const PREDEFINED_TAGS: NewsfeedTagDTO[] = [
   { label: "Resultater", value: "resultater", color: "bg-blue-600" },
   { label: "Bilder", value: "bilder", color: "bg-purple-600" },
   { label: "Kommende løp", value: "kommende løp", color: "bg-green-600" },
@@ -38,8 +35,18 @@ export const TAG_BG: Record<string, string> = Object.fromEntries(
   PREDEFINED_TAGS.map((t) => [t.value, t.color]),
 );
 
-export function tagBg(tag: string) {
-  return TAG_BG[tag.toLowerCase()] ?? "bg-black";
+export function tagBg(tag: string, tags?: NewsfeedTagDTO[]) {
+  const list = tags ?? PREDEFINED_TAGS;
+  return (
+    list.find((t) => t.value.toLowerCase() === tag.toLowerCase())?.color ??
+    "bg-black"
+  );
+}
+
+/** Hook to get live tags from backend, falling back to PREDEFINED_TAGS */
+export function useTags(): NewsfeedTagDTO[] {
+  const { data } = useQuery(QUERIES.newsfeed.getAllTags);
+  return data && data.length > 0 ? data : PREDEFINED_TAGS;
 }
 
 export const NEWS_IMAGES = [
@@ -79,6 +86,7 @@ export function StoryDialog({
   onClose: () => void;
 }) {
   const { data: races } = useQuery(QUERIES.race.getAllRaces);
+  const tags = useTags();
   const matchedRace = findRaceForPost(races ?? [], post);
   const heroImg = post.headerImage ?? img;
   const galleryImages = post.images ?? [];
@@ -108,7 +116,7 @@ export function StoryDialog({
                 {post.tags.map((tag) => (
                   <Link key={tag} to={`/nyheter/tag/${tag.toLowerCase()}`}>
                     <span
-                      className={`${tagBg(tag)} text-white text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full hover:opacity-80 transition-opacity cursor-pointer`}
+                      className={`${tagBg(tag, tags)} text-white text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full hover:opacity-80 transition-opacity cursor-pointer`}
                     >
                       {tag}
                     </span>
@@ -173,6 +181,7 @@ export function FeaturedStory({
 }) {
   const [open, setOpen] = useState(false);
   const displayImg = post.headerImage ?? img;
+  const tags = useTags();
 
   return (
     <>
@@ -184,7 +193,7 @@ export function FeaturedStory({
                 {post.tags.map((tag) => (
                   <Link key={tag} to={`/nyheter/tag/${tag.toLowerCase()}`}>
                     <span
-                      className={`${tagBg(tag)} text-white text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full hover:opacity-80 transition-opacity cursor-pointer`}
+                      className={`${tagBg(tag, tags)} text-white text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full hover:opacity-80 transition-opacity cursor-pointer`}
                     >
                       {tag}
                     </span>
@@ -242,6 +251,7 @@ export function CompactStory({
 }) {
   const [open, setOpen] = useState(false);
   const displayImg = post.headerImage ?? img;
+  const tags = useTags();
 
   return (
     <>
@@ -258,7 +268,7 @@ export function CompactStory({
             {post.tags.map((tag) => (
               <Link key={tag} to={`/nyheter/tag/${tag.toLowerCase()}`}>
                 <Badge
-                  className={`${tagBg(tag)} text-white text-[9px] border-0 px-1.5 py-0 hover:opacity-80 transition-opacity cursor-pointer`}
+                  className={`${tagBg(tag, tags)} text-white text-[9px] border-0 px-1.5 py-0 hover:opacity-80 transition-opacity cursor-pointer`}
                 >
                   {tag}
                 </Badge>
@@ -297,6 +307,7 @@ export function CompactListStory({
 }) {
   const [open, setOpen] = useState(false);
   const displayImg = post.headerImage ?? img;
+  const tags = useTags();
 
   return (
     <>
@@ -317,7 +328,7 @@ export function CompactListStory({
             {post.tags.map((tag) => (
               <span
                 key={tag}
-                className={`${tagBg(tag)} text-white text-[8px] font-black uppercase tracking-widest px-1.5 py-0 rounded-full`}
+                className={`${tagBg(tag, tags)} text-white text-[8px] font-black uppercase tracking-widest px-1.5 py-0 rounded-full`}
               >
                 {tag}
               </span>

@@ -1,7 +1,7 @@
+/** biome-ignore-all lint/suspicious/noArrayIndexKey: dot indicators by index is fine */
 import { useQuery } from "@tanstack/react-query";
 import { Newspaper } from "lucide-react";
 import { QUERIES } from "@/api/queries.ts";
-import { Separator } from "@/components/ui/separator.tsx";
 import {
   CompactListStory,
   CompactStory,
@@ -36,7 +36,6 @@ export default function NewsFeed() {
       {/* Older posts */}
       {older.length > 0 && (
         <>
-          <Separator />
           {/* Mobile: compact vertical list */}
           <div className="flex flex-col sm:hidden">
             {older.map((post, idx) => (
@@ -47,15 +46,20 @@ export default function NewsFeed() {
               />
             ))}
           </div>
-          {/* Desktop: horizontal scroll row */}
-          <div className="hidden sm:flex gap-3 overflow-x-auto pb-1 scrollbar-hide">
-            {older.map((post, idx) => (
-              <CompactStory
-                key={post.uuid}
-                post={post}
-                img={NEWS_IMAGES[idx % NEWS_IMAGES.length] ?? ""}
-              />
-            ))}
+
+          {/* Desktop: horizontal scroll row with fade hint */}
+          <div className="hidden sm:block relative">
+            <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide scroll-smooth">
+              {older.map((post, idx) => (
+                <CompactStory
+                  key={post.uuid}
+                  post={post}
+                  img={NEWS_IMAGES[idx % NEWS_IMAGES.length] ?? ""}
+                />
+              ))}
+            </div>
+            {/* Right-edge fade to hint at more content */}
+            <div className="pointer-events-none absolute right-0 top-0 bottom-2 w-16 bg-linear-to-l from-white to-transparent" />
           </div>
         </>
       )}

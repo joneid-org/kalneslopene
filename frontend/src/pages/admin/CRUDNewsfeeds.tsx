@@ -6,6 +6,7 @@ import { QUERIES } from "@/api/queries.ts";
 import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog.tsx";
 import { NewsfeedForm } from "@/components/admin/NewsfeedForm.tsx";
 import { NewsfeedsCard } from "@/components/admin/NewsfeedsCard.tsx";
+import { NewsfeedTagManager } from "@/components/admin/NewsfeedTagManager.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Dialog,
@@ -13,6 +14,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog.tsx";
+import { Input } from "@/components/ui/input.tsx";
+import { Label } from "@/components/ui/label.tsx";
+import { Separator } from "@/components/ui/separator.tsx";
 import type { NewsFeedDTO } from "@/model/DTO.ts";
 
 // ─── Main component ────────────────────────────────────────────────────────────
@@ -24,6 +28,17 @@ export function CRUDNewsfeeds() {
     qc.invalidateQueries({ queryKey: ["newsfeed", "getAll"] });
 
   const { data: newsfeeds } = useQuery(QUERIES.newsfeed.getAllNewsFeeds);
+  const { data: settings } = useQuery(QUERIES.newsfeed.getSettings);
+  const [maxArticles, setMaxArticles] = useState<number | undefined>(undefined);
+
+  const settingsMutation = useMutation({
+    mutationFn: (max: number) =>
+      QUERIES.newsfeed.updateSettings({ maxArticles: max }).queryFn(),
+    onSuccess: () =>
+      qc.invalidateQueries({ queryKey: ["newsfeed", "settings"] }),
+  });
+
+  const currentMax = maxArticles ?? settings?.maxArticles ?? 10;
 
   const [showAdd, setShowAdd] = useState(false);
   const addMutation = useMutation({
@@ -69,8 +84,43 @@ export function CRUDNewsfeeds() {
         <ChevronLeftIcon className="size-4" />
         Tilbake
       </Button>
+      <h1 className="text-2xl font-bold tracking-tight">Nyheter</h1>
+
+      {/* ── Settings ────────────────────────────────────────────── */}
+      <div className="rounded-lg border p-4 space-y-3">
+        <h2 className="text-base font-semibold">Innstillinger</h2>
+        <div className="flex items-end gap-3">
+          <div className="space-y-1.5 flex-1 max-w-[200px]">
+            <Label>Antall artikler på forsiden</Label>
+            <Input
+              type="number"
+              min={1}
+              max={50}
+              value={currentMax}
+              onChange={(e) => setMaxArticles(Number(e.target.value))}
+            />
+          </div>
+          <Button
+            onClick={() => settingsMutation.mutate(currentMax)}
+            disabled={settingsMutation.isPending}
+          >
+            Lagre
+          </Button>
+        </div>
+      </div>
+
+      <Separator />
+
+      {/* ── Tag management ──────────────────────────────────────── */}
+      <div className="rounded-lg border p-4">
+        <NewsfeedTagManager />
+      </div>
+
+      <Separator />
+
+      {/* ── Articles ────────────────────────────────────────────── */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">Nyheter</h1>
+        <h2 className="text-base font-semibold">Artikler</h2>
         <Button className="gap-1.5" onClick={() => setShowAdd(true)}>
           <PlusIcon className="size-4" />
           Legg til nyhet

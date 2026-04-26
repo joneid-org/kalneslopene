@@ -4,6 +4,8 @@ import type {
   LoginResponse,
   MilestoneDTO,
   NewsFeedDTO,
+  NewsfeedSettingsDTO,
+  NewsfeedTagDTO,
   OrganizerDTO,
   RaceDTO,
   RaceRunnerDTO,
@@ -187,6 +189,42 @@ export const QUERIES = {
     deleteNewsFeed: (uuid: string) => ({
       queryKey: ["newsfeed", "delete", uuid],
       queryFn: () => kyClient.delete(`/api/newsfeeds/${uuid}`).json<void>(),
+    }),
+    getSettings: {
+      queryKey: ["newsfeed", "settings"],
+      queryFn: () =>
+        kyClient.get("/api/newsfeeds/settings").json<NewsfeedSettingsDTO>(),
+    },
+    updateSettings: (dto: NewsfeedSettingsDTO) => ({
+      queryKey: ["newsfeed", "settings", "update"],
+      queryFn: () =>
+        kyClient
+          .patch("/api/newsfeeds/settings", { json: dto })
+          .json<NewsfeedSettingsDTO>(),
+    }),
+    getAllTags: {
+      queryKey: ["newsfeed", "tags"],
+      queryFn: () =>
+        kyClient.get("/api/newsfeeds/tags").json<NewsfeedTagDTO[]>(),
+    },
+    createTag: (dto: NewsfeedTagDTO) => ({
+      queryKey: ["newsfeed", "tags", "create"],
+      queryFn: () =>
+        kyClient
+          .post("/api/newsfeeds/tags", { json: dto })
+          .json<NewsfeedTagDTO>(),
+    }),
+    updateTag: (uuid: string, dto: NewsfeedTagDTO) => ({
+      queryKey: ["newsfeed", "tags", "update", uuid],
+      queryFn: () =>
+        kyClient
+          .patch(`/api/newsfeeds/tags/${uuid}`, { json: dto })
+          .json<NewsfeedTagDTO>(),
+    }),
+    deleteTag: (uuid: string) => ({
+      queryKey: ["newsfeed", "tags", "delete", uuid],
+      queryFn: () =>
+        kyClient.delete(`/api/newsfeeds/tags/${uuid}`).json<void>(),
     }),
   },
   auth: {

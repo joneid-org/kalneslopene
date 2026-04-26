@@ -3,7 +3,7 @@
 import { ImagePlus, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { FormFooter } from "@/components/admin/FormFooter.tsx";
-import { PREDEFINED_TAGS, tagBg } from "@/components/NewsFeedStories.tsx";
+import { tagBg, useTags } from "@/components/NewsFeedStories.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -51,6 +51,7 @@ export function NewsfeedForm({
     initial.headerImage,
   );
   const [images, setImages] = useState<string[]>(initial.images ?? []);
+  const availableTags = useTags();
 
   const headerImageRef = useRef<HTMLInputElement>(null);
   const imagesRef = useRef<HTMLInputElement>(null);
@@ -130,10 +131,9 @@ export function NewsfeedForm({
                   {selectedTags.map((tag) => (
                     <span
                       key={tag}
-                      className={`${tagBg(tag)} text-white text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full`}
+                      className={`${tagBg(tag, availableTags)} text-white text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full`}
                     >
-                      {PREDEFINED_TAGS.find((t) => t.value === tag)?.label ??
-                        tag}
+                      {availableTags.find((t) => t.value === tag)?.label ?? tag}
                     </span>
                   ))}
                 </div>
@@ -141,7 +141,7 @@ export function NewsfeedForm({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56">
-            {PREDEFINED_TAGS.map((tag) => (
+            {availableTags.map((tag) => (
               <DropdownMenuCheckboxItem
                 key={tag.value}
                 checked={selectedTags.includes(tag.value)}

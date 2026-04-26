@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { Cloud } from "lucide-react";
+import { Cloud, Droplets, Thermometer, Wind } from "lucide-react";
 import { QUERIES } from "@/api/queries.ts";
 import { formatDDMonth } from "@/lib/timeUtils.ts";
+import { useYrWeather } from "@/lib/useYrWeather.ts";
 import { getUpcomingRaces } from "@/lib/utils.ts";
 import NewsFeed from "../components/NewsFeed.tsx";
 import OrganisersBlock from "../components/OrganisersBlock.tsx";
@@ -12,6 +13,7 @@ import cardImage from "../data/Messenger_creation_56DB2467-9FDC-4ED1-9316-C458D9
 export function Home() {
   const { data: races } = useQuery(QUERIES.race.getAllRaces);
   const nextRace = getUpcomingRaces(races ?? [])[0];
+  const weather = useYrWeather(nextRace?.raceDate);
 
   return (
     <div>
@@ -68,11 +70,34 @@ export function Home() {
                         </div>
                         <div className="w-px h-8 bg-white/30" />
                         <div className="text-sm sm:text-base text-white space-y-1.5">
-                          {nextRace.weather && (
-                            <div className="flex items-center gap-2">
-                              <Cloud className="size-3.5 sm:size-4 shrink-0 text-white/70" />
-                              {nextRace.weather}
-                            </div>
+                          {weather ? (
+                            <>
+                              <div className="flex items-center gap-2">
+                                <Cloud className="size-3.5 sm:size-4 shrink-0 text-white/70" />
+                                {weather.label}
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Thermometer className="size-3.5 sm:size-4 shrink-0 text-white/70" />
+                                {weather.temperature}°C
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Wind className="size-3.5 sm:size-4 shrink-0 text-white/70" />
+                                {weather.windSpeed} m/s
+                              </div>
+                              {weather.precipitation > 0 && (
+                                <div className="flex items-center gap-2">
+                                  <Droplets className="size-3.5 sm:size-4 shrink-0 text-white/70" />
+                                  {weather.precipitation} mm
+                                </div>
+                              )}
+                            </>
+                          ) : (
+                            nextRace?.weather && (
+                              <div className="flex items-center gap-2">
+                                <Cloud className="size-3.5 sm:size-4 shrink-0 text-white/70" />
+                                {nextRace.weather}
+                              </div>
+                            )
                           )}
                         </div>
                       </div>

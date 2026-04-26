@@ -69,3 +69,28 @@ export type LoginResponse = {
   username: string;
   roles: string[];
 };
+
+export type YrTimeseries = {
+  time: string;
+  data: {
+    instant: {
+      details: {
+        air_temperature: number;
+        wind_speed: number;
+        cloud_area_fraction: number;
+      };
+    };
+    next_1_hours?: {
+      summary: { symbol_code: string };
+      details: { precipitation_amount: number };
+    };
+    next_6_hours?: {
+      summary: { symbol_code: string };
+      details: { precipitation_amount: number };
+    };
+  };
+};
+
+export type YrForecast = {
+  properties: { timeseries: YrTimeseries[] };
+};

@@ -40,6 +40,7 @@ export type RunnerDTO = {
   uuid?: string;
   name: string;
   gender: string;
+  pr?: string;
 };
 
 export type RaceRunnerDTO = {

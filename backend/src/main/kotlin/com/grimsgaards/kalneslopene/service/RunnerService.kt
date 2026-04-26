@@ -28,7 +28,8 @@ class RunnerService(
         return runnerRepository.saveAll(runners.map {
             RunnerEntity(
                 name = it.name,
-                gender = it.gender
+                gender = it.gender,
+                pr = it.pr
             )
         }).map { it.toDto() }
     }
@@ -40,6 +41,7 @@ class RunnerService(
         existingRunner.apply {
             name = updatedRunner.name
             gender = updatedRunner.gender
+            pr = updatedRunner.pr
         }
         return runnerRepository.save(existingRunner).toDto()
     }

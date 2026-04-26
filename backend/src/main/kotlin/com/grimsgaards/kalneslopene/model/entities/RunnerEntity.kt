@@ -5,6 +5,9 @@ import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
+import java.time.Duration
 import java.util.*
 
 @Entity
@@ -14,6 +17,9 @@ data class RunnerEntity(
     var name: String,
     var gender: String,
 
+    @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
+    var pr: Duration? = null,
+
     @OneToMany(mappedBy = "runner")
     val races: MutableList<RaceRunnerEntity> = mutableListOf()
 ) {
@@ -21,6 +27,6 @@ data class RunnerEntity(
     val uuid: UUID = UUID.randomUUID()
 
     fun toDto(): RunnerDTO {
-        return RunnerDTO(uuid, name, gender)
+        return RunnerDTO(uuid, name, gender, pr)
     }
 }

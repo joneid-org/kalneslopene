@@ -1,0 +1,3 @@
+ALTER TABLE runner
+    ADD COLUMN pr INTERVAL;
+

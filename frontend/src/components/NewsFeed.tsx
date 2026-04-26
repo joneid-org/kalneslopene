@@ -3,8 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronUp, Newspaper } from "lucide-react";
 import { useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
-import { Button } from "@/components/ui/button.tsx";
 import { CompactStory, NEWS_IMAGES } from "@/components/NewsFeedStories.tsx";
+import { Button } from "@/components/ui/button.tsx";
 
 export default function NewsFeed() {
   const { data: newsfeeds } = useQuery(QUERIES.newsfeed.getAllNewsFeeds);
@@ -45,11 +45,11 @@ export default function NewsFeed() {
           >
             {expanded ? (
               <>
-                <ChevronUp className="size-4" /> Se mindre
+                <ChevronUp className="size-4" /> Vis færre
               </>
             ) : (
               <>
-                <ChevronDown className="size-4" /> Se mer
+                <ChevronDown className="size-4" /> Vis flere
               </>
             )}
           </Button>

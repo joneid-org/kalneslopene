@@ -9,7 +9,6 @@ import { Loypekart } from "./pages/Loypekart.tsx";
 import { NyhetTag } from "./pages/NyhetTag.tsx";
 import { NyhetArtikel } from "./pages/NyhetArtikel.tsx";
 import { Resultater } from "./pages/Resultater.tsx";
-import { PersonligeRekorder } from "./pages/PersonligeRekorder.tsx";
 import { Statistikk } from "./pages/Statistikk.tsx";
 import { CRUDRaces } from "./pages/admin/CRUDRaces.tsx";
 import { CRUDRunners } from "./pages/admin/CRUDRunners.tsx";
@@ -48,10 +47,6 @@ export const router = createBrowserRouter([
       {
         path: "Statistikk",
         Component: Statistikk,
-      },
-      {
-        path: "PersonligeRekorder",
-        Component: PersonligeRekorder,
       },
       {
         path: "Historie",

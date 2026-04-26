@@ -81,7 +81,7 @@ export function Loypekart() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
+    <div className="w-full max-w-[80vw] mx-auto px-4 py-8 space-y-6">
       {/* Header */}
       <div className="space-y-1">
         <h1 className="text-3xl font-bold tracking-tight">Løypekart</h1>

@@ -19,7 +19,7 @@ export function NyhetTag() {
   );
 
   return (
-    <div className="w-full sm:max-w-[75vw] lg:max-w-[60vw] mx-auto px-4 py-6">
+    <div className="w-full max-w-[80vw] mx-auto px-4 py-6">
       <div className="flex items-center gap-3 mb-6">
         <Link to="/">
           <Button variant="ghost" size="sm" className="gap-1">

@@ -91,10 +91,10 @@ export function Home() {
             </section>
           </div>
 
-          <div className="w-full sm:max-w-[75vw] lg:max-w-[60vw] mx-auto px-2 sm:px-4 md:px-8">
+          <div className="w-full sm:max-w-[80vw] mx-auto px-2 sm:px-4 md:px-8">
             <NewsFeed />
           </div>
-          <div className="w-full sm:max-w-[75vw] lg:max-w-[60vw] mx-auto px-2 sm:px-4 md:px-8 pb-8">
+          <div className="w-full sm:max-w-[80vw] mx-auto px-2 sm:px-4 md:px-8 pb-8">
             <OrganisersBlock />
           </div>
         </div>

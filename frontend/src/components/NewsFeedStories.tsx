@@ -98,11 +98,8 @@ export function StoryDialog({
         if (!v) onClose();
       }}
     >
-      <DialogContent
-        className="p-0 overflow-hidden max-h-[90vh] flex flex-col [&>button]:top-3 [&>button]:right-3 [&>button]:bg-black [&>button]:text-white [&>button]:rounded-lg [&>button]:size-10 [&>button]:flex [&>button]:items-center [&>button]:justify-center [&>button]:hover:bg-gray-800 [&>button]:opacity-100"
-        style={{ width: "min(50vw, 100%)", maxWidth: "none" }}
-      >
-        <div className="h-56 shrink-0 overflow-hidden">
+      <DialogContent className="p-0 overflow-hidden max-h-[90vh] flex flex-col w-[95vw] sm:w-[75vw] max-w-none [&>button]:top-3 [&>button]:right-3 [&>button]:bg-black [&>button]:text-white [&>button]:rounded-lg [&>button]:size-10 [&>button]:flex [&>button]:items-center [&>button]:justify-center [&>button]:hover:bg-gray-800 [&>button]:opacity-100">
+        <div className="aspect-video shrink-0 overflow-hidden">
           <img
             src={heroImg}
             alt={post.header}
@@ -154,7 +151,7 @@ export function StoryDialog({
                 {galleryImages.map((src, idx) => (
                   <div
                     key={idx}
-                    className="rounded-md overflow-hidden border aspect-square"
+                    className="rounded-md overflow-hidden border aspect-video"
                   >
                     <img
                       src={src}
@@ -249,51 +246,49 @@ export function CompactStory({
   post: NewsFeedDTO;
   img: string;
 }) {
-  const [open, setOpen] = useState(false);
   const displayImg = post.headerImage ?? img;
   const tags = useTags();
 
   return (
-    <>
-      <Card className="shrink-0 w-56 overflow-hidden group hover:shadow-md transition-all">
-        <div className="h-28 overflow-hidden">
+    <Link to={`/nyheter/${post.uuid}`} className="block group">
+      <Card className="overflow-hidden hover:shadow-md transition-all h-full flex flex-col gap-0 py-0">
+        <div className="aspect-video overflow-hidden shrink-0">
           <img
             src={displayImg}
             alt={post.header}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         </div>
-        <CardContent className="p-3">
-          <div className="flex flex-wrap gap-1 mb-1.5">
+        <CardHeader className="px-2 pt-2 pb-1 flex-1 gap-1">
+          <p className="text-md font-bold text-black group-hover:text-blue-600 transition-colors leading-snug line-clamp-2">
+            {post.header}
+          </p>
+          <p className="text-xs text-black leading-snug line-clamp-2">
+            {post.content}
+          </p>
+        </CardHeader>
+        <CardFooter className="px-2 pb-3 pt-1 mb-1 flex flex-wrap items-center justify-between gap-1">
+          <div className="flex flex-wrap gap-1">
             {post.tags.map((tag) => (
-              <Link key={tag} to={`/nyheter/tag/${tag.toLowerCase()}`}>
+              <Link
+                key={tag}
+                to={`/nyheter/tag/${tag.toLowerCase()}`}
+                onClick={(e) => e.stopPropagation()}
+              >
                 <Badge
-                  className={`${tagBg(tag, tags)} text-white text-[9px] border-0 px-1.5 py-0 hover:opacity-80 transition-opacity cursor-pointer`}
+                  className={`${tagBg(tag, tags)} text-white text-[11px] border-0 px-1.5 py-0 hover:opacity-80 transition-opacity cursor-pointer`}
                 >
                   {tag}
                 </Badge>
               </Link>
             ))}
           </div>
-          <button
-            type="button"
-            className="text-xs font-bold text-gray-900 hover:text-blue-600 transition-colors leading-snug line-clamp-2 text-left w-full cursor-pointer"
-            onClick={() => setOpen(true)}
-          >
-            {post.header}
-          </button>
-          <time className="text-[10px] text-gray-300 mt-1 block">
+          <time className="text-[10px] text-black">
             {formatDateFull(post.date)}
           </time>
-        </CardContent>
+        </CardFooter>
       </Card>
-      <StoryDialog
-        post={post}
-        img={img}
-        open={open}
-        onClose={() => setOpen(false)}
-      />
-    </>
+    </Link>
   );
 }
 

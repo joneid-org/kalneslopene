@@ -7,6 +7,7 @@ import { Layout } from "./Layout.tsx";
 import { Login } from "./pages/Login.tsx";
 import { Loypekart } from "./pages/Loypekart.tsx";
 import { NyhetTag } from "./pages/NyhetTag.tsx";
+import { NyhetArtikel } from "./pages/NyhetArtikel.tsx";
 import { Resultater } from "./pages/Resultater.tsx";
 import { PersonligeRekorder } from "./pages/PersonligeRekorder.tsx";
 import { Statistikk } from "./pages/Statistikk.tsx";
@@ -63,6 +64,10 @@ export const router = createBrowserRouter([
       {
         path: "nyheter/tag/:tag",
         Component: NyhetTag,
+      },
+      {
+        path: "nyheter/:uuid",
+        Component: NyhetArtikel,
       },
       {
         path: "logg-inn",

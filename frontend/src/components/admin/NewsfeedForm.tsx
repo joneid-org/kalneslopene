@@ -50,11 +50,9 @@ export function NewsfeedForm({
   const [headerImage, setHeaderImage] = useState<string | undefined>(
     initial.headerImage,
   );
-  const [images, setImages] = useState<string[]>(initial.images ?? []);
   const availableTags = useTags();
 
   const headerImageRef = useRef<HTMLInputElement>(null);
-  const imagesRef = useRef<HTMLInputElement>(null);
 
   const toggleTag = (value: string) => {
     setSelectedTags((prev) =>
@@ -69,16 +67,6 @@ export function NewsfeedForm({
     if (file) setHeaderImage(await readFileAsDataURL(file));
   };
 
-  const handleImagesChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files ?? []);
-    const results = await Promise.all(files.map(readFileAsDataURL));
-    setImages((prev) => [...prev, ...results]);
-  };
-
-  const removeImage = (idx: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== idx));
-  };
-
   const handleSubmit = () => {
     onSubmit({
       header: header.trim(),
@@ -86,7 +74,7 @@ export function NewsfeedForm({
       tags: selectedTags,
       date: new Date(date) as unknown as Date,
       headerImage,
-      images,
+      images: [],
     });
   };
 
@@ -170,12 +158,8 @@ export function NewsfeedForm({
           onChange={handleHeaderImageChange}
         />
         {headerImage ? (
-          <div className="relative w-full rounded-md overflow-hidden border">
-            <img
-              src={headerImage}
-              alt="Header"
-              className="w-full h-32 object-cover"
-            />
+          <div className="relative inline-block rounded-md overflow-hidden border w-full flex justify-center">
+            <img src={headerImage} alt="Header" className="max-w-full h-auto" />
             <button
               type="button"
               onClick={() => {
@@ -198,51 +182,6 @@ export function NewsfeedForm({
             Velg header-bilde fra fil
           </Button>
         )}
-      </div>
-
-      {/* Gallery images */}
-      <div className="space-y-1.5">
-        <Label>Bilder i innlegget</Label>
-        <input
-          ref={imagesRef}
-          type="file"
-          accept="image/*"
-          multiple
-          className="hidden"
-          onChange={handleImagesChange}
-        />
-        {images.length > 0 && (
-          <div className="grid grid-cols-3 gap-2 mb-2">
-            {images.map((src, idx) => (
-              <div
-                key={idx}
-                className="relative rounded-md overflow-hidden border"
-              >
-                <img
-                  src={src}
-                  alt={`Bilde ${idx + 1}`}
-                  className="w-full h-20 object-cover"
-                />
-                <button
-                  type="button"
-                  onClick={() => removeImage(idx)}
-                  className="absolute top-1 right-1 bg-black text-white rounded-full p-0.5 hover:bg-gray-800"
-                >
-                  <X className="size-3" />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full gap-2"
-          onClick={() => imagesRef.current?.click()}
-        >
-          <ImagePlus className="size-4" />
-          Legg til bilder
-        </Button>
       </div>
 
       <FormFooter

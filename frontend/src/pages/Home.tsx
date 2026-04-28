@@ -23,8 +23,8 @@ export function Home() {
           {/* Hero — flush to top, no gap above */}
           <div className="w-full">
             <section
-              className="relative overflow-hidden w-full bg-blue-900 h-[40vh] min-h-60"
-              style={{ maxHeight: "560px" }}
+              className="relative overflow-hidden w-full bg-blue-900 h-[40vh] lg:h-[50vh] min-h-60"
+              style={{ maxHeight: "800px" }}
             >
               <img
                 src={cardImage}

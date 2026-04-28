@@ -5,9 +5,29 @@
  * Import this file in App.css (already imported via theme.css chain or directly).
  */
 
-/* ─── Global layout token ───────────────────────────────── */
+/* ─── Global layout tokens ──────────────────────────────── */
 :root {
-  --page-max-width: 1500px;
+  --page-max-width: 1600px;
+}
+
+/* Base font — must be on html so rem units scale correctly */
+html {
+  font-size: 16px;
+}
+
+/* 1280px+ (large desktop) */
+@media (min-width: 1280px) {
+  html { font-size: 17px; }
+}
+
+/* 1920px+ (full HD / 2K) */
+@media (min-width: 1920px) {
+  html { font-size: 19px; }
+}
+
+/* 2560px+ (QHD and 4K logical viewports) */
+@media (min-width: 2560px) {
+  html { font-size: 22px; }
 }
 
 @layer components {
@@ -15,30 +35,30 @@
 
   /* Standard full-width page content wrapper */
   .page-content {
-    @apply w-full mx-auto px-4 py-6 sm:py-8;
+    @apply w-full mx-auto px-6 py-6 sm:py-8 lg:px-12;
     max-width: var(--page-max-width);
   }
 
   /* Tighter wrapper used for article/detail pages */
   .page-content-sm {
-    @apply w-full mx-auto px-4 py-6;
+    @apply w-full mx-auto px-6 py-6 lg:px-12;
     max-width: var(--page-max-width);
   }
 
   /* ─── Page headings ────────────────────────────────────── */
 
   .page-title {
-    @apply text-2xl sm:text-3xl font-black text-gray-900 leading-tight tracking-tight;
+    @apply text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900 leading-tight tracking-tight;
   }
 
   .page-subtitle {
-    @apply text-sm text-muted-foreground;
+    @apply text-sm lg:text-base text-muted-foreground;
   }
 
   /* ─── Section spacing ──────────────────────────────────── */
 
   .section-stack {
-    @apply flex flex-col gap-6;
+    @apply flex flex-col gap-6 lg:gap-8;
   }
 
   /* ─── Cards ────────────────────────────────────────────── */
@@ -56,23 +76,23 @@
   /* ─── Tag pills ────────────────────────────────────────── */
 
   .tag-pill {
-    @apply text-white text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full hover:opacity-80 transition-opacity cursor-pointer;
+    @apply text-white text-[9px] lg:text-[11px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full hover:opacity-80 transition-opacity cursor-pointer;
   }
 
   /* ─── Muted / secondary text ───────────────────────────── */
 
   .text-secondary {
-    @apply text-sm text-muted-foreground leading-relaxed;
+    @apply text-sm lg:text-base text-muted-foreground leading-relaxed;
   }
 
   .text-label {
-    @apply text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60;
+    @apply text-[10px] lg:text-xs font-semibold uppercase tracking-widest text-muted-foreground/60;
   }
 
   /* ─── Stat number display ──────────────────────────────── */
 
   .stat-value {
-    @apply text-2xl font-black tabular-nums;
+    @apply text-2xl lg:text-3xl font-black tabular-nums;
   }
 
   /* ─── Empty state ──────────────────────────────────────── */

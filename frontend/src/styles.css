@@ -7,7 +7,7 @@
 
 /* ─── Global layout tokens ──────────────────────────────── */
 :root {
-  --page-max-width: 1600px;
+  --page-max-width: 1200px;
 }
 
 /* Base font — must be on html so rem units scale correctly */

@@ -10,7 +10,7 @@ export default function HomeFooter() {
 
   return (
     <footer className="bg-card border-t">
-      <div className="w-full sm:max-w-[80vw] mx-auto px-6 py-5 flex flex-col items-center gap-2">
+      <div className="page-content flex flex-col items-center gap-2">
         <h3 className=" font-semibold uppercase tracking-widest ">Kontakt</h3>
         <p>
           Har du spørsmål, innspill eller ønsker å bidra? Send oss en melding!
@@ -60,7 +60,7 @@ export default function HomeFooter() {
 
       <Separator />
 
-      <div className="w-full sm:max-w-[80vw] mx-auto px-6 py-2.5 flex items-center justify-between text-[10px] text-muted-foreground">
+      <div className="page-content py-2.5 flex items-center justify-between text-[10px] text-muted-foreground">
         <span>© {new Date().getFullYear()} Torsdagsløpet</span>
         <div className="flex items-center gap-3">
           <span>Drevet av frivillige ❤️</span>

@@ -9,7 +9,7 @@ export function Layout() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header ref={headerRef} />
-      <main className="flex-1">
+      <main className="flex-1 w-full">
         <Outlet />
       </main>
       <HomeFooter />

@@ -109,7 +109,7 @@ export function Home() {
           </div>
 
           <div className="flex flex-col gap-6 mt-6">
-            <div className="w-full sm:max-w-[80vw] mx-auto px-2 sm:px-4 md:px-8 py-4">
+            <div className="page-content py-4">
               <div className="text-center space-y-2">
                 <p className="text-2xl sm:text-2xl font-black text-gray-900 tracking-tight">
                   Snør på deg skoene - bli med i Torsdagsløpet!
@@ -122,13 +122,13 @@ export function Home() {
               </div>
             </div>
 
-            <div className="w-full sm:max-w-[80vw] mx-auto px-2 sm:px-4 md:px-8">
+            <div className="page-content">
               <NewsFeed />
             </div>
-            <div className="w-full sm:max-w-[80vw] mx-auto px-2 sm:px-4 md:px-8">
+            <div className="page-content">
               <SeasonStatBoxes />
             </div>
-            <div className="w-full sm:max-w-[80vw] mx-auto px-2 sm:px-4 md:px-8 pb-8 flex flex-col gap-6">
+            <div className="page-content pb-8 flex flex-col gap-6">
               <OrganisersBlock />
               <SponsorsBlock />
             </div>

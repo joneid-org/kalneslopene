@@ -30,7 +30,10 @@ export default function PhotoDialog({
       open={index !== null}
       onOpenChange={(open) => !open && onIndexChange(null)}
     >
-      <DialogContent className="max-w-[95vw] md:max-w-[85vw] lg:max-w-[75vw] p-2 sm:p-4 bg-white border-0">
+      <DialogContent
+        className="p-2 sm:p-4 bg-white border-0"
+        style={{ maxWidth: "var(--page-max-width)", width: "95vw" }}
+      >
         <DialogTitle className="sr-only">
           Bilde {(index ?? 0) + 1} av {photos.length}
         </DialogTitle>

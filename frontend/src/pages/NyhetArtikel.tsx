@@ -48,7 +48,14 @@ export function NyhetArtikel() {
   return (
     <div className="w-full px-4 py-6">
       {/* Back button — always 80vw centered */}
-      <div className="mb-4 max-w-[80vw] mx-auto">
+      <div
+        className="mb-4 w-full"
+        style={{
+          maxWidth: "var(--page-max-width)",
+          marginLeft: "auto",
+          marginRight: "auto",
+        }}
+      >
         <Link to="/">
           <Button variant="ghost" size="sm" className="gap-1 -ml-2">
             <ArrowLeft className="size-4" />
@@ -58,7 +65,10 @@ export function NyhetArtikel() {
       </div>
 
       {/* Main content — shrinks to image natural width, max 80vw, centered */}
-      <div className="mx-auto w-fit max-w-[80vw]">
+      <div
+        className="mx-auto w-fit"
+        style={{ maxWidth: "var(--page-max-width)" }}
+      >
         {/* Tags + result link */}
         <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
           <div className="flex flex-wrap gap-1.5">
@@ -101,7 +111,7 @@ export function NyhetArtikel() {
             src={heroImg}
             alt={post.header}
             className="h-auto rounded-lg block"
-            style={{ maxWidth: "80vw", width: "auto" }}
+            style={{ maxWidth: "var(--page-max-width)", width: "auto" }}
           />
         )}
       </div>

@@ -5,17 +5,24 @@
  * Import this file in App.css (already imported via theme.css chain or directly).
  */
 
+/* ─── Global layout token ───────────────────────────────── */
+:root {
+  --page-max-width: 1500px;
+}
+
 @layer components {
   /* ─── Page layout ──────────────────────────────────────── */
 
   /* Standard full-width page content wrapper */
   .page-content {
-    @apply w-full max-w-[80vw] mx-auto px-4 py-6 sm:py-8;
+    @apply w-full mx-auto px-4 py-6 sm:py-8;
+    max-width: var(--page-max-width);
   }
 
   /* Tighter wrapper used for article/detail pages */
   .page-content-sm {
-    @apply w-full max-w-[80vw] mx-auto px-4 py-6;
+    @apply w-full mx-auto px-4 py-6;
+    max-width: var(--page-max-width);
   }
 
   /* ─── Page headings ────────────────────────────────────── */

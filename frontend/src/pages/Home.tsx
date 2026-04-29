@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { Cloud, Droplets, Thermometer, Wind } from "lucide-react";
+import { ArrowRight, Cloud, Droplets, Thermometer, Wind } from "lucide-react";
 import { QUERIES } from "@/api/queries.ts";
+import { Button } from "@/components/ui/button.tsx";
 import { formatDDMonth } from "@/lib/timeUtils.ts";
 import { useYrWeather } from "@/lib/useYrWeather.ts";
 import { getUpcomingRaces } from "@/lib/utils.ts";
@@ -8,7 +9,7 @@ import NewsFeed from "../components/NewsFeed.tsx";
 import OrganisersBlock from "../components/OrganisersBlock.tsx";
 import SeasonStatBoxes from "../components/SeasonStatBoxes.tsx";
 import SponsorsBlock from "../components/SponsorsBlock.tsx";
-import cardImage from "../data/Messenger_creation_56DB2467-9FDC-4ED1-9316-C458D96DC9A5.jpeg";
+import cardImage from "../data/ChatGPT Image 29. apr. 2026, 11_32_50.png";
 
 export function Home() {
   const { data: races } = useQuery(QUERIES.race.getAllRaces);
@@ -23,7 +24,7 @@ export function Home() {
           {/* Hero — flush to top, no gap above */}
           <div className="w-full">
             <section
-              className="relative overflow-hidden w-full bg-blue-900 h-[40vh] lg:h-[50vh] min-h-60"
+              className="relative overflow-hidden w-full h-[40vh] lg:h-[40vh] min-h-60"
               style={{ maxHeight: "800px" }}
             >
               <img
@@ -74,6 +75,7 @@ export function Home() {
                             <>
                               <div className="flex items-center gap-2">
                                 <Cloud className="size-3.5 sm:size-4 shrink-0 text-white/70" />
+                                {/*TODO: La iconet matche været. Sol ved sol, sky ved sky osv. */}
                                 {weather.label}
                               </div>
                               <div className="flex items-center gap-2">
@@ -111,7 +113,7 @@ export function Home() {
           <div className="flex flex-col gap-6 mt-6">
             <div className="page-content py-4">
               <div className="text-center space-y-2">
-                <p className="text-2xl sm:text-2xl font-black text-gray-900 tracking-tight">
+                <p className="text-2xl sm:text-2xl font-black bg-green-500 text-gray-900 tracking-tight">
                   Snør på deg skoene - bli med i Torsdagsløpet!
                 </p>
                 <p className="text-sm  max-w-xl mx-auto">
@@ -119,6 +121,10 @@ export function Home() {
                   deltakerliste før start. Gratis frukt til alle deltakere etter
                   løpet.{" "}
                 </p>
+                <Button>
+                  Åpne løpskalender
+                  <ArrowRight></ArrowRight>
+                </Button>
               </div>
             </div>
 

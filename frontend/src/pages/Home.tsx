@@ -24,7 +24,7 @@ export function Home() {
           {/* Hero — flush to top, no gap above */}
           <div className="w-full">
             <section
-              className="relative overflow-hidden w-full h-[40vh] lg:h-[40vh] min-h-60"
+              className="relative overflow-hidden w-full h-[40vh] lg:h-[40vh] 2xl:h-[20] min-h-60"
               style={{ maxHeight: "800px" }}
             >
               <img
@@ -111,17 +111,19 @@ export function Home() {
           </div>
 
           <div className="flex flex-col gap-6 mt-6">
-            <div className="page-content py-4">
-              <div className="text-center space-y-2">
-                <p className="text-2xl sm:text-2xl font-black bg-green-500 text-gray-900 tracking-tight">
+            <div className="page-content ">
+              <div className="border-l-4 shadow-2xl pb-2 border-[#2f7d4c] text-center space-y-2">
+                <p className="text-2xl sm:text-xl font-black bg-[#2f7d4c] text-white tracking-tight ml-3 p-2">
                   Snør på deg skoene - bli med i Torsdagsløpet!
                 </p>
-                <p className="text-sm  max-w-xl mx-auto">
+                <p className="text-sm font-bold  max-w-xl mx-auto">
                   Ingen forhåndspåmelding - du trenger kun å skrive deg på vår
                   deltakerliste før start. Gratis frukt til alle deltakere etter
-                  løpet.{" "}
+                  løpet 🍎🏃
+                  {/*<Apple className="size-4 inline-block text-green-500 " />{" "}*/}
+                  {/* TODO: Rødt fylt eple*/}
                 </p>
-                <Button>
+                <Button variant={"outline"}>
                   Åpne løpskalender
                   <ArrowRight></ArrowRight>
                 </Button>

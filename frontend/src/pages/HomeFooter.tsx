@@ -11,11 +11,12 @@ export default function HomeFooter() {
   return (
     <footer className="bg-card border-t">
       <div className="page-content flex flex-col items-center gap-2">
-        <h3 className=" font-semibold uppercase tracking-widest ">Kontakt</h3>
-        <p>
+        <h5 className=" font-semibold tracking-widest ">Kontakt</h5>
+        <p className={"text-sm"}>
           Har du spørsmål, innspill eller ønsker å bidra? Send oss en melding!
         </p>
         <div className="flex flex-wrap justify-center gap-2">
+          {/*TODO: Gjenbruk styling, ikke gjenta*/}
           <a
             href={`mailto:${mainContact?.email}`}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border bg-muted/40 hover:bg-muted transition-colors text-xs text-muted-foreground hover:text-foreground"

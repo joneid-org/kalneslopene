@@ -83,7 +83,7 @@ export function NyhetArtikel() {
               <Button
                 size="sm"
                 variant="outline"
-                className="gap-1.5 text-blue-600 border-blue-200 hover:bg-blue-50 shrink-0"
+                className="gap-1.5 text-[#173d2b]  border-blue-200 hover:bg-[#173d2b]/10  shrink-0"
               >
                 <ExternalLink className="size-3.5" />
                 Se resultater
@@ -93,18 +93,21 @@ export function NyhetArtikel() {
         </div>
 
         {/* Title */}
-        <h1 className="page-title mb-1">{post.header}</h1>
-        <time className="text-xs text-gray-400 font-medium block mb-4">
+        <h2 className=" mb-1">{post.header}</h2>
+        <time className="text-xs  font-medium block mb-4">
           {formatDateFull(post.date)}
         </time>
 
-        <Separator className="mb-6" />
+        <Separator className="mb-3" />
 
         {/* Content */}
-        <p className="text-sm sm:text-base text-gray-700 leading-relaxed whitespace-pre-line mb-6">
+        {/*  TODO: Formattering på input. Hvorfor blir whitespace borte, og dobbelt så stor.*/}
+
+        <p className="text-sm sm:text-base  leading-relaxed whitespace-pre-line mb-6">
           {post.content}
         </p>
 
+        {/*  TODO: Klikkbart, åpne dialog for å se full størrelse. */}
         {/* Hero image — natural width, capped at 80vw */}
         {heroImg && (
           <img

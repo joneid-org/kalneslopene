@@ -81,6 +81,7 @@ export default function SeasonStatBoxes() {
     },
   ];
 
+  // TODO: Legg under hverandre på mobil/mindre skjerm.
   return (
     <div className="rounded-md bg-linear-to-br bg-[#173d2b] p-2 flex flex-col gap-3">
       {/* 2×3 grid of white stat cards */}

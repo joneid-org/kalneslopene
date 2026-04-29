@@ -5,7 +5,6 @@ import { ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
-import { Badge } from "@/components/ui/badge.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Card,
@@ -247,7 +246,7 @@ export function CompactStory({
 
   return (
     <Link to={`/nyheter/${post.uuid}`} className="block group">
-      <Card className="overflow-hidden card-hover h-full flex flex-col gap-0 py-0">
+      <Card className="overflow-hidden card-hover hover:shadow-2xl h-full flex flex-col gap-0 py-0">
         <div className="aspect-video overflow-hidden shrink-0">
           <img
             src={displayImg}
@@ -255,11 +254,11 @@ export function CompactStory({
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         </div>
-        <CardHeader className="px-2 pt-2 pb-1 flex-1 gap-1">
-          <p className="text-md font-bold text-black group-hover:text-blue-600 transition-colors leading-snug line-clamp-2">
+        <CardHeader className="px-2 pt-4 pb-1 flex-1 gap-1">
+          <p className="text-md font-bold text-black transition-colors leading-snug line-clamp-2">
             {post.header}
           </p>
-          <p className="text-xs text-black leading-snug line-clamp-2">
+          <p className="text-sm text-black leading-snug line-clamp-2">
             {post.content}
           </p>
         </CardHeader>
@@ -271,15 +270,16 @@ export function CompactStory({
                 to={`/nyheter/tag/${tag.toLowerCase()}`}
                 onClick={(e) => e.stopPropagation()}
               >
-                <Badge
-                  className={`${tagBg(tag, tags)} text-white text-[11px] border-0 px-1.5 py-0 hover:opacity-80 transition-opacity cursor-pointer`}
+                <p
+                  className={`${tagBg(tag, tags)} text-white text-xs border-0 px-2 py-1 hover:opacity-80 transition-opacity cursor-pointer`}
                 >
+                  {/*TODO: Stor tekst, farga tekst og ikke bg.*/}
                   {tag}
-                </Badge>
+                </p>
               </Link>
             ))}
           </div>
-          <time className="text-[10px] text-black">
+          <time className="text-xs text-black">
             {formatDateFull(post.date)}
           </time>
         </CardFooter>

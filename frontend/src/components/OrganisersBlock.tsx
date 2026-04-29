@@ -27,7 +27,7 @@ export default function OrganisersBlock() {
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="text-sm text-muted-foreground">{O_TEXT}</p>
-        <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
+        <div className="grid grid-cols-3 gap-3">
           {ordered.map((organizer) => (
             <div
               key={organizer.name}

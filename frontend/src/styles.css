@@ -7,7 +7,7 @@
 
 /* ─── Global layout tokens ──────────────────────────────── */
 :root {
-  --page-max-width: 1300px;
+  --page-max-width: 1200px;
 }
 
 /* Base font — must be on html so rem units scale correctly */
@@ -35,7 +35,7 @@ html {
 
   /* Standard full-width page content wrapper */
   .page-content {
-    @apply w-full mx-auto px-6 py-6 sm:py-8 lg:px-12;
+    @apply w-full mx-auto px-6 py-3 lg:px-12 ;
     max-width: var(--page-max-width);
   }
 

@@ -40,7 +40,7 @@ export default function NewsFeed() {
           <Button
             variant="ghost"
             size="sm"
-            className="text-blue-500 font-semibold gap-1"
+            className=" font-semibold gap-1"
             onClick={() => setExpanded((v) => !v)}
           >
             {expanded ? (

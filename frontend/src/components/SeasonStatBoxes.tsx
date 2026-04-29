@@ -55,10 +55,10 @@ export default function SeasonStatBoxes() {
   ).size;
 
   const stats = [
-    {
-      value: "Deltakerstatistikk",
-      label: "Årets sesong i tall",
-    },
+    // {
+    //   value: "Deltakerstatistikk",
+    //   label: "Årets sesong i tall",
+    // },
     {
       icon: Users,
       value: totalRunners,
@@ -82,22 +82,28 @@ export default function SeasonStatBoxes() {
   ];
 
   return (
-    <div className="rounded-md bg-linear-to-br from-blue-800 to-indigo-900 p-4 flex flex-col gap-3">
+    <div className="rounded-md bg-linear-to-br bg-[#173d2b] p-2 flex flex-col gap-3">
       {/* 2×3 grid of white stat cards */}
       <div className="grid grid-cols-3 gap-2">
+        <div className="bg-[#173d2b] rounded-md p-3 flex flex-col justify-between items-center text-center">
+          <p className="text-xs text-white tabular-nums uppercase">
+            Deltakerstatistikk
+          </p>
+          <p className="text-xl text-white font-semibold ">
+            Årets sesong i tall
+          </p>
+        </div>
         {stats.map(({ value, label }) => (
           <div
             key={label}
-            className="bg-white rounded-md p-3 flex flex-col justify-between gap-2"
+            className="bg-white rounded-md p-3 flex flex-col justify-between items-center text-center"
           >
-            <div>
-              <p className="text-xl font-black tabular-nums text-gray-900">
-                {value ?? "–"}
-              </p>
-              <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">
-                {label}
-              </p>
-            </div>
+            <p className="text-xl font-black tabular-nums text-gray-900">
+              {value ?? "–"}
+            </p>
+            <p className="text-xs font-semibold uppercase tracking-wide ">
+              {label}
+            </p>
           </div>
         ))}
       </div>

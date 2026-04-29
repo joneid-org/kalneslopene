@@ -16,6 +16,7 @@ export function Home() {
   const nextRace = getUpcomingRaces(races ?? [])[0];
   const weather = useYrWeather(nextRace?.raceDate);
 
+  // TODO: Fjern mye av padding og margin. Skal være 3/5 uansett.
   return (
     <div>
       <div className="flex flex-col lg:flex-row items-start gap-6">
@@ -110,10 +111,10 @@ export function Home() {
             </section>
           </div>
 
-          <div className="flex flex-col gap-6 mt-6">
+          <div className="flex flex-col gap-6 ">
             <div className="page-content ">
-              <div className="border-l-4 shadow-2xl pb-2 border-[#2f7d4c] text-center space-y-2">
-                <p className="text-2xl sm:text-xl font-black bg-[#2f7d4c] text-white tracking-tight ml-3 p-2">
+              <div className="border-l-4 shadow-2xl pt-5 pb-2 border-[#2f7d4c] text-center space-y-2">
+                <p className="text-2xl rounded-2xl sm:text-xl mr-4 font-black bg-[#2f7d4c] text-white tracking-tight ml-3 p-2">
                   Snør på deg skoene - bli med i Torsdagsløpet!
                 </p>
                 <p className="text-sm font-bold  max-w-xl mx-auto">

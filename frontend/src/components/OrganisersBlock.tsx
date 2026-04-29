@@ -19,19 +19,19 @@ export default function OrganisersBlock() {
     "løping og fellesskap.";
   return (
     <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base flex items-center gap-2">
-          <Users className="size-4 text-primary" />
-          Arrangørteamet
+      <CardHeader className="pb-2 text-[#173d2b]">
+        <CardTitle className="flex items-center gap-2">
+          <Users className="size-4 font-bold " />
+          ARRANGØRTEAMET
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <p className="text-sm text-muted-foreground">{O_TEXT}</p>
+        <p className="text-sm ">{O_TEXT}</p>
         <div className="grid grid-cols-3 gap-3">
           {ordered.map((organizer) => (
             <div
               key={organizer.name}
-              className="flex flex-col items-center text-center gap-2 p-3 rounded-lg bg-muted/40"
+              className="flex align-middle gap-3 items-center"
             >
               {organizer.image ? (
                 <img
@@ -40,15 +40,15 @@ export default function OrganisersBlock() {
                   className="size-14 rounded-full object-cover border-2 border-muted shrink-0"
                 />
               ) : (
-                <div className="size-14 rounded-full bg-primary/10 flex items-center justify-center text-sm font-semibold text-primary shrink-0">
+                <div className="size-14 rounded-md bg-[#173d2b]/10 flex items-center justify-center text-sm font-semibold text-[#173d2b] shrink-0">
                   {organizer.initials}
                 </div>
               )}
               <div>
-                <p className="text-sm font-medium leading-tight">
+                <p className="text-sm font-bold leading-tight">
                   {organizer.name}
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs ">
                   {organizer.responsibility.join(", ")}
                 </p>
               </div>

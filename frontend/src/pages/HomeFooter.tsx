@@ -60,13 +60,13 @@ export default function HomeFooter() {
 
       <Separator />
 
-      <div className="page-content py-2.5 flex items-center justify-between text-[10px] text-muted-foreground">
+      <div className="page-content py-2.5 flex items-center justify-between text-xs text-muted-foreground">
         <span>© {new Date().getFullYear()} Torsdagsløpet</span>
         <div className="flex items-center gap-3">
           <span>Drevet av frivillige ❤️</span>
           <a
             href="/admin"
-            className="text-muted-foreground/40 hover:text-muted-foreground transition-colors"
+            className="hover:text-muted-foreground transition-colors"
           >
             Admin
           </a>

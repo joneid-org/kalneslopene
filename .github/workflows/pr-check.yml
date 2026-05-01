@@ -1,0 +1,31 @@
+name: "PR Check"
+
+on:
+  pull_request:
+    branches-ignore:
+      - "Bump*"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.head.label || github.head_ref || github.ref}}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24.13"
+          cache: "npm"
+          cache-dependency-path: "frontend/package-lock.json"
+      - name: Install dependencies
+        run: npm ci
+      - name: Biome check
+        run: npm run check
+      - name: Build
+        run: npm run build

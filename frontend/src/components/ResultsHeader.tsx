@@ -66,15 +66,15 @@ export default function ResultsHeader({
       </div>
 
       {/* ── Stat boxes ── */}
-      <div className="grid grid-cols-3 gap-2 md:gap-4">
+      <div className="grid grid-cols-3 gap-1 sm:gap-2 md:gap-4">
         <StatBox
           icon={UsersIcon}
           value={participants}
           label="Deltakere"
-          color="green"
+          compact
         />
-        <StatBox icon={Mars} value={maleCount} label="Menn" color="blue" />
-        <StatBox icon={Venus} value={femaleCount} label="Kvinner" color="red" />
+        <StatBox icon={Mars} value={maleCount} label="Menn" compact />
+        <StatBox icon={Venus} value={femaleCount} label="Kvinner" compact />
       </div>
     </>
   );

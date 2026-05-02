@@ -1,9 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, ExternalLink } from "lucide-react";
+import { useState } from "react";
 import { Link, useParams } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
 import { NEWS_IMAGES, tagBg, useTags } from "@/components/NewsFeedStories.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator.tsx";
 import { formatDateFull } from "@/lib/timeUtils.ts";
 
@@ -15,6 +22,7 @@ function sameDate(a: unknown, b: Date): boolean {
 
 export function NyhetArtikel() {
   const { uuid } = useParams<{ uuid: string }>();
+  const [open, setOpen] = useState(false);
   const { data: post } = useQuery(
     QUERIES.newsfeed.getNewsFeedByUuid(uuid ?? ""),
   );
@@ -44,7 +52,6 @@ export function NyhetArtikel() {
     if (!hasResultTag || !races) return undefined;
     return races.find((r) => sameDate(r.raceDate, post.date));
   })();
-
   return (
     <div className="w-full px-4 py-6">
       {/* Back button — always 80vw centered */}
@@ -101,21 +108,39 @@ export function NyhetArtikel() {
         <Separator className="mb-3" />
 
         {/* Content */}
-        {/*  TODO: Formattering på input. Hvorfor blir whitespace borte, og dobbelt så stor.*/}
-
         <p className="text-sm sm:text-base  leading-relaxed whitespace-pre-line mb-6">
           {post.content}
         </p>
 
-        {/*  TODO: Klikkbart, åpne dialog for å se full størrelse. */}
-        {/* Hero image — natural width, capped at 80vw */}
+        {/* Hero image — klikkbar, åpner dialog for full størrelse */}
         {heroImg && (
-          <img
-            src={heroImg}
-            alt={post.header}
-            className="h-auto rounded-lg block"
-            style={{ maxWidth: "var(--page-max-width)", width: "auto" }}
-          />
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <button
+                type="button"
+                className="focus:outline-none"
+                aria-label="Vis bilde i full størrelse"
+              >
+                <img
+                  src={heroImg}
+                  alt={post.header}
+                  className="h-auto rounded-lg block cursor-zoom-in hover:opacity-90 transition"
+                  style={{ maxWidth: "var(--page-max-width)", width: "auto" }}
+                />
+              </button>
+            </DialogTrigger>
+            <DialogContent
+              className="p-2 sm:p-4 bg-white border-0"
+              style={{ maxWidth: "var(--page-max-width)", width: "95vw" }}
+            >
+              <DialogTitle className="sr-only">{post.header}</DialogTitle>
+              <img
+                src={heroImg}
+                alt={post.header}
+                className="w-full rounded-md object-contain max-h-[88vh]"
+              />
+            </DialogContent>
+          </Dialog>
         )}
       </div>
     </div>

@@ -12,7 +12,6 @@ import { applySavedOrder } from "@/lib/organizerOrder.ts";
 export default function OrganisersBlock() {
   const { data: organizers } = useQuery(QUERIES.organizer.getAllOrganizers);
   const ordered = applySavedOrder(organizers ?? []);
-  // TODO: Legg de under hverandre på mobil/mindre skjerm.
   const O_TEXT =
     "Torsdagsløpet er et frivillig drevet mosjonsløp som har arrangert " +
     "ukentlige løp siden 1978. Vi er en gjeng entusiaster som brenner for " +
@@ -27,7 +26,7 @@ export default function OrganisersBlock() {
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="text-sm ">{O_TEXT}</p>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {ordered.map((organizer) => (
             <div
               key={organizer.name}

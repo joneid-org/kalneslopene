@@ -42,6 +42,11 @@ export function tagBg(tag: string, tags?: NewsfeedTagDTO[]) {
   );
 }
 
+export function tagText(tag: string, tags?: NewsfeedTagDTO[]) {
+  const bg = tagBg(tag, tags);
+  return bg.replace(/^bg-/, "text-");
+}
+
 /** Hook to get live tags from backend, falling back to PREDEFINED_TAGS */
 export function useTags(): NewsfeedTagDTO[] {
   const { data } = useQuery(QUERIES.newsfeed.getAllTags);
@@ -271,9 +276,8 @@ export function CompactStory({
                 onClick={(e) => e.stopPropagation()}
               >
                 <p
-                  className={`${tagBg(tag, tags)} text-white text-xs border-0 px-2 py-1 hover:opacity-80 transition-opacity cursor-pointer`}
+                  className={`${tagText(tag, tags)} text-xs font-bold uppercase px-0 py-1 hover:opacity-70 transition-opacity cursor-pointer`}
                 >
-                  {/*TODO: Stor tekst, farga tekst og ikke bg.*/}
                   {tag}
                 </p>
               </Link>

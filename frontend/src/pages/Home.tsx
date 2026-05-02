@@ -1,5 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, Cloud, Droplets, Thermometer, Wind } from "lucide-react";
+import {
+  ArrowRight,
+  Cloud,
+  CloudDrizzle,
+  CloudLightning,
+  CloudRain,
+  CloudSnow,
+  Droplets,
+  Eye,
+  Sun,
+  SunDim,
+  Thermometer,
+  Wind,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { QUERIES } from "@/api/queries.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { formatDDMonth } from "@/lib/timeUtils.ts";
@@ -11,12 +25,26 @@ import SeasonStatBoxes from "../components/SeasonStatBoxes.tsx";
 import SponsorsBlock from "../components/SponsorsBlock.tsx";
 import cardImage from "../data/ChatGPT Image 29. apr. 2026, 11_32_50.png";
 
+function weatherIcon(symbol: string): LucideIcon {
+  const s = symbol.replace(/_day|_night/, "");
+  if (s === "clearsky") return Sun;
+  if (s === "fair") return SunDim;
+  if (s === "partlycloudy") return SunDim;
+  if (s === "cloudy") return Cloud;
+  if (s === "fog") return Eye;
+  if (s.includes("thunder")) return CloudLightning;
+  if (s.includes("snow")) return CloudSnow;
+  if (s.includes("sleet")) return CloudDrizzle;
+  if (s.includes("heavyrain")) return CloudRain;
+  if (s.includes("rain")) return CloudRain;
+  return Cloud;
+}
+
 export function Home() {
   const { data: races } = useQuery(QUERIES.race.getAllRaces);
   const nextRace = getUpcomingRaces(races ?? [])[0];
   const weather = useYrWeather(nextRace?.raceDate);
 
-  // TODO: Fjern mye av padding og margin. Skal være 3/5 uansett.
   return (
     <div>
       <div className="flex flex-col lg:flex-row items-start gap-6">
@@ -75,8 +103,12 @@ export function Home() {
                           {weather ? (
                             <>
                               <div className="flex items-center gap-2">
-                                <Cloud className="size-3.5 sm:size-4 shrink-0 text-white/70" />
-                                {/*TODO: La iconet matche været. Sol ved sol, sky ved sky osv. */}
+                                {(() => {
+                                  const Icon = weatherIcon(weather.symbol);
+                                  return (
+                                    <Icon className="size-3.5 sm:size-4 shrink-0 text-white/70" />
+                                  );
+                                })()}
                                 {weather.label}
                               </div>
                               <div className="flex items-center gap-2">
@@ -121,8 +153,6 @@ export function Home() {
                   Ingen forhåndspåmelding - du trenger kun å skrive deg på vår
                   deltakerliste før start. Gratis frukt til alle deltakere etter
                   løpet 🍎🏃
-                  {/*<Apple className="size-4 inline-block text-green-500 " />{" "}*/}
-                  {/* TODO: Rødt fylt eple*/}
                 </p>
                 <Button variant={"outline"}>
                   Åpne løpskalender

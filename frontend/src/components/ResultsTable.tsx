@@ -85,7 +85,7 @@ export default function ResultsTable({ tableData, title }: ResultsTableProps) {
         cell: ({ getValue, row }) => (
           <span className="flex items-start gap-1 w-full">
             <span
-              className={`inline-block size-1.5 rounded-full shrink-0 mt-[3px] ${row.original.gender === "Mann" ? "bg-blue-500" : "bg-red-500"}`}
+              className={`inline-block size-1.5 rounded-full shrink-0 mt-0.75 ${row.original.gender === "Mann" ? "bg-blue-500" : "bg-red-500"}`}
             />
             <span
               className="leading-tight"
@@ -179,7 +179,7 @@ export default function ResultsTable({ tableData, title }: ResultsTableProps) {
                 <DropdownMenuCheckboxItem
                   className="text-xs font-semibold"
                   checked={DESKTOP_ONLY_COLUMNS.every(
-                    (c) => columnVisibility[c] === true,
+                    (c) => columnVisibility[c],
                   )}
                   onCheckedChange={(val) => {
                     setColumnVisibility((prev) => ({
@@ -237,8 +237,11 @@ export default function ResultsTable({ tableData, title }: ResultsTableProps) {
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
+            {table.getRowModel().rows.map((row, i) => (
+              <TableRow
+                key={row.id}
+                className={i % 2 === 1 ? "bg-gray-50" : ""}
+              >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
                     key={cell.id}

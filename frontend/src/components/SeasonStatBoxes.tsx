@@ -81,11 +81,10 @@ export default function SeasonStatBoxes() {
     },
   ];
 
-  // TODO: Legg under hverandre på mobil/mindre skjerm.
   return (
     <div className="rounded-md bg-linear-to-br bg-[#173d2b] p-2 flex flex-col gap-3">
       {/* 2×3 grid of white stat cards */}
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
         <div className="bg-[#173d2b] rounded-md p-3 flex flex-col justify-between items-center text-center">
           <p className="text-xs text-white tabular-nums uppercase">
             Deltakerstatistikk

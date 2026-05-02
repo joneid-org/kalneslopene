@@ -35,13 +35,13 @@ html {
 
   /* Standard full-width page content wrapper */
   .page-content {
-    @apply w-full mx-auto px-6 py-3 lg:px-12 ;
+    @apply w-full mx-auto px-3 py-3 sm:px-4;
     max-width: var(--page-max-width);
   }
 
   /* Tighter wrapper used for article/detail pages */
   .page-content-sm {
-    @apply w-full mx-auto px-6 py-6 lg:px-12;
+    @apply w-full mx-auto px-3 py-4 sm:px-4;
     max-width: var(--page-max-width);
   }
 

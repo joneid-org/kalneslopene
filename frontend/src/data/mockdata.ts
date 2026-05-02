@@ -780,8 +780,10 @@ export const getRunnerChartData = (
     if (!byWeek.has(key)) {
       byWeek.set(key, { label, date: race.date });
     }
-    const point = byWeek.get(key)!;
-    point[String(y)] = timeToSeconds(r.time);
+    const point = byWeek.get(key);
+    if (point) {
+      point[String(y)] = timeToSeconds(r.time);
+    }
   }
 
   const points = Array.from(byWeek.values()).sort(

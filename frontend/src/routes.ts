@@ -1,23 +1,23 @@
 import { createBrowserRouter } from "react-router";
-import { Admin } from "./pages/Admin.tsx";
-import { Bilder } from "./pages/Bilder.tsx";
-import { Historie } from "./pages/Historie.tsx";
-import { Home } from "./pages/Home.tsx";
+import { AuthGuard } from "./components/admin/AuthGuard.tsx";
 import { Layout } from "./Layout.tsx";
-import { Login } from "./pages/Login.tsx";
-import { Loypekart } from "./pages/Loypekart.tsx";
-import { NyhetTag } from "./pages/NyhetTag.tsx";
-import { NyhetArtikel } from "./pages/NyhetArtikel.tsx";
-import { Resultater } from "./pages/Resultater.tsx";
-import { Statistikk } from "./pages/Statistikk.tsx";
+import { Admin } from "./pages/Admin.tsx";
+import { CRUDNewsfeeds } from "./pages/admin/CRUDNewsfeeds.tsx";
+import { CRUDOrganizers } from "./pages/admin/CRUDOrganizers.tsx";
 import { CRUDRaces } from "./pages/admin/CRUDRaces.tsx";
 import { CRUDRunners } from "./pages/admin/CRUDRunners.tsx";
-import { CRUDOrganizers } from "./pages/admin/CRUDOrganizers.tsx";
-import { CRUDNewsfeeds } from "./pages/admin/CRUDNewsfeeds.tsx";
-import { RegisterResults } from "./pages/admin/RegisterResults.tsx";
 import { ImportResultsFromFile } from "./pages/admin/ImportResultsFromFile.tsx";
 import { LiveTiming } from "./pages/admin/LiveTiming.tsx";
-import { AuthGuard } from "./components/AuthGuard.tsx";
+import { RegisterResults } from "./pages/admin/RegisterResults.tsx";
+import { CourseMap } from "./pages/CourseMap.tsx";
+import { History } from "./pages/History.tsx";
+import { Home } from "./pages/Home.tsx";
+import { Login } from "./pages/Login.tsx";
+import { NewsArticle } from "./pages/NewsArticle.tsx";
+import { NewsTag } from "./pages/NewsTag.tsx";
+import { Pictures } from "./pages/Pictures.tsx";
+import { Results } from "./pages/Results.tsx";
+import { Statistics } from "./pages/Statistics.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -30,39 +30,39 @@ export const router = createBrowserRouter([
       },
       {
         path: "Resultater",
-        Component: Resultater,
+        Component: Results,
       },
       {
         path: "Resultater/:uuid",
-        Component: Resultater,
+        Component: Results,
       },
       {
         path: "Bilder",
-        Component: Bilder,
+        Component: Pictures,
       },
       {
         path: "Bilder/:uuid",
-        Component: Bilder,
+        Component: Pictures,
       },
       {
         path: "Statistikk",
-        Component: Statistikk,
+        Component: Statistics,
       },
       {
         path: "Historie",
-        Component: Historie,
+        Component: History,
       },
       {
         path: "Løypekart",
-        Component: Loypekart,
+        Component: CourseMap,
       },
       {
         path: "nyheter/tag/:tag",
-        Component: NyhetTag,
+        Component: NewsTag,
       },
       {
         path: "nyheter/:uuid",
-        Component: NyhetArtikel,
+        Component: NewsArticle,
       },
       {
         path: "logg-inn",

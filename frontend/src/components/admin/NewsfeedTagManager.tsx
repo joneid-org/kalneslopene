@@ -2,15 +2,16 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { PencilIcon, PlusIcon, TrashIcon } from "lucide-react";
 import { useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
+import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { Input } from "@/components/ui/input.tsx";
-import { Label } from "@/components/ui/label.tsx";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog.tsx";
+import { Input } from "@/components/ui/input.tsx";
+import { Label } from "@/components/ui/label.tsx";
 import {
   Select,
   SelectContent,
@@ -18,7 +19,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select.tsx";
-import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog.tsx";
 import type { NewsfeedTagDTO } from "@/model/DTO.ts";
 
 const COLOR_OPTIONS = [
@@ -54,7 +54,7 @@ function TagForm({
       <div className="space-y-1.5">
         <Label>Navn (vises til brukere)</Label>
         <Input
-          placeholder="f.eks. Resultater"
+          placeholder="f.eks. Results"
           value={label}
           onChange={(e) => setLabel(e.target.value)}
         />

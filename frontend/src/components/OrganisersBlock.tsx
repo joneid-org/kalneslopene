@@ -7,31 +7,26 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
+import { ORGANIZER_DESCRIPTION } from "@/lib/constants.ts";
 import { applySavedOrder } from "@/lib/organizerOrder.ts";
 
 export default function OrganisersBlock() {
   const { data: organizers } = useQuery(QUERIES.organizer.getAllOrganizers);
   const ordered = applySavedOrder(organizers ?? []);
-  const O_TEXT =
-    "Torsdagsløpet er et frivillig drevet mosjonsløp som har arrangert " +
-    "ukentlige løp siden 1978. Vi er en gjeng entusiaster som brenner for " +
-    "løping og fellesskap.";
+
   return (
     <Card>
       <CardHeader className="pb-2 text-[#173d2b]">
         <CardTitle className="flex items-center gap-2">
-          <Users className="size-4 font-bold " />
+          <Users className="size-4 font-bold" />
           ARRANGØRTEAMET
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <p className="text-sm ">{O_TEXT}</p>
+        <p className="text-sm">{ORGANIZER_DESCRIPTION}</p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {ordered.map((organizer) => (
-            <div
-              key={organizer.name}
-              className="flex align-middle gap-3 items-center"
-            >
+            <div key={organizer.name} className="flex gap-3 items-center">
               {organizer.image ? (
                 <img
                   src={organizer.image}
@@ -47,9 +42,7 @@ export default function OrganisersBlock() {
                 <p className="text-sm font-bold leading-tight">
                   {organizer.name}
                 </p>
-                <p className="text-xs ">
-                  {organizer.responsibility.join(", ")}
-                </p>
+                <p className="text-xs">{organizer.responsibility.join(", ")}</p>
               </div>
             </div>
           ))}

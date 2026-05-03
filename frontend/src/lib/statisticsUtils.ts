@@ -84,15 +84,24 @@ export function getMaxParticipantsInSingleRace(
   return Math.max(0, ...Object.values(countsByRace));
 }
 
+// Raskeste løper (returnerer full RaceRunnerDTO)
+export function getFastestRunner(
+  raceRunners: RaceRunnerDTO[],
+): RaceRunnerDTO | null {
+  return (
+    raceRunners
+      .filter((rr) => !rr.hideTime && rr.resultTime)
+      .sort(
+        (a, b) =>
+          mapResultTimeToNumber(a.resultTime) -
+          mapResultTimeToNumber(b.resultTime),
+      )[0] ?? null
+  );
+}
+
 // Løyperekord (fastest time ever)
 export function getCourseRecord(raceRunners: RaceRunnerDTO[]): string {
-  const best = raceRunners
-    .filter((rr) => !rr.hideTime && rr.resultTime)
-    .sort(
-      (a, b) =>
-        mapResultTimeToNumber(a.resultTime) -
-        mapResultTimeToNumber(b.resultTime),
-    )[0];
+  const best = getFastestRunner(raceRunners);
   return best
     ? formatSecondsToTime(mapResultTimeToNumber(best.resultTime))
     : "-";
@@ -123,4 +132,37 @@ export function getAverageParticipants(raceRunners: RaceRunnerDTO[]): number {
   const races = new Set(raceRunners.map((rr) => rr.race.uuid)).size;
   if (races === 0) return 0;
   return Math.round(raceRunners.length / races);
+}
+
+// Antall løp gjennomført dette året (frem til og med i dag)
+export function getRacesHeldThisYear(races: RaceDTO[], year: number): number {
+  const now = new Date();
+  return races.filter(
+    (r) => extractYear(r.raceDate) === year && new Date(r.raceDate) <= now,
+  ).length;
+}
+
+// Antall gjenstående løp dette året (etter i dag)
+export function getRacesLeftThisYear(races: RaceDTO[], year: number): number {
+  const now = new Date();
+  return races.filter(
+    (r) => extractYear(r.raceDate) === year && new Date(r.raceDate) > now,
+  ).length;
+}
+
+// Antall unike løpere av et gitt kjønn dette året
+export function getUniqueRunnersByGenderThisYear(
+  raceRunners: RaceRunnerDTO[],
+  year: number,
+  gender: string,
+): number {
+  return new Set(
+    raceRunners
+      .filter(
+        (r) =>
+          extractYear(r.race.raceDate) === year &&
+          r.runner.gender?.toLowerCase() === gender.toLowerCase(),
+      )
+      .map((r) => r.runner.uuid),
+  ).size;
 }

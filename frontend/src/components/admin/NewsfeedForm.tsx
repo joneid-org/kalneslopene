@@ -3,7 +3,7 @@
 import { ImagePlus, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { FormFooter } from "@/components/admin/FormFooter.tsx";
-import { tagBg, useTags } from "@/components/NewsFeedStories.tsx";
+import { tagBg, useTags } from "@/lib/newsUtils.ts";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {

@@ -1,5 +1,5 @@
-import xxlLogo from "@/data/7b914af91dd705b9e268e5fe80e7a87431e6d726-283x147.svg";
-import kiwiLogo from "@/data/kiwi-logo-white-outl-wo-pay-off.png";
+import kiwiLogo from "@/data/kiwi.png";
+import xxlLogo from "@/data/xxl.svg";
 
 const sponsors = [
   { name: "Kiwi", url: "https://kiwi.no/", logo: kiwiLogo },

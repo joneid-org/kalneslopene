@@ -15,8 +15,8 @@ CREATE TABLE newsfeed_tag
 );
 
 INSERT INTO newsfeed_tag (label, value, color) VALUES
-    ('Resultater',   'resultater',   'bg-blue-600'),
-    ('Bilder',       'bilder',       'bg-purple-600'),
+    ('Results',   'resultater',   'bg-blue-600'),
+    ('Pictures',       'bilder',       'bg-purple-600'),
     ('Kommende løp', 'kommende løp', 'bg-green-600'),
     ('Ukens løp',    'ukens løp',    'bg-orange-500');
 

@@ -3,8 +3,8 @@ import { Footprints } from "lucide-react";
 import { forwardRef } from "react";
 import { Link } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
-import { DynamicDropDownMenu } from "@/components/DynamicDropDownMenu.tsx";
-import MobileNavBarMenu from "@/components/MobileNavBarMenu.tsx";
+import { DynamicDropDownMenu } from "@/components/Navbar/DynamicDropDownMenu.tsx";
+import MobileNavBarMenu from "@/components/Navbar/MobileNavBarMenu.tsx";
 import { Button } from "@/components/ui/button.tsx";
 
 const headerBarDynamic = [

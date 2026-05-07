@@ -34,6 +34,8 @@ export type CsvRow = {
 
 type EditMode = "time" | "link" | "create" | null;
 
+const actionBtnClass = "h-7 w-7 p-0";
+
 function RowEditor({
   row,
   onUpdate,
@@ -123,7 +125,7 @@ function RowEditor({
           <Button
             size="sm"
             variant="ghost"
-            className="h-7 w-7 p-0 shrink-0"
+            className={actionBtnClass}
             onClick={() => setMode(null)}
           >
             <XIcon className="size-3.5" />
@@ -199,7 +201,7 @@ function RowEditor({
           <Button
             size="sm"
             variant="ghost"
-            className="h-7 w-7 p-0 shrink-0"
+            className={actionBtnClass}
             onClick={() => setMode(null)}
           >
             <XIcon className="size-3.5" />
@@ -296,99 +298,95 @@ export function CsvReviewTable({
         </div>
       </div>
 
-      <div className="border rounded-md overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-8">#</TableHead>
-              <TableHead>Navn i fil</TableHead>
-              <TableHead>Løper</TableHead>
-              <TableHead className="w-24">Tid</TableHead>
-              <TableHead className="w-8" />
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {rows.map((row, idx) => {
-              const isEditing = editingId === row.id;
-              return (
-                <TableRow
-                  key={row.id}
-                  className={
-                    !row.resolvedRunner
-                      ? "bg-orange-50 dark:bg-orange-950/20"
-                      : undefined
-                  }
-                >
-                  <TableCell className="text-muted-foreground text-xs">
-                    {idx + 1}
-                  </TableCell>
-                  <TableCell className="text-sm font-medium">
-                    {row.csvName}
-                  </TableCell>
-                  <TableCell>
-                    {isEditing ? (
-                      <RowEditor
-                        row={row}
-                        onUpdate={(p) => updateRow(row.id, p)}
-                        onClose={() => setEditingId(null)}
-                      />
-                    ) : row.resolvedRunner ? (
-                      <div className="flex items-center gap-2">
-                        <CheckIcon className="size-3.5 text-green-500 shrink-0" />
-                        <span className="text-sm">
-                          {row.resolvedRunner.name}
-                        </span>
-                        {row.resolvedRunner.name !== row.csvName && (
-                          <Badge
-                            variant="outline"
-                            className="text-xs py-0 px-1.5"
-                          >
-                            koblet
-                          </Badge>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-2">
-                        <XCircleIcon className="size-3.5 text-orange-500 shrink-0" />
-                        <span className="text-sm text-muted-foreground italic">
-                          Ikke funnet
-                        </span>
-                      </div>
-                    )}
-                  </TableCell>
-                  <TableCell className="tabular-nums font-mono text-sm">
-                    {row.timeSeconds > 0
-                      ? formatSecondsToTime(row.timeSeconds)
-                      : "-"}
-                  </TableCell>
-                  <TableCell>
-                    {!isEditing && (
-                      <div className="flex items-center gap-1">
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
-                          onClick={() => setEditingId(row.id)}
+      <Table className="border rounded-md overflow-hidden">
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-8">#</TableHead>
+            <TableHead>Navn i fil</TableHead>
+            <TableHead>Løper</TableHead>
+            <TableHead className="w-24">Tid</TableHead>
+            <TableHead className="w-8" />
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {rows.map((row, idx) => {
+            const isEditing = editingId === row.id;
+            return (
+              <TableRow
+                key={row.id}
+                className={
+                  !row.resolvedRunner
+                    ? "bg-orange-50 dark:bg-orange-950/20"
+                    : undefined
+                }
+              >
+                <TableCell className="text-muted-foreground text-xs">
+                  {idx + 1}
+                </TableCell>
+                <TableCell className="text-sm font-medium">
+                  {row.csvName}
+                </TableCell>
+                <TableCell>
+                  {isEditing ? (
+                    <RowEditor
+                      row={row}
+                      onUpdate={(p) => updateRow(row.id, p)}
+                      onClose={() => setEditingId(null)}
+                    />
+                  ) : row.resolvedRunner ? (
+                    <div className="flex items-center gap-2">
+                      <CheckIcon className="size-3.5 text-green-500 shrink-0" />
+                      <span className="text-sm">{row.resolvedRunner.name}</span>
+                      {row.resolvedRunner.name !== row.csvName && (
+                        <Badge
+                          variant="outline"
+                          className="text-xs py-0 px-1.5"
                         >
-                          <PencilIcon className="size-3.5" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="h-6 w-6 p-0 text-destructive/60 hover:text-destructive"
-                          onClick={() => removeRow(row.id)}
-                        >
-                          <XIcon className="size-3.5" />
-                        </Button>
-                      </div>
-                    )}
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </div>
+                          koblet
+                        </Badge>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <XCircleIcon className="size-3.5 text-orange-500 shrink-0" />
+                      <span className="text-sm text-muted-foreground italic">
+                        Ikke funnet
+                      </span>
+                    </div>
+                  )}
+                </TableCell>
+                <TableCell className="tabular-nums font-mono text-sm">
+                  {row.timeSeconds > 0
+                    ? formatSecondsToTime(row.timeSeconds)
+                    : "-"}
+                </TableCell>
+                <TableCell>
+                  {!isEditing && (
+                    <div className="flex items-center gap-1">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
+                        onClick={() => setEditingId(row.id)}
+                      >
+                        <PencilIcon className="size-3.5" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-6 w-6 p-0 text-destructive/60 hover:text-destructive"
+                        onClick={() => removeRow(row.id)}
+                      >
+                        <XIcon className="size-3.5" />
+                      </Button>
+                    </div>
+                  )}
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
     </div>
   );
 }

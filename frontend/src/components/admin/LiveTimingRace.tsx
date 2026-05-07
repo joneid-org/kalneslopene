@@ -22,6 +22,14 @@ import type { RunnerDTO } from "@/model/DTO.ts";
 
 type TimingState = "idle" | "running" | "stopped";
 
+function formatLive(secs: number): string {
+  const total = Math.floor(secs);
+  const tenths = Math.floor((secs % 1) * 10);
+  const mm = Math.floor(total / 60);
+  const ss = total % 60;
+  return `${String(mm).padStart(2, "0")}:${String(ss).padStart(2, "0")}.${tenths}`;
+}
+
 export function LiveTimingRace({
   startList,
   slots,
@@ -34,7 +42,7 @@ export function LiveTimingRace({
   onStop: () => void;
 }) {
   const [state, setState] = useState<TimingState>("idle");
-  const [display, setDisplay] = useState(0); // seconds shown on clock
+  const [display, setDisplay] = useState(0);
   const [assigningSlotId, setAssigningSlotId] = useState<number | null>(null);
   const [confirmStop, setConfirmStop] = useState(false);
 
@@ -42,7 +50,6 @@ export function LiveTimingRace({
   const rafRef = useRef<number | null>(null);
   const nextIdRef = useRef(0);
 
-  // Tick the display every 100ms via rAF
   const tick = useCallback(() => {
     if (startTimeRef.current !== null) {
       const elapsed = (Date.now() - startTimeRef.current) / 1000;
@@ -119,18 +126,8 @@ export function LiveTimingRace({
 
   const unassigned = slots.filter((s) => s.runner === null).length;
 
-  // Format elapsed as mm:ss.t (tenths)
-  function formatLive(secs: number): string {
-    const total = Math.floor(secs);
-    const tenths = Math.floor((secs % 1) * 10);
-    const mm = Math.floor(total / 60);
-    const ss = total % 60;
-    return `${String(mm).padStart(2, "0")}:${String(ss).padStart(2, "0")}.${tenths}`;
-  }
-
   return (
     <div className="space-y-4">
-      {/* Clock */}
       <div className="rounded-xl border bg-card p-6 flex flex-col items-center gap-4">
         <div
           className={`font-mono text-5xl font-bold tabular-nums tracking-tight transition-colors ${
@@ -204,7 +201,6 @@ export function LiveTimingRace({
         )}
       </div>
 
-      {/* Confirm stop dialog */}
       {confirmStop && (
         <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-4 space-y-3">
           <p className="text-sm font-medium">Stopp tidtaking?</p>
@@ -232,7 +228,6 @@ export function LiveTimingRace({
         </div>
       )}
 
-      {/* Stats row */}
       {slots.length > 0 && (
         <div className="flex gap-3 text-xs text-muted-foreground">
           <span>
@@ -255,74 +250,70 @@ export function LiveTimingRace({
         </div>
       )}
 
-      {/* Finish slots list */}
       {slots.length > 0 && (
         <div className="space-y-2">
           <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             Målganger ({slots.length})
           </p>
-          <div className="space-y-2">
-            {[...slots].reverse().map((slot, revIdx) => {
-              const pos = slots.length - revIdx;
-              return (
-                <div
-                  key={slot.id}
-                  className={`rounded-lg border p-3 flex items-center gap-3 ${
-                    slot.runner === null
-                      ? "border-orange-200 bg-orange-50 dark:border-orange-900 dark:bg-orange-950/20"
-                      : "border-border bg-card"
-                  }`}
-                >
-                  <span className="text-muted-foreground text-xs w-5 text-right tabular-nums shrink-0">
-                    {pos}.
-                  </span>
-                  <span className="font-mono tabular-nums text-sm font-semibold w-20 shrink-0">
-                    {formatSecondsToTime(Math.round(slot.elapsedSeconds))}
-                  </span>
+          {[...slots].reverse().map((slot, revIdx) => {
+            const pos = slots.length - revIdx;
+            return (
+              <div
+                key={slot.id}
+                className={`rounded-lg border p-3 flex items-center gap-3 ${
+                  slot.runner === null
+                    ? "border-orange-200 bg-orange-50 dark:border-orange-900 dark:bg-orange-950/20"
+                    : "border-border bg-card"
+                }`}
+              >
+                <span className="text-muted-foreground text-xs w-5 text-right tabular-nums shrink-0">
+                  {pos}.
+                </span>
+                <span className="font-mono tabular-nums text-sm font-semibold w-20 shrink-0">
+                  {formatSecondsToTime(Math.round(slot.elapsedSeconds))}
+                </span>
 
-                  {slot.runner ? (
-                    <div className="flex items-center gap-2 flex-1 min-w-0">
-                      <CheckIcon className="size-3.5 text-green-500 shrink-0" />
-                      <span className="text-sm font-medium truncate">
-                        {slot.runner.name}
-                      </span>
-                      <button
-                        type="button"
-                        className="ml-auto text-muted-foreground hover:text-destructive shrink-0"
-                        onClick={() => handleUnassign(slot.id)}
-                        title="Fjern kobling"
-                      >
-                        <XIcon className="size-3.5" />
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2 flex-1">
-                      <button
-                        type="button"
-                        className="flex items-center gap-2 text-sm text-orange-600 dark:text-orange-400 hover:text-orange-700 font-medium"
-                        onClick={() => setAssigningSlotId(slot.id)}
-                      >
-                        <UserIcon className="size-3.5" />
-                        Koble løper
-                      </button>
-                      <button
-                        type="button"
-                        className="ml-auto text-muted-foreground hover:text-destructive shrink-0"
-                        onClick={() => handleRemoveSlot(slot.id)}
-                        title="Slett"
-                      >
-                        <XIcon className="size-3.5" />
-                      </button>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+                {slot.runner ? (
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <CheckIcon className="size-3.5 text-green-500 shrink-0" />
+                    <span className="text-sm font-medium truncate">
+                      {slot.runner.name}
+                    </span>
+                    <button
+                      type="button"
+                      className="ml-auto text-muted-foreground hover:text-destructive shrink-0"
+                      onClick={() => handleUnassign(slot.id)}
+                      title="Fjern kobling"
+                    >
+                      <XIcon className="size-3.5" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2 flex-1">
+                    <button
+                      type="button"
+                      className="flex items-center gap-2 text-sm text-orange-600 dark:text-orange-400 hover:text-orange-700 font-medium"
+                      onClick={() => setAssigningSlotId(slot.id)}
+                    >
+                      <UserIcon className="size-3.5" />
+                      Koble løper
+                    </button>
+                    <button
+                      type="button"
+                      className="ml-auto text-muted-foreground hover:text-destructive shrink-0"
+                      onClick={() => handleRemoveSlot(slot.id)}
+                      title="Slett"
+                    >
+                      <XIcon className="size-3.5" />
+                    </button>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
 
-      {/* Runner picker drawer */}
       <Drawer
         open={assigningSlotId !== null}
         onOpenChange={(open) => {

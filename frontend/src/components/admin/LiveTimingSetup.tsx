@@ -70,7 +70,6 @@ export function LiveTimingSetup({
 
   return (
     <div className="space-y-5">
-      {/* Race selector */}
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-base flex items-center gap-2">
@@ -123,7 +122,6 @@ export function LiveTimingSetup({
         </CardContent>
       </Card>
 
-      {/* Start list builder */}
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-base flex items-center gap-2">
@@ -133,7 +131,6 @@ export function LiveTimingSetup({
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          {/* Search */}
           <div className="relative">
             <SearchIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground pointer-events-none" />
             <Input
@@ -144,7 +141,6 @@ export function LiveTimingSetup({
             />
           </div>
 
-          {/* Suggestions dropdown */}
           {search.length > 0 && suggestions.length > 0 && (
             <div className="border rounded-md divide-y max-h-36 overflow-y-auto">
               {suggestions.map((r) => (
@@ -169,7 +165,6 @@ export function LiveTimingSetup({
 
           <Separator />
 
-          {/* Current start list */}
           {startList.length === 0 ? (
             <p className="text-sm text-muted-foreground italic text-center py-2">
               Ingen løpere lagt til ennå.
@@ -204,16 +199,14 @@ export function LiveTimingSetup({
         </CardContent>
       </Card>
 
-      <div className="flex justify-end">
-        <Button
-          size="lg"
-          disabled={!selectedRace || startList.length === 0}
-          onClick={onStart}
-          className="gap-2"
-        >
-          Gå til tidtaking
-        </Button>
-      </div>
+      <Button
+        size="lg"
+        className="ml-auto block gap-2"
+        disabled={!selectedRace || startList.length === 0}
+        onClick={onStart}
+      >
+        Gå til tidtaking
+      </Button>
     </div>
   );
 }

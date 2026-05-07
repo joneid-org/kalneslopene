@@ -81,7 +81,7 @@ export function RegisterResults() {
   });
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
+    <div className="page-content max-w-3xl mx-auto space-y-6">
       <Button
         variant="ghost"
         className="gap-1.5 -ml-2 text-muted-foreground"
@@ -111,7 +111,6 @@ export function RegisterResults() {
         onDelete={setDeleting}
       />
 
-      {/* Edit dialog */}
       <Dialog
         open={!!editing}
         onOpenChange={(o) => {
@@ -128,7 +127,6 @@ export function RegisterResults() {
         )}
       </Dialog>
 
-      {/* Delete confirm */}
       <Dialog
         open={!!deleting}
         onOpenChange={(o) => {

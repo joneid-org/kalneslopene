@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
-import type { RaceDTO, RaceRunnerDTO } from "@/model/DTO.ts";
+import type { RaceDTO } from "@/model/DTO.ts";
 
 export function MissingRunnersCard({
   races,
@@ -35,7 +35,7 @@ export function MissingRunnersCard({
           expandable={false}
           expandedRaceUuid={null}
           runnerCountByRace={new Map()}
-          runnersForRace={() => [] as RaceRunnerDTO[]}
+          runnersForRace={() => []}
           onToggleExpand={() => {}}
           onEdit={onEdit}
           onDelete={onDelete}

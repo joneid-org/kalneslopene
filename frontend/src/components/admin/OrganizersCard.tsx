@@ -1,5 +1,6 @@
-import { GripVertical, PencilIcon, Trash2Icon, UsersIcon } from "lucide-react";
+import { GripVertical, PencilIcon, UsersIcon } from "lucide-react";
 import { useRef, useState } from "react";
+import { DeleteButton } from "@/components/admin/DeleteButton.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -72,12 +73,10 @@ export function OrganizersCard({
                     : "hover:bg-muted/40"
                 }`}
               >
-                {/* Drag handle */}
                 <span className="cursor-grab active:cursor-grabbing text-muted-foreground/40 hover:text-muted-foreground shrink-0">
                   <GripVertical className="size-4" />
                 </span>
 
-                {/* Avatar */}
                 {org.image ? (
                   <img
                     src={org.image}
@@ -90,7 +89,6 @@ export function OrganizersCard({
                   </div>
                 )}
 
-                {/* Info */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <span className="text-sm font-medium">{org.name}</span>
@@ -107,7 +105,6 @@ export function OrganizersCard({
                   )}
                 </div>
 
-                {/* Actions */}
                 <div className="flex items-center gap-1 shrink-0">
                   <Button
                     size="sm"
@@ -117,14 +114,7 @@ export function OrganizersCard({
                   >
                     <PencilIcon className="size-3.5" />
                   </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    className="h-7 w-7 p-0 text-destructive hover:text-destructive"
-                    onClick={() => onDelete(org)}
-                  >
-                    <Trash2Icon className="size-3.5" />
-                  </Button>
+                  <DeleteButton onClick={() => onDelete(org)} />
                 </div>
               </li>
             ))}

@@ -28,12 +28,10 @@ function parseCsv(text: string): { name: string; time: string }[] {
 
   return lines
     .map((line) => {
-      // Support comma, semicolon, or tab as delimiter
       const parts = line
         .split(/[;,\t]/)
         .map((p) => p.trim().replace(/^"|"$/g, ""));
       if (parts.length < 2) return null;
-      // Detect which column is the time (contains ":" digit pattern)
       const timeIndex = parts.findIndex((p) => /^\d+:\d{2}(:\d{2})?$/.test(p));
       if (timeIndex === -1) return null;
       const nameIndex = timeIndex === 0 ? 1 : 0;
@@ -136,11 +134,9 @@ export function CsvUploadStep({
 
       {error && <p className="text-sm text-destructive">{error}</p>}
 
-      <div className="flex justify-between gap-3">
-        <Button variant="outline" onClick={onBack}>
-          Tilbake
-        </Button>
-      </div>
+      <Button variant="outline" onClick={onBack}>
+        Tilbake
+      </Button>
     </div>
   );
 }

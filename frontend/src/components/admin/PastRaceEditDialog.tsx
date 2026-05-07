@@ -1,15 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  PencilIcon,
-  SaveIcon,
-  Trash2Icon,
-  UserPlusIcon,
-  XIcon,
-} from "lucide-react";
+import { PencilIcon, SaveIcon, UserPlusIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
-import { BulkAddRunnersForm } from "@/components/admin/BulkAddRunnersForm.tsx";
-import type { QueuedRunner } from "@/components/admin/BulkAddRunnersForm.tsx";
+import {
+  BulkAddRunnersForm,
+  type QueuedRunner,
+} from "@/components/admin/BulkAddRunnersForm.tsx";
+import { DeleteButton } from "@/components/admin/DeleteButton.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -53,6 +50,7 @@ export function PastRaceEditDialog({
   const [editHideTime, setEditHideTime] = useState(false);
 
   const pendingUuids = new Set(pendingRunners.map((r) => r.runner.uuid));
+  const runnerCount = runners.length + pendingRunners.length;
 
   const refreshRunners = async () => {
     const fresh = await QUERIES.race
@@ -161,16 +159,12 @@ export function PastRaceEditDialog({
             onChange={(e) => setWeather(e.target.value)}
           />
         </div>
-
         <Separator />
-
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <p className="text-sm font-medium">
               Løpere{" "}
-              <span className="text-muted-foreground">
-                ({runners.length + pendingRunners.length})
-              </span>
+              <span className="text-muted-foreground">({runnerCount})</span>
             </p>
             <Button
               size="sm"
@@ -183,13 +177,11 @@ export function PastRaceEditDialog({
             </Button>
           </div>
 
-          {runners.length === 0 && pendingRunners.length === 0 && (
+          {runnerCount === 0 ? (
             <p className="text-sm text-muted-foreground italic">
               Ingen løpere registrert ennå.
             </p>
-          )}
-
-          {(runners.length > 0 || pendingRunners.length > 0) && (
+          ) : (
             <div className="border rounded-md divide-y max-h-72 overflow-y-auto">
               {runners.map((rr) => {
                 const isEditing = editingRunnerUuid === rr.runner.uuid;
@@ -214,14 +206,10 @@ export function PastRaceEditDialog({
                           >
                             <PencilIcon className="size-3.5" />
                           </Button>
-                          <Button
+                          <DeleteButton
                             size="sm"
-                            variant="ghost"
-                            className="h-6 w-6 p-0 text-destructive hover:text-destructive"
                             onClick={() => removeRunner.mutate(rr)}
-                          >
-                            <Trash2Icon className="size-3.5" />
-                          </Button>
+                          />
                         </div>
                       </div>
                     ) : (
@@ -309,7 +297,7 @@ export function PastRaceEditDialog({
               ))}
             </div>
           )}
-        </div>
+        </div>{" "}
       </div>
 
       <DialogFooter>

@@ -14,6 +14,23 @@ import type { CsvRow } from "@/components/admin/CsvReviewTable.tsx";
 
 type Step = "race" | "upload" | "review";
 
+const steps: Step[] = ["race", "upload", "review"];
+const stepLabels: Record<Step, string> = {
+  race: "Velg løp",
+  upload: "Last opp fil",
+  review: "Gjennomgå",
+};
+
+function stepBubbleClass(s: Step, current: Step) {
+  const done =
+    (s === "race" && (current === "upload" || current === "review")) ||
+    (s === "upload" && current === "review");
+  const active = s === current;
+  if (active) return "bg-primary text-primary-foreground border-primary";
+  if (done) return "bg-primary/20 text-primary border-primary/30";
+  return "bg-muted text-muted-foreground border-border";
+}
+
 export function ImportResultsFromFile() {
   const navigate = useNavigate();
   const qc = useQueryClient();
@@ -50,7 +67,7 @@ export function ImportResultsFromFile() {
   const unresolved = rows.filter((r) => r.resolvedRunner === null).length;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
+    <div className="page-content max-w-4xl mx-auto space-y-6">
       <Button
         variant="ghost"
         className="gap-1.5 -ml-2 text-muted-foreground"
@@ -60,51 +77,29 @@ export function ImportResultsFromFile() {
         Tilbake
       </Button>
 
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">
-          Registrer resultat fra fil
-        </h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Last opp en CSV-fil med løpernavn og tider.
-        </p>
-      </div>
+      <h1 className="text-2xl font-bold tracking-tight">
+        Registrer resultat fra fil
+      </h1>
+      <p className="text-sm text-muted-foreground">
+        Last opp en CSV-fil med løpernavn og tider.
+      </p>
 
-      {/* Step indicator */}
       <div className="flex items-center gap-2 text-sm">
-        {(["race", "upload", "review"] as Step[]).map((s, i) => {
-          const labels: Record<Step, string> = {
-            race: "Velg løp",
-            upload: "Last opp fil",
-            review: "Gjennomgå",
-          };
-          const done =
-            (s === "race" && (step === "upload" || step === "review")) ||
-            (s === "upload" && step === "review");
-          const active = s === step;
-          return (
-            <span key={s} className="flex items-center gap-2">
-              <span
-                className={`flex items-center justify-center rounded-full size-6 text-xs font-semibold border ${
-                  active
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : done
-                      ? "bg-primary/20 text-primary border-primary/30"
-                      : "bg-muted text-muted-foreground border-border"
-                }`}
-              >
-                {i + 1}
-              </span>
-              <span
-                className={active ? "font-medium" : "text-muted-foreground"}
-              >
-                {labels[s]}
-              </span>
-              {i < 2 && (
-                <span className="text-muted-foreground/40 mx-1">›</span>
-              )}
+        {steps.map((s, i) => (
+          <span key={s} className="flex items-center gap-2">
+            <span
+              className={`flex items-center justify-center rounded-full size-6 text-xs font-semibold border ${stepBubbleClass(s, step)}`}
+            >
+              {i + 1}
             </span>
-          );
-        })}
+            <span
+              className={s === step ? "font-medium" : "text-muted-foreground"}
+            >
+              {stepLabels[s]}
+            </span>
+            {i < 2 && <span className="text-muted-foreground/40 mx-1">›</span>}
+          </span>
+        ))}
       </div>
 
       {step === "race" && (

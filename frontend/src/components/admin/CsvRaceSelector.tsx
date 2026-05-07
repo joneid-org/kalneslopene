@@ -1,8 +1,11 @@
 import { CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
 import { Card, CardContent } from "@/components/ui/card.tsx";
-import { formatDDMonth, extractYear } from "@/lib/timeUtils.ts";
-import { raceDateToSortKey } from "@/lib/timeUtils.ts";
+import {
+  formatDDMonth,
+  extractYear,
+  raceDateToSortKey,
+} from "@/lib/timeUtils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 
 export function CsvRaceSelector({
@@ -64,11 +67,9 @@ export function CsvRaceSelector({
         </CardContent>
       </Card>
 
-      <div className="flex justify-end">
-        <Button disabled={!selected} onClick={onNext}>
-          Neste
-        </Button>
-      </div>
+      <Button className="ml-auto block" disabled={!selected} onClick={onNext}>
+        Neste
+      </Button>
     </div>
   );
 }

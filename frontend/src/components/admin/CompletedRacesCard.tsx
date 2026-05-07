@@ -43,7 +43,7 @@ export function CompletedRacesCard({
         ) : (
           <PastRacesTable
             rows={races}
-            expandable={true}
+            expandable
             expandedRaceUuid={expandedRaceUuid}
             runnerCountByRace={runnerCountByRace}
             runnersForRace={runnersForRace}

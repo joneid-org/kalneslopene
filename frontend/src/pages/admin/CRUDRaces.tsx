@@ -18,8 +18,6 @@ import { formatDDMonth, raceDateToSortKey } from "@/lib/timeUtils.ts";
 import { isPast } from "@/lib/utils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 
-// ─── main component ───────────────────────────────────────────────────────────
-
 export function CRUDRaces() {
   const qc = useQueryClient();
   const navigate = useNavigate();
@@ -70,7 +68,7 @@ export function CRUDRaces() {
   });
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
+    <div className="page-content max-w-3xl mx-auto space-y-6">
       <Button
         variant="ghost"
         className="gap-1.5 -ml-2 text-muted-foreground"
@@ -104,7 +102,6 @@ export function CRUDRaces() {
         onDelete={setDeleting}
       />
 
-      {/* Add single race dialog */}
       <Dialog open={showAdd} onOpenChange={setShowAdd}>
         <DialogContent>
           <DialogHeader>
@@ -119,7 +116,6 @@ export function CRUDRaces() {
         </DialogContent>
       </Dialog>
 
-      {/* Season dialog */}
       <Dialog open={showSeason} onOpenChange={setShowSeason}>
         <SeasonDialog
           onClose={() => setShowSeason(false)}
@@ -127,7 +123,6 @@ export function CRUDRaces() {
         />
       </Dialog>
 
-      {/* Edit dialog */}
       <Dialog
         open={!!editing}
         onOpenChange={(o) => {
@@ -150,7 +145,6 @@ export function CRUDRaces() {
         </DialogContent>
       </Dialog>
 
-      {/* Delete confirm */}
       <Dialog
         open={!!deleting}
         onOpenChange={(o) => {

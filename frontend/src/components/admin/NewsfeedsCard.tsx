@@ -1,7 +1,7 @@
-import { NewspaperIcon, PencilIcon, Trash2Icon } from "lucide-react";
+import { NewspaperIcon } from "lucide-react";
 import { AdminCard } from "@/components/admin/AdminCard.tsx";
+import { RowActions } from "@/components/admin/RowActions.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
-import { Button } from "@/components/ui/button.tsx";
 import { TableCell } from "@/components/ui/table.tsx";
 import { formatDateFull } from "@/lib/timeUtils.ts";
 import type { NewsFeedDTO } from "@/model/DTO.ts";
@@ -42,26 +42,10 @@ export function NewsfeedsCard({
               ))}
             </div>
           </TableCell>
-          <TableCell>
-            <div className="flex items-center gap-1 justify-end">
-              <Button
-                size="sm"
-                variant="ghost"
-                className="h-7 w-7 p-0"
-                onClick={() => onEdit(feed)}
-              >
-                <PencilIcon className="size-3.5" />
-              </Button>
-              <Button
-                size="sm"
-                variant="ghost"
-                className="h-7 w-7 p-0 text-destructive hover:text-destructive"
-                onClick={() => onDelete(feed)}
-              >
-                <Trash2Icon className="size-3.5" />
-              </Button>
-            </div>
-          </TableCell>
+          <RowActions
+            onEdit={() => onEdit(feed)}
+            onDelete={() => onDelete(feed)}
+          />
         </>
       )}
     />

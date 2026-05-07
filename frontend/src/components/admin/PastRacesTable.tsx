@@ -1,4 +1,6 @@
-import { CheckCircle2Icon, PencilIcon, Trash2Icon } from "lucide-react";
+import { Fragment } from "react";
+import { CheckCircle2Icon, PencilIcon } from "lucide-react";
+import { DeleteButton } from "@/components/admin/DeleteButton.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Table,
@@ -51,19 +53,16 @@ export function PastRacesTable({
           const isExpanded = expandedRaceUuid === race.uuid;
           const runners = runnersForRace(race);
           return (
-            <>
+            <Fragment key={race.uuid}>
               <TableRow
-                key={race.uuid}
                 className={expandable ? "cursor-pointer hover:bg-muted/50" : ""}
                 onClick={expandable ? () => onToggleExpand(race) : undefined}
               >
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2Icon className="size-3.5 text-green-600 shrink-0" />
-                    <span className="font-medium">
-                      {formatDDMonth(race.raceDate)}
-                    </span>
-                  </div>
+                <TableCell className="flex items-center gap-2">
+                  <CheckCircle2Icon className="size-3.5 text-green-600 shrink-0" />
+                  <span className="font-medium">
+                    {formatDDMonth(race.raceDate)}
+                  </span>
                 </TableCell>
                 <TableCell className="tabular-nums text-muted-foreground">
                   {formatTimeStamp(race.raceDate)}
@@ -79,28 +78,22 @@ export function PastRacesTable({
                   </TableCell>
                 )}
                 <TableCell>
-                  {/* biome-ignore lint/a11y/noStaticElementInteractions: stop row click propagation */}
-                  {/* biome-ignore lint/a11y/useKeyWithClickEvents: stop row click propagation */}
-                  <div
-                    className="flex items-center gap-1 justify-end"
-                    onClick={(e) => e.stopPropagation()}
-                  >
+                  <div className="flex items-center gap-1 justify-end">
                     <Button
                       size="sm"
                       variant="ghost"
                       className="h-7 w-7 p-0"
-                      onClick={() => onEdit(race)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onEdit(race);
+                      }}
                     >
                       <PencilIcon className="size-3.5" />
                     </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="h-7 w-7 p-0 text-destructive hover:text-destructive"
+                    <DeleteButton
+                      stopPropagation
                       onClick={() => onDelete(race)}
-                    >
-                      <Trash2Icon className="size-3.5" />
-                    </Button>
+                    />
                   </div>
                 </TableCell>
               </TableRow>
@@ -145,7 +138,7 @@ export function PastRacesTable({
                   </TableCell>
                 </TableRow>
               )}
-            </>
+            </Fragment>
           );
         })}
       </TableBody>

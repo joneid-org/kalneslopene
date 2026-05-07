@@ -19,8 +19,6 @@ import { Label } from "@/components/ui/label.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import type { NewsFeedDTO } from "@/model/DTO.ts";
 
-// ─── Main component ────────────────────────────────────────────────────────────
-
 export function CRUDNewsfeeds() {
   const qc = useQueryClient();
   const navigate = useNavigate();
@@ -75,7 +73,7 @@ export function CRUDNewsfeeds() {
   );
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
+    <div className="page-content max-w-3xl mx-auto space-y-6">
       <Button
         variant="ghost"
         className="gap-1.5 -ml-2 text-muted-foreground"
@@ -86,7 +84,6 @@ export function CRUDNewsfeeds() {
       </Button>
       <h1 className="text-2xl font-bold tracking-tight">Nyheter</h1>
 
-      {/* ── Settings ────────────────────────────────────────────── */}
       <div className="rounded-lg border p-4 space-y-3">
         <h2 className="text-base font-semibold">Innstillinger</h2>
         <div className="flex items-end gap-3">
@@ -111,14 +108,10 @@ export function CRUDNewsfeeds() {
 
       <Separator />
 
-      {/* ── Tag management ──────────────────────────────────────── */}
-      <div className="rounded-lg border p-4">
-        <NewsfeedTagManager />
-      </div>
+      <NewsfeedTagManager />
 
       <Separator />
 
-      {/* ── Articles ────────────────────────────────────────────── */}
       <div className="flex items-center justify-between">
         <h2 className="text-base font-semibold">Artikler</h2>
         <Button className="gap-1.5" onClick={() => setShowAdd(true)}>
@@ -133,7 +126,6 @@ export function CRUDNewsfeeds() {
         onDelete={setDeleting}
       />
 
-      {/* Add dialog */}
       <Dialog open={showAdd} onOpenChange={setShowAdd}>
         <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -148,7 +140,6 @@ export function CRUDNewsfeeds() {
         </DialogContent>
       </Dialog>
 
-      {/* Edit dialog */}
       <Dialog
         open={!!editing}
         onOpenChange={(o) => {
@@ -170,7 +161,6 @@ export function CRUDNewsfeeds() {
         </DialogContent>
       </Dialog>
 
-      {/* Delete confirm */}
       <Dialog
         open={!!deleting}
         onOpenChange={(o) => {

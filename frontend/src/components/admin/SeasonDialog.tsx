@@ -23,8 +23,7 @@ export function SeasonDialog({
   onClose: () => void;
   onCreated: () => void;
 }) {
-  const today = new Date();
-  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  const todayStr = new Date().toISOString().slice(0, 10);
 
   const [startDate, setStartDate] = useState(todayStr);
   const [endDate, setEndDate] = useState("");

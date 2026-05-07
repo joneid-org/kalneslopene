@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/drawer.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { formatSecondsToTime, timeToSeconds } from "@/lib/timeUtils.ts";
-import type { RaceDTO, RunnerDTO } from "@/model/DTO.ts";
+import type { RunnerDTO } from "@/model/DTO.ts";
 import type { FinishSlot } from "@/pages/admin/LiveTiming.tsx";
 
 export function LiveTimingReview({
@@ -30,7 +30,6 @@ export function LiveTimingReview({
   onSave,
   onBack,
 }: {
-  race: RaceDTO;
   startList: RunnerDTO[];
   slots: FinishSlot[];
   onSlotsChange: (slots: FinishSlot[]) => void;
@@ -118,7 +117,6 @@ export function LiveTimingReview({
         )}
       </div>
 
-      {/* Slots table */}
       <div className="space-y-2">
         {slots.map((slot, i) => (
           <div
@@ -133,7 +131,6 @@ export function LiveTimingReview({
               {i + 1}.
             </span>
 
-            {/* Time cell */}
             {editingTimeId === slot.id ? (
               <div className="flex items-center gap-1.5 shrink-0">
                 <Input
@@ -173,7 +170,6 @@ export function LiveTimingReview({
               </button>
             )}
 
-            {/* Runner cell */}
             {slot.runner ? (
               <div className="flex items-center gap-2 flex-1 min-w-0">
                 <CheckIcon className="size-3.5 text-green-500 shrink-0" />
@@ -245,7 +241,6 @@ export function LiveTimingReview({
         </Button>
       </div>
 
-      {/* Runner picker drawer */}
       <Drawer
         open={reassigningSlotId !== null}
         onOpenChange={(open) => {

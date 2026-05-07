@@ -3,7 +3,6 @@
 import { ImagePlus, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { FormFooter } from "@/components/admin/FormFooter.tsx";
-import { tagBg, useTags } from "@/lib/newsUtils.ts";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -15,16 +14,9 @@ import {
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
+import { tagBg, useTags } from "@/lib/newsUtils.ts";
+import { readFileAsDataURL } from "@/lib/utils.ts";
 import type { NewsFeedDTO } from "@/model/DTO.ts";
-
-function readFileAsDataURL(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
 
 export function NewsfeedForm({
   initial,
@@ -147,7 +139,6 @@ export function NewsfeedForm({
         </DropdownMenu>
       </div>
 
-      {/* Header image */}
       <div className="space-y-1.5">
         <Label>Header-bilde</Label>
         <input
@@ -158,7 +149,7 @@ export function NewsfeedForm({
           onChange={handleHeaderImageChange}
         />
         {headerImage ? (
-          <div className="relative inline-block rounded-md overflow-hidden border w-full flex justify-center">
+          <div className="relative w-full rounded-md overflow-hidden border flex justify-center">
             <img src={headerImage} alt="Header" className="max-w-full h-auto" />
             <button
               type="button"

@@ -1,8 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { PencilIcon, PlusIcon, TrashIcon } from "lucide-react";
+import { PencilIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
 import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog.tsx";
+import { DeleteButton } from "@/components/admin/DeleteButton.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Dialog,
@@ -33,6 +34,9 @@ const COLOR_OPTIONS = [
   { label: "Svart", value: "bg-black" },
   { label: "Grå", value: "bg-gray-500" },
 ];
+
+const tagPillClass =
+  "text-white text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full";
 
 function TagForm({
   initial,
@@ -91,14 +95,9 @@ function TagForm({
             ))}
           </SelectContent>
         </Select>
-        {/* Preview */}
-        <div className="pt-1">
-          <span
-            className={`${color} text-white text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full`}
-          >
-            {label || "Forhåndsvisning"}
-          </span>
-        </div>
+        <span className={`${color} ${tagPillClass} inline-block mt-1`}>
+          {label || "Forhåndsvisning"}
+        </span>
       </div>
       <div className="flex gap-2 justify-end pt-2">
         <Button variant="ghost" onClick={onCancel}>
@@ -175,9 +174,7 @@ export function NewsfeedTagManager() {
             className="flex items-center justify-between px-4 py-2.5 gap-3"
           >
             <div className="flex items-center gap-2">
-              <span
-                className={`${tag.color} text-white text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full`}
-              >
+              <span className={`${tag.color} ${tagPillClass}`}>
                 {tag.label}
               </span>
               <span className="text-xs text-muted-foreground">
@@ -193,20 +190,12 @@ export function NewsfeedTagManager() {
               >
                 <PencilIcon className="size-3.5" />
               </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="size-7 text-red-500 hover:text-red-600"
-                onClick={() => setDeleting(tag)}
-              >
-                <TrashIcon className="size-3.5" />
-              </Button>
+              <DeleteButton onClick={() => setDeleting(tag)} />
             </div>
           </div>
         ))}
       </div>
 
-      {/* Add dialog */}
       <Dialog open={showAdd} onOpenChange={setShowAdd}>
         <DialogContent>
           <DialogHeader>
@@ -221,7 +210,6 @@ export function NewsfeedTagManager() {
         </DialogContent>
       </Dialog>
 
-      {/* Edit dialog */}
       <Dialog
         open={!!editing}
         onOpenChange={(o) => {
@@ -243,7 +231,6 @@ export function NewsfeedTagManager() {
         </DialogContent>
       </Dialog>
 
-      {/* Delete confirm */}
       <Dialog
         open={!!deleting}
         onOpenChange={(o) => {

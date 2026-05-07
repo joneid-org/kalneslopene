@@ -5,16 +5,8 @@ import { Button } from "@/components/ui/button.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { Switch } from "@/components/ui/switch.tsx";
+import { readFileAsDataURL } from "@/lib/utils.ts";
 import type { OrganizerDTO } from "@/model/DTO.ts";
-
-function readFileAsDataURL(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
 
 export function OrganizerForm({
   initial,
@@ -65,7 +57,6 @@ export function OrganizerForm({
 
   return (
     <div className="space-y-4">
-      {/* Avatar image */}
       <div className="space-y-1.5">
         <Label>Profilbilde</Label>
         <input

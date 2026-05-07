@@ -16,8 +16,6 @@ import {
 import { useOrganizerOrder } from "@/lib/organizerOrder.ts";
 import type { OrganizerDTO } from "@/model/DTO.ts";
 
-// ─── Main component ────────────────────────────────────────────────────────────
-
 export function CRUDOrganizers() {
   const qc = useQueryClient();
   const navigate = useNavigate();
@@ -58,7 +56,7 @@ export function CRUDOrganizers() {
   });
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
+    <div className="page-content max-w-3xl mx-auto space-y-6">
       <Button
         variant="ghost"
         className="gap-1.5 -ml-2 text-muted-foreground"
@@ -82,7 +80,6 @@ export function CRUDOrganizers() {
         onReorder={move}
       />
 
-      {/* Add dialog */}
       <Dialog open={showAdd} onOpenChange={setShowAdd}>
         <DialogContent>
           <DialogHeader>
@@ -97,7 +94,6 @@ export function CRUDOrganizers() {
         </DialogContent>
       </Dialog>
 
-      {/* Edit dialog */}
       <Dialog
         open={!!editing}
         onOpenChange={(o) => {
@@ -119,7 +115,6 @@ export function CRUDOrganizers() {
         </DialogContent>
       </Dialog>
 
-      {/* Delete confirm */}
       <Dialog
         open={!!deleting}
         onOpenChange={(o) => {

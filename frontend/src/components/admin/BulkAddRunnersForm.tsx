@@ -50,6 +50,8 @@ export function BulkAddRunnersForm({
       !pendingUuids.has(r.uuid),
   );
 
+  const showSuggestions = !selected && suggestions.length > 0;
+
   const handleAddToQueue = () => {
     if (!selected || (!time && !hideTime)) return;
     setQueue((prev) => [
@@ -84,7 +86,7 @@ export function BulkAddRunnersForm({
             setSelected(null);
           }}
         />
-        {!selected && suggestions.length > 0 && (
+        {showSuggestions && (
           <div className="border rounded-md divide-y max-h-36 overflow-y-auto">
             {suggestions.map((r) => (
               <button
@@ -140,36 +142,34 @@ export function BulkAddRunnersForm({
       {queue.length > 0 && (
         <>
           <Separator />
-          <div className="space-y-1">
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              Klar til lagring ({queue.length})
-            </p>
-            <div className="border rounded-md divide-y max-h-44 overflow-y-auto">
-              {queue.map((q, i) => (
-                <div
-                  key={q.runner.uuid}
-                  className="flex items-center justify-between px-3 py-1.5 text-sm"
-                >
-                  <span className="font-medium">{q.runner.name}</span>
-                  <div className="flex items-center gap-3">
-                    <span className="tabular-nums font-mono text-muted-foreground">
-                      {q.hideTime
-                        ? "Deltatt"
-                        : formatSecondsToTime(q.resultTime)}
-                    </span>
-                    <button
-                      type="button"
-                      className="text-destructive hover:text-destructive/80"
-                      onClick={() =>
-                        setQueue((prev) => prev.filter((_, j) => j !== i))
-                      }
-                    >
-                      <XIcon className="size-3.5" />
-                    </button>
-                  </div>
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            Klar til lagring ({queue.length})
+          </p>
+          <div className="border rounded-md divide-y max-h-44 overflow-y-auto">
+            {queue.map((q) => (
+              <div
+                key={q.runner.uuid}
+                className="flex items-center justify-between px-3 py-1.5 text-sm"
+              >
+                <span className="font-medium">{q.runner.name}</span>
+                <div className="flex items-center gap-3">
+                  <span className="tabular-nums font-mono text-muted-foreground">
+                    {q.hideTime ? "Deltatt" : formatSecondsToTime(q.resultTime)}
+                  </span>
+                  <button
+                    type="button"
+                    className="text-destructive hover:text-destructive/80"
+                    onClick={() =>
+                      setQueue((prev) =>
+                        prev.filter((r) => r.runner.uuid !== q.runner.uuid),
+                      )
+                    }
+                  >
+                    <XIcon className="size-3.5" />
+                  </button>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </>
       )}

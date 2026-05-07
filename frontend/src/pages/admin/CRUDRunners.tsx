@@ -15,8 +15,6 @@ import {
 } from "@/components/ui/dialog.tsx";
 import type { RunnerDTO } from "@/model/DTO.ts";
 
-// ─── Main component ────────────────────────────────────────────────────────────
-
 export function CRUDRunners() {
   const qc = useQueryClient();
   const navigate = useNavigate();
@@ -58,7 +56,7 @@ export function CRUDRunners() {
   });
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
+    <div className="page-content max-w-3xl mx-auto space-y-6">
       <Button
         variant="ghost"
         className="gap-1.5 -ml-2 text-muted-foreground"
@@ -83,7 +81,6 @@ export function CRUDRunners() {
         onDelete={setDeleting}
       />
 
-      {/* Add dialog */}
       <Dialog open={showAdd} onOpenChange={setShowAdd}>
         <DialogContent>
           <DialogHeader>
@@ -98,7 +95,6 @@ export function CRUDRunners() {
         </DialogContent>
       </Dialog>
 
-      {/* Edit dialog */}
       <Dialog
         open={!!editing}
         onOpenChange={(o) => {
@@ -120,7 +116,6 @@ export function CRUDRunners() {
         </DialogContent>
       </Dialog>
 
-      {/* Delete confirm */}
       <Dialog
         open={!!deleting}
         onOpenChange={(o) => {

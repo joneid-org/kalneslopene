@@ -19,6 +19,18 @@ export type FinishSlot = {
 
 type Phase = "setup" | "racing" | "review";
 
+const phases: Phase[] = ["setup", "racing", "review"];
+
+function stepBubbleClass(p: Phase, current: Phase) {
+  const done =
+    (p === "setup" && (current === "racing" || current === "review")) ||
+    (p === "racing" && current === "review");
+  const active = p === current;
+  if (active) return "bg-primary text-primary-foreground border-primary";
+  if (done) return "bg-primary/20 text-primary border-primary/30";
+  return "bg-muted text-muted-foreground border-border";
+}
+
 export function LiveTiming() {
   const navigate = useNavigate();
   const qc = useQueryClient();
@@ -27,7 +39,6 @@ export function LiveTiming() {
 
   const allRaces = races ?? [];
 
-  // Most recent past race (last run)
   const lastRace =
     [...allRaces]
       .filter(isPast)
@@ -37,7 +48,6 @@ export function LiveTiming() {
         ),
       )[0] ?? null;
 
-  // Next upcoming race (closest in the future)
   const nextRace =
     [...allRaces]
       .filter((r) => !isPast(r))
@@ -85,7 +95,7 @@ export function LiveTiming() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
+    <div className="page-content max-w-2xl mx-auto space-y-6">
       <Button
         variant="ghost"
         className="gap-1.5 -ml-2 text-muted-foreground"
@@ -97,44 +107,28 @@ export function LiveTiming() {
         {phase === "setup" ? "Tilbake" : "Til forberedelse"}
       </Button>
 
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Live tidtaking</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          {stepLabels[phase]}
-        </p>
-      </div>
+      <h1 className="text-2xl font-bold tracking-tight">Live tidtaking</h1>
+      <p className="text-sm text-muted-foreground">{stepLabels[phase]}</p>
 
-      {/* Step indicator */}
       <div className="flex items-center gap-2 text-sm">
-        {(["setup", "racing", "review"] as Phase[]).map((p, i) => {
-          const done =
-            (p === "setup" && (phase === "racing" || phase === "review")) ||
-            (p === "racing" && phase === "review");
-          const active = p === phase;
-          return (
-            <span key={p} className="flex items-center gap-2">
-              <span
-                className={`flex items-center justify-center rounded-full size-6 text-xs font-semibold border ${
-                  active
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : done
-                      ? "bg-primary/20 text-primary border-primary/30"
-                      : "bg-muted text-muted-foreground border-border"
-                }`}
-              >
-                {i + 1}
-              </span>
-              <span
-                className={active ? "font-medium" : "text-muted-foreground"}
-              >
-                {stepLabels[p]}
-              </span>
-              {i < 2 && (
-                <span className="text-muted-foreground/40 mx-1">›</span>
-              )}
+        {phases.map((p, i) => (
+          <span key={p} className="flex items-center gap-2">
+            <span
+              className={`flex items-center justify-center rounded-full size-6 text-xs font-semibold border ${stepBubbleClass(
+                p,
+                phase,
+              )}`}
+            >
+              {i + 1}
             </span>
-          );
-        })}
+            <span
+              className={p === phase ? "font-medium" : "text-muted-foreground"}
+            >
+              {stepLabels[p]}
+            </span>
+            {i < 2 && <span className="text-muted-foreground/40 mx-1">›</span>}
+          </span>
+        ))}
       </div>
 
       {phase === "setup" && (

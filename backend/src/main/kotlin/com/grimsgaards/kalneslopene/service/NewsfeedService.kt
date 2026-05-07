@@ -3,6 +3,7 @@ package com.grimsgaards.kalneslopene.service
 import com.grimsgaards.kalneslopene.model.dto.NewsfeedDTO
 import com.grimsgaards.kalneslopene.model.dto.NewsfeedSettingsDTO
 import com.grimsgaards.kalneslopene.model.entities.NewsfeedEntity
+import com.grimsgaards.kalneslopene.model.input.NewsfeedInput
 import com.grimsgaards.kalneslopene.repository.NewsfeedRepository
 import com.grimsgaards.kalneslopene.repository.NewsfeedSettingsRepository
 import org.springframework.scheduling.annotation.Scheduled
@@ -37,7 +38,7 @@ class NewsfeedService(
         return newsfeedRepository.findById(uuid).get().toDto()
     }
 
-    fun createNewsfeed(newsfeed: NewsfeedDTO): NewsfeedDTO {
+    fun createNewsfeed(newsfeed: NewsfeedInput): NewsfeedDTO {
         return newsfeedRepository.save(
             NewsfeedEntity(
                 tags = newsfeed.tags,
@@ -50,9 +51,10 @@ class NewsfeedService(
         ).toDto()
     }
 
-    fun updateNewsfeed(updatedNewsfeed: NewsfeedDTO, uuid: UUID): NewsfeedDTO {
-        val existingNews = newsfeedRepository.findById(uuid)
-            .orElseThrow { NoSuchElementException("Newsfeed with uuid $uuid not found") }
+    fun updateNewsfeed(updatedNewsfeed: NewsfeedInput, uuid: UUID? = null): NewsfeedDTO {
+        val resolvedUuid = updatedNewsfeed.uuid ?: uuid ?: throw IllegalArgumentException("UUID must be provided")
+        val existingNews = newsfeedRepository.findById(resolvedUuid)
+            .orElseThrow { NoSuchElementException("Newsfeed with uuid $resolvedUuid not found") }
 
         existingNews.apply {
             tags = updatedNewsfeed.tags

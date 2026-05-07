@@ -3,6 +3,8 @@ package com.grimsgaards.kalneslopene.controller
 import com.grimsgaards.kalneslopene.model.dto.NewsfeedDTO
 import com.grimsgaards.kalneslopene.model.dto.NewsfeedSettingsDTO
 import com.grimsgaards.kalneslopene.model.dto.NewsfeedTagDTO
+import com.grimsgaards.kalneslopene.model.input.NewsfeedInput
+import com.grimsgaards.kalneslopene.model.input.NewsfeedTagInput
 import com.grimsgaards.kalneslopene.service.NewsfeedService
 import com.grimsgaards.kalneslopene.service.NewsfeedTagService
 import org.springframework.web.bind.annotation.*
@@ -22,11 +24,11 @@ class NewsfeedController(
     fun getNewsFeed(@PathVariable uuid: UUID): NewsfeedDTO = newsfeedService.findByUuid(uuid)
 
     @PatchMapping("/{uuid}")
-    fun updateNewsFeed(@PathVariable uuid: UUID, @RequestBody newsfeed: NewsfeedDTO): NewsfeedDTO =
+    fun updateNewsFeed(@PathVariable uuid: UUID, @RequestBody newsfeed: NewsfeedInput): NewsfeedDTO =
         newsfeedService.updateNewsfeed(newsfeed, uuid)
 
     @PostMapping("/createNewsfeed")
-    fun createNewsFeed(@RequestBody newsfeed: NewsfeedDTO): NewsfeedDTO =
+    fun createNewsFeed(@RequestBody newsfeed: NewsfeedInput): NewsfeedDTO =
         newsfeedService.createNewsfeed(newsfeed)
 
     @DeleteMapping("/{uuid}")
@@ -47,11 +49,11 @@ class NewsfeedController(
     fun getTags(): List<NewsfeedTagDTO> = newsfeedTagService.getAllTags()
 
     @PostMapping("/tags")
-    fun createTag(@RequestBody dto: NewsfeedTagDTO): NewsfeedTagDTO =
+    fun createTag(@RequestBody dto: NewsfeedTagInput): NewsfeedTagDTO =
         newsfeedTagService.createTag(dto)
 
     @PatchMapping("/tags/{uuid}")
-    fun updateTag(@PathVariable uuid: UUID, @RequestBody dto: NewsfeedTagDTO): NewsfeedTagDTO =
+    fun updateTag(@PathVariable uuid: UUID, @RequestBody dto: NewsfeedTagInput): NewsfeedTagDTO =
         newsfeedTagService.updateTag(uuid, dto)
 
     @DeleteMapping("/tags/{uuid}")

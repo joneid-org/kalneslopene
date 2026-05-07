@@ -4,6 +4,7 @@ import com.grimsgaards.kalneslopene.model.dto.RaceDTO
 import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
 import com.grimsgaards.kalneslopene.model.entities.RaceEntity
 import com.grimsgaards.kalneslopene.model.entities.RaceRunnerKey
+import com.grimsgaards.kalneslopene.model.input.RaceInput
 import com.grimsgaards.kalneslopene.repository.RaceRepository
 import com.grimsgaards.kalneslopene.repository.RaceRunnerRepository
 import com.grimsgaards.kalneslopene.repository.RunnerRepository
@@ -28,7 +29,7 @@ class RaceService(
             ?: throw NoSuchElementException("Race with id $uuid not found")
     }
 
-    fun createRaces(races: List<RaceDTO>): List<RaceDTO> {
+    fun createRaces(races: List<RaceInput>): List<RaceDTO> {
         return raceRepository.saveAll(races.map {
             RaceEntity(
                 raceDate = it.raceDate,
@@ -37,10 +38,10 @@ class RaceService(
         }).map { it.toDto() }
     }
 
-    fun updateRace(updatedRace: RaceDTO, uuid: UUID): RaceDTO {
-
-        val existingRace = raceRepository.findById(uuid)
-            .orElseThrow { NoSuchElementException("Race with uuid $uuid not found") }
+    fun updateRace(updatedRace: RaceInput, uuid: UUID? = null): RaceDTO {
+        val resolvedUuid = updatedRace.uuid ?: uuid ?: throw IllegalArgumentException("UUID must be provided")
+        val existingRace = raceRepository.findById(resolvedUuid)
+            .orElseThrow { NoSuchElementException("Race with uuid $resolvedUuid not found") }
 
         existingRace.apply {
             raceDate = updatedRace.raceDate

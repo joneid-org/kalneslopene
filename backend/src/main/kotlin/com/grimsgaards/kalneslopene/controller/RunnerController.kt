@@ -2,6 +2,7 @@ package com.grimsgaards.kalneslopene.controller
 
 import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
 import com.grimsgaards.kalneslopene.model.dto.RunnerDTO
+import com.grimsgaards.kalneslopene.model.input.RunnerInput
 import com.grimsgaards.kalneslopene.service.RunnerService
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -27,12 +28,12 @@ class RunnerController(
     }
 
     @PatchMapping("/{uuid}")
-    fun updateRunner(@RequestBody runner: RunnerDTO, @PathVariable uuid: UUID): RunnerDTO {
+    fun updateRunner(@RequestBody runner: RunnerInput, @PathVariable uuid: UUID): RunnerDTO {
         return runnerService.updateRunner(runner, uuid)
     }
 
     @PostMapping
-    fun createMultipleRunners(@RequestBody runners: List<RunnerDTO>): List<RunnerDTO> {
+    fun createMultipleRunners(@RequestBody runners: List<RunnerInput>): List<RunnerDTO> {
         return runnerService.createMultipleRunners(runners)
     }
 

@@ -1,6 +1,7 @@
 package com.grimsgaards.kalneslopene.controller
 
 import com.grimsgaards.kalneslopene.model.dto.OrganizerDTO
+import com.grimsgaards.kalneslopene.model.input.OrganizerInput
 import com.grimsgaards.kalneslopene.service.OrganizerService
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -21,12 +22,12 @@ class OrganizerController(
     }
 
     @PatchMapping("/{uuid}")
-    fun updateOrganizer(@PathVariable uuid: UUID, @RequestBody organizer: OrganizerDTO): OrganizerDTO {
+    fun updateOrganizer(@PathVariable uuid: UUID, @RequestBody organizer: OrganizerInput): OrganizerDTO {
         return organizerService.updateOrganizer(organizer, uuid)
     }
 
     @PostMapping("/createOrganizer")
-    fun createOrganizer(@RequestBody organizer: OrganizerDTO): OrganizerDTO {
+    fun createOrganizer(@RequestBody organizer: OrganizerInput): OrganizerDTO {
         return organizerService.createOrganizer(organizer)
     }
 

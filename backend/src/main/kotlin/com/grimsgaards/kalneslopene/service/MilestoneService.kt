@@ -2,6 +2,7 @@ package com.grimsgaards.kalneslopene.service
 
 import com.grimsgaards.kalneslopene.model.dto.MilestoneDTO
 import com.grimsgaards.kalneslopene.model.entities.MilestoneEntity
+import com.grimsgaards.kalneslopene.model.input.MilestoneInput
 import com.grimsgaards.kalneslopene.repository.MilestoneRepository
 import org.springframework.stereotype.Service
 import java.util.*
@@ -20,7 +21,7 @@ class MilestoneService(
         return milestoneRepository.findById(uuid).get().toDto()
     }
 
-    fun createMilestone(milestone: MilestoneDTO): MilestoneDTO {
+    fun createMilestone(milestone: MilestoneInput): MilestoneDTO {
         return milestoneRepository.save(
             MilestoneEntity(
                 year = milestone.year,
@@ -33,9 +34,10 @@ class MilestoneService(
         ).toDto()
     }
 
-    fun updateMilestone(updatedMilestone: MilestoneDTO, uuid: UUID): MilestoneDTO {
-        val existing = milestoneRepository.findById(uuid)
-            .orElseThrow { NoSuchElementException("Milestone with uuid $uuid not found") }
+    fun updateMilestone(updatedMilestone: MilestoneInput, uuid: UUID? = null): MilestoneDTO {
+        val resolvedUuid = updatedMilestone.uuid ?: uuid ?: throw IllegalArgumentException("UUID must be provided")
+        val existing = milestoneRepository.findById(resolvedUuid)
+            .orElseThrow { NoSuchElementException("Milestone with uuid $resolvedUuid not found") }
 
         existing.apply {
             year = updatedMilestone.year

@@ -2,6 +2,7 @@ package com.grimsgaards.kalneslopene.service
 
 import com.grimsgaards.kalneslopene.model.dto.OrganizerDTO
 import com.grimsgaards.kalneslopene.model.entities.OrganizerEntity
+import com.grimsgaards.kalneslopene.model.input.OrganizerInput
 import com.grimsgaards.kalneslopene.repository.OrganizerRepository
 import org.springframework.stereotype.Service
 import java.util.*
@@ -18,7 +19,7 @@ class OrganizerService(
         return organizerRepository.findById(uuid).get().toDto()
     }
 
-    fun createOrganizer(organizer: OrganizerDTO): OrganizerDTO {
+    fun createOrganizer(organizer: OrganizerInput): OrganizerDTO {
         return organizerRepository.save(
             OrganizerEntity(
                 name = organizer.name,
@@ -32,9 +33,10 @@ class OrganizerService(
         ).toDto()
     }
 
-    fun updateOrganizer(updatedOrganizer: OrganizerDTO, uuid: UUID): OrganizerDTO {
-        val existingOrganizer = organizerRepository.findById(uuid)
-            .orElseThrow { NoSuchElementException("Organizer with uuid $uuid not found") }
+    fun updateOrganizer(updatedOrganizer: OrganizerInput, uuid: UUID? = null): OrganizerDTO {
+        val resolvedUuid = updatedOrganizer.uuid ?: uuid ?: throw IllegalArgumentException("UUID must be provided")
+        val existingOrganizer = organizerRepository.findById(resolvedUuid)
+            .orElseThrow { NoSuchElementException("Organizer with uuid $resolvedUuid not found") }
 
         existingOrganizer.apply {
             name = updatedOrganizer.name

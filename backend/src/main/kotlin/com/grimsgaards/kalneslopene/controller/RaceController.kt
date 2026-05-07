@@ -2,6 +2,7 @@ package com.grimsgaards.kalneslopene.controller
 
 import com.grimsgaards.kalneslopene.model.dto.RaceDTO
 import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
+import com.grimsgaards.kalneslopene.model.input.RaceInput
 import com.grimsgaards.kalneslopene.service.RaceService
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -19,13 +20,13 @@ class RaceController(
     fun getRaceById(@PathVariable uuid: UUID): RaceDTO = raceService.findByUuid(uuid)
 
     @PatchMapping("/{uuid}")
-    fun updateRace(@RequestBody race: RaceDTO, @PathVariable uuid: UUID): RaceDTO = raceService.updateRace(race, uuid)
+    fun updateRace(@RequestBody race: RaceInput, @PathVariable uuid: UUID): RaceDTO = raceService.updateRace(race, uuid)
 
     @DeleteMapping("/{uuid}")
     fun deleteRaceById(@PathVariable uuid: UUID) = raceService.deleteRaceById(uuid)
 
     @PostMapping("/createRaces")
-    fun createRaces(@RequestBody races: List<RaceDTO>): List<RaceDTO> = raceService.createRaces(races)
+    fun createRaces(@RequestBody races: List<RaceInput>): List<RaceDTO> = raceService.createRaces(races)
 
     @GetMapping("/{uuid}/runners")
     fun getRunnersInRace(@PathVariable uuid: UUID): List<RaceRunnerDTO> = raceService.findAllRunnersInRace(uuid)

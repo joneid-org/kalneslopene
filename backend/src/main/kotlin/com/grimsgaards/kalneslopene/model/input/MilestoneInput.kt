@@ -1,9 +1,9 @@
-package com.grimsgaards.kalneslopene.model.dto
+package com.grimsgaards.kalneslopene.model.input
 
-import java.util.*
+import java.util.UUID
 
-data class MilestoneDTO(
-    val uuid: UUID,
+data class MilestoneInput(
+    val uuid: UUID? = null,
     val year: String,
     val icon: String,
     val title: String,
@@ -11,3 +11,4 @@ data class MilestoneDTO(
     val extra: String? = null,
     val details: List<String>
 )
+

@@ -4,7 +4,7 @@ import java.time.Duration
 import java.util.*
 
 data class RunnerDTO(
-    val uuid: UUID?,
+    val uuid: UUID,
     val name: String,
     val gender: String,
     val pr: Duration? = null

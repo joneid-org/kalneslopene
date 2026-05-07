@@ -3,6 +3,7 @@ package com.grimsgaards.kalneslopene.service
 import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
 import com.grimsgaards.kalneslopene.model.dto.RunnerDTO
 import com.grimsgaards.kalneslopene.model.entities.RunnerEntity
+import com.grimsgaards.kalneslopene.model.input.RunnerInput
 import com.grimsgaards.kalneslopene.repository.RunnerRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -24,7 +25,7 @@ class RunnerService(
         return runnerRepository.findByNameStartsWithIgnoreCase(name).map { it.toDto() }
     }
 
-    fun createMultipleRunners(runners: List<RunnerDTO>): List<RunnerDTO> {
+    fun createMultipleRunners(runners: List<RunnerInput>): List<RunnerDTO> {
         return runnerRepository.saveAll(runners.map {
             RunnerEntity(
                 name = it.name,
@@ -34,9 +35,10 @@ class RunnerService(
         }).map { it.toDto() }
     }
 
-    fun updateRunner(updatedRunner: RunnerDTO, uuid: UUID): RunnerDTO {
-        val existingRunner = runnerRepository.findById(uuid)
-        .orElseThrow { NoSuchElementException("Runner with uuid $uuid not found") }
+    fun updateRunner(updatedRunner: RunnerInput, uuid: UUID? = null): RunnerDTO {
+        val resolvedUuid = updatedRunner.uuid ?: uuid ?: throw IllegalArgumentException("UUID must be provided")
+        val existingRunner = runnerRepository.findById(resolvedUuid)
+        .orElseThrow { NoSuchElementException("Runner with uuid $resolvedUuid not found") }
 
         existingRunner.apply {
             name = updatedRunner.name

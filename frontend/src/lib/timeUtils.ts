@@ -60,9 +60,7 @@ export function toDateString(raceDate: unknown): string {
 
 export function formatDate(raceDate: unknown): string | undefined {
   if (!raceDate) return undefined;
-  const { day, month } = parseDateParts(raceDate);
-  const monthName = NORWEGIAN_MONTH_NAMES[(month ?? 1) - 1];
-  return `${String(day).padStart(2, "0")}. ${monthName}`;
+  return formatDDMonth(raceDate);
 }
 
 export function formatDateFull(raceDate: unknown): string | undefined {

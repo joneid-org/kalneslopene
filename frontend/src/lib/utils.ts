@@ -3,6 +3,10 @@ import { twMerge } from "tailwind-merge";
 import type { Photo } from "@/data/mockdata.ts";
 import { DISTANCE_KM } from "@/lib/constants.ts";
 import {
+  getFastestRunner,
+  getBestTimeThisYear,
+} from "@/lib/statisticsUtils.ts";
+import {
   extractYear,
   formatSecondsToTime,
   mapResultTimeToNumber,
@@ -95,32 +99,27 @@ export function getNextRace(races: RaceDTO[], uuid?: string): RaceDTO | null {
 export function findFastetFemaleInRace(
   results: RaceRunnerDTO[],
 ): RaceRunnerDTO | undefined {
-  return results
-    .filter((r) => r.runner.gender === "Kvinne" && r.resultTime)
-    .sort(
-      (a, b) =>
-        mapResultTimeToNumber(a.resultTime ?? "") -
-        mapResultTimeToNumber(b.resultTime ?? ""),
-    )[0];
+  return findFastestInRace(results, "Kvinne");
 }
 
 export function findFastetMaleInRace(
   results: RaceRunnerDTO[],
 ): RaceRunnerDTO | undefined {
-  return results
-    .filter((r) => r.runner.gender === "Mann" && r.resultTime)
-    .sort(
-      (a, b) =>
-        mapResultTimeToNumber(a.resultTime ?? "") -
-        mapResultTimeToNumber(b.resultTime ?? ""),
-    )[0];
+  return findFastestInRace(results, "Mann");
 }
 
 export function findFastestRunnerInRace(
   results: RaceRunnerDTO[],
 ): RaceRunnerDTO | undefined {
+  return findFastestInRace(results);
+}
+
+export function findFastestInRace(
+  results: RaceRunnerDTO[],
+  gender?: string,
+): RaceRunnerDTO | undefined {
   return results
-    .filter((r) => r.resultTime)
+    .filter((r) => r.resultTime && (!gender || r.runner.gender === gender))
     .sort(
       (a, b) =>
         mapResultTimeToNumber(a.resultTime ?? "") -
@@ -181,13 +180,7 @@ export function buildTableRows(
 }
 
 export function getBestRaceFromRunner(raceRunner: RaceRunnerDTO[]): string {
-  const best = raceRunner
-    .filter((rr) => !rr.hideTime && rr.resultTime)
-    .sort(
-      (a, b) =>
-        mapResultTimeToNumber(a.resultTime) -
-        mapResultTimeToNumber(b.resultTime),
-    )[0];
+  const best = getFastestRunner(raceRunner);
   return best
     ? formatSecondsToTime(mapResultTimeToNumber(best.resultTime))
     : "-";
@@ -197,19 +190,7 @@ export function getBestRaceThisYearFromRunner(
   raceRunner: RaceRunnerDTO[],
   year: number,
 ): string {
-  const best = raceRunner
-    .filter(
-      (rr) =>
-        !rr.hideTime && rr.resultTime && extractYear(rr.race.raceDate) === year,
-    )
-    .sort(
-      (a, b) =>
-        mapResultTimeToNumber(a.resultTime) -
-        mapResultTimeToNumber(b.resultTime),
-    )[0];
-  return best
-    ? formatSecondsToTime(mapResultTimeToNumber(best.resultTime))
-    : "-";
+  return getBestTimeThisYear(raceRunner, year);
 }
 
 export function isPast(race: RaceDTO): boolean {

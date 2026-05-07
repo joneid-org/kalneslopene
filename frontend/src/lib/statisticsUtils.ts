@@ -2,6 +2,7 @@ import {
   extractYear,
   formatSecondsToTime,
   mapResultTimeToNumber,
+  raceDateToSortKey,
 } from "@/lib/timeUtils.ts";
 import type { RaceDTO, RaceRunnerDTO } from "@/model/DTO.ts";
 
@@ -41,8 +42,6 @@ export function getPersonalRecords(
     .filter((r): r is PersonalRecord => r !== null && r.prSeconds > 0)
     .sort((a, b) => a.prSeconds - b.prSeconds);
 }
-
-// ...existing code...
 
 // Totalt antall løp
 export function getNumberOfRaces(races: RaceDTO[]): number {
@@ -136,17 +135,19 @@ export function getAverageParticipants(raceRunners: RaceRunnerDTO[]): number {
 
 // Antall løp gjennomført dette året (frem til og med i dag)
 export function getRacesHeldThisYear(races: RaceDTO[], year: number): number {
-  const now = new Date();
+  const now = new Date().toISOString();
   return races.filter(
-    (r) => extractYear(r.raceDate) === year && new Date(r.raceDate) <= now,
+    (r) =>
+      extractYear(r.raceDate) === year && raceDateToSortKey(r.raceDate) <= now,
   ).length;
 }
 
 // Antall gjenstående løp dette året (etter i dag)
 export function getRacesLeftThisYear(races: RaceDTO[], year: number): number {
-  const now = new Date();
+  const now = new Date().toISOString();
   return races.filter(
-    (r) => extractYear(r.raceDate) === year && new Date(r.raceDate) > now,
+    (r) =>
+      extractYear(r.raceDate) === year && raceDateToSortKey(r.raceDate) > now,
   ).length;
 }
 

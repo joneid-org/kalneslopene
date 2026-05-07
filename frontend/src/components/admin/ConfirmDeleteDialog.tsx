@@ -1,5 +1,5 @@
-import type { ReactNode } from "react";
 import { Trash2Icon } from "lucide-react";
+import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import {
   DialogContent,

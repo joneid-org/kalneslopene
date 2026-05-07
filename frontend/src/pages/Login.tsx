@@ -1,6 +1,7 @@
+import { LogInIcon, UserPlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { LogInIcon, UserPlusIcon } from "lucide-react";
+import { QUERIES } from "@/api/queries.ts";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Card,
@@ -10,7 +11,6 @@ import {
 } from "@/components/ui/card.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
-import { QUERIES } from "@/api/queries.ts";
 import { useAuth } from "@/context/AuthContext.tsx";
 
 export function Login() {

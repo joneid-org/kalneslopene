@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { Mail, MessageCircle, Phone } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { Mail, MessageCircle, Phone } from "lucide-react";
 import type { ReactNode } from "react";
 import { QUERIES } from "@/api/queries.ts";
 import { Separator } from "@/components/ui/separator.tsx";

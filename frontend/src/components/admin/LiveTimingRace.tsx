@@ -8,7 +8,6 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
-import type { FinishSlot } from "@/pages/admin/LiveTiming.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -19,6 +18,7 @@ import {
 } from "@/components/ui/drawer.tsx";
 import { formatSecondsToTime } from "@/lib/timeUtils.ts";
 import type { RunnerDTO } from "@/model/DTO.ts";
+import type { FinishSlot } from "@/pages/admin/LiveTiming.tsx";
 
 type TimingState = "idle" | "running" | "stopped";
 

@@ -3,8 +3,8 @@ import { twMerge } from "tailwind-merge";
 import type { Photo } from "@/data/mockdata.ts";
 import { DISTANCE_KM } from "@/lib/constants.ts";
 import {
-  getFastestRunner,
   getBestTimeThisYear,
+  getFastestRunner,
 } from "@/lib/statisticsUtils.ts";
 import {
   extractYear,

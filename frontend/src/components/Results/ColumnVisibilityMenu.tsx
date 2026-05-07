@@ -1,4 +1,4 @@
-import type { Table } from "@tanstack/react-table";
+import type { Table, VisibilityState } from "@tanstack/react-table";
 import { SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -10,7 +10,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu.tsx";
 import { COLUMN_LABELS, DESKTOP_ONLY_COLUMNS } from "@/lib/constants.ts";
-import type { VisibilityState } from "@tanstack/react-table";
 
 type Props<T> = {
   table: Table<T>;

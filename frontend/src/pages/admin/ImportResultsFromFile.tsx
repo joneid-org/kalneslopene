@@ -3,14 +3,14 @@ import { ChevronLeftIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
-import { CsvReviewTable } from "@/components/admin/CsvReviewTable.tsx";
 import { CsvRaceSelector } from "@/components/admin/CsvRaceSelector.tsx";
+import type { CsvRow } from "@/components/admin/CsvReviewTable.tsx";
+import { CsvReviewTable } from "@/components/admin/CsvReviewTable.tsx";
 import { CsvUploadStep } from "@/components/admin/CsvUploadStep.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { secondsToDuration } from "@/lib/timeUtils.ts";
 import { isPast } from "@/lib/utils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
-import type { CsvRow } from "@/components/admin/CsvReviewTable.tsx";
 
 type Step = "race" | "upload" | "review";
 

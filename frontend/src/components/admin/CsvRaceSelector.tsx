@@ -2,8 +2,8 @@ import { CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
 import { Card, CardContent } from "@/components/ui/card.tsx";
 import {
-  formatDDMonth,
   extractYear,
+  formatDDMonth,
   raceDateToSortKey,
 } from "@/lib/timeUtils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";

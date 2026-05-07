@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import {
   CheckIcon,
   PencilIcon,
@@ -6,7 +7,6 @@ import {
   XIcon,
 } from "lucide-react";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { QUERIES } from "@/api/queries.ts";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Button } from "@/components/ui/button.tsx";

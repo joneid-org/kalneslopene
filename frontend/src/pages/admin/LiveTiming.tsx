@@ -7,7 +7,7 @@ import { LiveTimingRace } from "@/components/admin/LiveTimingRace.tsx";
 import { LiveTimingReview } from "@/components/admin/LiveTimingReview.tsx";
 import { LiveTimingSetup } from "@/components/admin/LiveTimingSetup.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { secondsToDuration, raceDateToSortKey } from "@/lib/timeUtils.ts";
+import { raceDateToSortKey, secondsToDuration } from "@/lib/timeUtils.ts";
 import { isPast } from "@/lib/utils.ts";
 import type { RaceDTO, RunnerDTO } from "@/model/DTO.ts";
 

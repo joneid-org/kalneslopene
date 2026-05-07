@@ -2,7 +2,7 @@
 variable "hcloud_token" {}
 variable "s3_access_key" {}
 variable "s3_secret_key" {}
-variable "torsdagslopet_domain" {}
+variable "domain" {}
 variable "bucket_name" {}
 
 variable "location" {
@@ -15,5 +15,10 @@ variable "os_type" {
 
 variable "ssh_public_keys" {
   description = "Map of team mebers name -> public ssh key"
+  type = map(string)
+}
+
+variable "environments" {
+  description = "Map of environments -> url"
   type = map(string)
 }

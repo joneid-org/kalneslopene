@@ -1,5 +1,5 @@
 resource "hcloud_zone" "torsdagslopet" {
-  name = var.torsdagslopet_domain
+  name = var.domain
   mode = "primary"
   ttl  = 3600
 }

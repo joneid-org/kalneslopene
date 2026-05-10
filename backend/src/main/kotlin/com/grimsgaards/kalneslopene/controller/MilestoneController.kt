@@ -21,7 +21,7 @@ class MilestoneController(
         return milestoneService.getMilestone(uuid)
     }
 
-    @PostMapping("/createMilestone")
+    @PostMapping()
     fun createMilestone(@RequestBody milestone: MilestoneInput): MilestoneDTO {
         return milestoneService.createMilestone(milestone)
     }

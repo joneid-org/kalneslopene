@@ -1,5 +1,6 @@
 package com.grimsgaards.kalneslopene.service
 
+import com.grimsgaards.kalneslopene.model.dto.Gender
 import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
 import com.grimsgaards.kalneslopene.model.dto.RunnerDTO
 import com.grimsgaards.kalneslopene.model.entities.RunnerEntity
@@ -29,7 +30,7 @@ class RunnerService(
         return runnerRepository.saveAll(runners.map {
             RunnerEntity(
                 name = it.name,
-                gender = it.gender,
+                gender = Gender.valueOf(it.gender.uppercase()),
                 pr = it.pr
             )
         }).map { it.toDto() }
@@ -42,7 +43,7 @@ class RunnerService(
 
         existingRunner.apply {
             name = updatedRunner.name
-            gender = updatedRunner.gender
+            gender = Gender.valueOf(updatedRunner.gender.uppercase())
             pr = updatedRunner.pr
         }
         return runnerRepository.save(existingRunner).toDto()

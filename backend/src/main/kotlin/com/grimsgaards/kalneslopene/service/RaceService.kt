@@ -3,6 +3,7 @@ package com.grimsgaards.kalneslopene.service
 import com.grimsgaards.kalneslopene.model.dto.RaceDTO
 import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
 import com.grimsgaards.kalneslopene.model.entities.RaceEntity
+import com.grimsgaards.kalneslopene.model.entities.RaceRunnerEntity
 import com.grimsgaards.kalneslopene.model.entities.RaceRunnerKey
 import com.grimsgaards.kalneslopene.model.input.RaceInput
 import com.grimsgaards.kalneslopene.repository.RaceRepository
@@ -66,30 +67,20 @@ class RaceService(
         val race = raceRepository.findByIdOrNull(raceUuid)
             ?: throw NoSuchElementException("Race $raceUuid not found")
 
-        val savedEntities = runners.map { dto ->
-            val runner = runnerRepository.findByIdOrNull(requireNotNull(dto.runner.uuid) { "Runner UUID cannot be null" })
+        val runnerUuids = runners.map { it.runner.uuid }
+        val runnerEntities = runnerRepository.findAllById(runnerUuids).associateBy { it.uuid }
+        val newEntities = runners.map { dto ->
+            val runnerEntity = runnerEntities[dto.runner.uuid]
                 ?: throw NoSuchElementException("Runner ${dto.runner.uuid} not found")
-            val key = RaceRunnerKey(runnerUuid = runner.uuid, raceUuid = race.uuid)
-
-            val existing = raceRunnerRepository.findByIdOrNull(key)
-            if (existing != null) {
-                existing.resultTime = dto.resultTime
-                existing.hideTime = dto.hideTime
-                raceRunnerRepository.save(existing)
-            } else {
-                raceRunnerRepository.save(
-                    com.grimsgaards.kalneslopene.model.entities.RaceRunnerEntity(
-                        id = key,
-                        runner = runner,
-                        race = race,
-                        resultTime = dto.resultTime,
-                        hideTime = dto.hideTime
-                    )
-                )
-            }
+            RaceRunnerEntity(
+                id = RaceRunnerKey(runnerUuid = runnerEntity.uuid, raceUuid = raceUuid),
+                runner = runnerEntity,
+                race = race,
+                resultTime = dto.resultTime,
+                hideTime = dto.hideTime
+            )
         }
-        raceRunnerRepository.flush()
-        return savedEntities.map { it.toDto() }
+        return raceRunnerRepository.saveAll(newEntities).map { it.toDto() }
     }
 
 

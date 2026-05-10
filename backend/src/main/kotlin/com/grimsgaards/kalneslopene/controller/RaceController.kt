@@ -25,7 +25,7 @@ class RaceController(
     @DeleteMapping("/{uuid}")
     fun deleteRaceById(@PathVariable uuid: UUID) = raceService.deleteRaceById(uuid)
 
-    @PostMapping("/createRaces")
+    @PostMapping()
     fun createRaces(@RequestBody races: List<RaceInput>): List<RaceDTO> = raceService.createRaces(races)
 
     @GetMapping("/{uuid}/runners")

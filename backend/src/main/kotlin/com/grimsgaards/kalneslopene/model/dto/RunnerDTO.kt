@@ -6,6 +6,11 @@ import java.util.*
 data class RunnerDTO(
     val uuid: UUID,
     val name: String,
-    val gender: String,
+    val gender: Gender,
     val pr: Duration? = null
 )
+
+enum class Gender {
+    MALE,
+    FEMALE,
+}

@@ -11,6 +11,6 @@ data class NewsfeedTagEntity(
 
     var label: String,
     var value: String,
-    var color: String = "bg-black",
+    var color: String,
 )
 

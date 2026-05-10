@@ -7,7 +7,6 @@ import { CRUDOrganizers } from "./pages/admin/CRUDOrganizers.tsx";
 import { CRUDRaces } from "./pages/admin/CRUDRaces.tsx";
 import { CRUDRunners } from "./pages/admin/CRUDRunners.tsx";
 import { ImportResultsFromFile } from "./pages/admin/ImportResultsFromFile.tsx";
-import { LiveTiming } from "./pages/admin/LiveTiming.tsx";
 import { RegisterResults } from "./pages/admin/RegisterResults.tsx";
 import { CourseMap } from "./pages/CourseMap.tsx";
 import { History } from "./pages/History.tsx";
@@ -86,10 +85,6 @@ export const router = createBrowserRouter([
           {
             path: "admin/results/import",
             Component: ImportResultsFromFile,
-          },
-          {
-            path: "admin/live-timing",
-            Component: LiveTiming,
           },
           {
             path: "admin/runners",

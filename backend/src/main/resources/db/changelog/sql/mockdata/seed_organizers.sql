@@ -11,7 +11,7 @@ INSERT INTO organizer (uuid, name, responsibility, initials, phone, email, conta
 (
     'd1000000-0000-0000-0000-000000000002',
     'Magnus Holm',
-    ARRAY['Tidtaking', 'Results'],
+    ARRAY['Tidtaking', 'Resultater'],
     'MH',
     '91234567',
     'magnus@kalneslopene.no',

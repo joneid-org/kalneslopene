@@ -1,0 +1,80 @@
+name: "Deploy"
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment"
+        required: true
+        type: choice
+        options:
+          - dev
+          - test
+          - prod
+      tag:
+        description: "Image tag to deploy (must already be pushed to the registry)"
+        required: true
+        type: string
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      tag:
+        required: true
+        type: string
+
+concurrency:
+  group: deploy-${{ inputs.environment }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    timeout-minutes: 10
+    env:
+      DOKPLOY_URL: ${{ secrets.DOKPLOY_URL }}
+      DOKPLOY_API_KEY: ${{ secrets.DOKPLOY_API_KEY }}
+      COMPOSE_ID: ${{ secrets.DOKPLOY_COMPOSE_ID }}
+      IMAGE_TAG: ${{ inputs.tag }}
+    steps:
+      - name: Set IMAGE_TAG on Dokploy compose
+        run: |
+          set -euo pipefail
+
+          current_env=$(curl -fsS -X POST "$DOKPLOY_URL/api/compose.one" \
+            -H "x-api-key: $DOKPLOY_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d "$(jq -n --arg id "$COMPOSE_ID" '{composeId: $id}')" \
+            | jq -r '.env // ""')
+
+          new_env=$(
+            printf '%s\n' "$current_env" | grep -v '^IMAGE_TAG=' || true
+            printf 'IMAGE_TAG=%s\n' "$IMAGE_TAG"
+          )
+
+          curl -fsS -X POST "$DOKPLOY_URL/api/compose.saveEnvironment" \
+            -H "x-api-key: $DOKPLOY_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d "$(jq -n --arg id "$COMPOSE_ID" --arg env "$new_env" \
+                  '{composeId: $id, env: $env}')"
+
+      - name: Trigger Dokploy redeploy
+        run: |
+          set -euo pipefail
+          curl -fsS -X POST "$DOKPLOY_URL/api/compose.deploy" \
+            -H "x-api-key: $DOKPLOY_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d "$(jq -n --arg id "$COMPOSE_ID" '{composeId: $id}')"
+
+      - name: Summary
+        run: |
+          {
+            echo "### Deploy triggered"
+            echo ""
+            echo "- Environment: \`${{ inputs.environment }}\`"
+            echo "- Tag: \`$IMAGE_TAG\`"
+            echo "- Dokploy compose: \`$COMPOSE_ID\`"
+            echo "- Watch progress in Dokploy: $DOKPLOY_URL"
+          } >> "$GITHUB_STEP_SUMMARY"

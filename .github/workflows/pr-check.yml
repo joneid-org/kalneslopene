@@ -2,15 +2,14 @@ name: "PR Check"
 
 on:
   pull_request:
-    branches-ignore:
-      - "Bump*"
+  workflow_call:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.head.label || github.head_ref || github.ref}}
   cancel-in-progress: true
 
 jobs:
-  build-frontend:
+  check-frontend:
     if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     defaults:
@@ -27,9 +26,9 @@ jobs:
       - name: Biome check
         run: bun run check
       - name: Build
-        run: bun run build
+        run: bun run tsc
 
-  build-backend:
+  check-backend:
     if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     defaults:
@@ -45,4 +44,4 @@ jobs:
           cache-dependency-path: |
             ./backend/*.gradle*
             ./backend/**/gradle-wrapper.properties
-      - run: ./gradlew clean build
+      - run: ./gradlew test

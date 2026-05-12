@@ -37,6 +37,6 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.REGISTRY_HOST }}/torsdagslopet:${{ inputs.tag }}
+          tags: ${{ secrets.REGISTRY_HOST }}/joneid-org/torsdagslopet:${{ inputs.tag }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

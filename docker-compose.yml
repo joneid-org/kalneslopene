@@ -18,7 +18,7 @@ services:
         condition: any
 
   backend:
-    image: ${REGISTRY_HOST}/torsdagslopet:${IMAGE_TAG:-latest}
+    image: ${REGISTRY_HOST}/joneid-org/torsdagslopet:${IMAGE_TAG:-latest}
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-cloud}
       POSTGRES_URL: jdbc:postgresql://db:5432/kalneslopene

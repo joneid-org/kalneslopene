@@ -43,10 +43,9 @@ jobs:
         run: |
           set -euo pipefail
 
-          current_env=$(curl -fsS -X POST "$DOKPLOY_URL/api/compose.one" \
+          current_env=$(curl -fsS -G "$DOKPLOY_URL/api/compose.one" \
             -H "x-api-key: $DOKPLOY_API_KEY" \
-            -H "Content-Type: application/json" \
-            -d "$(jq -n --arg id "$COMPOSE_ID" '{composeId: $id}')" \
+            --data-urlencode "composeId=$COMPOSE_ID" \
             | jq -r '.env // ""')
 
           new_env=$(

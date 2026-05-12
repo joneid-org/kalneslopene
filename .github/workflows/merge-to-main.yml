@@ -1,0 +1,29 @@
+name: "Merge to main"
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: merge-to-main
+  cancel-in-progress: true
+
+jobs:
+  pr-check:
+    uses: ./.github/workflows/pr-check.yml
+
+  build-and-push:
+    needs: pr-check
+    uses: ./.github/workflows/build-and-push.yml
+    with:
+      tag: ${{ github.sha }}
+    secrets: inherit
+
+  deploy:
+    needs: build-and-push
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: dev
+      tag: ${{ github.sha }}
+    secrets: inherit

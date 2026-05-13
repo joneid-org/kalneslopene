@@ -39,3 +39,6 @@ out/
 
 ### Kotlin ###
 .kotlin
+
+### Frontend dist embedded by Dockerfile ###
+src/main/resources/static/

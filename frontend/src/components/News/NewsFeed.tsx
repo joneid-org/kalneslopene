@@ -32,12 +32,11 @@ export default function NewsFeed() {
     <div className="flex flex-col gap-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {visible.map((post: NewsFeedDTO, idx) => (
-          <Link
+          <Card
             key={post.uuid}
-            to={`/nyheter/${post.uuid}`}
-            className="block group"
+            className="overflow-hidden card-hover hover:shadow-2xl h-full flex flex-col gap-0 py-0"
           >
-            <Card className="overflow-hidden card-hover hover:shadow-2xl h-full flex flex-col gap-0 py-0">
+            <Link to={`/nyheter/${post.uuid}`} className="block group">
               <div className="aspect-video overflow-hidden shrink-0">
                 <img
                   src={
@@ -49,38 +48,44 @@ export default function NewsFeed() {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               </div>
-              <CardHeader className="px-2 pt-3 pb-1 gap-1">
-                <div className="flex flex-wrap gap-1 mb-1">
-                  {post.tags.map((tag) => (
-                    <Link
-                      key={tag}
-                      to={`/nyheter/tag/${tag.toLowerCase()}`}
-                      onClick={(e) => e.stopPropagation()}
+            </Link>
+            <CardHeader className="px-2 pt-3 pb-1 gap-1">
+              <div className="flex flex-wrap gap-1 mb-1">
+                {post.tags.map((tag) => (
+                  <Link
+                    key={tag}
+                    to={`/nyheter/tag/${tag.toLowerCase()}`}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <span
+                      className="tag-pill"
+                      style={{ color: tagColor(tag, tags) }}
                     >
-                      <span
-                        className="tag-pill"
-                        style={{ color: tagColor(tag, tags) }}
-                      >
-                        {tag}
-                      </span>
-                    </Link>
-                  ))}
-                </div>
+                      {tag}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+              <Link
+                key={post.uuid}
+                to={`/nyheter/${post.uuid}`}
+                className="block group"
+              >
                 <p className="text-md font-bold transition-colors leading-snug line-clamp-2">
                   {post.header}
                 </p>
                 <p className="text-sm leading-snug line-clamp-2">
                   {post.content}
                 </p>
-              </CardHeader>
-              <CardFooter className="px-2 pb-3 pt-1 mt-auto flex flex-wrap items-center justify-end gap-1">
-                <time className="text-xs lowercase text-muted-foreground">
-                  {" "}
-                  {formatDateFull(post.date)}
-                </time>
-              </CardFooter>
-            </Card>
-          </Link>
+              </Link>
+            </CardHeader>
+            <CardFooter className="px-2 pb-3 pt-1 mt-auto flex flex-wrap items-center justify-end gap-1">
+              <time className="text-xs lowercase text-muted-foreground">
+                {" "}
+                {formatDateFull(post.date)}
+              </time>
+            </CardFooter>
+          </Card>
         ))}
       </div>
 

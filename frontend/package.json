@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "tsc": "tsc",
+    "tsc": "tsc -b",
     "preview": "vite preview",
     "check": "biome check",
     "check:fix": "biome check --write"

@@ -21,9 +21,14 @@ services:
     image: ${REGISTRY_HOST}/joneid-org/torsdagslopet:${IMAGE_TAG:-latest}
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-cloud}
+      SPRING_LIQUIBASE_DROP_FIRST: ${SPRING_LIQUIBASE_DROP_FIRST:-false}
       POSTGRES_URL: jdbc:postgresql://db:5432/kalneslopene
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME}
     networks:
       - internal
       - dokploy-network

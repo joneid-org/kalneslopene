@@ -10,6 +10,7 @@ import {
 import { colorIcon } from "@/components/CourseMap/mapUtils.ts";
 import { PinInfoPanel } from "@/components/CourseMap/PinInfoPanel.tsx";
 import { RoutePhotoGallery } from "@/components/CourseMap/RoutePhotoGallery.tsx";
+import PhotoDialog from "@/components/PhotoDialog.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { blaaRoute } from "@/data/coordinater";
 import {
@@ -19,10 +20,26 @@ import {
   type Pin,
   pins,
   routePhotos,
-} from "@/data/loypekartData.ts";
+} from "@/data/loypekartData.ts"; // Adapt RoutePhoto to the Photo shape PhotoDialog expects
+
+// Adapt RoutePhoto to the Photo shape PhotoDialog expects
+const dialogPhotos = routePhotos.map((rp) => ({
+  url: rp.imageUrl,
+  caption: rp.title,
+  raceId: rp.id,
+}));
 
 export function CourseMap() {
   const [activePin, setActivePin] = useState<Pin | null>(null);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  const activePinPhoto = activePin
+    ? routePhotos.find((rp) => rp.id === `rp-${activePin.id}`)
+    : undefined;
+
+  const activePinDialogIndex = activePinPhoto
+    ? dialogPhotos.findIndex((p) => p.raceId === activePinPhoto.id)
+    : -1;
 
   return (
     <div className="page-content space-y-6">
@@ -47,13 +64,13 @@ export function CourseMap() {
 
       <div className="flex flex-col md:flex-row gap-4">
         <div
-          className="flex-1 rounded-xl overflow-hidden border shadow-sm min-h-105"
+          className="flex-1 rounded-xl overflow-hidden border shadow-sm min-h-80"
           style={{ zIndex: 0 }}
         >
           <MapContainer
             center={MAP_CENTER}
             zoom={MAP_ZOOM}
-            style={{ height: "100%", minHeight: "420px", width: "100%" }}
+            style={{ height: "100%", minHeight: "320px", width: "100%" }}
             scrollWheelZoom={false}
           >
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
@@ -80,14 +97,28 @@ export function CourseMap() {
             ))}
           </MapContainer>
         </div>
-        <div className="md:w-72 shrink-0">
-          <PinInfoPanel pin={activePin} onClose={() => setActivePin(null)} />
+        <div className="md:w-96 shrink-0">
+          <PinInfoPanel
+            pin={activePin}
+            onClose={() => setActivePin(null)}
+            photo={activePinPhoto}
+            onPhotoClick={() =>
+              activePinDialogIndex >= 0 &&
+              setLightboxIndex(activePinDialogIndex)
+            }
+          />
         </div>
       </div>
 
       <Separator />
 
       <RoutePhotoGallery photos={routePhotos} />
+
+      <PhotoDialog
+        photos={dialogPhotos}
+        index={lightboxIndex}
+        onIndexChange={setLightboxIndex}
+      />
     </div>
   );
 }

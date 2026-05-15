@@ -23,20 +23,17 @@ import {
 import type { NewsfeedTagDTO } from "@/model/DTO.ts";
 
 const COLOR_OPTIONS = [
-  { label: "Blå", value: "bg-blue-600" },
-  { label: "Mørkeblå", value: "bg-blue-800" },
-  { label: "Lilla", value: "bg-purple-600" },
-  { label: "Grønn", value: "bg-green-600" },
-  { label: "Orange", value: "bg-orange-500" },
-  { label: "Rød", value: "bg-red-500" },
-  { label: "Rosa", value: "bg-pink-500" },
-  { label: "Gul", value: "bg-yellow-500" },
-  { label: "Svart", value: "bg-black" },
-  { label: "Grå", value: "bg-gray-500" },
+  { label: "Blå", value: "#2563eb" },
+  { label: "Mørkeblå", value: "#1e40af" },
+  { label: "Lilla", value: "#9333ea" },
+  { label: "Grønn", value: "#16a34a" },
+  { label: "Orange", value: "#f97316" },
+  { label: "Rød", value: "#ef4444" },
+  { label: "Rosa", value: "#ec4899" },
+  { label: "Gul", value: "#eab308" },
+  { label: "Svart", value: "#000000" },
+  { label: "Grå", value: "#6b7280" },
 ];
-
-const tagPillClass =
-  "text-white text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full";
 
 function TagForm({
   initial,
@@ -77,7 +74,10 @@ function TagForm({
           <SelectTrigger className="w-full">
             <SelectValue>
               <span className="flex items-center gap-2">
-                <span className={`${color} inline-block size-3 rounded-full`} />
+                <span
+                  className="inline-block size-3 rounded-full"
+                  style={{ backgroundColor: color }}
+                />
                 {COLOR_OPTIONS.find((c) => c.value === color)?.label ?? color}
               </span>
             </SelectValue>
@@ -87,7 +87,8 @@ function TagForm({
               <SelectItem key={opt.value} value={opt.value}>
                 <span className="flex items-center gap-2">
                   <span
-                    className={`${opt.value} inline-block size-3 rounded-full`}
+                    className="inline-block size-3 rounded-full"
+                    style={{ backgroundColor: opt.value }}
                   />
                   {opt.label}
                 </span>
@@ -95,7 +96,7 @@ function TagForm({
             ))}
           </SelectContent>
         </Select>
-        <span className={`${color} ${tagPillClass} inline-block mt-1`}>
+        <span className="tag-pill" style={{ color }}>
           {label || "Forhåndsvisning"}
         </span>
       </div>
@@ -174,7 +175,7 @@ export function NewsfeedTagManager() {
             className="flex items-center justify-between px-4 py-2.5 gap-3"
           >
             <div className="flex items-center gap-2">
-              <span className={`${tag.color} ${tagPillClass}`}>
+              <span className="tag-pill" style={{ color: tag.color }}>
                 {tag.label}
               </span>
               <span className="text-xs text-muted-foreground">

@@ -14,7 +14,7 @@ import { Separator } from "@/components/ui/separator.tsx";
 import {
   findRaceForPost,
   NEWS_IMAGES,
-  tagBg,
+  tagColor,
   useTags,
 } from "@/lib/newsUtils.ts";
 import { formatDateFull } from "@/lib/timeUtils.ts";
@@ -48,7 +48,7 @@ export function NewsArticle() {
   return (
     <div className="w-full px-4 py-6">
       <div
-        className="mx-auto w-fit"
+        className="mx-auto w-full"
         style={{ maxWidth: "var(--page-max-width)" }}
       >
         <Link to="/">
@@ -59,10 +59,15 @@ export function NewsArticle() {
         </Link>
 
         <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-1.5 text-xs">
             {post.tags.map((tag) => (
               <Link key={tag} to={`/nyheter/tag/${tag.toLowerCase()}`}>
-                <span className={`${tagBg(tag, tags)} tag-pill`}>{tag}</span>
+                <span
+                  className="tag-pill"
+                  style={{ color: tagColor(tag, tags) }}
+                >
+                  {tag}
+                </span>
               </Link>
             ))}
           </div>
@@ -81,13 +86,13 @@ export function NewsArticle() {
         </div>
 
         <h2 className="mb-1">{post.header}</h2>
-        <time className="text-xs font-medium block mb-4">
+        <time className="text-xs font-medium block lowercase mb-4">
           {formatDateFull(post.date)}
         </time>
 
         <Separator className="mb-3" />
 
-        <p className="text-sm sm:text-base leading-relaxed whitespace-pre-line mb-6">
+        <p className="text-xs leading-relaxed whitespace-pre-line mb-6">
           {post.content}
         </p>
 
@@ -102,7 +107,7 @@ export function NewsArticle() {
                 <img
                   src={headerImage}
                   alt={post.header}
-                  className="h-auto rounded-lg block cursor-zoom-in hover:opacity-90 transition"
+                  className="w-full h-auto rounded-lg block cursor-zoom-in hover:opacity-90 transition object-contain"
                   style={{ maxWidth: "var(--page-max-width)", width: "auto" }}
                 />
               </button>

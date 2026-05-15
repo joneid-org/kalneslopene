@@ -31,7 +31,7 @@ export default function OrganisersBlock() {
                 <img
                   src={organizer.image}
                   alt={organizer.name}
-                  className="size-14 rounded-full object-cover border-2 border-muted shrink-0"
+                  className="size-14 rounded-md object-cover border-2 border-muted shrink-0"
                 />
               ) : (
                 <div className="size-14 rounded-md bg-[#173d2b]/10 flex items-center justify-center text-sm font-semibold text-[#173d2b] shrink-0">

@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router";
+import { RaceCalendar } from "@/pages/RaceCalendar.tsx";
 import { AuthGuard } from "./components/admin/AuthGuard.tsx";
 import { Layout } from "./Layout.tsx";
 import { Admin } from "./pages/Admin.tsx";
@@ -54,6 +55,10 @@ export const router = createBrowserRouter([
       {
         path: "Løypekart",
         Component: CourseMap,
+      },
+      {
+        path: "Løpskalender",
+        Component: RaceCalendar,
       },
       {
         path: "nyheter/tag/:tag",

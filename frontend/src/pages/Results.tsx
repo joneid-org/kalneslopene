@@ -1,5 +1,5 @@
 import { useQueries, useQuery } from "@tanstack/react-query";
-import { Mars, UsersIcon, Venus } from "lucide-react";
+import { Mars, Star, UsersIcon, Venus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useParams } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
@@ -10,6 +10,10 @@ import ResultsHeader from "@/components/Results/ResultsHeader.tsx";
 import ResultsTable from "@/components/Results/ResultsTable.tsx";
 import StatBox from "@/components/StatBox.tsx";
 import { photos } from "@/data/mockdata.ts";
+import {
+  getNewPersonalBestCount,
+  getNewYearBestCount,
+} from "@/lib/statisticsUtils.ts";
 import { formatDateFull } from "@/lib/timeUtils.ts";
 import {
   buildTableRows,
@@ -63,6 +67,16 @@ export function Results() {
   const femaleCount = raceRunners?.filter(
     (r) => r.runner.gender === "Kvinne",
   ).length;
+  const yearBestCount = getNewYearBestCount(
+    raceRunners ?? [],
+    uuid,
+    allRacesByRunner,
+  );
+  const personalBestCount = getNewPersonalBestCount(
+    raceRunners ?? [],
+    uuid,
+    allRacesByRunner,
+  );
   const racePhotos = useMemo(
     () => getPhotosByRaceId(photos, race?.uuid),
     [race],
@@ -93,6 +107,20 @@ export function Results() {
         />
         <StatBox icon={Mars} value={maleCount} label="Menn" compact />
         <StatBox icon={Venus} value={femaleCount} label="Kvinner" compact />
+        <StatBox icon={Star} value={yearBestCount} label="Årsbeste" compact />
+        <StatBox
+          icon={Star}
+          value={personalBestCount}
+          label="Personlig rekord"
+          compact
+        />
+        {/*TODO: Hvor mange er nye i løpet.*/}
+        <StatBox
+          icon={Star}
+          value={personalBestCount}
+          label="Debutanter"
+          compact
+        />
       </div>
 
       <ResultsTable tableData={tableData} title={title} />

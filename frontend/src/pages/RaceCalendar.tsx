@@ -46,9 +46,7 @@ export function RaceCalendar() {
 
   const currentYear = new Date().getFullYear();
   const [selectedYear, setSelectedYear] = useState<number>(currentYear);
-  const [month, setMonth] = useState<Date>(
-    new Date(currentYear, new Date().getMonth()),
-  );
+  const [month, setMonth] = useState<Date>(new Date());
   const [selectedRace, setSelectedRace] = useState<RaceDTO | null>(null);
 
   const racesForYear = races

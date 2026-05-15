@@ -17,11 +17,6 @@ export function tagColor(tag: string, tags?: NewsfeedTagDTO[]): string {
   );
 }
 
-/** @deprecated use tagColor */
-export function tagBg(tag: string, tags?: NewsfeedTagDTO[]) {
-  return tagColor(tag, tags);
-}
-
 export function useTags(): NewsfeedTagDTO[] {
   const { data } = useQuery(QUERIES.newsfeed.getAllTags);
   return data && data.length > 0 ? data : PREDEFINED_TAGS;

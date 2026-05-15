@@ -13,12 +13,12 @@ export function Slogan() {
         deltakerliste før start. Gratis frukt til alle deltakere etter løpet
         🍎🏃
       </p>
-      <Link to="/Løpskalender">
-        <Button variant={"outline"}>
+      <Button asChild variant={"outline"}>
+        <Link to="/Løpskalender">
           Åpne løpskalender
           <ArrowRight />
-        </Button>
-      </Link>
+        </Link>
+      </Button>
     </div>
   );
 }

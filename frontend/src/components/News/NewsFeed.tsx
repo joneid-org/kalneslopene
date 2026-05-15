@@ -6,7 +6,7 @@ import { Link } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card.tsx";
-import { NEWS_IMAGES, tagText, useTags } from "@/lib/newsUtils.ts";
+import { NEWS_IMAGES, tagColor, useTags } from "@/lib/newsUtils.ts";
 import { formatDateFull } from "@/lib/timeUtils.ts";
 import type { NewsFeedDTO } from "@/model/DTO.ts";
 
@@ -49,31 +49,33 @@ export default function NewsFeed() {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               </div>
-              <CardHeader className="px-2 pt-4 pb-1 flex-1 gap-1">
-                <p className="text-md font-bold text-black transition-colors leading-snug line-clamp-2">
-                  {post.header}
-                </p>
-                <p className="text-sm text-black leading-snug line-clamp-2">
-                  {post.content}
-                </p>
-              </CardHeader>
-              <CardFooter className="px-2 pb-3 pt-1 mb-1 flex flex-wrap items-center justify-between gap-1">
-                <div className="flex flex-wrap gap-1">
+              <CardHeader className="px-2 pt-3 pb-1 gap-1">
+                <div className="flex flex-wrap gap-1 mb-1">
                   {post.tags.map((tag) => (
                     <Link
                       key={tag}
                       to={`/nyheter/tag/${tag.toLowerCase()}`}
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <p
-                        className={`${tagText(tag, tags)} text-xs font-bold uppercase px-0 py-1 hover:opacity-70 transition-opacity cursor-pointer`}
+                      <span
+                        className="tag-pill"
+                        style={{ color: tagColor(tag, tags) }}
                       >
                         {tag}
-                      </p>
+                      </span>
                     </Link>
                   ))}
                 </div>
-                <time className="text-xs text-black">
+                <p className="text-md font-bold transition-colors leading-snug line-clamp-2">
+                  {post.header}
+                </p>
+                <p className="text-sm leading-snug line-clamp-2">
+                  {post.content}
+                </p>
+              </CardHeader>
+              <CardFooter className="px-2 pb-3 pt-1 mt-auto flex flex-wrap items-center justify-end gap-1">
+                <time className="text-xs lowercase text-muted-foreground">
+                  {" "}
                   {formatDateFull(post.date)}
                 </time>
               </CardFooter>

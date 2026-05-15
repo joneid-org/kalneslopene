@@ -5,7 +5,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card.tsx";
-import { tagBg, useTags } from "@/lib/newsUtils.ts";
+import { tagColor, useTags } from "@/lib/newsUtils.ts";
 import { formatDateFull } from "@/lib/timeUtils.ts";
 import type { NewsFeedDTO } from "@/model/DTO.ts";
 
@@ -26,7 +26,10 @@ export function TagNewsFeed({ post, img }: { post: NewsFeedDTO; img: string }) {
                     to={`/nyheter/tag/${tag.toLowerCase()}`}
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <span className={`${tagBg(tag, tags)} tag-pill`}>
+                    <span
+                      className="tag-pill"
+                      style={{ color: tagColor(tag, tags) }}
+                    >
                       {tag}
                     </span>
                   </Link>

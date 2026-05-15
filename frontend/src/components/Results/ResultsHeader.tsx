@@ -28,7 +28,7 @@ export default function ResultsHeader({
           asChild
           size="sm"
           variant="secondary"
-          className="absolute top-3 right-3 md:top-4 md:right-4 bg-black/60 hover:bg-black/80 text-white border-0 backdrop-blur-sm text-xs gap-1.5"
+          className="absolute top-3 right-3 md:top-4 md:right-4 bg-[#173d2b] hover:bg-black/80 text-white border-0 backdrop-blur-sm text-xs gap-1.5"
         >
           <Link to={photosPath}>
             <Images className="size-3.5" />

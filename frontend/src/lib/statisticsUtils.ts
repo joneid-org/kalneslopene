@@ -142,7 +142,54 @@ export function getRacesHeldThisYear(races: RaceDTO[], year: number): number {
   ).length;
 }
 
-// Antall gjenstående løp dette året (etter i dag)
+// Antall lpere som satte personlig rekord i et gitt lp
+export function getNewPersonalBestCount(
+  raceRunners: RaceRunnerDTO[],
+  raceUuid: string,
+  allRacesByRunner: Record<string, RaceRunnerDTO[]>,
+): number {
+  return raceRunners.filter((rr) => {
+    if (rr.hideTime || !rr.resultTime) return false;
+    const currentSeconds = mapResultTimeToNumber(rr.resultTime);
+    if (currentSeconds <= 0) return false;
+    const history = (allRacesByRunner[rr.runner.uuid ?? ""] ?? []).filter(
+      (h) => !h.hideTime && h.resultTime && h.race.uuid !== raceUuid,
+    );
+    if (history.length === 0) return true;
+    const previousBest = Math.min(
+      ...history.map((h) => mapResultTimeToNumber(h.resultTime)),
+    );
+    return currentSeconds < previousBest;
+  }).length;
+}
+
+// Antall lpere som satte rsbeste i et gitt lp
+export function getNewYearBestCount(
+  raceRunners: RaceRunnerDTO[],
+  raceUuid: string,
+  allRacesByRunner: Record<string, RaceRunnerDTO[]>,
+): number {
+  const year = new Date().getFullYear();
+  return raceRunners.filter((rr) => {
+    if (rr.hideTime || !rr.resultTime) return false;
+    const currentSeconds = mapResultTimeToNumber(rr.resultTime);
+    if (currentSeconds <= 0) return false;
+    const history = (allRacesByRunner[rr.runner.uuid ?? ""] ?? []).filter(
+      (h) =>
+        !h.hideTime &&
+        h.resultTime &&
+        h.race.uuid !== raceUuid &&
+        extractYear(h.race.raceDate) === year,
+    );
+    if (history.length === 0) return true;
+    const previousBest = Math.min(
+      ...history.map((h) => mapResultTimeToNumber(h.resultTime)),
+    );
+    return currentSeconds < previousBest;
+  }).length;
+}
+
+// Antall gjenstende lp dette ret (etter i dag)
 export function getRacesLeftThisYear(races: RaceDTO[], year: number): number {
   const now = new Date().toISOString();
   return races.filter(

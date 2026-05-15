@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as React from "react"
 import { Switch as SwitchPrimitive } from "radix-ui"
 

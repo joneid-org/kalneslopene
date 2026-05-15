@@ -20,13 +20,15 @@ import {
   type Pin,
   pins,
   routePhotos,
-} from "@/data/loypekartData.ts"; // Adapt RoutePhoto to the Photo shape PhotoDialog expects
+} from "@/data/loypekartData.ts";
+import type { Photo } from "@/data/mockdata.ts"; // Adapt RoutePhoto to the Photo shape PhotoDialog expects
 
 // Adapt RoutePhoto to the Photo shape PhotoDialog expects
-const dialogPhotos = routePhotos.map((rp) => ({
+const dialogPhotos: Photo[] = routePhotos.map((rp) => ({
   url: rp.imageUrl,
   caption: rp.title,
   raceId: rp.id,
+  id: rp.id,
 }));
 
 export function CourseMap() {

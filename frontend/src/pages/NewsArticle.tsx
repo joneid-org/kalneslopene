@@ -59,7 +59,7 @@ export function NewsArticle() {
         </Link>
 
         <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-1.5 text-xs">
             {post.tags.map((tag) => (
               <Link key={tag} to={`/nyheter/tag/${tag.toLowerCase()}`}>
                 <span
@@ -92,7 +92,7 @@ export function NewsArticle() {
 
         <Separator className="mb-3" />
 
-        <p className="text-sm leading-relaxed whitespace-pre-line mb-6">
+        <p className="text-xs leading-relaxed whitespace-pre-line mb-6">
           {post.content}
         </p>
 

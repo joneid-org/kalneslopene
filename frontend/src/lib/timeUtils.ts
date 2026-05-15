@@ -67,7 +67,7 @@ export function formatDateFull(raceDate: unknown): string | undefined {
   if (!raceDate) return undefined;
   const { day, month, year } = parseDateParts(raceDate);
   const monthName = NORWEGIAN_MONTH_NAMES[(month ?? 1) - 1];
-  return `${String(day).padStart(2, "0")}. ${monthName} ${year}`;
+  return `${String(day).padStart(2)}. ${monthName} ${year}`;
 }
 
 export function formatTimeStamp(raceDate: unknown): string {

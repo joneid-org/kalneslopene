@@ -5,7 +5,6 @@ CREATE TABLE organizer
     responsibility TEXT[],
     initials       VARCHAR(10)  NOT NULL,
     phone          VARCHAR(20),
-    email          VARCHAR(255),
-    contactPerson   BOOLEAN DEFAULT FALSE
+    email          VARCHAR(255)
 );
 

@@ -42,7 +42,7 @@ databaseChangeLog:
             path: db/changelog/sql/migrate/migrate_race_weather_nullable.sql
             relativeToChangelogFile: false
   - changeSet:
-      id: 006-create_milestone_table
+      id: 007-create_milestone_table
       author: kristian
       changes:
         - sqlFile:
@@ -89,4 +89,11 @@ databaseChangeLog:
       changes:
         - sqlFile:
             path: db/changelog/sql/migrate/migrate_runner_add_pr.sql
+            relativeToChangelogFile: false
+  - changeSet:
+      id: 014-migrate_organizer_add_contact_person
+      author: ejoneid
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_organizer_add_contact_person.sql
             relativeToChangelogFile: false

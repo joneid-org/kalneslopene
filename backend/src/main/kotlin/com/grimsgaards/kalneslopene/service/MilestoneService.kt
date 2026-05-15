@@ -12,9 +12,7 @@ class MilestoneService(
     val milestoneRepository: MilestoneRepository
 ) {
     fun getAllMilestones(): List<MilestoneDTO> {
-        return milestoneRepository.findAll()
-            .sortedBy { it.year }
-            .map { it.toDto() }
+        return milestoneRepository.findAllByOrderByYearAsc().map { it.toDto() }
     }
 
     fun getMilestone(uuid: UUID): MilestoneDTO {

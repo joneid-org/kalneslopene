@@ -7,6 +7,7 @@ import {
   getUniqueRunnersByGenderThisYear,
 } from "@/lib/statisticsUtils.ts";
 
+// TODO: Needs rewrite to avoid it sending multiple requests for runners. Instead, create a new endpoint that returns all runners for all
 export default function SeasonStatBoxes() {
   const { data: races } = useQuery(QUERIES.race.getAllRaces);
 

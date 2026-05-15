@@ -28,8 +28,8 @@ class RunnerController(
     }
 
     @PatchMapping("/{uuid}")
-    fun updateRunner(@RequestBody runner: RunnerInput, @PathVariable uuid: UUID): RunnerDTO {
-        return runnerService.updateRunner(runner, uuid)
+    fun updateRunner(@RequestBody input: RunnerInput, @PathVariable uuid: UUID): RunnerDTO {
+        return runnerService.updateRunner(uuid, input)
     }
 
     @PostMapping

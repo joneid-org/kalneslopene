@@ -1,5 +1,6 @@
 package com.grimsgaards.kalneslopene.security
 
+import com.grimsgaards.kalneslopene.model.entities.UserRole
 import com.grimsgaards.kalneslopene.repository.UserRepository
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -26,9 +27,8 @@ class SecurityConfig {
                 auth
                     .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/auth/setup/needed").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/auth/setup").permitAll()
-                    .anyRequest().hasRole("USER")
+                    .anyRequest().hasAuthority(UserRole.ADMIN.toString())
             }
             .httpBasic { }
         return http.build()
@@ -39,9 +39,7 @@ class SecurityConfig {
         return UserDetailsService { username ->
             val user = userRepository.findByUsername(username)
                 ?: throw UsernameNotFoundException("Bruker ikke funnet: $username")
-            val authorities = user.roles
-                .split(",")
-                .map { SimpleGrantedAuthority(it.trim()) }
+            val authorities = user.roles.map { SimpleGrantedAuthority(it.toString()) }
             User.builder()
                 .username(user.username)
                 .password(user.password)

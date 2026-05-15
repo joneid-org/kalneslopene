@@ -3,34 +3,41 @@ package com.grimsgaards.kalneslopene.service
 import com.grimsgaards.kalneslopene.model.dto.NewsfeedDTO
 import com.grimsgaards.kalneslopene.model.dto.NewsfeedSettingsDTO
 import com.grimsgaards.kalneslopene.model.entities.NewsfeedEntity
+import com.grimsgaards.kalneslopene.model.entities.NewsfeedSettingsEntity
 import com.grimsgaards.kalneslopene.model.input.NewsfeedInput
 import com.grimsgaards.kalneslopene.repository.NewsfeedRepository
 import com.grimsgaards.kalneslopene.repository.NewsfeedSettingsRepository
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.time.OffsetDateTime
-import java.util.*
+import java.util.UUID
 
 @Service
 class NewsfeedService(
     val newsfeedRepository: NewsfeedRepository,
     val newsfeedSettingsRepository: NewsfeedSettingsRepository,
 ) {
-    private fun maxArticles(): Int =
-        newsfeedSettingsRepository.findAll().firstOrNull()?.maxArticles ?: 10
+    private var settings = getSettingsEntity()
+
+    private fun getSettingsEntity(): NewsfeedSettingsEntity =
+        newsfeedSettingsRepository.findAll().firstOrNull() ?: newsfeedSettingsRepository.save(
+            NewsfeedSettingsEntity(
+                maxArticles = 10
+            )
+        )
+
+    fun getSettings(): NewsfeedSettingsDTO = NewsfeedSettingsDTO(settings.maxArticles)
 
     fun getSpecifiedNumberOfNewsfeed(): List<NewsfeedDTO> {
-        return newsfeedRepository.findAllSortedAndLimited(maxArticles()).map { it.toDto() }
+        return newsfeedRepository.findAllSortedAndLimited(settings.maxArticles).map { it.toDto() }
     }
 
-    fun getSettings(): NewsfeedSettingsDTO =
-        NewsfeedSettingsDTO(maxArticles())
 
     fun updateSettings(dto: NewsfeedSettingsDTO): NewsfeedSettingsDTO {
-        val existing = newsfeedSettingsRepository.findAll().firstOrNull()
-            ?: com.grimsgaards.kalneslopene.model.entities.NewsfeedSettingsEntity()
+        val existing = getSettingsEntity()
         existing.maxArticles = dto.maxArticles
         newsfeedSettingsRepository.save(existing)
+        settings = existing
         return NewsfeedSettingsDTO(existing.maxArticles)
     }
 
@@ -51,10 +58,9 @@ class NewsfeedService(
         ).toDto()
     }
 
-    fun updateNewsfeed(updatedNewsfeed: NewsfeedInput, uuid: UUID? = null): NewsfeedDTO {
-        val resolvedUuid = updatedNewsfeed.uuid ?: uuid ?: throw IllegalArgumentException("UUID must be provided")
-        val existingNews = newsfeedRepository.findById(resolvedUuid)
-            .orElseThrow { NoSuchElementException("Newsfeed with uuid $resolvedUuid not found") }
+    fun updateNewsfeed(uuid: UUID, updatedNewsfeed: NewsfeedInput): NewsfeedDTO {
+        val existingNews = newsfeedRepository.findById(uuid)
+            .orElseThrow { NoSuchElementException("Newsfeed with uuid ${updatedNewsfeed.uuid} not found") }
 
         existingNews.apply {
             tags = updatedNewsfeed.tags
@@ -70,15 +76,5 @@ class NewsfeedService(
 
     fun deleteNewsfeed(uuid: UUID) {
         newsfeedRepository.deleteById(uuid)
-    }
-
-    /** Runs every day at 03:00 — deletes newsfeeds older than 1 year */
-    @Scheduled(cron = "0 0 3 * * *")
-    fun deleteOldNewsfeeds() {
-        val cutoff = OffsetDateTime.now().minusYears(1)
-        val old = newsfeedRepository.findAll().filter { it.date.isBefore(cutoff) }
-        if (old.isNotEmpty()) {
-            newsfeedRepository.deleteAll(old)
-        }
     }
 }

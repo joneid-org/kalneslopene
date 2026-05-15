@@ -23,7 +23,7 @@ class OrganizerController(
 
     @PatchMapping("/{uuid}")
     fun updateOrganizer(@PathVariable uuid: UUID, @RequestBody organizer: OrganizerInput): OrganizerDTO {
-        return organizerService.updateOrganizer(organizer, uuid)
+        return organizerService.updateOrganizer(uuid, organizer)
     }
 
     @PostMapping("/createOrganizer")

@@ -14,8 +14,7 @@ class S3Controller(
 
     @GetMapping("/presigned-url")
     fun getPresignedUrl(
-        @RequestParam bucket: String,
         @RequestParam fileName: String,
         @RequestParam(defaultValue = "1") expiryHours: Int
-    ): String = s3Service.getPresignedUrl(bucket, fileName, expiryHours)
+    ): String = s3Service.getPresignedUrl(fileName, expiryHours)
 }

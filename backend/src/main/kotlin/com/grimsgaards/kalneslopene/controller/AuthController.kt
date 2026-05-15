@@ -1,6 +1,7 @@
 package com.grimsgaards.kalneslopene.controller
 
 import com.grimsgaards.kalneslopene.model.entities.UserEntity
+import com.grimsgaards.kalneslopene.model.entities.UserRole
 import com.grimsgaards.kalneslopene.repository.UserRepository
 import org.springframework.http.HttpStatus
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 
 data class LoginRequest(val username: String, val password: String)
-data class LoginResponse(val username: String, val roles: List<String>)
+data class LoginResponse(val username: String, val roles: Set<UserRole>)
 data class SetupRequest(val username: String, val password: String)
 
 @RestController
@@ -27,8 +28,7 @@ class AuthController(
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Ugyldig brukernavn eller passord")
         }
 
-        val roles = user.roles.split(",").map { it.trim() }
-        return LoginResponse(username = user.username, roles = roles)
+        return LoginResponse(username = user.username, roles = user.roles)
     }
 
     /** Returns true when no users exist — used by frontend to show first-time setup */
@@ -50,10 +50,10 @@ class AuthController(
             username = request.username,
             password = passwordEncoder.encode(request.password)
                 ?: throw IllegalStateException("Password encoding returned null"),
-            roles = "ROLE_ADMIN",
+            roles = mutableSetOf(UserRole.ADMIN),
         )
         userRepository.save(user)
-        return LoginResponse(username = user.username, roles = listOf("ROLE_ADMIN"))
+        return LoginResponse(username = user.username, roles = user.roles)
     }
 }
 

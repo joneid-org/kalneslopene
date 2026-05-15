@@ -31,20 +31,17 @@ class RunnerService(
             RunnerEntity(
                 name = it.name,
                 gender = Gender.valueOf(it.gender.uppercase()),
-                pr = it.pr
             )
         }).map { it.toDto() }
     }
 
-    fun updateRunner(updatedRunner: RunnerInput, uuid: UUID? = null): RunnerDTO {
-        val resolvedUuid = updatedRunner.uuid ?: uuid ?: throw IllegalArgumentException("UUID must be provided")
-        val existingRunner = runnerRepository.findById(resolvedUuid)
-        .orElseThrow { NoSuchElementException("Runner with uuid $resolvedUuid not found") }
+    fun updateRunner(uuid: UUID, updatedRunner: RunnerInput): RunnerDTO {
+        val existingRunner = runnerRepository.findById(uuid)
+        .orElseThrow { NoSuchElementException("Runner with uuid $uuid not found") }
 
         existingRunner.apply {
             name = updatedRunner.name
             gender = Gender.valueOf(updatedRunner.gender.uppercase())
-            pr = updatedRunner.pr
         }
         return runnerRepository.save(existingRunner).toDto()
     }

@@ -20,7 +20,7 @@ class RaceController(
     fun getRaceById(@PathVariable uuid: UUID): RaceDTO = raceService.findByUuid(uuid)
 
     @PatchMapping("/{uuid}")
-    fun updateRace(@RequestBody race: RaceInput, @PathVariable uuid: UUID): RaceDTO = raceService.updateRace(race, uuid)
+    fun updateRace(@RequestBody input: RaceInput, @PathVariable uuid: UUID): RaceDTO = raceService.updateRace(uuid, input)
 
     @DeleteMapping("/{uuid}")
     fun deleteRaceById(@PathVariable uuid: UUID) = raceService.deleteRaceById(uuid)
@@ -43,6 +43,6 @@ class RaceController(
     ): RaceRunnerDTO = raceService.updateRunnerInRace(uuid, runnerUuid, runner)
 
     @DeleteMapping("/{uuid}/runners")
-    fun removeRunnersFromRace(@PathVariable uuid: UUID, @RequestBody runners: List<RaceRunnerDTO>) =
-        raceService.removeRunnersFromRace(uuid, runners)
+    fun removeRunnersFromRace(@PathVariable uuid: UUID, @RequestBody runnerUuids: List<UUID>) =
+        raceService.removeRunnersFromRace(uuid, runnerUuids.toSet())
 }

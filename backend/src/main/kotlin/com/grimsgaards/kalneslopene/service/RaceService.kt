@@ -12,7 +12,7 @@ import com.grimsgaards.kalneslopene.repository.RunnerRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.util.*
+import java.util.UUID
 
 @Service
 class RaceService(
@@ -39,10 +39,9 @@ class RaceService(
         }).map { it.toDto() }
     }
 
-    fun updateRace(updatedRace: RaceInput, uuid: UUID? = null): RaceDTO {
-        val resolvedUuid = updatedRace.uuid ?: uuid ?: throw IllegalArgumentException("UUID must be provided")
-        val existingRace = raceRepository.findById(resolvedUuid)
-            .orElseThrow { NoSuchElementException("Race with uuid $resolvedUuid not found") }
+    fun updateRace(uuid: UUID, updatedRace: RaceInput): RaceDTO {
+        val existingRace = raceRepository.findById(uuid)
+            .orElseThrow { NoSuchElementException("Race with uuid $uuid not found") }
 
         existingRace.apply {
             raceDate = updatedRace.raceDate
@@ -50,7 +49,6 @@ class RaceService(
         }
 
         return raceRepository.save(existingRace).toDto()
-
     }
 
     fun deleteRaceById(uuid: UUID) {
@@ -85,23 +83,19 @@ class RaceService(
 
 
     fun updateRunnerInRace(raceUuid: UUID, runnerUuid: UUID, runnerDto: RaceRunnerDTO): RaceRunnerDTO {
-        val race = raceRepository.findByIdOrNull(raceUuid)
-            ?: throw NoSuchElementException("Race $raceUuid not found")
-        val runner = runnerRepository.findByIdOrNull(runnerUuid)
-            ?: throw NoSuchElementException("Runner $runnerUuid not found")
-        val key = RaceRunnerKey(runnerUuid = runner.uuid, raceUuid = race.uuid)
-        val entity = race.runners.find { it.id == key }
-            ?: throw NoSuchElementException("Runner $runnerUuid not found in race $raceUuid")
-        entity.resultTime = runnerDto.resultTime
-        entity.hideTime = runnerDto.hideTime
-        raceRepository.save(race)
-        return entity.toDto()
+        val key = RaceRunnerKey(runnerUuid = runnerUuid, raceUuid = raceUuid)
+        val entity = raceRunnerRepository.findById(key)
+            .orElseThrow { NoSuchElementException("Runner $runnerUuid not found in race $raceUuid") }
+        entity.apply {
+            resultTime = runnerDto.resultTime
+            hideTime = runnerDto.hideTime
+        }
+        return raceRunnerRepository.save(entity).toDto()
     }
 
-    fun removeRunnersFromRace(raceUuid: UUID, runners: List<RaceRunnerDTO>) {
+    fun removeRunnersFromRace(raceUuid: UUID, runnerUuids: Set<UUID>) {
         val race = raceRepository.findByIdOrNull(raceUuid)
             ?: throw NoSuchElementException("Race $raceUuid not found")
-        val runnerUuids = runners.map { it.runner.uuid }
         race.runners.removeIf { it.runner.uuid in runnerUuids }
         raceRepository.save(race)
     }

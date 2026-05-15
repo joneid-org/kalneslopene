@@ -7,6 +7,5 @@ data class RunnerInput(
     val uuid: UUID? = null,
     val name: String,
     val gender: String,
-    val pr: Duration? = null
 )
 

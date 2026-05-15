@@ -33,10 +33,9 @@ class OrganizerService(
         ).toDto()
     }
 
-    fun updateOrganizer(updatedOrganizer: OrganizerInput, uuid: UUID? = null): OrganizerDTO {
-        val resolvedUuid = updatedOrganizer.uuid ?: uuid ?: throw IllegalArgumentException("UUID must be provided")
-        val existingOrganizer = organizerRepository.findById(resolvedUuid)
-            .orElseThrow { NoSuchElementException("Organizer with uuid $resolvedUuid not found") }
+    fun updateOrganizer(uuid: UUID, updatedOrganizer: OrganizerInput): OrganizerDTO {
+        val existingOrganizer = organizerRepository.findById(uuid)
+            .orElseThrow { NoSuchElementException("Organizer with uuid $uuid not found") }
 
         existingOrganizer.apply {
             name = updatedOrganizer.name

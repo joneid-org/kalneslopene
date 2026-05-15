@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface MilestoneRepository : JpaRepository<MilestoneEntity, UUID>
+interface MilestoneRepository : JpaRepository<MilestoneEntity, UUID> {
+    fun findAllByOrderByYearAsc(): List<MilestoneEntity>
+}

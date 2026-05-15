@@ -30,7 +30,6 @@ class SecurityConfig {
                     .requestMatchers(HttpMethod.POST, "/api/auth/setup").permitAll()
                     .anyRequest().hasAuthority(UserRole.ADMIN.toString())
             }
-            .httpBasic { }
         return http.build()
     }
 

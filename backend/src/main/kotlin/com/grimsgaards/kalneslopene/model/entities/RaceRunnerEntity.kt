@@ -24,9 +24,12 @@ data class RaceRunnerEntity(
     val race: RaceEntity,
 
     @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
-    val resultTime: Duration,
-    val hideTime: Boolean = false,
+    var resultTime: Duration,
+    var hideTime: Boolean = false,
 ) {
+    @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
+    val previousPersonalRecord: Duration? = runner.personalRecord
+
     fun toDto(): RaceRunnerDTO {
         return RaceRunnerDTO(
             runner = runner.toDto(),

@@ -1,0 +1,126 @@
+import { useQuery } from "@tanstack/react-query";
+import { ArrowLeft, ExternalLink } from "lucide-react";
+import { useState } from "react";
+import { Link, useParams } from "react-router";
+import { QUERIES } from "@/api/queries.ts";
+import { Button } from "@/components/ui/button.tsx";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator.tsx";
+import {
+  findRaceForPost,
+  NEWS_IMAGES,
+  tagBg,
+  useTags,
+} from "@/lib/newsUtils.ts";
+import { formatDateFull } from "@/lib/timeUtils.ts";
+
+export function NewsArticle() {
+  const { uuid } = useParams<{ uuid: string }>();
+  const [open, setOpen] = useState(false);
+  const { data: post } = useQuery(
+    QUERIES.newsfeed.getNewsFeedByUuid(uuid ?? ""),
+  );
+  const { data: races } = useQuery(QUERIES.race.getAllRaces);
+  const { data: allNewsfeeds } = useQuery(QUERIES.newsfeed.getAllNewsFeeds);
+  const tags = useTags();
+
+  if (!post) {
+    return (
+      <div className="flex items-center justify-center py-24">
+        <p className="text-sm text-gray-400">Laster artikkel...</p>
+      </div>
+    );
+  }
+
+  const fallbackImg =
+    NEWS_IMAGES[
+      (allNewsfeeds?.findIndex((n) => n.uuid === uuid) ?? 0) %
+        NEWS_IMAGES.length
+    ] ?? "";
+  const headerImage = post.headerImage ?? fallbackImg;
+  const matchedRace = findRaceForPost(races ?? [], post);
+
+  return (
+    <div className="w-full px-4 py-6">
+      <div
+        className="mx-auto w-fit"
+        style={{ maxWidth: "var(--page-max-width)" }}
+      >
+        <Link to="/">
+          <Button variant="ghost" size="sm" className="gap-1 -ml-2 mb-4">
+            <ArrowLeft className="size-4" />
+            Tilbake
+          </Button>
+        </Link>
+
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div className="flex flex-wrap gap-1.5">
+            {post.tags.map((tag) => (
+              <Link key={tag} to={`/nyheter/tag/${tag.toLowerCase()}`}>
+                <span className={`${tagBg(tag, tags)} tag-pill`}>{tag}</span>
+              </Link>
+            ))}
+          </div>
+          {matchedRace?.uuid && (
+            <Link to={`/Resultater/${matchedRace.uuid}`}>
+              <Button
+                size="sm"
+                variant="outline"
+                className="gap-1.5 text-[#173d2b] border-blue-200 hover:bg-[#173d2b]/10 shrink-0"
+              >
+                <ExternalLink className="size-3.5" />
+                Se resultater
+              </Button>
+            </Link>
+          )}
+        </div>
+
+        <h2 className="mb-1">{post.header}</h2>
+        <time className="text-xs font-medium block mb-4">
+          {formatDateFull(post.date)}
+        </time>
+
+        <Separator className="mb-3" />
+
+        <p className="text-sm sm:text-base leading-relaxed whitespace-pre-line mb-6">
+          {post.content}
+        </p>
+
+        {headerImage && (
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <button
+                type="button"
+                className="focus:outline-none"
+                aria-label="Vis bilde i full størrelse"
+              >
+                <img
+                  src={headerImage}
+                  alt={post.header}
+                  className="h-auto rounded-lg block cursor-zoom-in hover:opacity-90 transition"
+                  style={{ maxWidth: "var(--page-max-width)", width: "auto" }}
+                />
+              </button>
+            </DialogTrigger>
+            <DialogContent
+              className="p-2 sm:p-4 bg-white border-0"
+              style={{ maxWidth: "var(--page-max-width)", width: "95vw" }}
+            >
+              <DialogTitle className="sr-only">{post.header}</DialogTitle>
+              <img
+                src={headerImage}
+                alt={post.header}
+                className="w-full rounded-md object-contain max-h-[88vh]"
+              />
+            </DialogContent>
+          </Dialog>
+        )}
+      </div>
+    </div>
+  );
+}

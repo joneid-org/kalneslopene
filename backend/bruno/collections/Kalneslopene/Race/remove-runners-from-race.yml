@@ -1,0 +1,16 @@
+version: 1
+name: Remove runners from race
+requests:
+  - name: Remove multiple runners
+    method: DELETE
+    url: http://localhost:8080/api/races/{{raceUuid}}/runners
+    headers:
+      Content-Type: application/json
+    body:
+      type: json
+      value: |
+        [
+          { "runner": { "uuid": "{{runnerUuid1}}" } },
+          { "runner": { "uuid": "{{runnerUuid2}}" } }
+        ]
+

@@ -1,0 +1,3 @@
+ALTER TABLE organizer
+    ADD COLUMN IF NOT EXISTS image TEXT;
+

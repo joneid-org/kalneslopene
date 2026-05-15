@@ -1,0 +1,88 @@
+import { useQuery } from "@tanstack/react-query";
+import type { LucideIcon } from "lucide-react";
+import { Mail, MessageCircle, Phone } from "lucide-react";
+import type { ReactNode } from "react";
+import { QUERIES } from "@/api/queries.ts";
+import { Separator } from "@/components/ui/separator.tsx";
+import { getContactPerson } from "@/lib/utils.ts";
+
+function ContactLink({
+  href,
+  icon: Icon,
+  children,
+}: {
+  href: string;
+  icon: LucideIcon | (() => ReactNode);
+  children: ReactNode;
+}) {
+  const isExternal = href.startsWith("http");
+  return (
+    <a
+      href={href}
+      {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border bg-muted/40 hover:bg-muted transition-colors text-xs text-muted-foreground hover:text-foreground"
+    >
+      <Icon className="size-3.5" />
+      {children}
+    </a>
+  );
+}
+
+const FacebookIcon = () => (
+  <svg
+    className="size-3.5"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    aria-hidden="true"
+  >
+    <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.313 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z" />
+  </svg>
+);
+
+export default function HomeFooter() {
+  const { data: organizers } = useQuery(QUERIES.organizer.getAllOrganizers);
+  const mainContact = getContactPerson(organizers ?? []);
+
+  return (
+    <footer className="bg-card border-t">
+      <div className="page-content flex flex-col items-center gap-2">
+        <h5 className="font-semibold tracking-widest">Kontakt</h5>
+        <p className="text-sm">
+          Har du spørsmål, innspill eller ønsker å bidra? Send oss en melding!
+        </p>
+        <div className="flex flex-wrap justify-center gap-2">
+          <ContactLink href={`mailto:${mainContact?.email}`} icon={Mail}>
+            E-post
+          </ContactLink>
+          <ContactLink href={`tel:+47${mainContact?.phone}`} icon={Phone}>
+            Ring oss
+          </ContactLink>
+          <ContactLink
+            href="https://www.facebook.com/torsdagslopet"
+            icon={FacebookIcon}
+          >
+            Facebook
+          </ContactLink>
+          <ContactLink href="https://m.me/torsdagslopet" icon={MessageCircle}>
+            Messenger
+          </ContactLink>
+        </div>
+      </div>
+
+      <Separator />
+
+      <div className="page-content py-2.5 flex items-center justify-between text-xs text-muted-foreground">
+        <span>© {new Date().getFullYear()} Torsdagsløpet</span>
+        <div className="flex items-center gap-3">
+          <span>Drevet av frivillige ❤️</span>
+          <a
+            href="/admin"
+            className="hover:text-muted-foreground transition-colors"
+          >
+            Admin
+          </a>
+        </div>
+      </div>
+    </footer>
+  );
+}

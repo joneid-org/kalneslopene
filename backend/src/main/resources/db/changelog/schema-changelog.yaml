@@ -34,3 +34,66 @@ databaseChangeLog:
         - sqlFile:
             path: db/changelog/sql/create/create_organizer.sql
             relativeToChangelogFile: false
+  - changeSet:
+      id: 006-make-race-weather-nullable
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_race_weather_nullable.sql
+            relativeToChangelogFile: false
+  - changeSet:
+      id: 007-create_milestone_table
+      author: kristian
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/create/create_milestone.sql
+            relativeToChangelogFile: false
+  - changeSet:
+      id: 008-create_user_table
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/create/create_user.sql
+            relativeToChangelogFile: false
+  - changeSet:
+      id: 009-seed_users
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/mockdata/seed_users.sql
+            relativeToChangelogFile: false
+  - changeSet:
+      id: 010-migrate_newsfeed_add_images
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_newsfeed_add_images.sql
+            relativeToChangelogFile: false
+  - changeSet:
+      id: 011-migrate_newsfeed_settings_and_tags
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_newsfeed_settings_and_tags.sql
+            relativeToChangelogFile: false
+  - changeSet:
+      id: 012-migrate_organizer_add_image
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_organizer_add_image.sql
+            relativeToChangelogFile: false
+  - changeSet:
+      id: 013-migrate_runner_add_pr
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_runner_add_pr.sql
+            relativeToChangelogFile: false
+  - changeSet:
+      id: 014-migrate_organizer_add_contact_person
+      author: ejoneid
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_organizer_add_contact_person.sql
+            relativeToChangelogFile: false

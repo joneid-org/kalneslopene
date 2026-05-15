@@ -1,68 +1,51 @@
-import { Mail, Users } from "lucide-react";
-import { Link } from "react-router";
-import { Button } from "@/components/ui/button.tsx";
+import { useQuery } from "@tanstack/react-query";
+import { Users } from "lucide-react";
+import { QUERIES } from "@/api/queries.ts";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
-
-const organisers = [
-  { name: "Erik Haugen", role: "Løpsleder", initials: "EH" },
-  { name: "Marte Solberg", role: "Kasserer", initials: "MS" },
-  { name: "Jonas Bakke", role: "Sekretær", initials: "JB" },
-  { name: "Linn Dahl", role: "Frivillig koordinator", initials: "LD" },
-];
+import { ORGANIZER_DESCRIPTION } from "@/lib/constants.ts";
+import { applySavedOrder } from "@/lib/organizerOrder.ts";
 
 export default function OrganisersBlock() {
+  const { data: organizers } = useQuery(QUERIES.organizer.getAllOrganizers);
+  const ordered = applySavedOrder(organizers ?? []);
+
   return (
     <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base flex items-center gap-2">
-          <Users className="size-4 text-primary" />
-          Om arrangørene
+      <CardHeader className="pb-2 text-[#173d2b]">
+        <CardTitle className="flex items-center gap-2">
+          <Users className="size-4 font-bold" />
+          ARRANGØRTEAMET
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <p className="text-sm text-muted-foreground">
-          Torsdagsløpet er et frivillig drevet mosjonsløp som har arrangert
-          ukentlige løp siden 2018. Vi er en gjeng entusiaster som brenner for
-          løping og fellesskap.
-        </p>
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {organisers.map((person) => (
-            <div
-              key={person.name}
-              className="flex flex-col items-center text-center gap-2 p-3 rounded-lg bg-muted/40"
-            >
-              <div className="size-10 rounded-full bg-primary/10 flex items-center justify-center text-sm font-semibold text-primary shrink-0">
-                {person.initials}
-              </div>
+        <p className="text-sm">{ORGANIZER_DESCRIPTION}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {ordered.map((organizer) => (
+            <div key={organizer.name} className="flex gap-3 items-center">
+              {organizer.image ? (
+                <img
+                  src={organizer.image}
+                  alt={organizer.name}
+                  className="size-14 rounded-full object-cover border-2 border-muted shrink-0"
+                />
+              ) : (
+                <div className="size-14 rounded-md bg-[#173d2b]/10 flex items-center justify-center text-sm font-semibold text-[#173d2b] shrink-0">
+                  {organizer.initials}
+                </div>
+              )}
               <div>
-                <p className="text-sm font-medium leading-tight">
-                  {person.name}
+                <p className="text-sm font-bold leading-tight">
+                  {organizer.name}
                 </p>
-                <p className="text-xs text-muted-foreground">{person.role}</p>
+                <p className="text-xs">{organizer.responsibility.join(", ")}</p>
               </div>
             </div>
           ))}
-        </div>
-
-        <div className="flex flex-wrap gap-2">
-          <Button asChild variant="outline" size="sm">
-            <Link to="/Styret">Les mer om styret</Link>
-          </Button>
-          <Button asChild variant="outline" size="sm">
-            <a
-              href="mailto:kontakt@torsdagslop.no"
-              className="flex items-center gap-1.5"
-            >
-              <Mail className="size-3.5" />
-              Kontakt oss
-            </a>
-          </Button>
         </div>
       </CardContent>
     </Card>

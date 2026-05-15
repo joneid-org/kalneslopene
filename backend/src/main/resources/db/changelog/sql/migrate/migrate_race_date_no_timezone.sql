@@ -1,0 +1,3 @@
+ALTER TABLE race
+    ALTER COLUMN race_date TYPE TIMESTAMP WITHOUT TIME ZONE
+    USING race_date AT TIME ZONE 'Europe/Oslo';

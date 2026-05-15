@@ -1,11 +1,7 @@
 import { CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
 import { Card, CardContent } from "@/components/ui/card.tsx";
-import {
-  extractYear,
-  formatDDMonth,
-  raceDateToSortKey,
-} from "@/lib/timeUtils.ts";
+import { getDayAndMonth, getYear } from "@/lib/timeUtils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 
 export function CsvRaceSelector({
@@ -20,7 +16,7 @@ export function CsvRaceSelector({
   onNext: () => void;
 }) {
   const sorted = [...races].sort((a, b) =>
-    raceDateToSortKey(b.raceDate).localeCompare(raceDateToSortKey(a.raceDate)),
+    b.raceDate.localeCompare(a.raceDate),
   );
 
   return (
@@ -50,9 +46,9 @@ export function CsvRaceSelector({
                     className={`size-4 shrink-0 ${isSelected ? "text-primary" : "text-muted-foreground"}`}
                   />
                   <span className="font-medium">
-                    {formatDDMonth(race.raceDate)}{" "}
+                    {getDayAndMonth(race.raceDate)}{" "}
                     <span className="text-muted-foreground font-normal text-sm">
-                      {extractYear(race.raceDate)}
+                      {getYear(race.raceDate)}
                     </span>
                   </span>
                   {isSelected && (

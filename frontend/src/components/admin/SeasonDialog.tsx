@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+import { format } from "date-fns";
 import { useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
 import { Button } from "@/components/ui/button.tsx";
@@ -11,11 +12,36 @@ import {
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
-import { formatDateFull, generateRaceDates } from "@/lib/timeUtils.ts";
+import { getDayMonthAndYear } from "@/lib/timeUtils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 
 type PreviewRace = { date: string; time: string };
 
+export function generateRaceDates(
+  startDate: string,
+  endDate: string,
+  timeOfDay: string,
+  intervalDays: number,
+): string[] {
+  const dates: string[] = [];
+  const [startHour, startMinute] = timeOfDay.split(":").map(Number);
+  const [startYear, startMonth, startDay] = startDate.split("-").map(Number);
+  const [endYear, endMonth, endDay] = endDate.split("-").map(Number);
+  const end = new Date(endYear, endMonth - 1, endDay);
+
+  let start = new Date(startYear, startMonth - 1, startDay);
+  while (start <= end) {
+    const hour = String(startHour).padStart(2, "0");
+    const minute = String(startMinute).padStart(2, "0");
+    dates.push(`${format(start, "yyyy-MM-dd")}T${hour}:${minute}:00`);
+    start = new Date(
+      start.getFullYear(),
+      start.getMonth(),
+      start.getDate() + intervalDays,
+    );
+  }
+  return dates;
+}
 export function SeasonDialog({
   onClose,
   onCreated,
@@ -151,7 +177,7 @@ export function SeasonDialog({
                     className="px-3 py-1.5 flex items-center justify-between gap-3"
                   >
                     <span className="text-muted-foreground">
-                      {formatDateFull(r.date)}
+                      {getDayMonthAndYear(r.date)}
                     </span>
                     <Input
                       type="time"

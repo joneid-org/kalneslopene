@@ -12,7 +12,8 @@ import com.grimsgaards.kalneslopene.repository.RunnerRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.util.UUID
+import java.time.Duration
+import java.util.*
 
 @Service
 class RaceService(
@@ -74,7 +75,7 @@ class RaceService(
                 id = RaceRunnerKey(runnerUuid = runnerEntity.uuid, raceUuid = raceUuid),
                 runner = runnerEntity,
                 race = race,
-                resultTime = dto.resultTime,
+                resultTime = Duration.ofSeconds(dto.resultTime),
                 hideTime = dto.hideTime
             )
         }
@@ -87,7 +88,7 @@ class RaceService(
         val entity = raceRunnerRepository.findById(key)
             .orElseThrow { NoSuchElementException("Runner $runnerUuid not found in race $raceUuid") }
         entity.apply {
-            resultTime = runnerDto.resultTime
+            resultTime = Duration.ofSeconds(runnerDto.resultTime)
             hideTime = runnerDto.hideTime
         }
         return raceRunnerRepository.save(entity).toDto()

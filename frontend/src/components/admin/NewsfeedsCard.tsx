@@ -3,7 +3,7 @@ import { AdminCard } from "@/components/admin/AdminCard.tsx";
 import { RowActions } from "@/components/admin/RowActions.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
 import { TableCell } from "@/components/ui/table.tsx";
-import { formatDateFull } from "@/lib/timeUtils.ts";
+import { getDayMonthAndYear } from "@/lib/timeUtils.ts";
 import type { NewsFeedDTO } from "@/model/DTO.ts";
 
 export function NewsfeedsCard({
@@ -30,7 +30,7 @@ export function NewsfeedsCard({
       renderRow={(feed) => (
         <>
           <TableCell className="text-muted-foreground tabular-nums whitespace-nowrap">
-            {formatDateFull(feed.date)}
+            {getDayMonthAndYear(feed.date)}
           </TableCell>
           <TableCell className="font-medium">{feed.header}</TableCell>
           <TableCell className="hidden sm:table-cell">

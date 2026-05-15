@@ -7,7 +7,7 @@ import { DialogFooter } from "@/components/ui/dialog.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
-import { formatSecondsToTime, timeToSeconds } from "@/lib/timeUtils.ts";
+import { convertSecondsToTime, convertTimeToSeconds } from "@/lib/timeUtils.ts";
 import type { RaceRunnerDTO, RunnerDTO } from "@/model/DTO.ts";
 
 export type QueuedRunner = {
@@ -58,7 +58,7 @@ export function BulkAddRunnersForm({
       ...prev,
       {
         runner: selected,
-        resultTime: hideTime ? 0 : timeToSeconds(time),
+        resultTime: hideTime ? 0 : convertTimeToSeconds(time),
         hideTime,
       },
     ]);
@@ -154,7 +154,9 @@ export function BulkAddRunnersForm({
                 <span className="font-medium">{q.runner.name}</span>
                 <div className="flex items-center gap-3">
                   <span className="tabular-nums font-mono text-muted-foreground">
-                    {q.hideTime ? "Deltatt" : formatSecondsToTime(q.resultTime)}
+                    {q.hideTime
+                      ? "Deltatt"
+                      : convertSecondsToTime(q.resultTime)}
                   </span>
                   <button
                     type="button"

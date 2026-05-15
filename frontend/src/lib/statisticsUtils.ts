@@ -1,9 +1,4 @@
-import {
-  extractYear,
-  formatSecondsToTime,
-  mapResultTimeToNumber,
-  raceDateToSortKey,
-} from "@/lib/timeUtils.ts";
+import { convertSecondsToTime, getYear } from "@/lib/timeUtils.ts";
 import type { RaceDTO, RaceRunnerDTO } from "@/model/DTO.ts";
 
 export type PersonalRecord = {
@@ -24,17 +19,13 @@ export function getPersonalRecords(
       const { name, gender } = races[0].runner;
       const best = races
         .filter((rr) => !rr.hideTime && rr.resultTime)
-        .sort(
-          (a, b) =>
-            mapResultTimeToNumber(a.resultTime) -
-            mapResultTimeToNumber(b.resultTime),
-        )[0];
-      const prSeconds = best ? mapResultTimeToNumber(best.resultTime) : 0;
+        .sort((a, b) => a.resultTime - b.resultTime)[0];
+      const prSeconds = best ? best.resultTime : 0;
       return {
         runnerUuid: uuid,
         runnerName: name,
         gender,
-        pr: best ? formatSecondsToTime(prSeconds) : "-",
+        pr: best ? convertSecondsToTime(prSeconds) : "-",
         prSeconds,
         totalRaces: races.length,
       };
@@ -53,7 +44,7 @@ export function getNumberOfRacesThisYear(
   races: RaceDTO[],
   year: number,
 ): number {
-  return races.filter((r) => extractYear(r.raceDate) === year).length;
+  return races.filter((r) => getYear(r.raceDate) === year).length;
 }
 
 // Totalt antall unike løpere
@@ -66,7 +57,7 @@ export function getNumberOfUniqueRunnersThisYear(
 ): number {
   return new Set(
     raceRunners
-      .filter((rr) => extractYear(rr.race.raceDate) === year)
+      .filter((rr) => getYear(rr.race.raceDate) === year)
       .map((rr) => rr.runner.uuid),
   ).size;
 }
@@ -90,20 +81,14 @@ export function getFastestRunner(
   return (
     raceRunners
       .filter((rr) => !rr.hideTime && rr.resultTime)
-      .sort(
-        (a, b) =>
-          mapResultTimeToNumber(a.resultTime) -
-          mapResultTimeToNumber(b.resultTime),
-      )[0] ?? null
+      .sort((a, b) => a.resultTime - b.resultTime)[0] ?? null
   );
 }
 
 // Løyperekord (fastest time ever)
 export function getCourseRecord(raceRunners: RaceRunnerDTO[]): string {
   const best = getFastestRunner(raceRunners);
-  return best
-    ? formatSecondsToTime(mapResultTimeToNumber(best.resultTime))
-    : "-";
+  return best ? convertSecondsToTime(best.resultTime) : "-";
 }
 
 // Årets beste tid
@@ -114,16 +99,10 @@ export function getBestTimeThisYear(
   const best = raceRunners
     .filter(
       (rr) =>
-        !rr.hideTime && rr.resultTime && extractYear(rr.race.raceDate) === year,
+        !rr.hideTime && rr.resultTime && getYear(rr.race.raceDate) === year,
     )
-    .sort(
-      (a, b) =>
-        mapResultTimeToNumber(a.resultTime) -
-        mapResultTimeToNumber(b.resultTime),
-    )[0];
-  return best
-    ? formatSecondsToTime(mapResultTimeToNumber(best.resultTime))
-    : "-";
+    .sort((a, b) => a.resultTime - b.resultTime)[0];
+  return best ? convertSecondsToTime(best.resultTime) : "-";
 }
 
 // Gjennomsnittsdeltakelse (average participants per race)
@@ -136,10 +115,8 @@ export function getAverageParticipants(raceRunners: RaceRunnerDTO[]): number {
 // Antall løp gjennomført dette året (frem til og med i dag)
 export function getRacesHeldThisYear(races: RaceDTO[], year: number): number {
   const now = new Date().toISOString();
-  return races.filter(
-    (r) =>
-      extractYear(r.raceDate) === year && raceDateToSortKey(r.raceDate) <= now,
-  ).length;
+  return races.filter((r) => getYear(r.raceDate) === year && r.raceDate <= now)
+    .length;
 }
 
 // Antall lpere som satte personlig rekord i et gitt lp
@@ -150,15 +127,13 @@ export function getNewPersonalBestCount(
 ): number {
   return raceRunners.filter((rr) => {
     if (rr.hideTime || !rr.resultTime) return false;
-    const currentSeconds = mapResultTimeToNumber(rr.resultTime);
+    const currentSeconds = rr.resultTime;
     if (currentSeconds <= 0) return false;
     const history = (allRacesByRunner[rr.runner.uuid ?? ""] ?? []).filter(
       (h) => !h.hideTime && h.resultTime && h.race.uuid !== raceUuid,
     );
     if (history.length === 0) return true;
-    const previousBest = Math.min(
-      ...history.map((h) => mapResultTimeToNumber(h.resultTime)),
-    );
+    const previousBest = Math.min(...history.map((h) => h.resultTime));
     return currentSeconds < previousBest;
   }).length;
 }
@@ -172,19 +147,17 @@ export function getNewYearBestCount(
   const year = new Date().getFullYear();
   return raceRunners.filter((rr) => {
     if (rr.hideTime || !rr.resultTime) return false;
-    const currentSeconds = mapResultTimeToNumber(rr.resultTime);
+    const currentSeconds = rr.resultTime;
     if (currentSeconds <= 0) return false;
     const history = (allRacesByRunner[rr.runner.uuid ?? ""] ?? []).filter(
       (h) =>
         !h.hideTime &&
         h.resultTime &&
         h.race.uuid !== raceUuid &&
-        extractYear(h.race.raceDate) === year,
+        getYear(h.race.raceDate) === year,
     );
     if (history.length === 0) return true;
-    const previousBest = Math.min(
-      ...history.map((h) => mapResultTimeToNumber(h.resultTime)),
-    );
+    const previousBest = Math.min(...history.map((h) => h.resultTime));
     return currentSeconds < previousBest;
   }).length;
 }
@@ -192,10 +165,8 @@ export function getNewYearBestCount(
 // Antall gjenstende lp dette ret (etter i dag)
 export function getRacesLeftThisYear(races: RaceDTO[], year: number): number {
   const now = new Date().toISOString();
-  return races.filter(
-    (r) =>
-      extractYear(r.raceDate) === year && raceDateToSortKey(r.raceDate) > now,
-  ).length;
+  return races.filter((r) => getYear(r.raceDate) === year && r.raceDate > now)
+    .length;
 }
 
 // Antall unike løpere av et gitt kjønn dette året
@@ -208,7 +179,7 @@ export function getUniqueRunnersByGenderThisYear(
     raceRunners
       .filter(
         (r) =>
-          extractYear(r.race.raceDate) === year &&
+          getYear(r.race.raceDate) === year &&
           r.runner.gender?.toLowerCase() === gender.toLowerCase(),
       )
       .map((r) => r.runner.uuid),

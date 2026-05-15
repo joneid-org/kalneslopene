@@ -14,7 +14,7 @@ import {
   DrawerHeader,
   DrawerTrigger,
 } from "@/components/ui/drawer.tsx";
-import { formatDDMonth } from "@/lib/timeUtils.ts";
+import { getDayAndMonth } from "@/lib/timeUtils.ts";
 import { getRacesDTOByYear, getYears } from "@/lib/utils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 
@@ -67,7 +67,7 @@ export default function MobileNavBarMenu({
                                 to={`${basePath}/${race.uuid}`}
                                 className="py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                               >
-                                {formatDDMonth(race.raceDate)}
+                                {getDayAndMonth(race.raceDate)}
                               </Link>
                             </DrawerClose>
                           ))}

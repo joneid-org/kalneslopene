@@ -17,7 +17,7 @@ import {
   tagColor,
   useTags,
 } from "@/lib/newsUtils.ts";
-import { formatDateFull } from "@/lib/timeUtils.ts";
+import { getDayMonthAndYear } from "@/lib/timeUtils.ts";
 
 export function NewsArticle() {
   const { uuid } = useParams<{ uuid: string }>();
@@ -87,7 +87,7 @@ export function NewsArticle() {
 
         <h2 className="mb-1">{post.header}</h2>
         <time className="text-xs font-medium block lowercase mb-4">
-          {formatDateFull(post.date)}
+          {getDayMonthAndYear(post.date.toISOString())}
         </time>
 
         <Separator className="mb-3" />

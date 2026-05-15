@@ -8,7 +8,7 @@ import RunnerStatisticsRaceHistory from "@/components/Statistics/RunnerStatistic
 import RunnerStatisticsSeasonBest from "@/components/Statistics/RunnerStatisticsSeasonBest.tsx";
 import RunnerTimeChart from "@/components/Statistics/RunnerTimeChart.tsx";
 import SearchBox from "@/components/Statistics/SearchBox.tsx";
-import { extractYear } from "@/lib/timeUtils.ts";
+import { getYear } from "@/lib/timeUtils.ts";
 import { getBestRaceFromRunner } from "@/lib/utils.ts";
 import type { RunnerDTO } from "@/model/DTO.ts";
 
@@ -30,7 +30,7 @@ export default function RunnerStatistics() {
   const availableYears = useMemo(
     () =>
       Array.from(
-        new Set((raceHistory ?? []).map((rr) => extractYear(rr.race.raceDate))),
+        new Set((raceHistory ?? []).map((rr) => getYear(rr.race.raceDate))),
       ).sort((a, b) => b - a),
     [raceHistory],
   );

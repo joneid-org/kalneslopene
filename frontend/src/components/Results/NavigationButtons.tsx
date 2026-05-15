@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router";
-import { formatDate } from "@/lib/timeUtils.ts";
+import { getDayAndMonth } from "@/lib/timeUtils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 
 type Props = {
@@ -22,14 +22,14 @@ export default function NavigationButtons({
       {previousRace ? (
         <Link to={`${path}${previousRace.uuid}`} className={linkClass}>
           <ChevronLeft className="size-3.5 md:size-4" />
-          {formatDate(previousRace.raceDate)}
+          {getDayAndMonth(previousRace.raceDate)}
         </Link>
       ) : (
         <span />
       )}
       {nextRace && (
         <Link to={`${path}${nextRace.uuid}`} className={linkClass}>
-          {formatDate(nextRace.raceDate)}
+          {getDayAndMonth(nextRace.raceDate)}
           <ChevronRight className="size-3.5 md:size-4" />
         </Link>
       )}

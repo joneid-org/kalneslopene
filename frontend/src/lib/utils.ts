@@ -6,12 +6,7 @@ import {
   getBestTimeThisYear,
   getFastestRunner,
 } from "@/lib/statisticsUtils.ts";
-import {
-  extractYear,
-  formatSecondsToTime,
-  mapResultTimeToNumber,
-  raceDateToSortKey,
-} from "@/lib/timeUtils.ts";
+import { convertSecondsToTime, getYear } from "@/lib/timeUtils.ts";
 import type { OrganizerDTO, RaceDTO, RaceRunnerDTO } from "@/model/DTO.ts";
 
 export function getPhotosByRaceId(
@@ -31,8 +26,8 @@ export function getYears(races: RaceDTO[]): number[] {
   return Array.from(
     new Set(
       races
-        .filter((race) => raceDateToSortKey(race.raceDate) <= now)
-        .map((race) => extractYear(race.raceDate)),
+        .filter((race) => race.raceDate <= now)
+        .map((race) => getYear(race.raceDate)),
     ),
   ).sort((a, b) => b - a);
 }
@@ -40,16 +35,8 @@ export function getYears(races: RaceDTO[]): number[] {
 export function getRacesDTOByYear(races: RaceDTO[], year: number): RaceDTO[] {
   const now = new Date().toISOString();
   return races
-    .filter(
-      (race) =>
-        extractYear(race.raceDate) === year &&
-        raceDateToSortKey(race.raceDate) <= now,
-    )
-    .sort((a, b) =>
-      raceDateToSortKey(b.raceDate).localeCompare(
-        raceDateToSortKey(a.raceDate),
-      ),
-    );
+    .filter((race) => getYear(race.raceDate) === year && race.raceDate <= now)
+    .sort((a, b) => b.raceDate.localeCompare(a.raceDate));
 }
 
 export function getContactPerson(
@@ -64,15 +51,11 @@ export function getPreviousRace(
 ): RaceDTO | null {
   const currentRace = races.find((race) => race.uuid === uuid);
   if (!currentRace) return null;
-  const currentKey = raceDateToSortKey(currentRace.raceDate);
+  const currentKey = currentRace.raceDate;
   return (
     races
-      .filter((race) => raceDateToSortKey(race.raceDate) < currentKey)
-      .sort((a, b) =>
-        raceDateToSortKey(b.raceDate).localeCompare(
-          raceDateToSortKey(a.raceDate),
-        ),
-      )[0] ?? null
+      .filter((race) => race.raceDate < currentKey)
+      .sort((a, b) => b.raceDate.localeCompare(a.raceDate))[0] ?? null
   );
 }
 
@@ -80,19 +63,11 @@ export function getNextRace(races: RaceDTO[], uuid?: string): RaceDTO | null {
   const now = new Date().toISOString();
   const currentRace = races.find((race) => race.uuid === uuid);
   if (!currentRace) return null;
-  const currentKey = raceDateToSortKey(currentRace.raceDate);
+  const currentKey = currentRace.raceDate;
   return (
     races
-      .filter(
-        (race) =>
-          raceDateToSortKey(race.raceDate) > currentKey &&
-          raceDateToSortKey(race.raceDate) <= now,
-      )
-      .sort((a, b) =>
-        raceDateToSortKey(a.raceDate).localeCompare(
-          raceDateToSortKey(b.raceDate),
-        ),
-      )[0] ?? null
+      .filter((race) => race.raceDate > currentKey && race.raceDate <= now)
+      .sort((a, b) => a.raceDate.localeCompare(b.raceDate))[0] ?? null
   );
 }
 
@@ -120,11 +95,7 @@ export function findFastestInRace(
 ): RaceRunnerDTO | undefined {
   return results
     .filter((r) => r.resultTime && (!gender || r.runner.gender === gender))
-    .sort(
-      (a, b) =>
-        mapResultTimeToNumber(a.resultTime ?? "") -
-        mapResultTimeToNumber(b.resultTime ?? ""),
-    )[0];
+    .sort((a, b) => a.resultTime - b.resultTime)[0];
 }
 
 export type RowData = {
@@ -145,16 +116,12 @@ export function buildTableRows(
   raceCountByRunner: Record<string, number> = {},
   allRacesByRunner: Record<string, RaceRunnerDTO[]> = {},
 ): RowData[] {
-  const sorted = [...raceRunners].sort(
-    (a, b) =>
-      mapResultTimeToNumber(a.resultTime ?? "") -
-      mapResultTimeToNumber(b.resultTime ?? ""),
-  );
+  const sorted = [...raceRunners].sort((a, b) => a.resultTime - b.resultTime);
 
   const currentYear = new Date().getFullYear();
 
   return sorted.map((rr, index) => {
-    const timeSeconds = mapResultTimeToNumber(rr.resultTime ?? "");
+    const timeSeconds = rr.resultTime;
     const paceSeconds =
       DISTANCE_KM > 0 && timeSeconds > 0
         ? timeSeconds / DISTANCE_KM
@@ -163,14 +130,14 @@ export function buildTableRows(
     const prTime = getBestRaceFromRunner(runnerHistory);
     const formattedTime = rr.hideTime
       ? "Deltatt"
-      : formatSecondsToTime(timeSeconds);
+      : convertSecondsToTime(timeSeconds);
     return {
       position: index + 1,
       runnerName: rr.runner.name,
       gender: rr.runner.gender,
       time: formattedTime,
       hideTime: rr.hideTime,
-      pace: formatSecondsToTime(paceSeconds),
+      pace: convertSecondsToTime(paceSeconds),
       races: raceCountByRunner[rr.runner.uuid ?? ""] ?? 0,
       pr: prTime,
       yearBest: getBestRaceThisYearFromRunner(runnerHistory, currentYear),
@@ -181,9 +148,7 @@ export function buildTableRows(
 
 export function getBestRaceFromRunner(raceRunner: RaceRunnerDTO[]): string {
   const best = getFastestRunner(raceRunner);
-  return best
-    ? formatSecondsToTime(mapResultTimeToNumber(best.resultTime))
-    : "-";
+  return best ? convertSecondsToTime(best.resultTime) : "-";
 }
 
 export function getBestRaceThisYearFromRunner(
@@ -194,18 +159,14 @@ export function getBestRaceThisYearFromRunner(
 }
 
 export function isPast(race: RaceDTO): boolean {
-  return raceDateToSortKey(race.raceDate) < new Date().toISOString();
+  return race.raceDate < new Date().toISOString();
 }
 
 export function getUpcomingRaces(races: RaceDTO[]): RaceDTO[] {
   const now = new Date().toISOString();
   return races
-    .filter((r) => raceDateToSortKey(r.raceDate) >= now)
-    .sort((a, b) =>
-      raceDateToSortKey(a.raceDate).localeCompare(
-        raceDateToSortKey(b.raceDate),
-      ),
-    );
+    .filter((r) => r.raceDate >= now)
+    .sort((a, b) => a.raceDate.localeCompare(b.raceDate));
 }
 
 export function readFileAsDataURL(file: File): Promise<string> {

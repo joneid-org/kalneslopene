@@ -8,7 +8,6 @@ import type { CsvRow } from "@/components/admin/CsvReviewTable.tsx";
 import { CsvReviewTable } from "@/components/admin/CsvReviewTable.tsx";
 import { CsvUploadStep } from "@/components/admin/CsvUploadStep.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { secondsToDuration } from "@/lib/timeUtils.ts";
 import { isPast } from "@/lib/utils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 
@@ -50,7 +49,7 @@ export function ImportResultsFromFile() {
         .map((r) => ({
           runner: r.resolvedRunner!,
           race: selectedRace!,
-          resultTime: secondsToDuration(r.timeSeconds),
+          resultTime: r.timeSeconds,
           hideTime: r.timeSeconds === 0,
         }));
       await QUERIES.race.addRunnersToRace(raceUuid, raceRunners).queryFn();

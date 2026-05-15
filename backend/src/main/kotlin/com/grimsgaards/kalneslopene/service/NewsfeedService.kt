@@ -7,10 +7,8 @@ import com.grimsgaards.kalneslopene.model.entities.NewsfeedSettingsEntity
 import com.grimsgaards.kalneslopene.model.input.NewsfeedInput
 import com.grimsgaards.kalneslopene.repository.NewsfeedRepository
 import com.grimsgaards.kalneslopene.repository.NewsfeedSettingsRepository
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
-import java.time.OffsetDateTime
-import java.util.UUID
+import java.util.*
 
 @Service
 class NewsfeedService(

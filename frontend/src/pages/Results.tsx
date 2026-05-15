@@ -14,7 +14,7 @@ import {
   getNewPersonalBestCount,
   getNewYearBestCount,
 } from "@/lib/statisticsUtils.ts";
-import { formatDateFull } from "@/lib/timeUtils.ts";
+import { getDayMonthAndYear } from "@/lib/timeUtils.ts";
 import {
   buildTableRows,
   getNextRace,
@@ -54,7 +54,7 @@ export function Results() {
   const race = allRaces.find((r) => r.uuid === uuid);
   const previous = getPreviousRace(allRaces, uuid);
   const next = getNextRace(allRaces, uuid);
-  const title = formatDateFull(race?.raceDate);
+  const title = getDayMonthAndYear(race?.raceDate);
   const tableData = buildTableRows(
     raceRunners ?? [],
     raceCountByRunner,

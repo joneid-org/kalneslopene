@@ -8,11 +8,9 @@ import {
   CardTitle,
 } from "@/components/ui/card.tsx";
 import {
-  extractYear,
-  formatDDMonth,
-  formatSecondsToTime,
-  mapResultTimeToNumber,
-  raceDateToSortKey,
+  convertSecondsToTime,
+  getDayAndMonth,
+  getYear,
 } from "@/lib/timeUtils.ts";
 import type { RaceRunnerDTO } from "@/model/DTO.ts";
 
@@ -32,12 +30,8 @@ export default function RunnerStatisticsRaceHistory({
   const selectedYear = availableYears[yearIndex];
 
   const racesThisYear = raceHistory
-    .filter((rr) => extractYear(rr.race.raceDate) === selectedYear)
-    .sort((a, b) =>
-      raceDateToSortKey(b.race.raceDate).localeCompare(
-        raceDateToSortKey(a.race.raceDate),
-      ),
-    );
+    .filter((rr) => getYear(rr.race.raceDate) === selectedYear)
+    .sort((a, b) => b.race.raceDate.localeCompare(a.race.raceDate));
 
   return (
     <Card>
@@ -81,12 +75,10 @@ export default function RunnerStatisticsRaceHistory({
               className="flex items-center justify-between px-6 py-3"
             >
               <span className="text-sm text-muted-foreground">
-                {formatDDMonth(rr.race.raceDate)}
+                {getDayAndMonth(rr.race.raceDate)}
               </span>
               <span className="tabular-nums text-sm font-mono font-semibold">
-                {rr.hideTime
-                  ? "Deltatt"
-                  : formatSecondsToTime(mapResultTimeToNumber(rr.resultTime))}
+                {rr.hideTime ? "Deltatt" : convertSecondsToTime(rr.resultTime)}
               </span>
             </li>
           ))}

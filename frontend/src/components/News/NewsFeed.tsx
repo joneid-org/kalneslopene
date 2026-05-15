@@ -7,7 +7,7 @@ import { QUERIES } from "@/api/queries.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card.tsx";
 import { NEWS_IMAGES, tagColor, useTags } from "@/lib/newsUtils.ts";
-import { formatDateFull } from "@/lib/timeUtils.ts";
+import { getDayMonthAndYear } from "@/lib/timeUtils.ts";
 import type { NewsFeedDTO } from "@/model/DTO.ts";
 
 export default function NewsFeed() {
@@ -82,7 +82,7 @@ export default function NewsFeed() {
             <CardFooter className="px-2 pb-3 pt-1 mt-auto flex flex-wrap items-center justify-end gap-1">
               <time className="text-xs lowercase text-muted-foreground">
                 {" "}
-                {formatDateFull(post.date)}
+                {getDayMonthAndYear(post.date.toISOString())}
               </time>
             </CardFooter>
           </Card>

@@ -21,7 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table.tsx";
-import { formatSecondsToTime, timeToSeconds } from "@/lib/timeUtils.ts";
+import { convertSecondsToTime, timeToSeconds } from "@/lib/timeUtils.ts";
 import type { RunnerDTO } from "@/model/DTO.ts";
 
 export type CsvRow = {
@@ -49,7 +49,7 @@ function RowEditor({
   const [mode, setMode] = useState<EditMode>(null);
 
   // Time editing
-  const [time, setTime] = useState(formatSecondsToTime(row.timeSeconds));
+  const [time, setTime] = useState(convertSecondsToTime(row.timeSeconds));
 
   // Runner linking
   const [searchQuery, setSearchQuery] = useState("");
@@ -357,7 +357,7 @@ export function CsvReviewTable({
                 </TableCell>
                 <TableCell className="tabular-nums font-mono text-sm">
                   {row.timeSeconds > 0
-                    ? formatSecondsToTime(row.timeSeconds)
+                    ? convertSecondsToTime(row.timeSeconds)
                     : "-"}
                 </TableCell>
                 <TableCell>

@@ -46,7 +46,7 @@ export type RunnerDTO = {
 export type RaceRunnerDTO = {
   runner: RunnerDTO;
   race: RaceDTO;
-  resultTime: string;
+  resultTime: number;
   hideTime: boolean;
 };
 

@@ -14,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog.tsx";
-import { formatDDMonth, raceDateToSortKey } from "@/lib/timeUtils.ts";
+import { getDayAndMonth } from "@/lib/timeUtils.ts";
 import { isPast } from "@/lib/utils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 
@@ -28,11 +28,7 @@ export function CRUDRaces() {
 
   const upcoming = [...(races ?? [])]
     .filter((r) => !isPast(r))
-    .sort((a, b) =>
-      raceDateToSortKey(a.raceDate).localeCompare(
-        raceDateToSortKey(b.raceDate),
-      ),
-    );
+    .sort((a, b) => a.raceDate.localeCompare(b.raceDate));
 
   const [showSeason, setShowSeason] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
@@ -135,7 +131,7 @@ export function CRUDRaces() {
           </DialogHeader>
           {editing && (
             <RaceDateForm
-              initialDate={raceDateToSortKey(editing.raceDate).slice(0, 16)}
+              initialDate={editing.raceDate.slice(0, 16)}
               submitLabel="Lagre"
               isPending={editMutation.isPending}
               onCancel={() => setEditing(null)}
@@ -158,7 +154,7 @@ export function CRUDRaces() {
               <>
                 Er du sikker på at du vil slette løpet{" "}
                 <span className="font-semibold text-foreground">
-                  {formatDDMonth(deleting.raceDate)}
+                  {getDayAndMonth(deleting.raceDate)}
                 </span>
                 ? Dette kan ikke angres.
               </>

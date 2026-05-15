@@ -19,11 +19,9 @@ import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import {
-  formatDDMonth,
-  formatSecondsToTime,
-  mapResultTimeToNumber,
-  secondsToDuration,
-  timeToSeconds,
+  convertSecondsToTime,
+  convertTimeToSeconds,
+  getDayAndMonth,
 } from "@/lib/timeUtils.ts";
 import type { RaceDTO, RaceRunnerDTO } from "@/model/DTO.ts";
 
@@ -72,7 +70,7 @@ export function PastRaceEditDialog({
             pendingRunners.map((q) => ({
               runner: q.runner,
               race,
-              resultTime: secondsToDuration(q.resultTime),
+              resultTime: q.resultTime,
               hideTime: q.hideTime,
             })),
           )
@@ -107,11 +105,7 @@ export function PastRaceEditDialog({
   const startEditing = (rr: RaceRunnerDTO) => {
     setEditingRunnerUuid(rr.runner.uuid ?? null);
     setEditHideTime(rr.hideTime);
-    setEditTime(
-      rr.hideTime
-        ? ""
-        : formatSecondsToTime(mapResultTimeToNumber(String(rr.resultTime))),
-    );
+    setEditTime(rr.hideTime ? "" : convertSecondsToTime(rr.resultTime));
   };
 
   const handleSaveRunner = (rr: RaceRunnerDTO) => {
@@ -119,7 +113,7 @@ export function PastRaceEditDialog({
     updateRunner.mutate({
       ...rr,
       race,
-      resultTime: secondsToDuration(editHideTime ? 0 : timeToSeconds(editTime)),
+      resultTime: editHideTime ? 0 : convertTimeToSeconds(editTime),
       hideTime: editHideTime,
     });
   };
@@ -129,7 +123,7 @@ export function PastRaceEditDialog({
       <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            Legg til løpere – {formatDDMonth(race.raceDate)}
+            Legg til løpere – {getDayAndMonth(race.raceDate)}
           </DialogTitle>
         </DialogHeader>
         <BulkAddRunnersForm
@@ -147,7 +141,7 @@ export function PastRaceEditDialog({
   return (
     <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
       <DialogHeader>
-        <DialogTitle>Rediger løp – {formatDDMonth(race.raceDate)}</DialogTitle>
+        <DialogTitle>Rediger løp – {getDayAndMonth(race.raceDate)}</DialogTitle>
       </DialogHeader>
 
       <div className="space-y-5">
@@ -194,9 +188,7 @@ export function PastRaceEditDialog({
                           <span className="tabular-nums font-mono text-muted-foreground text-xs">
                             {rr.hideTime
                               ? "Kun deltatt"
-                              : formatSecondsToTime(
-                                  mapResultTimeToNumber(String(rr.resultTime)),
-                                )}
+                              : convertSecondsToTime(rr.resultTime)}
                           </span>
                           <Button
                             size="sm"
@@ -279,7 +271,7 @@ export function PastRaceEditDialog({
                     <span className="tabular-nums font-mono text-muted-foreground text-xs">
                       {q.hideTime
                         ? "Kun deltatt"
-                        : formatSecondsToTime(q.resultTime)}
+                        : convertSecondsToTime(q.resultTime)}
                     </span>
                     <button
                       type="button"

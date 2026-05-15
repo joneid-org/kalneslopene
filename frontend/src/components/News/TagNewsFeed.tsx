@@ -6,7 +6,7 @@ import {
   CardHeader,
 } from "@/components/ui/card.tsx";
 import { tagColor, useTags } from "@/lib/newsUtils.ts";
-import { formatDateFull } from "@/lib/timeUtils.ts";
+import { getDayMonthAndYear } from "@/lib/timeUtils.ts";
 import type { NewsFeedDTO } from "@/model/DTO.ts";
 
 export function TagNewsFeed({ post, img }: { post: NewsFeedDTO; img: string }) {
@@ -46,7 +46,7 @@ export function TagNewsFeed({ post, img }: { post: NewsFeedDTO; img: string }) {
             </CardContent>
             <CardFooter className="flex items-center justify-between pt-0">
               <time className="text-xs text-gray-400 font-medium">
-                {formatDateFull(post.date)}
+                {getDayMonthAndYear(post.date.toISOString())}
               </time>
             </CardFooter>
           </div>

@@ -15,10 +15,9 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart.tsx";
 import {
-  extractYear,
-  formatDDMonth,
-  formatSecondsToTime,
-  mapResultTimeToNumber,
+  convertSecondsToTime,
+  getDayAndMonth,
+  getYear,
 } from "@/lib/timeUtils.ts";
 import type { RaceRunnerDTO } from "@/model/DTO.ts";
 
@@ -78,17 +77,17 @@ export default function RunnerTimeChart({
     (rr) =>
       !rr.hideTime &&
       rr.resultTime &&
-      selectedYears.includes(extractYear(rr.race.raceDate)),
+      selectedYears.includes(getYear(rr.race.raceDate)),
   );
 
   const byDate = new Map<string, ChartPoint>();
   for (const rr of filtered) {
     const key = rr.race.raceDate as unknown as string;
-    const label = formatDDMonth(rr.race.raceDate);
-    const year = extractYear(rr.race.raceDate);
+    const label = getDayAndMonth(rr.race.raceDate);
+    const year = getYear(rr.race.raceDate);
     if (!byDate.has(key)) byDate.set(key, { label, sortKey: key });
     const point = byDate.get(key);
-    if (point) point[String(year)] = mapResultTimeToNumber(rr.resultTime);
+    if (point) point[String(year)] = rr.resultTime;
   }
 
   const points = Array.from(byDate.values()).sort((a, b) =>
@@ -169,7 +168,7 @@ export default function RunnerTimeChart({
                 axisLine={false}
               />
               <YAxis
-                tickFormatter={formatSecondsToTime}
+                tickFormatter={convertSecondsToTime}
                 tick={{ fontSize: 11 }}
                 tickLine={false}
                 axisLine={false}
@@ -180,7 +179,7 @@ export default function RunnerTimeChart({
                 content={
                   <ChartTooltipContent
                     formatter={(value, name) => [
-                      formatSecondsToTime(Number(value)),
+                      convertSecondsToTime(Number(value)),
                       chartConfig[String(name)]?.label ?? String(name),
                     ]}
                   />

@@ -5,7 +5,7 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
-import java.time.OffsetDateTime
+import java.time.LocalDateTime
 import java.util.*
 
 @Entity
@@ -15,7 +15,7 @@ data class NewsfeedEntity(
     var tags: List<String>,
     var header: String,
     var content: String,
-    var date: OffsetDateTime,
+    var date: LocalDateTime,
 
     @Column(name = "header_image", columnDefinition = "TEXT")
     var headerImage: String? = null,

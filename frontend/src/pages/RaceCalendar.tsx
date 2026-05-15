@@ -13,12 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
-import {
-  extractYear,
-  formatDateFull,
-  formatTimeStamp,
-  raceDateToSortKey,
-} from "@/lib/timeUtils.ts";
+import { getDayMonthAndYear, getTimestamp, getYear } from "@/lib/timeUtils.ts";
 import { isPast } from "@/lib/utils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 
@@ -41,7 +36,7 @@ export function RaceCalendar() {
   const { data: races = [] } = useQuery(QUERIES.race.getAllRaces);
 
   const allYears = Array.from(
-    new Set(races.map((r) => extractYear(r.raceDate))),
+    new Set(races.map((r) => getYear(r.raceDate))),
   ).sort((a, b) => b - a);
 
   const currentYear = new Date().getFullYear();
@@ -50,12 +45,8 @@ export function RaceCalendar() {
   const [selectedRace, setSelectedRace] = useState<RaceDTO | null>(null);
 
   const racesForYear = races
-    .filter((r) => extractYear(r.raceDate) === selectedYear)
-    .sort((a, b) =>
-      raceDateToSortKey(a.raceDate).localeCompare(
-        raceDateToSortKey(b.raceDate),
-      ),
-    );
+    .filter((r) => getYear(r.raceDate) === selectedYear)
+    .sort((a, b) => a.raceDate.localeCompare(b.raceDate));
 
   const pastDates = racesForYear
     .filter((r) => isPast(r))
@@ -189,10 +180,10 @@ export function RaceCalendar() {
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-base">
-                  {formatDateFull(selectedRace.raceDate)}
+                  {getDayMonthAndYear(selectedRace.raceDate)}
                 </CardTitle>
                 <p className="text-sm text-muted-foreground">
-                  kl. {formatTimeStamp(selectedRace.raceDate)}
+                  kl. {getTimestamp(selectedRace.raceDate)}
                 </p>
               </CardHeader>
               <Separator />

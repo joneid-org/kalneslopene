@@ -11,10 +11,9 @@ import {
   TableRow,
 } from "@/components/ui/table.tsx";
 import {
-  formatDDMonth,
-  formatSecondsToTime,
-  formatTimeStamp,
-  mapResultTimeToNumber,
+  convertSecondsToTime,
+  getDayAndMonth,
+  getTimestamp,
 } from "@/lib/timeUtils.ts";
 import type { RaceDTO, RaceRunnerDTO } from "@/model/DTO.ts";
 
@@ -61,11 +60,11 @@ export function PastRacesTable({
                 <TableCell className="flex items-center gap-2">
                   <CheckCircle2Icon className="size-3.5 text-green-600 shrink-0" />
                   <span className="font-medium">
-                    {formatDDMonth(race.raceDate)}
+                    {getDayAndMonth(race.raceDate)}
                   </span>
                 </TableCell>
                 <TableCell className="tabular-nums text-muted-foreground">
-                  {formatTimeStamp(race.raceDate)}
+                  {getTimestamp(race.raceDate)}
                 </TableCell>
                 <TableCell className="text-muted-foreground">
                   {race.weather ?? (
@@ -125,11 +124,7 @@ export function PastRacesTable({
                             <span className="tabular-nums font-mono text-xs text-muted-foreground">
                               {rr.hideTime
                                 ? "Kun deltatt"
-                                : formatSecondsToTime(
-                                    mapResultTimeToNumber(
-                                      String(rr.resultTime),
-                                    ),
-                                  )}
+                                : convertSecondsToTime(rr.resultTime)}
                             </span>
                           </div>
                         ))

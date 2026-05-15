@@ -14,7 +14,7 @@ import {
   Wind,
 } from "lucide-react";
 import { QUERIES } from "@/api/queries.ts";
-import { formatDDMonth } from "@/lib/timeUtils.ts";
+import { getDayAndMonth } from "@/lib/timeUtils.ts";
 import { useYrWeather } from "@/lib/useYrWeather.ts";
 import { getUpcomingRaces } from "@/lib/utils.ts";
 
@@ -63,10 +63,10 @@ export function NextRace() {
       <div className="flex items-center justify-center gap-4">
         <div className="text-center min-w-12">
           <div className="text-2xl sm:text-3xl font-black text-white leading-none tabular-nums">
-            {formatDDMonth(race.raceDate).split(".")[0]}.
+            {getDayAndMonth(race.raceDate).split(".")[0]}.
           </div>
           <div className="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-white/80 mt-1">
-            {(formatDDMonth(race.raceDate).split(". ")[1] ?? "").toUpperCase()}
+            {(getDayAndMonth(race.raceDate).split(". ")[1] ?? "").toUpperCase()}
           </div>
         </div>
         <div className="w-px h-8 bg-white/30" />

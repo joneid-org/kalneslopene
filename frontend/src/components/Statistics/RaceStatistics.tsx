@@ -12,7 +12,7 @@ import {
   getNumberOfUniqueRunners,
   getNumberOfUniqueRunnersThisYear,
 } from "@/lib/statisticsUtils.ts";
-import { extractYear, formatDateFull } from "@/lib/timeUtils.ts";
+import { getDayMonthAndYear, getYear } from "@/lib/timeUtils.ts";
 import { getYears } from "@/lib/utils.ts";
 import type { RaceRunnerDTO } from "@/model/DTO.ts";
 
@@ -40,7 +40,7 @@ export default function RaceStatistics() {
     () =>
       selectedYear
         ? allRaceRunners.filter(
-            (rr) => extractYear(rr.race.raceDate) === selectedYear,
+            (rr) => getYear(rr.race.raceDate) === selectedYear,
           )
         : allRaceRunners,
     [allRaceRunners, selectedYear],
@@ -115,7 +115,7 @@ export default function RaceStatistics() {
                 {allTimeBest.runner.name}
                 <span className="text-muted-foreground">
                   {", "}
-                  {formatDateFull(allTimeBest.race.raceDate)}
+                  {getDayMonthAndYear(allTimeBest.race.raceDate)}
                 </span>
               </p>
             </div>

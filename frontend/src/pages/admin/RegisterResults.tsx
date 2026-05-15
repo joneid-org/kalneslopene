@@ -14,7 +14,7 @@ import { MissingRunnersCard } from "@/components/admin/MissingRunnersCard.tsx";
 import { PastRaceEditDialog } from "@/components/admin/PastRaceEditDialog.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Dialog } from "@/components/ui/dialog.tsx";
-import { formatDDMonth, raceDateToSortKey } from "@/lib/timeUtils.ts";
+import { getDayAndMonth } from "@/lib/timeUtils.ts";
 import { isPast } from "@/lib/utils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 
@@ -28,11 +28,7 @@ export function RegisterResults() {
 
   const past = [...(races ?? [])]
     .filter((r) => isPast(r))
-    .sort((a, b) =>
-      raceDateToSortKey(b.raceDate).localeCompare(
-        raceDateToSortKey(a.raceDate),
-      ),
-    );
+    .sort((a, b) => b.raceDate.localeCompare(a.raceDate));
 
   const runnerResults = useQueries({
     queries: past.map((r) => ({
@@ -140,7 +136,7 @@ export function RegisterResults() {
               <>
                 Er du sikker på at du vil slette løpet{" "}
                 <span className="font-semibold text-foreground">
-                  {formatDDMonth(deleting.raceDate)}
+                  {getDayAndMonth(deleting.raceDate)}
                 </span>
                 ? Dette kan ikke angres.
               </>

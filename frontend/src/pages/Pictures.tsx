@@ -7,7 +7,7 @@ import PhotoGrid from "@/components/Pictures/PhotoGrid.tsx";
 import PhotoHeader from "@/components/Pictures/PhotoHeader.tsx";
 import NavigationButtons from "@/components/Results/NavigationButtons.tsx";
 import { photos } from "@/data/mockdata.ts";
-import { formatDateFull } from "@/lib/timeUtils.ts";
+import { getDayMonthAndYear } from "@/lib/timeUtils.ts";
 import {
   getNextRace,
   getPhotosByRaceId,
@@ -24,7 +24,7 @@ export function Pictures() {
   const race = allRaces.find((r) => r.uuid === uuid);
   const previous = getPreviousRace(allRaces, uuid);
   const next = getNextRace(allRaces, uuid);
-  const title = formatDateFull(race?.raceDate);
+  const title = getDayMonthAndYear(race?.raceDate);
 
   const racePhotos = useMemo(() => getPhotosByRaceId(photos, uuid), [uuid]);
 

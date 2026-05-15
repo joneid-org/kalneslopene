@@ -34,7 +34,7 @@ data class RaceRunnerEntity(
         return RaceRunnerDTO(
             runner = runner.toDto(),
             race = race.toDto(),
-            resultTime = resultTime,
+            resultTime = resultTime.toSeconds(),
             hideTime = hideTime
         )
     }

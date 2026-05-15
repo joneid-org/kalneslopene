@@ -25,11 +25,12 @@ class SecurityConfig {
             .csrf { it.disable() }
             .authorizeHttpRequests { auth ->
                 auth
-                    .requestMatchers(HttpMethod.GET, "*").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/auth/setup").permitAll()
                     .anyRequest().hasAuthority(UserRole.ADMIN.toString())
             }
+            .httpBasic { }
         return http.build()
     }
 

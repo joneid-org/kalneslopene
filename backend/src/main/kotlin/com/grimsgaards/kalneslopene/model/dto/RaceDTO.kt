@@ -6,5 +6,6 @@ import java.util.*
 data class RaceDTO(
     val uuid: UUID,
     val raceDate: LocalDateTime,
-    val weather: String?
+    val weather: String?,
+    val runnerCount: Int
 )

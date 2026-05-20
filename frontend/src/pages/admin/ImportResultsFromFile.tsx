@@ -1,8 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { ChevronLeftIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
+import { queryClient } from "@/api/queryClient.ts";
 import { CsvRaceSelector } from "@/components/admin/CsvRaceSelector.tsx";
 import type { CsvRow } from "@/components/admin/CsvReviewTable.tsx";
 import { CsvReviewTable } from "@/components/admin/CsvReviewTable.tsx";
@@ -33,9 +34,8 @@ function stepBubbleClass(s: Step, current: Step) {
 
 export function ImportResultsFromFile() {
   const navigate = useNavigate();
-  const qc = useQueryClient();
 
-  const { data: races } = useQuery(QUERIES.race.getAllRaces);
+  const { data: races } = useQuery(QUERIES.race.getAllRaces());
   const pastRaces = (races ?? []).filter(isPast);
 
   const [step, setStep] = useState<Step>("race");
@@ -43,23 +43,24 @@ export function ImportResultsFromFile() {
   const [rows, setRows] = useState<CsvRow[]>([]);
 
   const saveMutation = useMutation({
-    mutationFn: async () => {
-      const raceUuid = selectedRace!.uuid!;
+    mutationFn: async (race: RaceDTO) => {
+      const raceUuid = race.uuid;
       const raceRunners = rows
         .filter((r) => r.resolvedRunner !== null)
         .map((r) => ({
+          // biome-ignore lint/style/noNonNullAssertion: ex
           runner: r.resolvedRunner!,
-          race: selectedRace!,
+          race: race,
           resultTime: secondsToDuration(r.timeSeconds),
           hideTime: r.timeSeconds === 0,
         }));
       await QUERIES.race.addRunnersToRace(raceUuid, raceRunners).queryFn();
     },
-    onSuccess: () => {
-      qc.invalidateQueries({
-        queryKey: ["race", selectedRace!.uuid, "runnersInRace"],
+    onSuccess: (_, race) => {
+      queryClient.invalidateQueries({
+        queryKey: ["race", race.uuid, "runnersInRace"],
       });
-      qc.invalidateQueries({ queryKey: ["race", "getAll"] });
+      queryClient.invalidateQueries({ queryKey: ["race", "getAll"] });
       navigate("/admin/results");
     },
   });
@@ -140,7 +141,7 @@ export function ImportResultsFromFile() {
               disabled={
                 unresolved > 0 || rows.length === 0 || saveMutation.isPending
               }
-              onClick={() => saveMutation.mutate()}
+              onClick={() => saveMutation.mutate(selectedRace)}
             >
               {saveMutation.isPending
                 ? "Lagrer..."

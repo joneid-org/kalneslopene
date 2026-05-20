@@ -34,8 +34,6 @@ export function MissingRunnersCard({
           rows={races}
           expandable={false}
           expandedRaceUuid={null}
-          runnerCountByRace={new Map()}
-          runnersForRace={() => []}
           onToggleExpand={() => {}}
           onEdit={onEdit}
           onDelete={onDelete}

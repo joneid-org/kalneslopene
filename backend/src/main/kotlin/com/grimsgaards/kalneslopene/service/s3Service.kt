@@ -1,8 +1,8 @@
 package com.grimsgaards.kalneslopene.service
 
 import io.minio.GetPresignedObjectUrlArgs
+import io.minio.Http
 import io.minio.MinioClient
-import io.minio.http.Method
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.util.concurrent.TimeUnit
@@ -27,7 +27,7 @@ class S3Service(
     fun getPresignedUrl(fileName: String, expiryHours: Int = 1): String =
         minioClient.getPresignedObjectUrl(
             GetPresignedObjectUrlArgs.builder()
-                .method(Method.GET)
+                .method(Http.Method.GET)
                 .bucket(minioBucketName)
                 .`object`(fileName)
                 .expiry(expiryHours, TimeUnit.HOURS)

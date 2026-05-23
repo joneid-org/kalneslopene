@@ -29,10 +29,11 @@ export function Pictures() {
   const racePhotos = useMemo(() => getPhotosByRaceId(photos, uuid), [uuid]);
 
   const photographers = useMemo(() => {
-    const names = racePhotos
-      .map((p) => p.photographer)
-      .filter((n): n is string => !!n);
-    return [...new Set(names)];
+    const names = new Set<string>();
+    for (const p of racePhotos) {
+      if (p.photographer) names.add(p.photographer);
+    }
+    return [...names];
   }, [racePhotos]);
 
   return (

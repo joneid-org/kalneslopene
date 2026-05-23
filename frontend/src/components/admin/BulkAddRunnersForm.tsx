@@ -121,6 +121,7 @@ export function BulkAddRunnersForm({
             type="checkbox"
             checked={hideTime}
             onChange={(e) => setHideTime(e.target.checked)}
+            aria-label="Kun deltatt (skjul tid)"
             className="rounded"
           />
           <Label htmlFor="hideTimeBulk" className="whitespace-nowrap">

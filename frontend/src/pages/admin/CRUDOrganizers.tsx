@@ -19,8 +19,6 @@ import type { OrganizerDTO } from "@/model/DTO.ts";
 export function CRUDOrganizers() {
   const qc = useQueryClient();
   const navigate = useNavigate();
-  const invalidate = () =>
-    qc.invalidateQueries({ queryKey: ["organizer", "getAll"] });
 
   const { data: organizers } = useQuery(QUERIES.organizer.getAllOrganizers);
   const { ordered, move } = useOrganizerOrder(organizers ?? []);
@@ -30,7 +28,7 @@ export function CRUDOrganizers() {
     mutationFn: (organizer: Omit<OrganizerDTO, "uuid">) =>
       QUERIES.organizer.createOrganizer(organizer as OrganizerDTO).queryFn(),
     onSuccess: () => {
-      invalidate();
+      qc.invalidateQueries({ queryKey: ["organizer", "getAll"] });
       setShowAdd(false);
     },
   });
@@ -40,7 +38,7 @@ export function CRUDOrganizers() {
     mutationFn: (organizer: OrganizerDTO) =>
       QUERIES.organizer.updateOrganizer(organizer.uuid, organizer).queryFn(),
     onSuccess: () => {
-      invalidate();
+      qc.invalidateQueries({ queryKey: ["organizer", "getAll"] });
       setEditing(null);
     },
   });
@@ -50,7 +48,7 @@ export function CRUDOrganizers() {
     mutationFn: (uuid: string) =>
       QUERIES.organizer.deleteOrganizer(uuid).queryFn(),
     onSuccess: () => {
-      invalidate();
+      qc.invalidateQueries({ queryKey: ["organizer", "getAll"] });
       setDeleting(null);
     },
   });
@@ -66,7 +64,7 @@ export function CRUDOrganizers() {
         Tilbake
       </Button>
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">Organisatorer</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Organisatorer</h1>
         <Button className="gap-1.5" onClick={() => setShowAdd(true)}>
           <PlusIcon className="size-4" />
           Legg til organisator

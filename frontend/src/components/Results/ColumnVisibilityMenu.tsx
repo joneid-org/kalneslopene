@@ -49,19 +49,20 @@ export function ColumnVisibilityMenu<T>({
           Vis alle
         </DropdownMenuCheckboxItem>
         <DropdownMenuSeparator />
-        {table
-          .getAllColumns()
-          .filter((col) => col.getCanHide())
-          .map((col) => (
-            <DropdownMenuCheckboxItem
-              key={col.id}
-              className="text-xs"
-              checked={col.getIsVisible()}
-              onCheckedChange={(val) => col.toggleVisibility(val)}
-            >
-              {COLUMN_LABELS[col.id] ?? col.id}
-            </DropdownMenuCheckboxItem>
-          ))}
+        {table.getAllColumns().flatMap((col) =>
+          col.getCanHide()
+            ? [
+                <DropdownMenuCheckboxItem
+                  key={col.id}
+                  className="text-xs"
+                  checked={col.getIsVisible()}
+                  onCheckedChange={(val) => col.toggleVisibility(val)}
+                >
+                  {COLUMN_LABELS[col.id] ?? col.id}
+                </DropdownMenuCheckboxItem>,
+              ]
+            : [],
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

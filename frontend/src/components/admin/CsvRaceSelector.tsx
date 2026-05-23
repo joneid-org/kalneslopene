@@ -19,7 +19,7 @@ export function CsvRaceSelector({
   onSelect: (race: RaceDTO) => void;
   onNext: () => void;
 }) {
-  const sorted = [...races].sort((a, b) =>
+  const sorted = races.toSorted((a, b) =>
     raceDateToSortKey(b.raceDate).localeCompare(raceDateToSortKey(a.raceDate)),
   );
 

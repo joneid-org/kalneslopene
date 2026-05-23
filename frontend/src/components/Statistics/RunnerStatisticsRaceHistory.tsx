@@ -51,7 +51,7 @@ export default function RunnerStatisticsRaceHistory({
             <Button
               size="sm"
               variant="ghost"
-              className="h-7 w-7 p-0"
+              className="size-7 p-0"
               disabled={yearIndex === 0}
               onClick={() => setYearIndex((i) => i - 1)}
             >
@@ -63,7 +63,7 @@ export default function RunnerStatisticsRaceHistory({
             <Button
               size="sm"
               variant="ghost"
-              className="h-7 w-7 p-0"
+              className="size-7 p-0"
               disabled={yearIndex === availableYears.length - 1}
               onClick={() => setYearIndex((i) => i + 1)}
             >

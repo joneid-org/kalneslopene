@@ -109,7 +109,7 @@ export function OrganizersCard({
                   <Button
                     size="sm"
                     variant="ghost"
-                    className="h-7 w-7 p-0"
+                    className="size-7 p-0"
                     onClick={() => onEdit(org)}
                   >
                     <PencilIcon className="size-3.5" />

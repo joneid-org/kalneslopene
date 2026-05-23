@@ -34,7 +34,7 @@ export type CsvRow = {
 
 type EditMode = "time" | "link" | "create" | null;
 
-const actionBtnClass = "h-7 w-7 p-0";
+const actionBtnClass = "size-7 p-0";
 
 function RowEditor({
   row,
@@ -49,7 +49,7 @@ function RowEditor({
   const [mode, setMode] = useState<EditMode>(null);
 
   // Time editing
-  const [time, setTime] = useState(formatSecondsToTime(row.timeSeconds));
+  const [time, setTime] = useState(() => formatSecondsToTime(row.timeSeconds));
 
   // Runner linking
   const [searchQuery, setSearchQuery] = useState("");
@@ -84,7 +84,6 @@ function RowEditor({
           placeholder="mm:ss"
           value={time}
           onChange={(e) => setTime(e.target.value)}
-          autoFocus
         />
         <Button
           size="sm"
@@ -101,7 +100,7 @@ function RowEditor({
         <Button
           size="sm"
           variant="ghost"
-          className="h-7 w-7 p-0"
+          className="size-7 p-0"
           onClick={() => setMode(null)}
         >
           <XIcon className="size-3.5" />
@@ -117,10 +116,9 @@ function RowEditor({
           <SearchIcon className="size-3.5 text-muted-foreground shrink-0" />
           <Input
             className="h-7 text-xs px-2"
-            placeholder="Søk løper..."
+            placeholder="Søk løper…"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            autoFocus
           />
           <Button
             size="sm"
@@ -166,7 +164,6 @@ function RowEditor({
             className="h-7 text-xs px-2"
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
-            autoFocus
           />
         </div>
         <div className="space-y-1">
@@ -196,7 +193,7 @@ function RowEditor({
             onClick={() => createMutation.mutate()}
           >
             <PlusIcon className="size-3" />
-            {createMutation.isPending ? "Oppretter..." : "Opprett løper"}
+            {createMutation.isPending ? "Oppretter…" : "Opprett løper"}
           </Button>
           <Button
             size="sm"
@@ -250,7 +247,7 @@ function RowEditor({
       <Button
         size="sm"
         variant="ghost"
-        className="h-6 w-6 p-0 text-destructive/70 hover:text-destructive"
+        className="size-6 p-0 text-destructive/70 hover:text-destructive"
         onClick={onClose}
         title="Lukk"
       >
@@ -366,7 +363,7 @@ export function CsvReviewTable({
                       <Button
                         size="sm"
                         variant="ghost"
-                        className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
+                        className="size-6 p-0 text-muted-foreground hover:text-foreground"
                         onClick={() => setEditingId(row.id)}
                       >
                         <PencilIcon className="size-3.5" />
@@ -374,7 +371,7 @@ export function CsvReviewTable({
                       <Button
                         size="sm"
                         variant="ghost"
-                        className="h-6 w-6 p-0 text-destructive/60 hover:text-destructive"
+                        className="size-6 p-0 text-destructive/60 hover:text-destructive"
                         onClick={() => removeRow(row.id)}
                       >
                         <XIcon className="size-3.5" />

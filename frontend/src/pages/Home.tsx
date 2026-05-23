@@ -1,3 +1,4 @@
+import { SeasonStatBoxes } from "@/components/SeasonStatBoxes.tsx";
 import { Hero } from "../components/Hero/Hero.tsx";
 import NewsFeed from "../components/News/NewsFeed.tsx";
 import OrganisersBlock from "../components/OrganisersBlock.tsx";
@@ -11,8 +12,7 @@ export function Home() {
       <div className="flex flex-col page-content gap-6">
         <Slogan />
         <NewsFeed />
-        {/* TODO: Refactor and uncomment this component */}
-        {/*<SeasonStatBoxes />*/}
+        <SeasonStatBoxes />
         <OrganisersBlock />
         <SponsorsBlock />
       </div>

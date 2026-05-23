@@ -119,8 +119,6 @@ function TagForm({
 
 export function NewsfeedTagManager() {
   const qc = useQueryClient();
-  const invalidate = () =>
-    qc.invalidateQueries({ queryKey: ["newsfeed", "tags"] });
 
   const { data: tags = [] } = useQuery(QUERIES.newsfeed.getAllTags);
 
@@ -129,7 +127,7 @@ export function NewsfeedTagManager() {
     mutationFn: (dto: Omit<NewsfeedTagDTO, "uuid">) =>
       QUERIES.newsfeed.createTag(dto as NewsfeedTagDTO).queryFn(),
     onSuccess: () => {
-      invalidate();
+      qc.invalidateQueries({ queryKey: ["newsfeed", "tags"] });
       setShowAdd(false);
     },
   });
@@ -139,7 +137,7 @@ export function NewsfeedTagManager() {
     mutationFn: (dto: NewsfeedTagDTO) =>
       QUERIES.newsfeed.updateTag(dto.uuid, dto).queryFn(),
     onSuccess: () => {
-      invalidate();
+      qc.invalidateQueries({ queryKey: ["newsfeed", "tags"] });
       setEditing(null);
     },
   });
@@ -148,7 +146,7 @@ export function NewsfeedTagManager() {
   const deleteMutation = useMutation({
     mutationFn: (uuid: string) => QUERIES.newsfeed.deleteTag(uuid).queryFn(),
     onSuccess: () => {
-      invalidate();
+      qc.invalidateQueries({ queryKey: ["newsfeed", "tags"] });
       setDeleting(null);
     },
   });

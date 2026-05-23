@@ -1,4 +1,4 @@
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { FilterIcon, TimerIcon, TrophyIcon, UsersIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
@@ -6,15 +6,11 @@ import StatBox from "@/components/StatBox.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Card, CardContent } from "@/components/ui/card.tsx";
 import {
-  getAverageParticipants,
-  getCourseRecord,
-  getFastestRunner,
-  getNumberOfUniqueRunners,
-  getNumberOfUniqueRunnersThisYear,
-} from "@/lib/statisticsUtils.ts";
-import { extractYear, formatDateFull } from "@/lib/timeUtils.ts";
+  formatDateFull,
+  formatSecondsToTime,
+  mapResultTimeToNumber,
+} from "@/lib/timeUtils.ts";
 import { getYears } from "@/lib/utils.ts";
-import type { RaceRunnerDTO } from "@/model/DTO.ts";
 
 export default function RaceStatistics() {
   const [selectedYear, setSelectedYear] = useState<number | undefined>(
@@ -22,41 +18,12 @@ export default function RaceStatistics() {
   );
 
   const { data: races } = useQuery(QUERIES.race.getAllRaces());
-
-  const runnerQueries = useQueries({
-    queries: (races ?? []).map((race) =>
-      QUERIES.race.getAllRunnersInRace(race.uuid ?? ""),
-    ),
-  });
-
-  const allRaceRunners = useMemo(
-    () => runnerQueries.flatMap((q) => (q.data ?? []) as RaceRunnerDTO[]),
-    [runnerQueries],
+  const { data: allTimeStatistics } = useQuery(QUERIES.statistics.race());
+  const { data: yearStatistics } = useQuery(
+    QUERIES.statistics.race(selectedYear),
   );
 
   const availableYears = useMemo(() => getYears(races ?? []), [races]);
-
-  const filtered = useMemo(
-    () =>
-      selectedYear
-        ? allRaceRunners.filter(
-            (rr) => extractYear(rr.race.raceDate) === selectedYear,
-          )
-        : allRaceRunners,
-    [allRaceRunners, selectedYear],
-  );
-
-  const totalUniqueRunners = selectedYear
-    ? getNumberOfUniqueRunnersThisYear(allRaceRunners, selectedYear)
-    : getNumberOfUniqueRunners(allRaceRunners);
-  const averageParticipation = getAverageParticipants(filtered);
-  const courseRecord = getCourseRecord(filtered);
-
-  const allTimeBest = useMemo(
-    () => getFastestRunner(allRaceRunners),
-    [allRaceRunners],
-  );
-  const allTimeRecord = getCourseRecord(allRaceRunners);
 
   return (
     <section className="space-y-4">
@@ -86,22 +53,24 @@ export default function RaceStatistics() {
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         <StatBox
           icon={UsersIcon}
-          value={totalUniqueRunners}
+          value={yearStatistics?.uniqueRunners.total}
           label="Unike løpere"
         />
         <StatBox
           icon={FilterIcon}
-          value={averageParticipation}
+          value={yearStatistics?.averageRunnersPerRace?.toFixed(1) ?? "—"}
           label="Snitt deltakere"
         />
         <StatBox
           icon={TimerIcon}
-          value={courseRecord}
+          value={formatSecondsToTime(
+            mapResultTimeToNumber(yearStatistics?.courseRecord?.resultTime),
+          )}
           label="Årets raskeste tid"
         />
       </div>
 
-      {allTimeBest && (
+      {allTimeStatistics?.courseRecord && (
         <Card className="bg-muted/30">
           <CardContent className="py-3 px-4 flex items-center gap-3">
             <TrophyIcon className="size-4 text-amber-500 shrink-0" />
@@ -110,12 +79,20 @@ export default function RaceStatistics() {
                 Løyperekord
               </span>
               <p className="text-sm">
-                <span className="font-semibold">{allTimeRecord}</span>
+                <span className="font-semibold">
+                  {formatSecondsToTime(
+                    mapResultTimeToNumber(
+                      allTimeStatistics.courseRecord.resultTime,
+                    ),
+                  )}
+                </span>
                 {" — "}
-                {allTimeBest.runner.name}
+                {allTimeStatistics?.courseRecord.runner.name}
                 <span className="text-muted-foreground">
                   {", "}
-                  {formatDateFull(allTimeBest.race.raceDate)}
+                  {formatDateFull(
+                    allTimeStatistics?.courseRecord.race.raceDate,
+                  )}
                 </span>
               </p>
             </div>

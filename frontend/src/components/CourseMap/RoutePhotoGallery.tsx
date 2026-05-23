@@ -46,7 +46,9 @@ export function RoutePhotoGallery({ photos }: Props) {
               </span>
               <div className="h-px flex-1 bg-border" />
             </div>
-            <h3 className="text-2xl font-bold tracking-tight">{photo.title}</h3>
+            <h3 className="text-2xl font-semibold tracking-tight">
+              {photo.title}
+            </h3>
             <p className="text-muted-foreground leading-relaxed">
               {photo.caption}
             </p>

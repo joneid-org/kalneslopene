@@ -1,8 +1,7 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { PencilIcon, SaveIcon, UserPlusIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
-import { queryClient } from "@/api/queryClient.ts";
 import {
   BulkAddRunnersForm,
   type QueuedRunner,
@@ -31,12 +30,11 @@ import type { RaceDTO, RaceRunnerDTO } from "@/model/DTO.ts";
 export function PastRaceEditDialog({
   race,
   onClose,
-  onSaved,
 }: {
   race: RaceDTO;
   onClose: () => void;
-  onSaved: () => void;
 }) {
+  const qc = useQueryClient();
   const [weather, setWeather] = useState(race.weather ?? "");
   const [showAddRunners, setShowAddRunners] = useState(false);
   const [pendingRunners, setPendingRunners] = useState<QueuedRunner[]>([]);
@@ -73,11 +71,10 @@ export function PastRaceEditDialog({
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({
+      qc.invalidateQueries({
         queryKey: ["race", race.uuid, "runnersInRace"],
       });
-      queryClient.invalidateQueries({ queryKey: ["race", "getAll"] });
-      onSaved();
+      qc.invalidateQueries({ queryKey: ["race", "getAll"] });
       onClose();
     },
   });
@@ -85,15 +82,22 @@ export function PastRaceEditDialog({
   const removeRunner = useMutation({
     mutationFn: (rr: RaceRunnerDTO) =>
       QUERIES.race.removeRunnersFromRace(race.uuid, [rr]).queryFn(),
-    // onSuccess: refreshRunners, TODO: implement optimisic update
+    onSuccess: () => {
+      qc.invalidateQueries({
+        queryKey: ["race", race.uuid, "runnersInRace"],
+      });
+      qc.invalidateQueries({ queryKey: ["race", "getAll"] });
+    },
   });
 
   const updateRunner = useMutation({
     mutationFn: (rr: RaceRunnerDTO) =>
       QUERIES.race.updateRunnerInRace(race.uuid, rr.runner.uuid, rr).queryFn(),
     onSuccess: () => {
+      qc.invalidateQueries({
+        queryKey: ["race", race.uuid, "runnersInRace"],
+      });
       setEditingRunnerUuid(null);
-      // refreshRunners(); TODO: implement optimisic update
     },
   });
 
@@ -194,7 +198,7 @@ export function PastRaceEditDialog({
                           <Button
                             size="sm"
                             variant="ghost"
-                            className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
+                            className="size-6 p-0 text-muted-foreground hover:text-foreground"
                             onClick={() => startEditing(rr)}
                           >
                             <PencilIcon className="size-3.5" />
@@ -223,6 +227,7 @@ export function PastRaceEditDialog({
                             type="checkbox"
                             checked={editHideTime}
                             onChange={(e) => setEditHideTime(e.target.checked)}
+                            aria-label="Skjul tid (kun deltatt)"
                             className="rounded"
                           />
                           <label
@@ -247,7 +252,7 @@ export function PastRaceEditDialog({
                         <Button
                           size="sm"
                           variant="ghost"
-                          className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
+                          className="size-6 p-0 text-muted-foreground hover:text-foreground"
                           onClick={() => setEditingRunnerUuid(null)}
                         >
                           <XIcon className="size-3.5" />

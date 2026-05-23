@@ -32,6 +32,17 @@ export type YrWeatherResult = {
   windSpeed: number;
 };
 
+const OSLO_FORMATTER = new Intl.DateTimeFormat("en-US", {
+  timeZone: "Europe/Oslo",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hour12: false,
+});
+
 /**
  * Finds the Yr forecast timeseries entry closest to the given race date/hour.
  * raceDate is treated as a local Norway/Oslo time and converted to UTC for comparison.
@@ -49,17 +60,7 @@ export function useYrWeather(
   const raceDateObj = new Date(raceDate);
 
   // Get the UTC offset for Europe/Oslo at raceDateObj (handles DST automatically)
-  const osloFormatter = new Intl.DateTimeFormat("en-US", {
-    timeZone: "Europe/Oslo",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
-  });
-  const parts = osloFormatter.formatToParts(raceDateObj);
+  const parts = OSLO_FORMATTER.formatToParts(raceDateObj);
   const get = (type: string) =>
     Number(parts.find((p) => p.type === type)?.value ?? 0);
   // Reconstruct the local Oslo wall-clock time that corresponds to raceDateObj

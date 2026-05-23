@@ -45,15 +45,18 @@ export function ImportResultsFromFile() {
   const saveMutation = useMutation({
     mutationFn: async (race: RaceDTO) => {
       const raceUuid = race.uuid;
-      const raceRunners = rows
-        .filter((r) => r.resolvedRunner !== null)
-        .map((r) => ({
-          // biome-ignore lint/style/noNonNullAssertion: ex
-          runner: r.resolvedRunner!,
-          race: race,
-          resultTime: secondsToDuration(r.timeSeconds),
-          hideTime: r.timeSeconds === 0,
-        }));
+      const raceRunners = rows.flatMap((r) =>
+        r.resolvedRunner === null
+          ? []
+          : [
+              {
+                runner: r.resolvedRunner,
+                race: race,
+                resultTime: secondsToDuration(r.timeSeconds),
+                hideTime: r.timeSeconds === 0,
+              },
+            ],
+      );
       await QUERIES.race.addRunnersToRace(raceUuid, raceRunners).queryFn();
     },
     onSuccess: (_, race) => {
@@ -78,7 +81,7 @@ export function ImportResultsFromFile() {
         Tilbake
       </Button>
 
-      <h1 className="text-2xl font-bold tracking-tight">
+      <h1 className="text-2xl font-semibold tracking-tight">
         Registrer resultat fra fil
       </h1>
       <p className="text-sm text-muted-foreground">

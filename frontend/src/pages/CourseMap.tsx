@@ -46,7 +46,7 @@ export function CourseMap() {
   return (
     <div className="page-content space-y-6">
       <div className="space-y-1">
-        <h1 className="text-3xl font-bold tracking-tight">Løypekart</h1>
+        <h1 className="text-3xl font-semibold tracking-tight">Løypekart</h1>
         <p className="text-muted-foreground text-sm">
           Klikk på en pin i kartet for å se informasjon om stedet.
         </p>
@@ -56,7 +56,7 @@ export function CourseMap() {
         {mapLegend.map(({ color, label }) => (
           <div key={label} className="flex items-center gap-1.5">
             <span
-              className="inline-block w-3 h-3 rounded-full border border-white shadow"
+              className="inline-block size-3 rounded-full border border-white shadow"
               style={{ background: color }}
             />
             <span className="text-muted-foreground">{label}</span>

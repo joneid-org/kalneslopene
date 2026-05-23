@@ -1,8 +1,10 @@
 package com.grimsgaards.kalneslopene.service
 
+import com.grimsgaards.kalneslopene.model.dto.Gender
 import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
 import com.grimsgaards.kalneslopene.model.dto.RunnerDTO
 import com.grimsgaards.kalneslopene.model.entities.RunnerEntity
+import com.grimsgaards.kalneslopene.model.input.RunnerInput
 import com.grimsgaards.kalneslopene.repository.RunnerRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -21,25 +23,25 @@ class RunnerService(
     }
 
     fun getRunnerByName(name: String): List<RunnerDTO> {
-        return runnerRepository.findByNameStartsWith(name).map { it.toDto() }
+        return runnerRepository.findByNameStartsWithIgnoreCase(name).map { it.toDto() }
     }
 
-    fun createMultipleRunners(runners: List<RunnerDTO>): List<RunnerDTO> {
+    fun createMultipleRunners(runners: List<RunnerInput>): List<RunnerDTO> {
         return runnerRepository.saveAll(runners.map {
             RunnerEntity(
                 name = it.name,
-                gender = it.gender
+                gender = Gender.valueOf(it.gender.uppercase()),
             )
         }).map { it.toDto() }
     }
 
-    fun updateRunner(updatedRunner: RunnerDTO, uuid: UUID): RunnerDTO {
+    fun updateRunner(uuid: UUID, updatedRunner: RunnerInput): RunnerDTO {
         val existingRunner = runnerRepository.findById(uuid)
         .orElseThrow { NoSuchElementException("Runner with uuid $uuid not found") }
 
         existingRunner.apply {
             name = updatedRunner.name
-            gender = updatedRunner.gender
+            gender = Gender.valueOf(updatedRunner.gender.uppercase())
         }
         return runnerRepository.save(existingRunner).toDto()
     }

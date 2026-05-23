@@ -2,6 +2,7 @@ package com.grimsgaards.kalneslopene.controller
 
 import com.grimsgaards.kalneslopene.model.dto.RaceDTO
 import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
+import com.grimsgaards.kalneslopene.model.input.RaceInput
 import com.grimsgaards.kalneslopene.service.RaceService
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -13,34 +14,35 @@ class RaceController(
 ) {
 
     @GetMapping
-    fun getAllRaces(): List<RaceDTO> {
-        return raceService.getAll()
-    }
+    fun getAllRaces(): List<RaceDTO> = raceService.getAll()
 
     @GetMapping("/{uuid}")
-    fun getRaceById(@PathVariable uuid: UUID): RaceDTO {
-        return raceService.findByUuid(uuid)
-    }
+    fun getRaceById(@PathVariable uuid: UUID): RaceDTO = raceService.findByUuid(uuid)
 
     @PatchMapping("/{uuid}")
-    fun updateRace(@RequestBody race: RaceDTO, @PathVariable uuid: UUID): RaceDTO {
-        return raceService.updateRace(race, uuid)
-    }
+    fun updateRace(@RequestBody input: RaceInput, @PathVariable uuid: UUID): RaceDTO = raceService.updateRace(uuid, input)
 
     @DeleteMapping("/{uuid}")
-    fun deleteRaceById(@PathVariable uuid: UUID) {
-        return raceService.deleteRaceById(uuid)
-    }
+    fun deleteRaceById(@PathVariable uuid: UUID) = raceService.deleteRaceById(uuid)
 
-    @PostMapping("/createRaces")
-    fun createRaces(@RequestBody races: List<RaceDTO>): List<RaceDTO> {
-
-        return raceService.createRaces(races)
-    }
+    @PostMapping()
+    fun createRaces(@RequestBody races: List<RaceInput>): List<RaceDTO> = raceService.createRaces(races)
 
     @GetMapping("/{uuid}/runners")
-    fun getRunnersInRace(@PathVariable uuid: UUID): List<RaceRunnerDTO> {
-        return raceService.findAllRunnersInRace(uuid)
-    }
+    fun getRunnersInRace(@PathVariable uuid: UUID): List<RaceRunnerDTO> = raceService.findAllRunnersInRace(uuid)
 
+    @PostMapping("/{uuid}/runners")
+    fun addRunnersToRace(@PathVariable uuid: UUID, @RequestBody runners: List<RaceRunnerDTO>): List<RaceRunnerDTO> =
+        raceService.addRunnersToRace(uuid, runners)
+
+    @PatchMapping("/{uuid}/runners/{runnerUuid}")
+    fun updateRunnerInRace(
+        @PathVariable uuid: UUID,
+        @PathVariable runnerUuid: UUID,
+        @RequestBody runner: RaceRunnerDTO
+    ): RaceRunnerDTO = raceService.updateRunnerInRace(uuid, runnerUuid, runner)
+
+    @DeleteMapping("/{uuid}/runners")
+    fun removeRunnersFromRace(@PathVariable uuid: UUID, @RequestBody runnerUuids: List<UUID>) =
+        raceService.removeRunnersFromRace(uuid, runnerUuids.toSet())
 }

@@ -1,0 +1,104 @@
+/*
+ * styles.css
+ * Shared component utility classes extracted from pages and components.
+ * Use @apply to compose Tailwind utilities into reusable class names.
+ * Import this file in App.css (already imported via theme.css chain or directly).
+ */
+
+/* ─── Global layout tokens ──────────────────────────────── */
+:root {
+  --page-max-width: 1200px;
+}
+
+/* Base font — must be on html so rem units scale correctly */
+html {
+  font-size: 16px;
+}
+
+/* 1280px+ (large desktop) */
+@media (min-width: 1280px) {
+  html { font-size: 17px; }
+}
+
+/* 1920px+ (full HD / 2K) */
+@media (min-width: 1920px) {
+  html { font-size: 19px; }
+}
+
+/* 2560px+ (QHD and 4K logical viewports) */
+@media (min-width: 2560px) {
+  html { font-size: 22px; }
+}
+
+@layer components {
+  /* ─── Page layout ──────────────────────────────────────── */
+
+  /* Standard full-width page content wrapper */
+  .page-content {
+    @apply w-full mx-auto px-3 py-3 sm:px-4;
+    max-width: var(--page-max-width);
+  }
+
+  /* Tighter wrapper used for article/detail pages */
+  .page-content-sm {
+    @apply w-full mx-auto px-3 py-4 sm:px-4;
+    max-width: var(--page-max-width);
+  }
+
+  /* ─── Page headings ────────────────────────────────────── */
+
+  .page-title {
+    @apply text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900 leading-tight tracking-tight;
+  }
+
+  .page-subtitle {
+    @apply text-sm lg:text-base text-muted-foreground;
+  }
+
+  /* ─── Section spacing ──────────────────────────────────── */
+
+  .section-stack {
+    @apply flex flex-col gap-6 lg:gap-8;
+  }
+
+  /* ─── Cards ────────────────────────────────────────────── */
+
+  .card-hover {
+    @apply transition-shadow hover:shadow-md;
+  }
+
+  /* ─── Interactive links / buttons ─────────────────────── */
+
+  .link-hover {
+    @apply transition-colors hover:text-blue-600;
+  }
+
+  /* ─── Tag pills ────────────────────────────────────────── */
+
+  .tag-pill {
+    @apply text-xs font-medium uppercase px-1.5 py-0.5 hover:opacity-80 transition-opacity cursor-pointer;
+  }
+
+  /* ─── Muted / secondary text ───────────────────────────── */
+
+  .text-secondary {
+    @apply text-sm lg:text-base text-muted-foreground leading-relaxed;
+  }
+
+  .text-label {
+    @apply text-[10px] lg:text-xs font-semibold uppercase tracking-widest text-muted-foreground/60;
+  }
+
+  /* ─── Stat number display ──────────────────────────────── */
+
+  .stat-value {
+    @apply text-2xl lg:text-3xl font-black tabular-nums;
+  }
+
+  /* ─── Empty state ──────────────────────────────────────── */
+
+  .empty-state {
+    @apply flex flex-col items-center justify-center py-16 gap-3 text-muted-foreground;
+  }
+}
+

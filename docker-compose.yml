@@ -1,20 +1,53 @@
 services:
   db:
     image: postgres:16.13-alpine
-    restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: kalneslopene
-    ports:
-      - "5432:5432"
     volumes:
       - kalnes_db:/var/lib/postgresql/data
+    networks:
+      - internal
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        condition: any
 
   backend:
-    build: ./backend/Dockerfile
-    env_file:
-      - path: .env
+    image: ${REGISTRY_HOST}/joneid-org/torsdagslopet:${IMAGE_TAG:-latest}
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-cloud}
+      SPRING_LIQUIBASE_DROP_FIRST: ${SPRING_LIQUIBASE_DROP_FIRST:-false}
+      POSTGRES_URL: jdbc:postgresql://db:5432/kalneslopene
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME}
+    networks:
+      - internal
+      - dokploy-network
+    deploy:
+      resources:
+        limits:
+          cpus: ${CPU_LIMIT:-1}
+          memory: ${MEMORY_LIMIT:-2g}
+      replicas: 1
+      restart_policy:
+        condition: any
+      update_config:
+        order: start-first
+        failure_action: rollback
 
 volumes:
   kalnes_db:
+
+networks:
+  internal:
+  dokploy-network:
+    external: true

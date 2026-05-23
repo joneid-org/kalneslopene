@@ -1,0 +1,26 @@
+version: 1
+name: Add runners to race
+requests:
+  - name: Add multiple runners
+    method: POST
+    url: http://localhost:8080/api/races/{{raceUuid}}/runners
+    headers:
+      Content-Type: application/json
+    body:
+      type: json
+      value: |
+        [
+          {
+            "runner": { "uuid": "{{runnerUuid1}}" },
+            "race": { "uuid": "{{raceUuid}}" },
+            "resultTime": "PT00H22M05S",
+            "hideTime": false
+          },
+          {
+            "runner": { "uuid": "{{runnerUuid2}}" },
+            "race": { "uuid": "{{raceUuid}}" },
+            "resultTime": "PT00H25M10S",
+            "hideTime": false
+          }
+        ]
+

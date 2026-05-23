@@ -1,0 +1,5 @@
+/frontend/ @emilienilsen
+/backend/ @emilienilsen @ejoneid
+/infra/ @ejoneid
+/.github/ @ejoneid
+*.nix @ejoneid

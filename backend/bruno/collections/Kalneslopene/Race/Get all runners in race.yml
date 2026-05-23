@@ -16,7 +16,7 @@ http:
       {
           "uuid": "a1000000-0000-0000-0000-000000000001",
           "name": "Eirik Solberg",
-          "gender": "Mann"
+          "gender": "MALE"
       }
   auth: inherit
 

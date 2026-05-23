@@ -1,0 +1,4 @@
+ALTER TABLE newsfeed
+    ADD COLUMN IF NOT EXISTS header_image TEXT,
+    ADD COLUMN IF NOT EXISTS images TEXT[] DEFAULT '{}';
+

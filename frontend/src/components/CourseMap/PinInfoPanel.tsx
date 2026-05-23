@@ -11,14 +11,17 @@ import {
   categoryLabel,
   categoryVariant,
   type Pin,
+  type RoutePhoto,
 } from "@/data/loypekartData.ts";
 
 type Props = {
   pin: Pin | null;
   onClose: () => void;
+  photo?: RoutePhoto;
+  onPhotoClick?: () => void;
 };
 
-export function PinInfoPanel({ pin, onClose }: Props) {
+export function PinInfoPanel({ pin, onClose, photo, onPhotoClick }: Props) {
   if (!pin) {
     return (
       <Card className="h-full flex items-center justify-center border-dashed">
@@ -56,6 +59,19 @@ export function PinInfoPanel({ pin, onClose }: Props) {
       <Separator />
       <CardContent className="pt-4 space-y-3">
         <p className="text-sm">{pin.description}</p>
+        {photo && (
+          <button
+            type="button"
+            onClick={onPhotoClick}
+            className="w-full overflow-hidden rounded-md border shadow-sm hover:opacity-90 transition-opacity"
+          >
+            <img
+              src={photo.imageUrl}
+              alt={photo.title}
+              className="w-full h-32 object-cover"
+            />
+          </button>
+        )}
         {pin.tips && (
           <div className="rounded-md bg-muted px-3 py-2 text-sm border-l-2 border-primary">
             <span className="font-medium text-xs uppercase tracking-wide text-primary">

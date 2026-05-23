@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "tsc": "tsc",
+    "tsc": "tsc -b",
     "preview": "vite preview",
     "check": "biome check",
     "check:fix": "biome check --write"
@@ -24,16 +24,18 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.6.0",
     "ky": "^1.14.3",
     "leaflet": "^1.9.4",
     "lucide-react": "^1.7.0",
     "radix-ui": "^1.4.3",
     "react": "^19.2.0",
+    "react-day-picker": "^10.0.1",
     "react-dom": "^19.2.0",
     "react-leaflet": "^5.0.0",
     "react-router": "^7.13.0",
-    "recharts": "^3.8.0",
+    "recharts": "^3.8.1",
     "tailwind-merge": "^3.5.0",
     "vaul": "^1.1.2"
   },

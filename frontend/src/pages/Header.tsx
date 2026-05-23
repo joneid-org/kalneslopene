@@ -18,7 +18,7 @@ const headerBarStatic = [
 ];
 
 export const Header = forwardRef<HTMLElement>(function Header(_props, ref) {
-  const { data: races } = useQuery(QUERIES.race.getAllRaces);
+  const { data: races } = useQuery(QUERIES.race.getAllRaces());
 
   return (
     <header ref={ref} className="border-b bg-white sticky top-0 z-50 shadow-sm">

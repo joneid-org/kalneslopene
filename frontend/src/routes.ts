@@ -1,4 +1,6 @@
 import { createBrowserRouter } from "react-router";
+import { ImagesPage } from "@/pages/admin/Images.tsx";
+import { RaceCalendar } from "@/pages/RaceCalendar.tsx";
 import { AuthGuard } from "./components/admin/AuthGuard.tsx";
 import { Layout } from "./Layout.tsx";
 import { Admin } from "./pages/Admin.tsx";
@@ -56,6 +58,10 @@ export const router = createBrowserRouter([
         Component: CourseMap,
       },
       {
+        path: "Løpskalender",
+        Component: RaceCalendar,
+      },
+      {
         path: "nyheter/tag/:tag",
         Component: NewsTag,
       },
@@ -85,6 +91,10 @@ export const router = createBrowserRouter([
           {
             path: "admin/results/import",
             Component: ImportResultsFromFile,
+          },
+          {
+            path: "admin/images",
+            Component: ImagesPage,
           },
           {
             path: "admin/runners",

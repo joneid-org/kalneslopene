@@ -76,7 +76,7 @@ html {
   /* ─── Tag pills ────────────────────────────────────────── */
 
   .tag-pill {
-    @apply text-white text-[9px] lg:text-[11px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full hover:opacity-80 transition-opacity cursor-pointer;
+    @apply text-xs font-medium uppercase px-1.5 py-0.5 hover:opacity-80 transition-opacity cursor-pointer;
   }
 
   /* ─── Muted / secondary text ───────────────────────────── */

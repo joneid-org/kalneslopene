@@ -18,7 +18,7 @@ export function Pictures() {
   const { uuid = "" } = useParams<{ uuid: string }>();
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  const { data: races } = useQuery(QUERIES.race.getAllRaces);
+  const { data: races } = useQuery(QUERIES.race.getAllRaces());
 
   const allRaces = races ?? [];
   const race = allRaces.find((r) => r.uuid === uuid);

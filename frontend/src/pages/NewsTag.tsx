@@ -5,7 +5,7 @@ import { QUERIES } from "@/api/queries.ts";
 import { TagNewsFeed } from "@/components/News/TagNewsFeed.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
-import { NEWS_IMAGES, tagBg } from "@/lib/newsUtils.ts";
+import { NEWS_IMAGES, tagColor } from "@/lib/newsUtils.ts";
 
 export function NewsTag() {
   const { tag } = useParams<{ tag: string }>();
@@ -26,9 +26,7 @@ export function NewsTag() {
         </Link>
         <Separator orientation="vertical" className="h-5" />
         <div className="flex items-center gap-2">
-          <span
-            className={`${tagBg(tag ?? "")} text-white text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full`}
-          >
+          <span className="tag-pill" style={{ color: tagColor(tag ?? "") }}>
             {tag}
           </span>
           <span className="text-sm text-gray-500">

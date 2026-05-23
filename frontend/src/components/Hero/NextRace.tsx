@@ -49,7 +49,7 @@ function WeatherRow({
 }
 
 export function NextRace() {
-  const { data: races } = useQuery(QUERIES.race.getAllRaces);
+  const { data: races } = useQuery(QUERIES.race.getAllRaces());
   const race = getUpcomingRaces(races ?? [])[0];
   const weather = useYrWeather(race?.raceDate);
 
@@ -72,20 +72,24 @@ export function NextRace() {
         <div className="w-px h-8 bg-white/30" />
         <div className="text-sm sm:text-base text-white space-y-1.5">
           {weather ? (
-            <>
-              <WeatherRow icon={weatherIcon(weather.symbol)}>
-                {weather.label}
-              </WeatherRow>
-              <WeatherRow icon={Thermometer}>
-                {weather.temperature}°C
-              </WeatherRow>
-              <WeatherRow icon={Wind}>{weather.windSpeed} m/s</WeatherRow>
-              {weather.precipitation > 0 && (
-                <WeatherRow icon={Droplets}>
-                  {weather.precipitation} mm
+            <div className="flex gap-4">
+              <div>
+                <WeatherRow icon={weatherIcon(weather.symbol)}>
+                  {weather.label}
                 </WeatherRow>
-              )}
-            </>
+                <WeatherRow icon={Thermometer}>
+                  {weather.temperature}°C
+                </WeatherRow>
+              </div>
+              <div>
+                <WeatherRow icon={Wind}>{weather.windSpeed} m/s</WeatherRow>
+                {weather.precipitation > 0 && (
+                  <WeatherRow icon={Droplets}>
+                    {weather.precipitation} mm
+                  </WeatherRow>
+                )}
+              </div>
+            </div>
           ) : (
             race.weather && <WeatherRow icon={Cloud}>{race.weather}</WeatherRow>
           )}

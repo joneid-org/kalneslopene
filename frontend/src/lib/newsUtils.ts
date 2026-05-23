@@ -1,32 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
 import { QUERIES } from "@/api/queries.ts";
-import type { NewsFeedDTO, NewsfeedTagDTO, RaceDTO } from "@/model/DTO.ts";
+import type { NewsFeedDTO, NewsfeedTagInput, RaceDTO } from "@/model/DTO.ts";
 
-export const PREDEFINED_TAGS: NewsfeedTagDTO[] = [
-  { label: "Results", value: "resultater", color: "bg-blue-600" },
-  { label: "Pictures", value: "bilder", color: "bg-purple-600" },
-  { label: "Kommende løp", value: "kommende løp", color: "bg-green-600" },
-  { label: "Ukens løp", value: "ukens løp", color: "bg-orange-500" },
+export const PREDEFINED_TAGS: NewsfeedTagInput[] = [
+  { label: "Results", value: "resultater", color: "#2563eb" },
+  { label: "Pictures", value: "bilder", color: "#9333ea" },
+  { label: "Kommende løp", value: "kommende løp", color: "#16a34a" },
+  { label: "Ukens løp", value: "ukens løp", color: "#f97316" },
 ];
 
-export const TAG_BG: Record<string, string> = Object.fromEntries(
-  PREDEFINED_TAGS.map((t) => [t.value, t.color]),
-);
-
-export function tagBg(tag: string, tags?: NewsfeedTagDTO[]) {
+export function tagColor(tag: string, tags?: NewsfeedTagInput[]): string {
   const list = tags ?? PREDEFINED_TAGS;
   return (
     list.find((t) => t.value.toLowerCase() === tag.toLowerCase())?.color ??
-    "bg-black"
+    "#000000"
   );
 }
 
-export function tagText(tag: string, tags?: NewsfeedTagDTO[]) {
-  const bg = tagBg(tag, tags);
-  return bg.replace(/^bg-/, "text-");
-}
-
-export function useTags(): NewsfeedTagDTO[] {
+export function useTags(): NewsfeedTagInput[] {
   const { data } = useQuery(QUERIES.newsfeed.getAllTags);
   return data && data.length > 0 ? data : PREDEFINED_TAGS;
 }

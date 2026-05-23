@@ -1,5 +1,3 @@
-/** biome-ignore-all lint/suspicious/noArrayIndexKey: <explanation> */
-
 import { ImagePlus, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { FormFooter } from "@/components/admin/FormFooter.tsx";
@@ -14,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
-import { tagBg, useTags } from "@/lib/newsUtils.ts";
+import { tagColor, useTags } from "@/lib/newsUtils.ts";
 import { readFileAsDataURL } from "@/lib/utils.ts";
 import type { NewsFeedDTO } from "@/model/DTO.ts";
 
@@ -111,7 +109,8 @@ export function NewsfeedForm({
                   {selectedTags.map((tag) => (
                     <span
                       key={tag}
-                      className={`${tagBg(tag, availableTags)} text-white text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full`}
+                      className="tag-pill"
+                      style={{ color: tagColor(tag ?? availableTags) }}
                     >
                       {availableTags.find((t) => t.value === tag)?.label ?? tag}
                     </span>
@@ -129,7 +128,8 @@ export function NewsfeedForm({
                 className="gap-2"
               >
                 <Badge
-                  className={`${tag.color} text-white border-0 text-[9px] font-black uppercase tracking-widest`}
+                  className="border text-[9px] font-black uppercase tracking-widest bg-transparent"
+                  style={{ color: tag.color, borderColor: tag.color }}
                 >
                   {tag.label}
                 </Badge>

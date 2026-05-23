@@ -1,7 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { PencilIcon, SaveIcon, UserPlusIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
+import { queryClient } from "@/api/queryClient.ts";
 import {
   BulkAddRunnersForm,
   type QueuedRunner,
@@ -29,20 +30,20 @@ import type { RaceDTO, RaceRunnerDTO } from "@/model/DTO.ts";
 
 export function PastRaceEditDialog({
   race,
-  initialRunners,
   onClose,
   onSaved,
 }: {
   race: RaceDTO;
-  initialRunners: RaceRunnerDTO[];
   onClose: () => void;
   onSaved: () => void;
 }) {
-  const qc = useQueryClient();
   const [weather, setWeather] = useState(race.weather ?? "");
   const [showAddRunners, setShowAddRunners] = useState(false);
   const [pendingRunners, setPendingRunners] = useState<QueuedRunner[]>([]);
-  const [runners, setRunners] = useState<RaceRunnerDTO[]>(initialRunners);
+  const { data: initialRunners } = useQuery(
+    QUERIES.race.getAllRunnersInRace(race.uuid),
+  );
+  const runners = initialRunners ?? [];
   const [editingRunnerUuid, setEditingRunnerUuid] = useState<string | null>(
     null,
   );
@@ -52,23 +53,15 @@ export function PastRaceEditDialog({
   const pendingUuids = new Set(pendingRunners.map((r) => r.runner.uuid));
   const runnerCount = runners.length + pendingRunners.length;
 
-  const refreshRunners = async () => {
-    const fresh = await QUERIES.race
-      .getAllRunnersInRace(race.uuid ?? "")
-      .queryFn();
-    setRunners(fresh);
-    qc.invalidateQueries({ queryKey: ["race", race.uuid, "runnersInRace"] });
-  };
-
   const saveMutation = useMutation({
     mutationFn: async () => {
       await QUERIES.race
-        .updateRace(race.uuid!, { ...race, weather: weather || undefined })
+        .updateRace(race.uuid, { ...race, weather: weather || undefined })
         .queryFn();
       if (pendingRunners.length > 0) {
         await QUERIES.race
           .addRunnersToRace(
-            race.uuid!,
+            race.uuid,
             pendingRunners.map((q) => ({
               runner: q.runner,
               race,
@@ -80,8 +73,10 @@ export function PastRaceEditDialog({
       }
     },
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["race", race.uuid, "runnersInRace"] });
-      qc.invalidateQueries({ queryKey: ["race", "getAll"] });
+      queryClient.invalidateQueries({
+        queryKey: ["race", race.uuid, "runnersInRace"],
+      });
+      queryClient.invalidateQueries({ queryKey: ["race", "getAll"] });
       onSaved();
       onClose();
     },
@@ -89,18 +84,16 @@ export function PastRaceEditDialog({
 
   const removeRunner = useMutation({
     mutationFn: (rr: RaceRunnerDTO) =>
-      QUERIES.race.removeRunnersFromRace(race.uuid!, [rr]).queryFn(),
-    onSuccess: refreshRunners,
+      QUERIES.race.removeRunnersFromRace(race.uuid, [rr]).queryFn(),
+    // onSuccess: refreshRunners, TODO: implement optimisic update
   });
 
   const updateRunner = useMutation({
     mutationFn: (rr: RaceRunnerDTO) =>
-      QUERIES.race
-        .updateRunnerInRace(race.uuid!, rr.runner.uuid!, rr)
-        .queryFn(),
+      QUERIES.race.updateRunnerInRace(race.uuid, rr.runner.uuid, rr).queryFn(),
     onSuccess: () => {
       setEditingRunnerUuid(null);
-      refreshRunners();
+      // refreshRunners(); TODO: implement optimisic update
     },
   });
 

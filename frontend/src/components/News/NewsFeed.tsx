@@ -6,7 +6,7 @@ import { Link } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card.tsx";
-import { NEWS_IMAGES, tagText, useTags } from "@/lib/newsUtils.ts";
+import { NEWS_IMAGES, tagColor, useTags } from "@/lib/newsUtils.ts";
 import { formatDateFull } from "@/lib/timeUtils.ts";
 import type { NewsFeedDTO } from "@/model/DTO.ts";
 
@@ -32,12 +32,11 @@ export default function NewsFeed() {
     <div className="flex flex-col gap-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {visible.map((post: NewsFeedDTO, idx) => (
-          <Link
+          <Card
             key={post.uuid}
-            to={`/nyheter/${post.uuid}`}
-            className="block group"
+            className="overflow-hidden card-hover hover:shadow-2xl h-full flex flex-col gap-0 py-0"
           >
-            <Card className="overflow-hidden card-hover hover:shadow-2xl h-full flex flex-col gap-0 py-0">
+            <Link to={`/nyheter/${post.uuid}`} className="block group">
               <div className="aspect-video overflow-hidden shrink-0">
                 <img
                   src={
@@ -49,36 +48,44 @@ export default function NewsFeed() {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               </div>
-              <CardHeader className="px-2 pt-4 pb-1 flex-1 gap-1">
-                <p className="text-md font-bold text-black transition-colors leading-snug line-clamp-2">
+            </Link>
+            <CardHeader className="px-2 pt-3 pb-1 gap-1">
+              <div className="flex flex-wrap gap-1 mb-1">
+                {post.tags.map((tag) => (
+                  <Link
+                    key={tag}
+                    to={`/nyheter/tag/${tag.toLowerCase()}`}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <span
+                      className="tag-pill"
+                      style={{ color: tagColor(tag, tags) }}
+                    >
+                      {tag}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+              <Link
+                key={post.uuid}
+                to={`/nyheter/${post.uuid}`}
+                className="block group"
+              >
+                <p className="text-md font-bold transition-colors leading-snug line-clamp-2">
                   {post.header}
                 </p>
-                <p className="text-sm text-black leading-snug line-clamp-2">
+                <p className="text-sm leading-snug line-clamp-2">
                   {post.content}
                 </p>
-              </CardHeader>
-              <CardFooter className="px-2 pb-3 pt-1 mb-1 flex flex-wrap items-center justify-between gap-1">
-                <div className="flex flex-wrap gap-1">
-                  {post.tags.map((tag) => (
-                    <Link
-                      key={tag}
-                      to={`/nyheter/tag/${tag.toLowerCase()}`}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <p
-                        className={`${tagText(tag, tags)} text-xs font-bold uppercase px-0 py-1 hover:opacity-70 transition-opacity cursor-pointer`}
-                      >
-                        {tag}
-                      </p>
-                    </Link>
-                  ))}
-                </div>
-                <time className="text-xs text-black">
-                  {formatDateFull(post.date)}
-                </time>
-              </CardFooter>
-            </Card>
-          </Link>
+              </Link>
+            </CardHeader>
+            <CardFooter className="px-2 pb-3 pt-1 mt-auto flex flex-wrap items-center justify-end gap-1">
+              <time className="text-xs lowercase text-muted-foreground">
+                {" "}
+                {formatDateFull(post.date)}
+              </time>
+            </CardFooter>
+          </Card>
         ))}
       </div>
 

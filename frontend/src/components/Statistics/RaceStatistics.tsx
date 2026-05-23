@@ -24,24 +24,18 @@ export default function RaceStatistics() {
   );
 
   const availableYears = useMemo(() => getYears(races ?? []), [races]);
+  const effectiveYear = selectedYear ?? availableYears[0];
 
   return (
     <section className="space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <h2 className="font-semibold">Løpsstatistikk</h2>
         <div className="flex flex-wrap gap-2">
-          <Button
-            size="sm"
-            variant={selectedYear === undefined ? "default" : "outline"}
-            onClick={() => setSelectedYear(undefined)}
-          >
-            Alle år
-          </Button>
           {availableYears.map((y) => (
             <Button
               key={y}
               size="sm"
-              variant={selectedYear === y ? "default" : "outline"}
+              variant={effectiveYear === y ? "default" : "outline"}
               onClick={() => setSelectedYear(y)}
             >
               {y}

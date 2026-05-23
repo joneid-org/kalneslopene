@@ -7,21 +7,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
-import type { RaceDTO, RaceRunnerDTO } from "@/model/DTO.ts";
+import type { RaceDTO } from "@/model/DTO.ts";
 
 export function CompletedRacesCard({
   races,
   expandedRaceUuid,
-  runnerCountByRace,
-  runnersForRace,
   onToggleExpand,
   onEdit,
   onDelete,
 }: {
   races: RaceDTO[];
   expandedRaceUuid: string | null;
-  runnerCountByRace: Map<string, number>;
-  runnersForRace: (race: RaceDTO) => RaceRunnerDTO[];
   onToggleExpand: (race: RaceDTO) => void;
   onEdit: (race: RaceDTO) => void;
   onDelete: (race: RaceDTO) => void;
@@ -45,8 +41,6 @@ export function CompletedRacesCard({
             rows={races}
             expandable
             expandedRaceUuid={expandedRaceUuid}
-            runnerCountByRace={runnerCountByRace}
-            runnersForRace={runnersForRace}
             onToggleExpand={onToggleExpand}
             onEdit={onEdit}
             onDelete={onDelete}

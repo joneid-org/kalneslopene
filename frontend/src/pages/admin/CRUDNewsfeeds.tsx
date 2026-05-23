@@ -51,7 +51,7 @@ export function CRUDNewsfeeds() {
   const [editing, setEditing] = useState<NewsFeedDTO | null>(null);
   const editMutation = useMutation({
     mutationFn: (newsfeed: NewsFeedDTO) =>
-      QUERIES.newsfeed.updateNewsFeed(newsfeed.uuid!, newsfeed).queryFn(),
+      QUERIES.newsfeed.updateNewsFeed(newsfeed.uuid, newsfeed).queryFn(),
     onSuccess: () => {
       invalidate();
       setEditing(null);

@@ -49,7 +49,7 @@ function WeatherRow({
 }
 
 export function NextRace() {
-  const { data: races } = useQuery(QUERIES.race.getAllRaces);
+  const { data: races } = useQuery(QUERIES.race.getAllRaces());
   const race = getUpcomingRaces(races ?? [])[0];
   const weather = useYrWeather(race?.raceDate);
 

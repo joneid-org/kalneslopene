@@ -12,13 +12,13 @@ data class RaceEntity(
     var raceDate: LocalDateTime,
     var weather: String?,
 
-    @OneToMany(mappedBy = "race", cascade = [CascadeType.PERSIST], orphanRemoval = true)
+    @OneToMany(mappedBy = "race", fetch = FetchType.EAGER, cascade = [CascadeType.PERSIST], orphanRemoval = true)
     val runners: MutableList<RaceRunnerEntity> = mutableListOf()
 ) {
     @Id
     val uuid: UUID = UUID.randomUUID()
 
     fun toDto(): RaceDTO {
-        return RaceDTO(uuid, raceDate, weather)
+        return RaceDTO(uuid, raceDate, weather, runners.size)
     }
 }

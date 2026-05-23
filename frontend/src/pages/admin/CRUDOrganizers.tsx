@@ -38,7 +38,7 @@ export function CRUDOrganizers() {
   const [editing, setEditing] = useState<OrganizerDTO | null>(null);
   const editMutation = useMutation({
     mutationFn: (organizer: OrganizerDTO) =>
-      QUERIES.organizer.updateOrganizer(organizer.uuid!, organizer).queryFn(),
+      QUERIES.organizer.updateOrganizer(organizer.uuid, organizer).queryFn(),
     onSuccess: () => {
       invalidate();
       setEditing(null);

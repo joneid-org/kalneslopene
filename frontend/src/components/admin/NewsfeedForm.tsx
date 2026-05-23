@@ -1,5 +1,3 @@
-/** biome-ignore-all lint/suspicious/noArrayIndexKey: <explanation> */
-
 import { ImagePlus, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { FormFooter } from "@/components/admin/FormFooter.tsx";

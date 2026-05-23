@@ -24,7 +24,7 @@ export function CRUDRaces() {
   const invalidateRaces = () =>
     qc.invalidateQueries({ queryKey: ["race", "getAll"] });
 
-  const { data: races } = useQuery(QUERIES.race.getAllRaces);
+  const { data: races } = useQuery(QUERIES.race.getAllRaces());
 
   const upcoming = [...(races ?? [])]
     .filter((r) => !isPast(r))
@@ -49,9 +49,12 @@ export function CRUDRaces() {
   });
 
   const editMutation = useMutation({
-    mutationFn: (raceDate: string) =>
+    mutationFn: (update: { race: RaceDTO; raceDate: string }) =>
       QUERIES.race
-        .updateRace(editing!.uuid!, { ...editing!, raceDate })
+        .updateRace(update.race.uuid, {
+          ...update.race,
+          raceDate: update.raceDate,
+        })
         .queryFn(),
     onSuccess: () => {
       invalidateRaces();
@@ -139,7 +142,9 @@ export function CRUDRaces() {
               submitLabel="Lagre"
               isPending={editMutation.isPending}
               onCancel={() => setEditing(null)}
-              onSubmit={(raceDate) => editMutation.mutate(raceDate)}
+              onSubmit={(raceDate) =>
+                editMutation.mutate({ race: editing, raceDate })
+              }
             />
           )}
         </DialogContent>

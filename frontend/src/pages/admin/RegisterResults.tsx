@@ -1,55 +1,27 @@
-import {
-  useMutation,
-  useQueries,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { ChevronLeftIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
+import { queryClient } from "@/api/queryClient.ts";
 import { CompletedRacesCard } from "@/components/admin/CompletedRacesCard.tsx";
 import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog.tsx";
 import { MissingRunnersCard } from "@/components/admin/MissingRunnersCard.tsx";
 import { PastRaceEditDialog } from "@/components/admin/PastRaceEditDialog.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Dialog } from "@/components/ui/dialog.tsx";
-import { formatDDMonth, raceDateToSortKey } from "@/lib/timeUtils.ts";
-import { isPast } from "@/lib/utils.ts";
+import { formatDDMonth } from "@/lib/timeUtils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 
+const now = new Date();
+
 export function RegisterResults() {
-  const qc = useQueryClient();
   const navigate = useNavigate();
-  const invalidateRaces = () =>
-    qc.invalidateQueries({ queryKey: ["race", "getAll"] });
 
-  const { data: races } = useQuery(QUERIES.race.getAllRaces);
+  const { data: races } = useQuery(QUERIES.race.getAllRaces({ to: now }));
 
-  const past = [...(races ?? [])]
-    .filter((r) => isPast(r))
-    .sort((a, b) =>
-      raceDateToSortKey(b.raceDate).localeCompare(
-        raceDateToSortKey(a.raceDate),
-      ),
-    );
-
-  const runnerResults = useQueries({
-    queries: past.map((r) => ({
-      ...QUERIES.race.getAllRunnersInRace(r.uuid ?? ""),
-      enabled: !!r.uuid,
-    })),
-  });
-
-  const runnerCountByRace = new Map<string, number>(
-    past.map((r, i) => [r.uuid ?? "", runnerResults[i].data?.length ?? 0]),
-  );
-
-  const withoutRunners = past.filter(
-    (r) => runnerCountByRace.get(r.uuid ?? "") === 0,
-  );
-  const withRunners = past.filter(
-    (r) => (runnerCountByRace.get(r.uuid ?? "") ?? 0) > 0,
+  const [withoutRunners, withRunners] = (races ?? []).partition(
+    (r) => r.runnerCount === 0,
   );
 
   const [editing, setEditing] = useState<RaceDTO | null>(null);
@@ -62,15 +34,8 @@ export function RegisterResults() {
     );
 
   const openEditing = async (race: RaceDTO) => {
-    const idx = past.findIndex((r) => r.uuid === race.uuid);
-    if (!runnerResults[idx]?.data) {
-      await qc.fetchQuery(QUERIES.race.getAllRunnersInRace(race.uuid ?? ""));
-    }
     setEditing(race);
   };
-
-  const runnersForRace = (race: RaceDTO) =>
-    runnerResults[past.findIndex((r) => r.uuid === race.uuid)]?.data ?? [];
 
   const deleteMutation = useMutation({
     mutationFn: (uuid: string) => QUERIES.race.deleteRace(uuid).queryFn(),
@@ -104,8 +69,6 @@ export function RegisterResults() {
       <CompletedRacesCard
         races={withRunners}
         expandedRaceUuid={expandedRaceUuid}
-        runnerCountByRace={runnerCountByRace}
-        runnersForRace={runnersForRace}
         onToggleExpand={toggleExpanded}
         onEdit={openEditing}
         onDelete={setDeleting}
@@ -120,7 +83,6 @@ export function RegisterResults() {
         {editing && (
           <PastRaceEditDialog
             race={editing}
-            initialRunners={runnersForRace(editing)}
             onClose={() => setEditing(null)}
             onSaved={invalidateRaces}
           />
@@ -155,4 +117,8 @@ export function RegisterResults() {
       </Dialog>
     </div>
   );
+}
+
+function invalidateRaces() {
+  queryClient.invalidateQueries({ queryKey: ["race", "getAll"] });
 }

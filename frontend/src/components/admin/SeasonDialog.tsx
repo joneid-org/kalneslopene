@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { formatDateFull, generateRaceDates } from "@/lib/timeUtils.ts";
-import type { RaceDTO } from "@/model/DTO.ts";
+import type { RaceInput } from "@/model/DTO.ts";
 
 type PreviewRace = { date: string; time: string };
 
@@ -32,8 +32,8 @@ export function SeasonDialog({
   const [preview, setPreview] = useState<PreviewRace[] | null>(null);
 
   const createMutation = useMutation({
-    mutationFn: (races: Omit<RaceDTO, "uuid">[]) =>
-      QUERIES.race.createRaces(races as RaceDTO[]).queryFn(),
+    mutationFn: (races: RaceInput[]) =>
+      QUERIES.race.createRaces(races).queryFn(),
     onSuccess: () => {
       onCreated();
       onClose();

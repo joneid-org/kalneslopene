@@ -54,8 +54,10 @@ export function AdminCard<T>({
           <TableHeader>
             <TableRow>
               {columns.map((col, i) => (
-                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                <TableHead key={i} className={col.className}>
+                <TableHead
+                  key={`${i.toString()}-${col.label}`}
+                  className={col.className}
+                >
                   {col.label}
                 </TableHead>
               ))}

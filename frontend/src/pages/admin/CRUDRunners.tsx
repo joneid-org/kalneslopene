@@ -39,7 +39,7 @@ export function CRUDRunners() {
   const [editing, setEditing] = useState<RunnerDTO | null>(null);
   const editMutation = useMutation({
     mutationFn: (runner: RunnerDTO) =>
-      QUERIES.runner.updateRunner(runner.uuid!, runner).queryFn(),
+      QUERIES.runner.updateRunner(runner.uuid, runner).queryFn(),
     onSuccess: () => {
       invalidate();
       setEditing(null);

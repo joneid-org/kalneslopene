@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import type { OrganizerDTO } from "@/model/DTO.ts";
 
 const STORAGE_KEY = "organizer-order";
@@ -38,11 +38,12 @@ export function useOrganizerOrder(organizers: OrganizerDTO[]) {
   const [ordered, setOrdered] = useState<OrganizerDTO[]>(() =>
     applySavedOrder(organizers),
   );
+  const [lastInput, setLastInput] = useState(organizers);
 
-  // Sync when organizers from server change
-  useEffect(() => {
+  if (organizers !== lastInput) {
+    setLastInput(organizers);
     setOrdered(applySavedOrder(organizers));
-  }, [organizers]);
+  }
 
   const move = useCallback((fromIndex: number, toIndex: number) => {
     setOrdered((prev) => {

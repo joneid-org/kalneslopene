@@ -1,9 +1,8 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronLeftIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
-import { queryClient } from "@/api/queryClient.ts";
 import { CompletedRacesCard } from "@/components/admin/CompletedRacesCard.tsx";
 import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog.tsx";
 import { MissingRunnersCard } from "@/components/admin/MissingRunnersCard.tsx";
@@ -16,6 +15,7 @@ import type { RaceDTO } from "@/model/DTO.ts";
 const now = new Date();
 
 export function RegisterResults() {
+  const qc = useQueryClient();
   const navigate = useNavigate();
 
   const { data: races } = useQuery(QUERIES.race.getAllRaces({ to: now }));
@@ -40,7 +40,7 @@ export function RegisterResults() {
   const deleteMutation = useMutation({
     mutationFn: (uuid: string) => QUERIES.race.deleteRace(uuid).queryFn(),
     onSuccess: () => {
-      invalidateRaces();
+      qc.invalidateQueries({ queryKey: ["race", "getAll"] });
       setDeleting(null);
     },
   });
@@ -56,7 +56,7 @@ export function RegisterResults() {
         Tilbake
       </Button>
 
-      <h1 className="text-2xl font-bold tracking-tight">
+      <h1 className="text-2xl font-semibold tracking-tight">
         Registrer resultater
       </h1>
 
@@ -81,11 +81,7 @@ export function RegisterResults() {
         }}
       >
         {editing && (
-          <PastRaceEditDialog
-            race={editing}
-            onClose={() => setEditing(null)}
-            onSaved={invalidateRaces}
-          />
+          <PastRaceEditDialog race={editing} onClose={() => setEditing(null)} />
         )}
       </Dialog>
 
@@ -117,8 +113,4 @@ export function RegisterResults() {
       </Dialog>
     </div>
   );
-}
-
-function invalidateRaces() {
-  queryClient.invalidateQueries({ queryKey: ["race", "getAll"] });
 }

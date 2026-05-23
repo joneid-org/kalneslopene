@@ -1,5 +1,5 @@
 import { TrendingUpIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -53,10 +53,6 @@ export default function RunnerTimeChart({
     availableYears.length > 0 ? [availableYears[0]] : [],
   );
 
-  useEffect(() => {
-    setSelectedYears(availableYears.length > 0 ? [availableYears[0]] : []);
-  }, [availableYears]);
-
   const toggleYear = (y: number) =>
     setSelectedYears((prev) =>
       prev.includes(y)
@@ -83,15 +79,16 @@ export default function RunnerTimeChart({
 
   const byDate = new Map<string, ChartPoint>();
   for (const rr of filtered) {
-    const key = rr.race.raceDate as unknown as string;
-    const label = formatDDMonth(rr.race.raceDate);
-    const year = extractYear(rr.race.raceDate);
+    const { raceDate } = rr.race;
+    const key = raceDate as unknown as string;
+    const label = formatDDMonth(raceDate);
+    const year = extractYear(raceDate);
     if (!byDate.has(key)) byDate.set(key, { label, sortKey: key });
     const point = byDate.get(key);
     if (point) point[String(year)] = mapResultTimeToNumber(rr.resultTime);
   }
 
-  const points = Array.from(byDate.values()).sort((a, b) =>
+  const points = Array.from(byDate.values()).toSorted((a, b) =>
     a.sortKey.localeCompare(b.sortKey),
   );
 

@@ -67,6 +67,18 @@ export type MilestoneDTO = {
 };
 export type MilestoneInput = Omit<MilestoneDTO, "uuid">;
 
+export type RaceStatisticsDTO = {
+  completedRaces: number;
+  upcomingRaces: number;
+  uniqueRunners: {
+    male: number;
+    female: number;
+    total: number;
+  };
+  averageRunnersPerRace: number;
+  courseRecord?: RaceRunnerDTO;
+};
+
 export type LoginRequest = {
   username: string;
   password: string;

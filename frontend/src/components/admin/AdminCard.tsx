@@ -20,7 +20,7 @@ export type AdminCardColumn = {
   className?: string;
 };
 
-export function AdminCard<T>({
+export function AdminCard<T extends { uuid: string }>({
   icon,
   title,
   items,
@@ -74,9 +74,8 @@ export function AdminCard<T>({
                 </TableCell>
               </TableRow>
             )}
-            {items.map((item, i) => (
-              // biome-ignore lint/suspicious/noArrayIndexKey: no stable key available generically
-              <TableRow key={i}>{renderRow(item)}</TableRow>
+            {items.map((item) => (
+              <TableRow key={item.uuid}>{renderRow(item)}</TableRow>
             ))}
           </TableBody>
         </Table>

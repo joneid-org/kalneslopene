@@ -15,6 +15,7 @@ import type {
   RaceDTO,
   RaceInput,
   RaceRunnerDTO,
+  RaceStatisticsDTO,
   RunnerDTO,
   RunnerInput,
   YrForecast,
@@ -107,6 +108,15 @@ export const QUERIES = {
         kyClient
           .delete(`/api/races/${raceUuid}/runners`, { json: runners })
           .json<void>(),
+    }),
+  },
+  statistics: {
+    race: (year?: number) => ({
+      queryKey: ["statistics", "race", year],
+      queryFn: () =>
+        kyClient
+          .get("/api/statistics/races", { searchParams: { year } })
+          .json<RaceStatisticsDTO>(),
     }),
   },
   organizer: {

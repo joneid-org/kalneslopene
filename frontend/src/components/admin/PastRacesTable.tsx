@@ -79,7 +79,7 @@ export function PastRacesTable({
                     <Button
                       size="sm"
                       variant="ghost"
-                      className="h-7 w-7 p-0"
+                      className="size-7 p-0"
                       onClick={(e) => {
                         e.stopPropagation();
                         onEdit(race);
@@ -105,23 +105,20 @@ export function PastRacesTable({
   );
 }
 
+const Shell = ({ children }: { children: ReactNode }) => (
+  <TableRow className="bg-muted/30 hover:bg-muted/30">
+    <TableCell colSpan={5} className="py-2 px-4">
+      {children}
+    </TableCell>
+  </TableRow>
+);
+
 const ExpandedTableRow = ({ raceUuid }: { raceUuid: string }) => {
   const {
     data: runners,
     isPending,
     isError,
   } = useQuery(QUERIES.race.getAllRunnersInRace(raceUuid));
-
-  const Shell = ({ children }: { children: ReactNode }) => (
-    <TableRow
-      key={`${raceUuid}-expanded`}
-      className="bg-muted/30 hover:bg-muted/30"
-    >
-      <TableCell colSpan={5} className="py-2 px-4">
-        {children}
-      </TableCell>
-    </TableRow>
-  );
 
   if (isPending) {
     return (

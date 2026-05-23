@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Footprints } from "lucide-react";
-import { forwardRef } from "react";
+import type { Ref } from "react";
 import { Link } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
 import { DynamicDropDownMenu } from "@/components/Navbar/DynamicDropDownMenu.tsx";
@@ -17,7 +17,7 @@ const headerBarStatic = [
   { path: "/Historie", label: "Historie" },
 ];
 
-export const Header = forwardRef<HTMLElement>(function Header(_props, ref) {
+export function Header({ ref }: { ref?: Ref<HTMLElement> }) {
   const { data: races } = useQuery(QUERIES.race.getAllRaces());
 
   return (
@@ -39,7 +39,7 @@ export const Header = forwardRef<HTMLElement>(function Header(_props, ref) {
                 <span className="absolute -top-0.5 -right-0.5 size-2 rounded-full bg-yellow-400 border border-white" />
               </div>
               <div className="min-w-0 leading-tight">
-                <h1 className="font-black text-sm text-gray-900 truncate leading-tight tracking-tight">
+                <h1 className="font-semibold text-sm text-gray-900 truncate leading-tight tracking-tight">
                   Torsdagsløpet
                 </h1>
               </div>
@@ -67,4 +67,4 @@ export const Header = forwardRef<HTMLElement>(function Header(_props, ref) {
       </div>
     </header>
   );
-});
+}

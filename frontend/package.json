@@ -12,7 +12,8 @@
     "tsc": "tsc -b",
     "preview": "vite preview",
     "check": "biome check",
-    "check:fix": "biome check --write"
+    "check:fix": "biome check --write",
+    "react-doctor": "bunx react-doctor@latest"
   },
   "dependencies": {
     "@emotion/styled": "^11.14.1",

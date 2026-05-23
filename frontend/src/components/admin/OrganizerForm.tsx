@@ -23,7 +23,7 @@ export function OrganizerForm({
   const [initials, setInitials] = useState(initial.initials ?? "");
   const [phone, setPhone] = useState(initial.phone ?? "");
   const [email, setEmail] = useState(initial.email ?? "");
-  const [responsibilityInput, setResponsibilityInput] = useState(
+  const [responsibilityInput, setResponsibilityInput] = useState(() =>
     (initial.responsibility ?? []).join(", "),
   );
   const [contactPerson, setContactPerson] = useState(
@@ -38,10 +38,10 @@ export function OrganizerForm({
   };
 
   const handleSubmit = () => {
-    const responsibility = responsibilityInput
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean);
+    const responsibility = responsibilityInput.split(",").flatMap((s) => {
+      const trimmed = s.trim();
+      return trimmed ? [trimmed] : [];
+    });
     onSubmit({
       name: name.trim(),
       initials: initials.trim(),
@@ -63,6 +63,7 @@ export function OrganizerForm({
           ref={imageRef}
           type="file"
           accept="image/*"
+          aria-label="Last opp profilbilde"
           className="hidden"
           onChange={handleImageChange}
         />

@@ -21,14 +21,12 @@ import type { RaceDTO } from "@/model/DTO.ts";
 export function CRUDRaces() {
   const qc = useQueryClient();
   const navigate = useNavigate();
-  const invalidateRaces = () =>
-    qc.invalidateQueries({ queryKey: ["race", "getAll"] });
 
   const { data: races } = useQuery(QUERIES.race.getAllRaces());
 
-  const upcoming = [...(races ?? [])]
+  const upcoming = (races ?? [])
     .filter((r) => !isPast(r))
-    .sort((a, b) =>
+    .toSorted((a, b) =>
       raceDateToSortKey(a.raceDate).localeCompare(
         raceDateToSortKey(b.raceDate),
       ),
@@ -43,7 +41,7 @@ export function CRUDRaces() {
     mutationFn: (raceDate: string) =>
       QUERIES.race.createRaces([{ raceDate } as RaceDTO]).queryFn(),
     onSuccess: () => {
-      invalidateRaces();
+      qc.invalidateQueries({ queryKey: ["race", "getAll"] });
       setShowAdd(false);
     },
   });
@@ -57,7 +55,7 @@ export function CRUDRaces() {
         })
         .queryFn(),
     onSuccess: () => {
-      invalidateRaces();
+      qc.invalidateQueries({ queryKey: ["race", "getAll"] });
       setEditing(null);
     },
   });
@@ -65,7 +63,7 @@ export function CRUDRaces() {
   const deleteMutation = useMutation({
     mutationFn: (uuid: string) => QUERIES.race.deleteRace(uuid).queryFn(),
     onSuccess: () => {
-      invalidateRaces();
+      qc.invalidateQueries({ queryKey: ["race", "getAll"] });
       setDeleting(null);
     },
   });
@@ -82,7 +80,9 @@ export function CRUDRaces() {
       </Button>
 
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">Administrer løp</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">
+          Administrer løp
+        </h1>
         <div className="flex gap-2">
           <Button
             variant="outline"
@@ -120,10 +120,7 @@ export function CRUDRaces() {
       </Dialog>
 
       <Dialog open={showSeason} onOpenChange={setShowSeason}>
-        <SeasonDialog
-          onClose={() => setShowSeason(false)}
-          onCreated={invalidateRaces}
-        />
+        <SeasonDialog onClose={() => setShowSeason(false)} />
       </Dialog>
 
       <Dialog

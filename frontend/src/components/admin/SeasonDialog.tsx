@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
 import { Button } from "@/components/ui/button.tsx";
@@ -16,13 +16,8 @@ import type { RaceInput } from "@/model/DTO.ts";
 
 type PreviewRace = { date: string; time: string };
 
-export function SeasonDialog({
-  onClose,
-  onCreated,
-}: {
-  onClose: () => void;
-  onCreated: () => void;
-}) {
+export function SeasonDialog({ onClose }: { onClose: () => void }) {
+  const qc = useQueryClient();
   const todayStr = new Date().toISOString().slice(0, 10);
 
   const [startDate, setStartDate] = useState(todayStr);
@@ -35,7 +30,7 @@ export function SeasonDialog({
     mutationFn: (races: RaceInput[]) =>
       QUERIES.race.createRaces(races).queryFn(),
     onSuccess: () => {
-      onCreated();
+      qc.invalidateQueries({ queryKey: ["race", "getAll"] });
       onClose();
     },
   });

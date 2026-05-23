@@ -1,5 +1,3 @@
-/** biome-ignore-all lint/suspicious/noArrayIndexKey: <explanation> */
-
 import { ImagePlus, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { FormFooter } from "@/components/admin/FormFooter.tsx";
@@ -147,6 +145,7 @@ export function NewsfeedForm({
           ref={headerImageRef}
           type="file"
           accept="image/*"
+          aria-label="Last opp header-bilde"
           className="hidden"
           onChange={handleHeaderImageChange}
         />
@@ -159,7 +158,7 @@ export function NewsfeedForm({
                 setHeaderImage(undefined);
                 if (headerImageRef.current) headerImageRef.current.value = "";
               }}
-              className="absolute top-1.5 right-1.5 bg-black text-white rounded-full p-0.5 hover:bg-gray-800"
+              className="absolute top-1.5 right-1.5 bg-gray-950 text-white rounded-full p-0.5 hover:bg-gray-800"
             >
               <X className="size-3.5" />
             </button>

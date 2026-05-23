@@ -2,6 +2,7 @@ import {
   CalendarIcon,
   ClipboardListIcon,
   FileUpIcon,
+  ImageIcon,
   LogOutIcon,
   NewspaperIcon,
   TimerIcon,
@@ -35,6 +36,7 @@ const actions = [
     icon: FileUpIcon,
     path: "/admin/results/import",
   },
+  { label: "Legg til bilder", icon: ImageIcon, path: "/admin/images" },
   { label: "Legg til løper", icon: UserPlusIcon, path: "/admin/runners" },
   { label: "Legg til organisator", icon: UsersIcon, path: "/admin/organizers" },
   { label: "Legg til nyhet", icon: NewspaperIcon, path: "/admin/newsfeeds" },
@@ -53,7 +55,7 @@ export function Admin() {
     <div className="page-content max-w-md mx-auto space-y-6">
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Admin</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">Admin</h1>
           <p className="text-sm text-muted-foreground mt-1">
             Innlogget som <span className="font-medium">{user?.username}</span>
           </p>

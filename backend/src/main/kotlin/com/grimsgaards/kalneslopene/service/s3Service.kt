@@ -34,5 +34,3 @@ class S3Service(
                 .build()
         )
 }
-
-

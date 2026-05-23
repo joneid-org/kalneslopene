@@ -1,43 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
 import { QUERIES } from "@/api/queries.ts";
-import {
-  getNumberOfUniqueRunnersThisYear,
-  getRacesHeldThisYear,
-  getRacesLeftThisYear,
-  getUniqueRunnersByGenderThisYear,
-} from "@/lib/statisticsUtils.ts";
 
-// TODO: Needs rewrite to avoid it sending multiple requests for runners. Instead, create a new endpoint that returns all runners for all
-export default function SeasonStatBoxes() {
-  const { data: races } = useQuery(QUERIES.race.getAllRaces);
+const CURRENT_YEAR = new Date().getFullYear();
 
-  const year = new Date().getFullYear();
-  const allRaces = races ?? [];
-
-  const { data: raceRunners } = useQuery({
-    queryKey: ["raceRunners", "all"],
-    queryFn: async () => {
-      const results = await Promise.all(
-        (races ?? []).map((r) =>
-          QUERIES.race.getAllRunnersInRace(r.uuid ?? "").queryFn(),
-        ),
-      );
-      return results.flat();
-    },
-    enabled: !!races && races.length > 0,
-  });
-
-  const rr = raceRunners ?? [];
+export function SeasonStatBoxes() {
+  const { data: yearStatistics } = useQuery(
+    QUERIES.statistics.race(CURRENT_YEAR),
+  );
 
   const stats = [
     {
-      value: getNumberOfUniqueRunnersThisYear(rr, year),
+      value: yearStatistics?.uniqueRunners.total,
       label: "deltakere totalt",
     },
-    { value: getUniqueRunnersByGenderThisYear(rr, year, "f"), label: "damer" },
-    { value: getUniqueRunnersByGenderThisYear(rr, year, "m"), label: "herrer" },
-    { value: getRacesHeldThisYear(allRaces, year), label: "løp gjennomført" },
-    { value: getRacesLeftThisYear(allRaces, year), label: "gjenstående løp" },
+    { value: yearStatistics?.uniqueRunners.female, label: "damer" },
+    { value: yearStatistics?.uniqueRunners.male, label: "herrer" },
+    { value: yearStatistics?.completedRaces, label: "løp gjennomført" },
+    { value: yearStatistics?.upcomingRaces, label: "gjenstående løp" },
   ];
 
   return (

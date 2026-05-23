@@ -127,6 +127,7 @@ export function CsvUploadStep({
           ref={fileRef}
           type="file"
           accept=".csv,text/csv"
+          aria-label="Velg CSV-fil"
           className="hidden"
           onChange={handleFileChange}
         />

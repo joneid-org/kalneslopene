@@ -27,6 +27,8 @@ jobs:
         run: bun run check
       - name: Build
         run: bun run tsc
+      - name: react-doctor
+        run: bun run react-doctor
 
   check-backend:
     if: github.actor != 'dependabot[bot]'

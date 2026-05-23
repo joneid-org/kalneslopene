@@ -18,8 +18,6 @@ import type { RunnerDTO } from "@/model/DTO.ts";
 export function CRUDRunners() {
   const qc = useQueryClient();
   const navigate = useNavigate();
-  const invalidate = () =>
-    qc.invalidateQueries({ queryKey: ["runner", "getAll"] });
 
   const [search, setSearch] = useState("");
   const { data: runners } = useQuery(
@@ -31,7 +29,7 @@ export function CRUDRunners() {
     mutationFn: (runner: Omit<RunnerDTO, "uuid">) =>
       QUERIES.runner.createRunners([runner as RunnerDTO]).queryFn(),
     onSuccess: () => {
-      invalidate();
+      qc.invalidateQueries({ queryKey: ["runner", "getAll"] });
       setShowAdd(false);
     },
   });
@@ -39,9 +37,9 @@ export function CRUDRunners() {
   const [editing, setEditing] = useState<RunnerDTO | null>(null);
   const editMutation = useMutation({
     mutationFn: (runner: RunnerDTO) =>
-      QUERIES.runner.updateRunner(runner.uuid!, runner).queryFn(),
+      QUERIES.runner.updateRunner(runner.uuid, runner).queryFn(),
     onSuccess: () => {
-      invalidate();
+      qc.invalidateQueries({ queryKey: ["runner", "getAll"] });
       setEditing(null);
     },
   });
@@ -50,7 +48,7 @@ export function CRUDRunners() {
   const deleteMutation = useMutation({
     mutationFn: (uuid: string) => QUERIES.runner.deleteRunner(uuid).queryFn(),
     onSuccess: () => {
-      invalidate();
+      qc.invalidateQueries({ queryKey: ["runner", "getAll"] });
       setDeleting(null);
     },
   });
@@ -66,7 +64,7 @@ export function CRUDRunners() {
         Tilbake
       </Button>
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight">Løpere</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Løpere</h1>
         <Button className="gap-1.5" onClick={() => setShowAdd(true)}>
           <PlusIcon className="size-4" />
           Legg til løper

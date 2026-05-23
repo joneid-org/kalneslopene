@@ -82,7 +82,7 @@ export function History() {
                 key={milestone.uuid}
                 className={`flex gap-4 ${i < milestones.length - 1 ? "pb-8" : ""}`}
               >
-                <div className="relative z-10 shrink-0 w-10 h-10 rounded-full bg-background border-2 border-primary flex items-center justify-center">
+                <div className="relative z-10 shrink-0 size-10 rounded-full bg-background border-2 border-primary flex items-center justify-center">
                   <Icon className="size-4 text-primary" />
                 </div>
                 <MilestoneCard

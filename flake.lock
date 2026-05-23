@@ -54,28 +54,11 @@
         "type": "github"
       }
     },
-    "nixpkgs-jdk24": {
-      "locked": {
-        "lastModified": 1759234089,
-        "narHash": "sha256-jODf26lZfqNwfEkldzdgzhib6Lm4+RBl1uIoWFNWiSU=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "c8f3f1665a102748eba941a60866ff46cf0203d1",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "c8f3f1665a102748eba941a60866ff46cf0203d1",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "devshell": "devshell",
         "flake-utils": "flake-utils",
-        "nixpkgs": "nixpkgs",
-        "nixpkgs-jdk24": "nixpkgs-jdk24"
+        "nixpkgs": "nixpkgs"
       }
     },
     "systems": {

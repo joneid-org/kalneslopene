@@ -1,11 +1,13 @@
 export type RaceDTO = {
-  uuid?: string;
+  uuid: string;
   raceDate: string;
   weather?: string;
+  runnerCount: number;
 };
+export type RaceInput = Omit<RaceDTO, "uuid" | "runnerCount">;
 
 export type NewsFeedDTO = {
-  uuid?: string;
+  uuid: string;
   tags: string[];
   header: string;
   content: string;
@@ -13,20 +15,22 @@ export type NewsFeedDTO = {
   headerImage?: string;
   images?: string[];
 };
+export type NewsFeedInput = Omit<NewsFeedDTO, "uuid">;
 
 export type NewsfeedTagDTO = {
-  uuid?: string;
+  uuid: string;
   label: string;
   value: string;
   color: string;
 };
+export type NewsfeedTagInput = Omit<NewsfeedTagDTO, "uuid">;
 
 export type NewsfeedSettingsDTO = {
   maxArticles: number;
 };
 
 export type OrganizerDTO = {
-  uuid?: string;
+  uuid: string;
   name: string;
   responsibility: string[];
   initials: string;
@@ -35,13 +39,15 @@ export type OrganizerDTO = {
   contactPerson: boolean;
   image?: string;
 };
+export type OrganizerInput = Omit<OrganizerDTO, "uuid">;
 
 export type RunnerDTO = {
-  uuid?: string;
+  uuid: string;
   name: string;
   gender: string;
   pr?: string;
 };
+export type RunnerInput = Omit<RunnerDTO, "uuid">;
 
 export type RaceRunnerDTO = {
   runner: RunnerDTO;
@@ -51,13 +57,26 @@ export type RaceRunnerDTO = {
 };
 
 export type MilestoneDTO = {
-  uuid?: string;
+  uuid: string;
   year: string;
   icon: string;
   title: string;
   summary: string;
   extra?: string;
   details: string[];
+};
+export type MilestoneInput = Omit<MilestoneDTO, "uuid">;
+
+export type RaceStatisticsDTO = {
+  completedRaces: number;
+  upcomingRaces: number;
+  uniqueRunners: {
+    male: number;
+    female: number;
+    total: number;
+  };
+  averageRunnersPerRace: number;
+  courseRecord?: RaceRunnerDTO;
 };
 
 export type LoginRequest = {

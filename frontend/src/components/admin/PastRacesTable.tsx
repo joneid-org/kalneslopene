@@ -1,5 +1,7 @@
-import { CheckCircle2Icon, PencilIcon } from "lucide-react";
-import { Fragment } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { CheckCircle2Icon, Loader2Icon, PencilIcon } from "lucide-react";
+import { Fragment, type ReactNode } from "react";
+import { QUERIES } from "@/api/queries.ts";
 import { DeleteButton } from "@/components/admin/DeleteButton.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -16,14 +18,12 @@ import {
   formatTimeStamp,
   mapResultTimeToNumber,
 } from "@/lib/timeUtils.ts";
-import type { RaceDTO, RaceRunnerDTO } from "@/model/DTO.ts";
+import type { RaceDTO } from "@/model/DTO.ts";
 
 export function PastRacesTable({
   rows,
   expandable,
   expandedRaceUuid,
-  runnerCountByRace,
-  runnersForRace,
   onToggleExpand,
   onEdit,
   onDelete,
@@ -31,8 +31,6 @@ export function PastRacesTable({
   rows: RaceDTO[];
   expandable: boolean;
   expandedRaceUuid: string | null;
-  runnerCountByRace: Map<string, number>;
-  runnersForRace: (race: RaceDTO) => RaceRunnerDTO[];
   onToggleExpand: (race: RaceDTO) => void;
   onEdit: (race: RaceDTO) => void;
   onDelete: (race: RaceDTO) => void;
@@ -51,7 +49,6 @@ export function PastRacesTable({
       <TableBody>
         {rows.map((race) => {
           const isExpanded = expandedRaceUuid === race.uuid;
-          const runners = runnersForRace(race);
           return (
             <Fragment key={race.uuid}>
               <TableRow
@@ -74,7 +71,7 @@ export function PastRacesTable({
                 </TableCell>
                 {expandable && (
                   <TableCell className="text-right tabular-nums text-muted-foreground">
-                    {runnerCountByRace.get(race.uuid ?? "") ?? "–"}
+                    {race.runnerCount ?? "–"}
                   </TableCell>
                 )}
                 <TableCell>
@@ -82,7 +79,7 @@ export function PastRacesTable({
                     <Button
                       size="sm"
                       variant="ghost"
-                      className="h-7 w-7 p-0"
+                      className="size-7 p-0"
                       onClick={(e) => {
                         e.stopPropagation();
                         onEdit(race);
@@ -98,45 +95,7 @@ export function PastRacesTable({
                 </TableCell>
               </TableRow>
               {expandable && isExpanded && (
-                <TableRow
-                  key={`${race.uuid}-expanded`}
-                  className="bg-muted/30 hover:bg-muted/30"
-                >
-                  <TableCell colSpan={5} className="py-2 px-4">
-                    <div className="divide-y rounded-md border bg-background">
-                      {runners.length === 0 ? (
-                        <p className="text-xs text-muted-foreground italic py-2 px-3">
-                          Ingen løpere registrert.
-                        </p>
-                      ) : (
-                        runners.map((rr, i) => (
-                          <div
-                            key={rr.runner.uuid}
-                            className="flex items-center justify-between px-3 py-1.5 text-sm"
-                          >
-                            <div className="flex items-center gap-2">
-                              <span className="text-xs tabular-nums text-muted-foreground w-5 text-right">
-                                {i + 1}.
-                              </span>
-                              <span className="font-medium">
-                                {rr.runner.name}
-                              </span>
-                            </div>
-                            <span className="tabular-nums font-mono text-xs text-muted-foreground">
-                              {rr.hideTime
-                                ? "Kun deltatt"
-                                : formatSecondsToTime(
-                                    mapResultTimeToNumber(
-                                      String(rr.resultTime),
-                                    ),
-                                  )}
-                            </span>
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  </TableCell>
-                </TableRow>
+                <ExpandedTableRow raceUuid={race.uuid} />
               )}
             </Fragment>
           );
@@ -145,3 +104,73 @@ export function PastRacesTable({
     </Table>
   );
 }
+
+const Shell = ({ children }: { children: ReactNode }) => (
+  <TableRow className="bg-muted/30 hover:bg-muted/30">
+    <TableCell colSpan={5} className="py-2 px-4">
+      {children}
+    </TableCell>
+  </TableRow>
+);
+
+const ExpandedTableRow = ({ raceUuid }: { raceUuid: string }) => {
+  const {
+    data: runners,
+    isPending,
+    isError,
+  } = useQuery(QUERIES.race.getAllRunnersInRace(raceUuid));
+
+  if (isPending) {
+    return (
+      <Shell>
+        <p className="flex items-center gap-2 text-xs text-muted-foreground italic py-2 px-3">
+          <Loader2Icon className="size-3.5 animate-spin" />
+          Laster løpere...
+        </p>
+      </Shell>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Shell>
+        <p className="text-xs text-destructive py-2 px-3">
+          Kunne ikke laste løpere.
+        </p>
+      </Shell>
+    );
+  }
+
+  return (
+    <Shell>
+      <div className="divide-y rounded-md border bg-background">
+        {runners.length === 0 ? (
+          <p className="text-xs text-muted-foreground italic py-2 px-3">
+            Ingen løpere registrert.
+          </p>
+        ) : (
+          runners.map((rr, i) => (
+            <div
+              key={rr.runner.uuid}
+              className="flex items-center justify-between px-3 py-1.5 text-sm"
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-xs tabular-nums text-muted-foreground w-5 text-right">
+                  {i + 1}.
+                </span>
+                <span className="font-medium">{rr.runner.name}</span>
+              </div>
+              <span className="tabular-nums font-mono text-xs text-muted-foreground">
+                {rr.hideTime
+                  ? "Kun deltatt"
+                  : formatSecondsToTime(
+                      mapResultTimeToNumber(String(rr.resultTime)),
+                    )}
+              </span>
+            </div>
+          ))
+        )}
+      </div>
+    </Shell>
+  );
+};

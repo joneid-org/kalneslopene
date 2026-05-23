@@ -1,15 +1,23 @@
 import { kyClient } from "@/api/queryClient.ts";
+import type { RaceFilter } from "@/api/types.ts";
 import type {
   LoginRequest,
   LoginResponse,
   MilestoneDTO,
+  MilestoneInput,
   NewsFeedDTO,
+  NewsFeedInput,
   NewsfeedSettingsDTO,
   NewsfeedTagDTO,
+  NewsfeedTagInput,
   OrganizerDTO,
+  OrganizerInput,
   RaceDTO,
+  RaceInput,
   RaceRunnerDTO,
+  RaceStatisticsDTO,
   RunnerDTO,
+  RunnerInput,
   YrForecast,
 } from "../model/DTO.ts";
 
@@ -28,19 +36,25 @@ export const QUERIES = {
     },
   },
   race: {
-    getAllRaces: {
-      queryKey: ["race", "getAll"],
+    getAllRaces: (filter?: RaceFilter) => ({
+      queryKey: ["race", "getAll", filter],
       queryFn: async () => {
-        return await kyClient.get("/api/races").json<RaceDTO[]>();
+        const searchParams: Record<string, string> = {};
+        if (filter?.from)
+          searchParams.from = filter.from.toISOString().slice(0, 19);
+        if (filter?.to) searchParams.to = filter.to.toISOString().slice(0, 19);
+        return await kyClient
+          .get("/api/races", { searchParams })
+          .json<RaceDTO[]>();
       },
-    },
+    }),
     getRaceByUuid: (uuid: string) => ({
       queryKey: ["race", "getById", uuid],
       queryFn: async () => {
         return await kyClient.get(`/api/races/${uuid}`).json<RaceDTO>();
       },
     }),
-    createRaces: (races: RaceDTO[]) => ({
+    createRaces: (races: RaceInput[]) => ({
       queryKey: ["race", "create"],
       queryFn: async () => {
         return await kyClient
@@ -96,6 +110,15 @@ export const QUERIES = {
           .json<void>(),
     }),
   },
+  statistics: {
+    race: (year?: number) => ({
+      queryKey: ["statistics", "race", year],
+      queryFn: () =>
+        kyClient
+          .get("/api/statistics/races", { searchParams: { year } })
+          .json<RaceStatisticsDTO>(),
+    }),
+  },
   organizer: {
     getAllOrganizers: {
       queryKey: ["organizer", "getAll"],
@@ -106,7 +129,7 @@ export const QUERIES = {
       queryFn: () =>
         kyClient.get(`/api/organizers/${uuid}`).json<OrganizerDTO>(),
     }),
-    createOrganizer: (organizer: OrganizerDTO) => ({
+    createOrganizer: (organizer: OrganizerInput) => ({
       queryKey: ["organizer", "create"],
       queryFn: () =>
         kyClient
@@ -140,7 +163,7 @@ export const QUERIES = {
       queryFn: () => kyClient.get(`/api/runners/${uuid}`).json<RunnerDTO>(),
     }),
 
-    createRunners: (runners: RunnerDTO[]) => ({
+    createRunners: (runners: RunnerInput[]) => ({
       queryKey: ["runner", "create"],
       queryFn: () =>
         kyClient.post("/api/runners", { json: runners }).json<RunnerDTO[]>(),
@@ -182,7 +205,7 @@ export const QUERIES = {
         return { ...data, date: new Date(data.date) };
       },
     }),
-    createNewsFeed: (newsfeed: NewsFeedDTO) => ({
+    createNewsFeed: (newsfeed: NewsFeedInput) => ({
       queryKey: ["newsfeed", "create"],
       queryFn: async () => {
         const data = await kyClient
@@ -221,7 +244,7 @@ export const QUERIES = {
       queryFn: () =>
         kyClient.get("/api/newsfeeds/tags").json<NewsfeedTagDTO[]>(),
     },
-    createTag: (dto: NewsfeedTagDTO) => ({
+    createTag: (dto: NewsfeedTagInput) => ({
       queryKey: ["newsfeed", "tags", "create"],
       queryFn: () =>
         kyClient
@@ -272,7 +295,7 @@ export const QUERIES = {
       queryFn: () =>
         kyClient.get(`/api/milestones/${uuid}`).json<MilestoneDTO>(),
     }),
-    createMilestone: (milestone: MilestoneDTO) => ({
+    createMilestone: (milestone: MilestoneInput) => ({
       queryKey: ["milestone", "create"],
       queryFn: () =>
         kyClient

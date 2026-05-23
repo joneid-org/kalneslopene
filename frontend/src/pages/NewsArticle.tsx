@@ -25,7 +25,7 @@ export function NewsArticle() {
   const { data: post } = useQuery(
     QUERIES.newsfeed.getNewsFeedByUuid(uuid ?? ""),
   );
-  const { data: races } = useQuery(QUERIES.race.getAllRaces);
+  const { data: races } = useQuery(QUERIES.race.getAllRaces());
   const { data: allNewsfeeds } = useQuery(QUERIES.newsfeed.getAllNewsFeeds);
   const tags = useTags();
 

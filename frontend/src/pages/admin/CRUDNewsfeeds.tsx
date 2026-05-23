@@ -22,8 +22,6 @@ import type { NewsFeedDTO } from "@/model/DTO.ts";
 export function CRUDNewsfeeds() {
   const qc = useQueryClient();
   const navigate = useNavigate();
-  const invalidate = () =>
-    qc.invalidateQueries({ queryKey: ["newsfeed", "getAll"] });
 
   const { data: newsfeeds } = useQuery(QUERIES.newsfeed.getAllNewsFeeds);
   const { data: settings } = useQuery(QUERIES.newsfeed.getSettings);
@@ -43,7 +41,7 @@ export function CRUDNewsfeeds() {
     mutationFn: (newsfeed: Omit<NewsFeedDTO, "uuid">) =>
       QUERIES.newsfeed.createNewsFeed(newsfeed as NewsFeedDTO).queryFn(),
     onSuccess: () => {
-      invalidate();
+      qc.invalidateQueries({ queryKey: ["newsfeed", "getAll"] });
       setShowAdd(false);
     },
   });
@@ -51,9 +49,9 @@ export function CRUDNewsfeeds() {
   const [editing, setEditing] = useState<NewsFeedDTO | null>(null);
   const editMutation = useMutation({
     mutationFn: (newsfeed: NewsFeedDTO) =>
-      QUERIES.newsfeed.updateNewsFeed(newsfeed.uuid!, newsfeed).queryFn(),
+      QUERIES.newsfeed.updateNewsFeed(newsfeed.uuid, newsfeed).queryFn(),
     onSuccess: () => {
-      invalidate();
+      qc.invalidateQueries({ queryKey: ["newsfeed", "getAll"] });
       setEditing(null);
     },
   });
@@ -63,12 +61,12 @@ export function CRUDNewsfeeds() {
     mutationFn: (uuid: string) =>
       QUERIES.newsfeed.deleteNewsFeed(uuid).queryFn(),
     onSuccess: () => {
-      invalidate();
+      qc.invalidateQueries({ queryKey: ["newsfeed", "getAll"] });
       setDeleting(null);
     },
   });
 
-  const displayed = [...(newsfeeds ?? [])].sort(
+  const displayed = (newsfeeds ?? []).toSorted(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   );
 
@@ -82,7 +80,7 @@ export function CRUDNewsfeeds() {
         <ChevronLeftIcon className="size-4" />
         Tilbake
       </Button>
-      <h1 className="text-2xl font-bold tracking-tight">Nyheter</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">Nyheter</h1>
 
       <div className="rounded-lg border p-4 space-y-3">
         <h2 className="text-base font-semibold">Innstillinger</h2>

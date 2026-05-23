@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { PencilIcon, SaveIcon, UserPlusIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
@@ -29,20 +29,19 @@ import type { RaceDTO, RaceRunnerDTO } from "@/model/DTO.ts";
 
 export function PastRaceEditDialog({
   race,
-  initialRunners,
   onClose,
-  onSaved,
 }: {
   race: RaceDTO;
-  initialRunners: RaceRunnerDTO[];
   onClose: () => void;
-  onSaved: () => void;
 }) {
   const qc = useQueryClient();
   const [weather, setWeather] = useState(race.weather ?? "");
   const [showAddRunners, setShowAddRunners] = useState(false);
   const [pendingRunners, setPendingRunners] = useState<QueuedRunner[]>([]);
-  const [runners, setRunners] = useState<RaceRunnerDTO[]>(initialRunners);
+  const { data: initialRunners } = useQuery(
+    QUERIES.race.getAllRunnersInRace(race.uuid),
+  );
+  const runners = initialRunners ?? [];
   const [editingRunnerUuid, setEditingRunnerUuid] = useState<string | null>(
     null,
   );
@@ -52,23 +51,15 @@ export function PastRaceEditDialog({
   const pendingUuids = new Set(pendingRunners.map((r) => r.runner.uuid));
   const runnerCount = runners.length + pendingRunners.length;
 
-  const refreshRunners = async () => {
-    const fresh = await QUERIES.race
-      .getAllRunnersInRace(race.uuid ?? "")
-      .queryFn();
-    setRunners(fresh);
-    qc.invalidateQueries({ queryKey: ["race", race.uuid, "runnersInRace"] });
-  };
-
   const saveMutation = useMutation({
     mutationFn: async () => {
       await QUERIES.race
-        .updateRace(race.uuid!, { ...race, weather: weather || undefined })
+        .updateRace(race.uuid, { ...race, weather: weather || undefined })
         .queryFn();
       if (pendingRunners.length > 0) {
         await QUERIES.race
           .addRunnersToRace(
-            race.uuid!,
+            race.uuid,
             pendingRunners.map((q) => ({
               runner: q.runner,
               race,
@@ -80,27 +71,33 @@ export function PastRaceEditDialog({
       }
     },
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["race", race.uuid, "runnersInRace"] });
+      qc.invalidateQueries({
+        queryKey: ["race", race.uuid, "runnersInRace"],
+      });
       qc.invalidateQueries({ queryKey: ["race", "getAll"] });
-      onSaved();
       onClose();
     },
   });
 
   const removeRunner = useMutation({
     mutationFn: (rr: RaceRunnerDTO) =>
-      QUERIES.race.removeRunnersFromRace(race.uuid!, [rr]).queryFn(),
-    onSuccess: refreshRunners,
+      QUERIES.race.removeRunnersFromRace(race.uuid, [rr]).queryFn(),
+    onSuccess: () => {
+      qc.invalidateQueries({
+        queryKey: ["race", race.uuid, "runnersInRace"],
+      });
+      qc.invalidateQueries({ queryKey: ["race", "getAll"] });
+    },
   });
 
   const updateRunner = useMutation({
     mutationFn: (rr: RaceRunnerDTO) =>
-      QUERIES.race
-        .updateRunnerInRace(race.uuid!, rr.runner.uuid!, rr)
-        .queryFn(),
+      QUERIES.race.updateRunnerInRace(race.uuid, rr.runner.uuid, rr).queryFn(),
     onSuccess: () => {
+      qc.invalidateQueries({
+        queryKey: ["race", race.uuid, "runnersInRace"],
+      });
       setEditingRunnerUuid(null);
-      refreshRunners();
     },
   });
 
@@ -201,7 +198,7 @@ export function PastRaceEditDialog({
                           <Button
                             size="sm"
                             variant="ghost"
-                            className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
+                            className="size-6 p-0 text-muted-foreground hover:text-foreground"
                             onClick={() => startEditing(rr)}
                           >
                             <PencilIcon className="size-3.5" />
@@ -230,6 +227,7 @@ export function PastRaceEditDialog({
                             type="checkbox"
                             checked={editHideTime}
                             onChange={(e) => setEditHideTime(e.target.checked)}
+                            aria-label="Skjul tid (kun deltatt)"
                             className="rounded"
                           />
                           <label
@@ -254,7 +252,7 @@ export function PastRaceEditDialog({
                         <Button
                           size="sm"
                           variant="ghost"
-                          className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
+                          className="size-6 p-0 text-muted-foreground hover:text-foreground"
                           onClick={() => setEditingRunnerUuid(null)}
                         >
                           <XIcon className="size-3.5" />

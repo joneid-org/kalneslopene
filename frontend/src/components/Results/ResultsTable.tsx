@@ -6,7 +6,7 @@ import {
   useReactTable,
   type VisibilityState,
 } from "@tanstack/react-table";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import { ColumnVisibilityMenu } from "@/components/Results/ColumnVisibilityMenu.tsx";
 import {
   Card,
@@ -30,15 +30,19 @@ type ResultsTableProps = {
   tableData: RowData[];
 };
 
+const MOBILE_QUERY = "(max-width: 767px)";
+
+function subscribeMobile(callback: () => void) {
+  const mq = window.matchMedia(MOBILE_QUERY);
+  mq.addEventListener("change", callback);
+  return () => mq.removeEventListener("change", callback);
+}
+
 function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 767px)");
-    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, []);
-  return isMobile;
+  return useSyncExternalStore(
+    subscribeMobile,
+    () => window.matchMedia(MOBILE_QUERY).matches,
+  );
 }
 
 const numCell = ({ getValue }: CellContext<RowData, unknown>) => (
@@ -49,21 +53,17 @@ export default function ResultsTable({ tableData, title }: ResultsTableProps) {
   const isMobile = useIsMobile();
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
-    () =>
-      Object.fromEntries(
-        DESKTOP_ONLY_COLUMNS.map((c) => [c, window.innerWidth >= 768]),
-      ),
+    () => Object.fromEntries(DESKTOP_ONLY_COLUMNS.map((c) => [c, !isMobile])),
   );
-
-  useEffect(() => {
+  const [lastIsMobile, setLastIsMobile] = useState(isMobile);
+  if (lastIsMobile !== isMobile) {
+    setLastIsMobile(isMobile);
     setColumnVisibility((prev) => {
       const updated = { ...prev };
-      for (const col of DESKTOP_ONLY_COLUMNS) {
-        updated[col] = !isMobile;
-      }
+      for (const col of DESKTOP_ONLY_COLUMNS) updated[col] = !isMobile;
       return updated;
     });
-  }, [isMobile]);
+  }
 
   const columns: ColumnDef<RowData>[] = useMemo(
     () => [

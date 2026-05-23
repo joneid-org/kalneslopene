@@ -5,6 +5,7 @@ import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
 import com.grimsgaards.kalneslopene.model.input.RaceInput
 import com.grimsgaards.kalneslopene.service.RaceService
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDateTime
 import java.util.*
 
 @RestController
@@ -14,7 +15,7 @@ class RaceController(
 ) {
 
     @GetMapping
-    fun getAllRaces(): List<RaceDTO> = raceService.getAll()
+    fun getAllRaces(filter: RaceFilter): List<RaceDTO> = raceService.getAll(filter)
 
     @GetMapping("/{uuid}")
     fun getRaceById(@PathVariable uuid: UUID): RaceDTO = raceService.findByUuid(uuid)
@@ -46,3 +47,8 @@ class RaceController(
     fun removeRunnersFromRace(@PathVariable uuid: UUID, @RequestBody runnerUuids: List<UUID>) =
         raceService.removeRunnersFromRace(uuid, runnerUuids.toSet())
 }
+
+data class RaceFilter(
+    val from: LocalDateTime? = null,
+    val to: LocalDateTime? = null,
+)

@@ -15,7 +15,7 @@ export function RowActions({ onEdit, onDelete }: Props) {
         <Button
           size="sm"
           variant="ghost"
-          className="h-7 w-7 p-0"
+          className="size-7 p-0"
           onClick={onEdit}
         >
           <PencilIcon className="size-3.5" />

@@ -6,12 +6,7 @@ updates:
       interval: "weekly"
     open-pull-requests-limit: 2
     groups:
-      frontend-major:
-        patterns:
-          - "*"
-        update-types:
-          - "major"
-      frontend-minor-patch:
+      frontend-group:
         patterns:
           - "*"
 
@@ -21,11 +16,6 @@ updates:
       interval: "weekly"
     open-pull-requests-limit: 2
     groups:
-      backend-major:
-        patterns:
-          - "*"
-        update-types:
-          - "major"
-      backend-minor-patch:
+      backend-group:
         patterns:
           - "*"

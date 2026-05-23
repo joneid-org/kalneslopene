@@ -1,5 +1,6 @@
 package com.grimsgaards.kalneslopene.service
 
+import com.grimsgaards.kalneslopene.controller.RaceFilter
 import com.grimsgaards.kalneslopene.model.dto.RaceDTO
 import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
 import com.grimsgaards.kalneslopene.model.entities.RaceEntity
@@ -21,8 +22,8 @@ class RaceService(
     val raceRunnerRepository: RaceRunnerRepository,
 ) {
 
-    fun getAll(): List<RaceDTO> {
-        return raceRepository.findAllSorted().map { it.toDto() }
+    fun getAll(filter: RaceFilter): List<RaceDTO> {
+        return raceRepository.findAllByFilter(filter).map { it.toDto() }
     }
 
     fun findByUuid(uuid: UUID): RaceDTO {

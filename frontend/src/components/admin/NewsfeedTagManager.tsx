@@ -137,7 +137,7 @@ export function NewsfeedTagManager() {
   const [editing, setEditing] = useState<NewsfeedTagDTO | null>(null);
   const editMutation = useMutation({
     mutationFn: (dto: NewsfeedTagDTO) =>
-      QUERIES.newsfeed.updateTag(dto.uuid!, dto).queryFn(),
+      QUERIES.newsfeed.updateTag(dto.uuid, dto).queryFn(),
     onSuccess: () => {
       invalidate();
       setEditing(null);

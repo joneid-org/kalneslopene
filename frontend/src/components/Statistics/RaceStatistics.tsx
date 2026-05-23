@@ -21,7 +21,7 @@ export default function RaceStatistics() {
     undefined,
   );
 
-  const { data: races } = useQuery(QUERIES.race.getAllRaces);
+  const { data: races } = useQuery(QUERIES.race.getAllRaces());
 
   const runnerQueries = useQueries({
     queries: (races ?? []).map((race) =>

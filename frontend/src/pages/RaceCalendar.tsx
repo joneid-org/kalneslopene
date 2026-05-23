@@ -38,7 +38,7 @@ function isSameDay(a: Date, b: Date) {
 }
 
 export function RaceCalendar() {
-  const { data: races = [] } = useQuery(QUERIES.race.getAllRaces);
+  const { data: races = [] } = useQuery(QUERIES.race.getAllRaces());
 
   const allYears = Array.from(
     new Set(races.map((r) => extractYear(r.raceDate))),
@@ -57,12 +57,9 @@ export function RaceCalendar() {
       ),
     );
 
-  const pastDates = racesForYear
-    .filter((r) => isPast(r))
-    .map((r) => raceDateToDate(r.raceDate));
-  const upcomingDates = racesForYear
-    .filter((r) => !isPast(r))
-    .map((r) => raceDateToDate(r.raceDate));
+  const [past, upcoming] = racesForYear.partition(isPast);
+  const pastDates = past.map((r) => raceDateToDate(r.raceDate));
+  const upcomingDates = upcoming.map((r) => raceDateToDate(r.raceDate));
 
   const selectedDate = selectedRace
     ? raceDateToDate(selectedRace.raceDate)

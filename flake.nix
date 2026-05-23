@@ -1,8 +1,6 @@
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    # Pinned to the last commit before jdk24 was removed from nixpkgs (EOL on 2025-10-04).
-    nixpkgs-jdk24.url = "github:nixos/nixpkgs/c8f3f1665a102748eba941a60866ff46cf0203d1";
     devshell = {
       url = "github:numtide/devshell";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -14,7 +12,6 @@
   outputs =
     {
       nixpkgs,
-      nixpkgs-jdk24,
       devshell,
       flake-utils,
       ...
@@ -30,14 +27,9 @@
           ];
         };
 
-        pkgsJdk24 = import nixpkgs-jdk24 {
-          inherit system;
-          config.allowUnfree = true;
-        };
-
         bun = pkgs.bun;
         nodejs = pkgs.nodejs;
-        jdk = pkgsJdk24.jdk24_headless;
+        jdk = pkgs.jdk25_headless;
         opentofu = pkgs.opentofu;
       in
       {

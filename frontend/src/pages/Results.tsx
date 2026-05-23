@@ -26,7 +26,7 @@ import type { RaceRunnerDTO } from "@/model/DTO.ts";
 export function Results() {
   const { uuid = "" } = useParams<{ uuid: string }>();
 
-  const { data: races } = useQuery(QUERIES.race.getAllRaces);
+  const { data: races } = useQuery(QUERIES.race.getAllRaces());
   const { data: raceRunners } = useQuery(
     QUERIES.race.getAllRunnersInRace(uuid),
   );

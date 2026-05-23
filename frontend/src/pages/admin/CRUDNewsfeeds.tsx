@@ -6,7 +6,6 @@ import { QUERIES } from "@/api/queries.ts";
 import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog.tsx";
 import { NewsfeedForm } from "@/components/admin/NewsfeedForm.tsx";
 import { NewsfeedsCard } from "@/components/admin/NewsfeedsCard.tsx";
-import { NewsfeedTagManager } from "@/components/admin/NewsfeedTagManager.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Dialog,
@@ -85,7 +84,7 @@ export function CRUDNewsfeeds() {
       <div className="rounded-lg border p-4 space-y-3">
         <h2 className="text-base font-semibold">Innstillinger</h2>
         <div className="flex items-end gap-3">
-          <div className="space-y-1.5 flex-1 max-w-[200px]">
+          <div className="space-y-1.5 flex-1 max-w-50">
             <Label>Antall artikler på forsiden</Label>
             <Input
               type="number"
@@ -103,10 +102,6 @@ export function CRUDNewsfeeds() {
           </Button>
         </div>
       </div>
-
-      <Separator />
-
-      <NewsfeedTagManager />
 
       <Separator />
 

@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router";
+import { NewsfeedTagManager } from "@/components/admin/NewsfeedTagManager.tsx";
 import { ImagesPage } from "@/pages/admin/Images.tsx";
 import { RaceCalendar } from "@/pages/RaceCalendar.tsx";
 import { AuthGuard } from "./components/admin/AuthGuard.tsx";
@@ -107,6 +108,10 @@ export const router = createBrowserRouter([
           {
             path: "admin/newsfeeds",
             Component: CRUDNewsfeeds,
+          },
+          {
+            path: "admin/tags",
+            Component: NewsfeedTagManager,
           },
         ],
       },

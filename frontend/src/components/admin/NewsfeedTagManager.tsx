@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { PencilIcon, PlusIcon } from "lucide-react";
+import { ChevronLeftIcon, PencilIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
 import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog.tsx";
 import { DeleteButton } from "@/components/admin/DeleteButton.tsx";
@@ -119,6 +120,7 @@ function TagForm({
 
 export function NewsfeedTagManager() {
   const qc = useQueryClient();
+  const navigate = useNavigate();
 
   const { data: tags = [] } = useQuery(QUERIES.newsfeed.getAllTags);
 
@@ -152,16 +154,22 @@ export function NewsfeedTagManager() {
   });
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-center justify-between">
-        <h2 className="text-base font-semibold">Tagger</h2>
-        <Button size="sm" className="gap-1.5" onClick={() => setShowAdd(true)}>
-          <PlusIcon className="size-3.5" />
-          Ny tag
-        </Button>
-      </div>
+    <div className="page-content max-w-3xl mx-auto space-y-6">
+      <Button
+        variant="ghost"
+        className="gap-1.5 -ml-2 text-muted-foreground"
+        onClick={() => navigate("/admin")}
+      >
+        <ChevronLeftIcon className="size-4" />
+        Tilbake
+      </Button>
+      <h1 className="text-2xl font-semibold tracking-tight">Tagger</h1>
+      <Button size="sm" className="gap-1.5" onClick={() => setShowAdd(true)}>
+        <PlusIcon className="size-3.5" />
+        Ny tag
+      </Button>
 
-      <div className="rounded-md border divide-y">
+      <div className="rounded-md border divide-y bg-white">
         {tags.length === 0 && (
           <p className="text-sm text-muted-foreground py-3 px-4">
             Ingen tagger ennå.

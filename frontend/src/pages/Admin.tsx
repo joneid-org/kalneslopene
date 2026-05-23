@@ -34,6 +34,7 @@ const actions = [
   { label: "Legg til løper", icon: UserPlusIcon, path: "/admin/runners" },
   { label: "Legg til organisator", icon: UsersIcon, path: "/admin/organizers" },
   { label: "Legg til nyhet", icon: NewspaperIcon, path: "/admin/newsfeeds" },
+  { label: "Administrer tagger", icon: NewspaperIcon, path: "/admin/tags" },
 ] as const;
 
 export function Admin() {

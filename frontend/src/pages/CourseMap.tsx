@@ -21,14 +21,15 @@ import {
   pins,
   routePhotos,
 } from "@/data/loypekartData.ts";
-import type { Photo } from "@/data/mockdata.ts"; // Adapt RoutePhoto to the Photo shape PhotoDialog expects
+
+import type { S3FileDto } from "@/model/DTO.ts"; // Adapt RoutePhoto to the Photo shape PhotoDialog expects
 
 // Adapt RoutePhoto to the Photo shape PhotoDialog expects
-const dialogPhotos: Photo[] = routePhotos.map((rp) => ({
+const dialogPhotos: S3FileDto[] = routePhotos.map((rp) => ({
   url: rp.imageUrl,
-  caption: rp.title,
+  description: rp.title,
   raceId: rp.id,
-  id: rp.id,
+  uuid: rp.id,
 }));
 
 export function CourseMap() {
@@ -40,7 +41,9 @@ export function CourseMap() {
     : undefined;
 
   const activePinDialogIndex = activePinPhoto
-    ? dialogPhotos.findIndex((p) => p.raceId === activePinPhoto.id)
+    ? // biome-ignore lint/suspicious/noTsIgnore: TODO: Refactor to avoid this
+      // @ts-ignore
+      dialogPhotos.findIndex((p) => p.raceId === activePinPhoto.id)
     : -1;
 
   return (

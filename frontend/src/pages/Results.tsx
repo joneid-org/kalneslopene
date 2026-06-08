@@ -9,18 +9,12 @@ import PhotoCarousel from "@/components/Results/PhotoCarousel.tsx";
 import ResultsHeader from "@/components/Results/ResultsHeader.tsx";
 import ResultsTable from "@/components/Results/ResultsTable.tsx";
 import StatBox from "@/components/StatBox.tsx";
-import { photos } from "@/data/mockdata.ts";
 import {
   getNewPersonalBestCount,
   getNewYearBestCount,
 } from "@/lib/statisticsUtils.ts";
 import { formatDateFull } from "@/lib/timeUtils.ts";
-import {
-  buildTableRows,
-  getNextRace,
-  getPhotosByRaceId,
-  getPreviousRace,
-} from "@/lib/utils.ts";
+import { buildTableRows, getNextRace, getPreviousRace } from "@/lib/utils.ts";
 import type { RaceRunnerDTO } from "@/model/DTO.ts";
 
 export function Results() {
@@ -77,10 +71,7 @@ export function Results() {
     uuid,
     allRacesByRunner,
   );
-  const racePhotos = useMemo(
-    () => getPhotosByRaceId(photos, race?.uuid),
-    [race],
-  );
+  const racePhotos = race?.photos ?? [];
 
   return (
     <div className="page-content space-y-3 md:space-y-5">

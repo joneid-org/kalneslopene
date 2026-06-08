@@ -2,10 +2,11 @@ package com.grimsgaards.kalneslopene.controller
 
 import com.grimsgaards.kalneslopene.model.dto.RaceDTO
 import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
+import com.grimsgaards.kalneslopene.model.input.PhotoUploadInfo
+import com.grimsgaards.kalneslopene.model.input.RaceFilter
 import com.grimsgaards.kalneslopene.model.input.RaceInput
 import com.grimsgaards.kalneslopene.service.RaceService
 import org.springframework.web.bind.annotation.*
-import java.time.LocalDateTime
 import java.util.*
 
 @RestController
@@ -21,7 +22,8 @@ class RaceController(
     fun getRaceById(@PathVariable uuid: UUID): RaceDTO = raceService.findByUuid(uuid)
 
     @PatchMapping("/{uuid}")
-    fun updateRace(@RequestBody input: RaceInput, @PathVariable uuid: UUID): RaceDTO = raceService.updateRace(uuid, input)
+    fun updateRace(@RequestBody input: RaceInput, @PathVariable uuid: UUID): RaceDTO =
+        raceService.updateRace(uuid, input)
 
     @DeleteMapping("/{uuid}")
     fun deleteRaceById(@PathVariable uuid: UUID) = raceService.deleteRaceById(uuid)
@@ -36,6 +38,10 @@ class RaceController(
     fun addRunnersToRace(@PathVariable uuid: UUID, @RequestBody runners: List<RaceRunnerDTO>): List<RaceRunnerDTO> =
         raceService.addRunnersToRace(uuid, runners)
 
+    @PostMapping("/{uuid}/photos")
+    fun addPhotoToRace(@PathVariable uuid: UUID, @RequestBody photos: List<String>): Map<String, PhotoUploadInfo> =
+        raceService.addPhotosToRace(uuid, photos)
+
     @PatchMapping("/{uuid}/runners/{runnerUuid}")
     fun updateRunnerInRace(
         @PathVariable uuid: UUID,
@@ -48,7 +54,3 @@ class RaceController(
         raceService.removeRunnersFromRace(uuid, runnerUuids.toSet())
 }
 
-data class RaceFilter(
-    val from: LocalDateTime? = null,
-    val to: LocalDateTime? = null,
-)

@@ -1,8 +1,9 @@
 import { Card, CardContent } from "@/components/ui/card.tsx";
-import type { Photo } from "@/data/mockdata.ts";
+
+import type { S3FileDto } from "@/model/DTO.ts";
 
 type PhotoGridProps = {
-  photos: Photo[];
+  photos: S3FileDto[];
   onPhotoClick: (idx: number) => void;
 };
 
@@ -21,14 +22,14 @@ export default function PhotoGrid({ photos, onPhotoClick }: PhotoGridProps) {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
           {photos.map((photo, idx) => (
             <button
-              key={photo.id}
+              key={photo.uuid}
               type="button"
               className="aspect-video sm:aspect-square overflow-hidden rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               onClick={() => onPhotoClick(idx)}
             >
               <img
                 src={photo.url}
-                alt={photo.caption}
+                alt={photo.description}
                 className="w-full h-full object-cover hover:opacity-90 transition-opacity"
               />
             </button>

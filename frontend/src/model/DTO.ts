@@ -1,10 +1,17 @@
+export interface S3FileDto {
+  uuid: string;
+  url: string;
+  description?: string;
+}
+
 export type RaceDTO = {
   uuid: string;
   raceDate: string;
   weather?: string;
   runnerCount: number;
+  photos: S3FileDto[];
 };
-export type RaceInput = Omit<RaceDTO, "uuid" | "runnerCount">;
+export type RaceInput = Omit<RaceDTO, "uuid" | "runnerCount" | "photos">;
 
 export type NewsFeedDTO = {
   uuid: string;

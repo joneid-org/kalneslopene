@@ -1,6 +1,5 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import type { Photo } from "@/data/mockdata.ts";
 import { DISTANCE_KM } from "@/lib/constants.ts";
 import {
   getBestTimeThisYear,
@@ -13,14 +12,6 @@ import {
   raceDateToSortKey,
 } from "@/lib/timeUtils.ts";
 import type { OrganizerDTO, RaceDTO, RaceRunnerDTO } from "@/model/DTO.ts";
-
-export function getPhotosByRaceId(
-  photos: Photo[],
-  uuid: string | undefined,
-): Photo[] {
-  if (!uuid) return [];
-  return photos.filter((p) => p.raceId === uuid);
-}
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -90,42 +81,6 @@ export function getNextRace(races: RaceDTO[], uuid?: string): RaceDTO | null {
     if (best === null || key < bestKey) {
       best = race;
       bestKey = key;
-    }
-  }
-  return best;
-}
-
-export function findFastetFemaleInRace(
-  results: RaceRunnerDTO[],
-): RaceRunnerDTO | undefined {
-  return findFastestInRace(results, "Kvinne");
-}
-
-export function findFastetMaleInRace(
-  results: RaceRunnerDTO[],
-): RaceRunnerDTO | undefined {
-  return findFastestInRace(results, "Mann");
-}
-
-export function findFastestRunnerInRace(
-  results: RaceRunnerDTO[],
-): RaceRunnerDTO | undefined {
-  return findFastestInRace(results);
-}
-
-export function findFastestInRace(
-  results: RaceRunnerDTO[],
-  gender?: string,
-): RaceRunnerDTO | undefined {
-  let best: RaceRunnerDTO | undefined;
-  let bestSeconds = Number.POSITIVE_INFINITY;
-  for (const r of results) {
-    if (!r.resultTime) continue;
-    if (gender && r.runner.gender !== gender) continue;
-    const seconds = mapResultTimeToNumber(r.resultTime);
-    if (seconds < bestSeconds) {
-      bestSeconds = seconds;
-      best = r;
     }
   }
   return best;

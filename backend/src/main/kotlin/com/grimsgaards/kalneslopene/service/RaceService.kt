@@ -1,6 +1,7 @@
 package com.grimsgaards.kalneslopene.service
 
-import com.grimsgaards.kalneslopene.controller.RaceFilter
+import com.grimsgaards.kalneslopene.model.input.PhotoUploadInfo
+import com.grimsgaards.kalneslopene.model.input.RaceFilter
 import com.grimsgaards.kalneslopene.model.dto.RaceDTO
 import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
 import com.grimsgaards.kalneslopene.model.entities.RaceEntity
@@ -20,6 +21,7 @@ class RaceService(
     val raceRepository: RaceRepository,
     val runnerRepository: RunnerRepository,
     val raceRunnerRepository: RaceRunnerRepository,
+    val s3Service: S3Service,
 ) {
 
     fun getAll(filter: RaceFilter): List<RaceDTO> {
@@ -82,6 +84,16 @@ class RaceService(
         return raceRunnerRepository.saveAll(newEntities).map { it.toDto() }
     }
 
+    @Transactional
+    fun addPhotosToRace(raceUuid: UUID, photoNames: List<String>): Map<String, PhotoUploadInfo> {
+        val race = raceRepository.findById(raceUuid).orElseThrow { NoSuchElementException("Race $raceUuid not found") }
+        val s3FileEntitiesMap = photoNames.associateWith { s3Service.createFileEntity("race-photos/$raceUuid/$it") }
+        race.photos.addAll(s3FileEntitiesMap.values)
+        return photoNames.associateWith { PhotoUploadInfo(
+            uploadUrl = s3Service.getPresignedUrl("race-photos/$raceUuid/$it"),
+            s3File = s3FileEntitiesMap[it]!!.toDto()
+        ) }
+    }
 
     fun updateRunnerInRace(raceUuid: UUID, runnerUuid: UUID, runnerDto: RaceRunnerDTO): RaceRunnerDTO {
         val key = RaceRunnerKey(runnerUuid = runnerUuid, raceUuid = raceUuid)

@@ -1,6 +1,6 @@
 package com.grimsgaards.kalneslopene.repository
 
-import com.grimsgaards.kalneslopene.controller.RaceFilter
+import com.grimsgaards.kalneslopene.model.input.RaceFilter
 import com.grimsgaards.kalneslopene.model.entities.RaceEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query

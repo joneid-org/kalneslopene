@@ -1,0 +1,18 @@
+info:
+  name: races
+  type: http
+  seq: 1
+
+http:
+  method: DELETE
+  url: "{{url}}/api/s3/files"
+  body:
+    type: json
+    data: '["f2b2e6e4-2d1d-4a27-999b-ce63b49e2ee6"]'
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

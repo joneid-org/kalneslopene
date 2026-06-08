@@ -13,7 +13,6 @@ import type {
   OrganizerDTO,
   OrganizerInput,
   RaceDTO,
-  RaceInput,
   RaceRunnerDTO,
   RaceStatisticsDTO,
   RunnerDTO,
@@ -52,14 +51,6 @@ export const QUERIES = {
       queryKey: ["race", "getById", uuid],
       queryFn: async () => {
         return await kyClient.get(`/api/races/${uuid}`).json<RaceDTO>();
-      },
-    }),
-    createRaces: (races: RaceInput[]) => ({
-      queryKey: ["race", "create"],
-      queryFn: async () => {
-        return await kyClient
-          .post("/api/races/createRaces", { json: races })
-          .json<RaceDTO[]>();
       },
     }),
     updateRace: (uuid: string, race: RaceDTO) => ({

@@ -1,18 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
 import PhotoDialog from "@/components/PhotoDialog.tsx";
 import PhotoGrid from "@/components/Pictures/PhotoGrid.tsx";
 import PhotoHeader from "@/components/Pictures/PhotoHeader.tsx";
 import NavigationButtons from "@/components/Results/NavigationButtons.tsx";
-import { photos } from "@/data/mockdata.ts";
 import { formatDateFull } from "@/lib/timeUtils.ts";
-import {
-  getNextRace,
-  getPhotosByRaceId,
-  getPreviousRace,
-} from "@/lib/utils.ts";
+import { getNextRace, getPreviousRace } from "@/lib/utils.ts";
 
 export function Pictures() {
   const { uuid = "" } = useParams<{ uuid: string }>();
@@ -26,15 +21,7 @@ export function Pictures() {
   const next = getNextRace(allRaces, uuid);
   const title = formatDateFull(race?.raceDate);
 
-  const racePhotos = useMemo(() => getPhotosByRaceId(photos, uuid), [uuid]);
-
-  const photographers = useMemo(() => {
-    const names = new Set<string>();
-    for (const p of racePhotos) {
-      if (p.photographer) names.add(p.photographer);
-    }
-    return [...names];
-  }, [racePhotos]);
+  const racePhotos = race?.photos ?? [];
 
   return (
     <div className="page-content space-y-3 md:space-y-5">
@@ -49,7 +36,7 @@ export function Pictures() {
       <PhotoHeader
         title={title ?? ""}
         photoCount={racePhotos.length}
-        photographers={photographers}
+        photographers={[]}
         resultsPath={race ? `/Resultater/${race.uuid}` : undefined}
       />
 

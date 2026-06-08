@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
 import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog.tsx";
 import { RaceDateForm } from "@/components/admin/RaceDateForm.tsx";
-import { SeasonDialog } from "@/components/admin/SeasonDialog.tsx";
+import { createRaces, SeasonDialog } from "@/components/admin/SeasonDialog.tsx";
 import { UpcomingRacesCard } from "@/components/admin/UpcomingRacesCard.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -38,8 +38,7 @@ export function CRUDRaces() {
   const [deleting, setDeleting] = useState<RaceDTO | null>(null);
 
   const addMutation = useMutation({
-    mutationFn: (raceDate: string) =>
-      QUERIES.race.createRaces([{ raceDate } as RaceDTO]).queryFn(),
+    mutationFn: (raceDate: string) => createRaces([{ raceDate } as RaceDTO]),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["race", "getAll"] });
       setShowAdd(false);

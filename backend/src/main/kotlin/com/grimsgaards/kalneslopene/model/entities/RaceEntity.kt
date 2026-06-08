@@ -18,7 +18,21 @@ data class RaceEntity(
     @Id
     val uuid: UUID = UUID.randomUUID()
 
+    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.PERSIST])
+    @JoinTable(
+        name = "race_photo",
+        joinColumns = [JoinColumn(name = "race_uuid")],
+        inverseJoinColumns = [JoinColumn(name = "file_uuid")]
+    )
+    val photos: MutableSet<FileEntity> = mutableSetOf()
+
     fun toDto(): RaceDTO {
-        return RaceDTO(uuid, raceDate, weather, runners.size)
+        return RaceDTO(
+            uuid = uuid,
+            raceDate = raceDate,
+            weather = weather,
+            runnerCount = runners.size,
+            photos = photos.filter { it.uploadConfirmedAt != null }.map { it.toDto() }
+        )
     }
 }

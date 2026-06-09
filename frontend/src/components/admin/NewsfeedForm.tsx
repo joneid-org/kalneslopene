@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { tagColor, useTags } from "@/lib/newsUtils.ts";
 import { readFileAsDataURL } from "@/lib/utils.ts";
-import type { NewsFeedDTO } from "@/model/DTO.ts";
+import type { NewsFeedDTO, NewsfeedTagDTO } from "@/model/DTO.ts";
 
 export function NewsfeedForm({
   initial,
@@ -108,7 +108,7 @@ export function NewsfeedForm({
                       className="tag-pill"
                       style={{ color: tagColor(tag ?? availableTags) }}
                     >
-                      {availableTags.find((t) => t.value === tag)?.label ?? tag}
+                      {availableTags.find((t) => t.value === tag)?.value ?? tag}
                     </span>
                   ))}
                 </div>
@@ -116,7 +116,7 @@ export function NewsfeedForm({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56">
-            {availableTags.map((tag) => (
+            {availableTags.map((tag: NewsfeedTagDTO) => (
               <DropdownMenuCheckboxItem
                 key={tag.value}
                 checked={selectedTags.includes(tag.value)}
@@ -127,7 +127,7 @@ export function NewsfeedForm({
                   className="border text-[9px] font-black uppercase tracking-widest bg-transparent"
                   style={{ color: tag.color, borderColor: tag.color }}
                 >
-                  {tag.label}
+                  {tag.value}
                 </Badge>
               </DropdownMenuCheckboxItem>
             ))}

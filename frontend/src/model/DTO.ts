@@ -21,6 +21,7 @@ export type NewsfeedTagDTO = {
   value: string;
   color: string;
 };
+export type NewsfeedTagInput = Omit<NewsfeedTagDTO, "value">;
 
 export type NewsfeedSettingsDTO = {
   maxArticles: number;

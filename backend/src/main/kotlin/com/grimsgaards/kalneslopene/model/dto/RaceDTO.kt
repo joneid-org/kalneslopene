@@ -7,5 +7,7 @@ data class RaceDTO(
     val uuid: UUID,
     val raceDate: LocalDateTime,
     val weather: String?,
-    val runnerCount: Int
+    val runnerCount: Int,
+    val photos: List<FileDto>,
 )
+

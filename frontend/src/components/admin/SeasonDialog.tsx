@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { QUERIES } from "@/api/queries.ts";
+import { kyClient } from "@/api/queryClient.ts";
 import { Button } from "@/components/ui/button.tsx";
 import {
   DialogContent,
@@ -12,9 +12,15 @@ import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { formatDateFull, generateRaceDates } from "@/lib/timeUtils.ts";
-import type { RaceInput } from "@/model/DTO.ts";
+import type { RaceDTO, RaceInput } from "@/model/DTO.ts";
 
 type PreviewRace = { date: string; time: string };
+
+export function createRaces(races: RaceInput[]) {
+  return kyClient
+    .post("/api/races/createRaces", { json: races })
+    .json<RaceDTO[]>();
+}
 
 export function SeasonDialog({ onClose }: { onClose: () => void }) {
   const qc = useQueryClient();
@@ -27,8 +33,7 @@ export function SeasonDialog({ onClose }: { onClose: () => void }) {
   const [preview, setPreview] = useState<PreviewRace[] | null>(null);
 
   const createMutation = useMutation({
-    mutationFn: (races: RaceInput[]) =>
-      QUERIES.race.createRaces(races).queryFn(),
+    mutationFn: (races: RaceInput[]) => createRaces(races),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["race", "getAll"] });
       onClose();

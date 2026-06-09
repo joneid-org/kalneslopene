@@ -1,6 +1,6 @@
 package com.grimsgaards.kalneslopene.service
 
-import com.grimsgaards.kalneslopene.controller.RaceFilter
+import com.grimsgaards.kalneslopene.model.input.RaceFilter
 import com.grimsgaards.kalneslopene.model.dto.Gender
 import com.grimsgaards.kalneslopene.model.dto.RaceStatisticsDto
 import com.grimsgaards.kalneslopene.model.dto.UniqueRunnersStats

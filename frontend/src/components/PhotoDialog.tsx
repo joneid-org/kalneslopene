@@ -1,10 +1,11 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog.tsx";
-import type { Photo } from "../data/mockdata.ts";
+
+import type { S3FileDto } from "@/model/DTO.ts";
 
 type PhotoDialogProps = {
-  photos: Photo[];
+  photos: S3FileDto[];
   index: number | null;
   onIndexChange: (idx: number | null) => void;
 };
@@ -41,12 +42,12 @@ export default function PhotoDialog({
           <div className="relative">
             <img
               src={photos[index].url}
-              alt={photos[index].caption}
+              alt={photos[index].description}
               className="w-full rounded-md object-contain max-h-[88vh]"
             />
-            {photos[index].caption && (
+            {photos[index].description && (
               <p className="text-center text-xs text-black/70 mt-2">
-                {photos[index].caption}
+                {photos[index].description}
               </p>
             )}
             <div className="absolute inset-y-0 left-0 flex items-center">

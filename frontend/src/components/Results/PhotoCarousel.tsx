@@ -13,10 +13,11 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel.tsx";
-import type { Photo } from "@/data/mockdata.ts";
+
+import type { S3FileDto } from "@/model/DTO.ts";
 
 type PhotoCarouselProps = {
-  photos: Photo[];
+  photos: S3FileDto[];
   uuid: string;
   onPhotoClick: (idx: number) => void;
 };
@@ -49,7 +50,7 @@ export default function PhotoCarousel({
           <CarouselContent className="-ml-2">
             {photos.map((photo, idx) => (
               <CarouselItem
-                key={photo.id}
+                key={photo.uuid}
                 className="pl-2 basis-1/2 sm:basis-1/3 md:basis-1/4"
               >
                 <button
@@ -59,7 +60,7 @@ export default function PhotoCarousel({
                 >
                   <img
                     src={photo.url}
-                    alt={photo.caption}
+                    alt={photo.description}
                     className="w-full h-full object-cover hover:opacity-90 transition-opacity"
                   />
                 </button>

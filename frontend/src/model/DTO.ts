@@ -18,12 +18,9 @@ export type NewsFeedDTO = {
 export type NewsFeedInput = Omit<NewsFeedDTO, "uuid">;
 
 export type NewsfeedTagDTO = {
-  uuid: string;
-  label: string;
   value: string;
   color: string;
 };
-export type NewsfeedTagInput = Omit<NewsfeedTagDTO, "uuid">;
 
 export type NewsfeedSettingsDTO = {
   maxArticles: number;

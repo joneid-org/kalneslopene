@@ -41,34 +41,29 @@ function TagForm({
   onSubmit,
   onCancel,
   submitLabel,
+  colorOnly = false,
 }: {
   initial: Partial<NewsfeedTagDTO>;
-  onSubmit: (dto: Omit<NewsfeedTagDTO, "uuid">) => void;
+  onSubmit: (dto: NewsfeedTagDTO) => void;
   onCancel: () => void;
   submitLabel: string;
+  colorOnly?: boolean;
 }) {
-  const [label, setLabel] = useState(initial.label ?? "");
   const [value, setValue] = useState(initial.value ?? "");
   const [color, setColor] = useState(initial.color ?? "bg-black");
 
   return (
     <div className="space-y-4">
-      <div className="space-y-1.5">
-        <Label>Navn (vises til brukere)</Label>
-        <Input
-          placeholder="f.eks. Results"
-          value={label}
-          onChange={(e) => setLabel(e.target.value)}
-        />
-      </div>
-      <div className="space-y-1.5">
-        <Label>Verdi (intern nøkkel, liten bokstav)</Label>
-        <Input
-          placeholder="f.eks. resultater"
-          value={value}
-          onChange={(e) => setValue(e.target.value.toLowerCase())}
-        />
-      </div>
+      {!colorOnly && (
+        <div className="space-y-1.5">
+          <Label>Verdi</Label>
+          <Input
+            placeholder="f.eks. resultater"
+            value={value}
+            onChange={(e) => setValue(e.target.value.toLowerCase())}
+          />
+        </div>
+      )}
       <div className="space-y-1.5">
         <Label>Farge</Label>
         <Select value={color} onValueChange={setColor}>
@@ -98,7 +93,7 @@ function TagForm({
           </SelectContent>
         </Select>
         <span className="tag-pill" style={{ color }}>
-          {label || "Forhåndsvisning"}
+          {value || "Forhåndsvisning"}
         </span>
       </div>
       <div className="flex gap-2 justify-end pt-2">
@@ -106,10 +101,8 @@ function TagForm({
           Avbryt
         </Button>
         <Button
-          disabled={!label.trim() || !value.trim()}
-          onClick={() =>
-            onSubmit({ label: label.trim(), value: value.trim(), color })
-          }
+          disabled={!colorOnly && !value.trim()}
+          onClick={() => onSubmit({ value: value.trim(), color })}
         >
           {submitLabel}
         </Button>
@@ -126,7 +119,7 @@ export function NewsfeedTagManager() {
 
   const [showAdd, setShowAdd] = useState(false);
   const addMutation = useMutation({
-    mutationFn: (dto: Omit<NewsfeedTagDTO, "uuid">) =>
+    mutationFn: (dto: NewsfeedTagDTO) =>
       QUERIES.newsfeed.createTag(dto as NewsfeedTagDTO).queryFn(),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["newsfeed", "tags"] });
@@ -137,7 +130,7 @@ export function NewsfeedTagManager() {
   const [editing, setEditing] = useState<NewsfeedTagDTO | null>(null);
   const editMutation = useMutation({
     mutationFn: (dto: NewsfeedTagDTO) =>
-      QUERIES.newsfeed.updateTag(dto.uuid, dto).queryFn(),
+      QUERIES.newsfeed.updateTag(dto.value, dto).queryFn(),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["newsfeed", "tags"] });
       setEditing(null);
@@ -146,7 +139,7 @@ export function NewsfeedTagManager() {
 
   const [deleting, setDeleting] = useState<NewsfeedTagDTO | null>(null);
   const deleteMutation = useMutation({
-    mutationFn: (uuid: string) => QUERIES.newsfeed.deleteTag(uuid).queryFn(),
+    mutationFn: (value: string) => QUERIES.newsfeed.deleteTag(value).queryFn(),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["newsfeed", "tags"] });
       setDeleting(null);
@@ -177,15 +170,12 @@ export function NewsfeedTagManager() {
         )}
         {tags.map((tag) => (
           <div
-            key={tag.uuid}
+            key={tag.value}
             className="flex items-center justify-between px-4 py-2.5 gap-3"
           >
             <div className="flex items-center gap-2">
               <span className="tag-pill" style={{ color: tag.color }}>
-                {tag.label}
-              </span>
-              <span className="text-xs text-muted-foreground">
-                ({tag.value})
+                {tag.value}
               </span>
             </div>
             <div className="flex gap-1">
@@ -231,6 +221,7 @@ export function NewsfeedTagManager() {
             <TagForm
               initial={editing}
               submitLabel="Lagre"
+              colorOnly
               onCancel={() => setEditing(null)}
               onSubmit={(dto) => editMutation.mutate({ ...editing, ...dto })}
             />
@@ -251,14 +242,14 @@ export function NewsfeedTagManager() {
               <>
                 Er du sikker på at du vil slette taggen{" "}
                 <span className="font-semibold text-foreground">
-                  «{deleting.label}»
+                  «{deleting.value}»
                 </span>
                 ? Dette kan ikke angres.
               </>
             }
             isPending={deleteMutation.isPending}
             onConfirm={() =>
-              deleting.uuid && deleteMutation.mutate(deleting.uuid)
+              deleting?.value && deleteMutation.mutate(deleting.value)
             }
             onClose={() => setDeleting(null)}
           />

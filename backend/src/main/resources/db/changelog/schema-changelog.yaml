@@ -97,3 +97,10 @@ databaseChangeLog:
         - sqlFile:
             path: db/changelog/sql/migrate/migrate_organizer_add_contact_person.sql
             relativeToChangelogFile: false
+  - changeSet:
+      id: 015-migrate_newsfeedtag_remove_label
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_newsfeedtag_remove_label.sql
+            relativeToChangelogFile: false

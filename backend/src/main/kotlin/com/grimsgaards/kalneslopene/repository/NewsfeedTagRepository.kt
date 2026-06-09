@@ -3,8 +3,7 @@ package com.grimsgaards.kalneslopene.repository
 import com.grimsgaards.kalneslopene.model.entities.NewsfeedTagEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
-import java.util.UUID
 
 @Repository
-interface NewsfeedTagRepository : JpaRepository<NewsfeedTagEntity, UUID>
+interface NewsfeedTagRepository : JpaRepository<NewsfeedTagEntity, String>
 

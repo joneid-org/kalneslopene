@@ -6,7 +6,6 @@ import com.grimsgaards.kalneslopene.model.input.NewsfeedTagInput
 import com.grimsgaards.kalneslopene.model.input.NewsfeedTagUpdateInput
 import com.grimsgaards.kalneslopene.repository.NewsfeedTagRepository
 import org.springframework.stereotype.Service
-import java.util.UUID
 
 @Service
 class NewsfeedTagService(
@@ -17,19 +16,18 @@ class NewsfeedTagService(
 
     fun createTag(dto: NewsfeedTagInput): NewsfeedTagDTO =
         newsfeedTagRepository.save(
-            NewsfeedTagEntity(label = dto.label, value = dto.value, color = dto.color)
+            NewsfeedTagEntity(value = dto.value, color = dto.color)
         ).toDto()
 
-    fun updateTag(uuid: UUID, input: NewsfeedTagUpdateInput): NewsfeedTagDTO {
+    fun updateTag(value: String, input: NewsfeedTagUpdateInput): NewsfeedTagDTO {
         val existing =
-            newsfeedTagRepository.findById(uuid).orElseThrow { NoSuchElementException("Tag not found") }
+            newsfeedTagRepository.findById(value).orElseThrow { NoSuchElementException("Tag not found") }
         existing.apply {
-            label = input.label
             color = input.color
         }
         return newsfeedTagRepository.save(existing).toDto()
     }
 
-    fun deleteTag(uuid: UUID) = newsfeedTagRepository.deleteById(uuid)
+    fun deleteTag(value: String) = newsfeedTagRepository.deleteById(value)
 }
 

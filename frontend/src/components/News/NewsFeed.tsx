@@ -75,7 +75,10 @@ export default function NewsFeed() {
                   {post.header}
                 </p>
                 <p className="text-sm leading-snug line-clamp-2">
-                  {post.content}
+                  {post.content
+                    .replace(/<[^>]+>/g, " ")
+                    .replace(/\s+/g, " ")
+                    .trim()}
                 </p>
               </Link>
             </CardHeader>

@@ -41,7 +41,10 @@ export function TagNewsFeed({ post, img }: { post: NewsFeedDTO; img: string }) {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-gray-900 leading-relaxed line-clamp-4">
-                {post.content}
+                {post.content
+                  .replace(/<[^>]+>/g, " ")
+                  .replace(/\s+/g, " ")
+                  .trim()}
               </p>
             </CardContent>
             <CardFooter className="flex items-center justify-between pt-0">

@@ -1,6 +1,7 @@
 import { ImagePlus, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { FormFooter } from "@/components/admin/FormFooter.tsx";
+import { RichTextEditor } from "@/components/admin/RichTextEditor.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -11,10 +12,9 @@ import {
 } from "@/components/ui/dropdown-menu.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
-import { Textarea } from "@/components/ui/textarea.tsx";
 import { tagColor, useTags } from "@/lib/newsUtils.ts";
 import { readFileAsDataURL } from "@/lib/utils.ts";
-import type { NewsFeedDTO } from "@/model/DTO.ts";
+import type { NewsFeedDTO, NewsfeedTagDTO } from "@/model/DTO.ts";
 
 export function NewsfeedForm({
   initial,
@@ -68,7 +68,8 @@ export function NewsfeedForm({
     });
   };
 
-  const isValid = header.trim() && content.trim() && date;
+  const isValid =
+    header.trim() && content.replace(/<[^>]+>/g, "").trim() && date;
 
   return (
     <div className="space-y-4">
@@ -82,12 +83,7 @@ export function NewsfeedForm({
       </div>
       <div className="space-y-1.5">
         <Label>Innhold</Label>
-        <Textarea
-          placeholder="Skriv nyhetsinnholdet her..."
-          rows={5}
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-        />
+        <RichTextEditor value={content} onChange={setContent} />
       </div>
       <div className="space-y-1.5">
         <Label>Dato</Label>
@@ -112,7 +108,7 @@ export function NewsfeedForm({
                       className="tag-pill"
                       style={{ color: tagColor(tag ?? availableTags) }}
                     >
-                      {availableTags.find((t) => t.value === tag)?.label ?? tag}
+                      {availableTags.find((t) => t.value === tag)?.value ?? tag}
                     </span>
                   ))}
                 </div>
@@ -120,7 +116,7 @@ export function NewsfeedForm({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56">
-            {availableTags.map((tag) => (
+            {availableTags.map((tag: NewsfeedTagDTO) => (
               <DropdownMenuCheckboxItem
                 key={tag.value}
                 checked={selectedTags.includes(tag.value)}
@@ -131,7 +127,7 @@ export function NewsfeedForm({
                   className="border text-[9px] font-black uppercase tracking-widest bg-transparent"
                   style={{ color: tag.color, borderColor: tag.color }}
                 >
-                  {tag.label}
+                  {tag.value}
                 </Badge>
               </DropdownMenuCheckboxItem>
             ))}

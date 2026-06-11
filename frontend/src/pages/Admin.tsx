@@ -5,7 +5,6 @@ import {
   ImageIcon,
   LogOutIcon,
   NewspaperIcon,
-  TimerIcon,
   UserPlusIcon,
   UsersIcon,
 } from "lucide-react";
@@ -27,11 +26,6 @@ const actions = [
     path: "/admin/results",
   },
   {
-    label: "Live tidtaking",
-    icon: TimerIcon,
-    path: "/admin/live-timing",
-  },
-  {
     label: "Registrer resultat fra fil",
     icon: FileUpIcon,
     path: "/admin/results/import",
@@ -40,6 +34,7 @@ const actions = [
   { label: "Legg til løper", icon: UserPlusIcon, path: "/admin/runners" },
   { label: "Legg til organisator", icon: UsersIcon, path: "/admin/organizers" },
   { label: "Legg til nyhet", icon: NewspaperIcon, path: "/admin/newsfeeds" },
+  { label: "Administrer tagger", icon: NewspaperIcon, path: "/admin/tags" },
 ] as const;
 
 export function Admin() {

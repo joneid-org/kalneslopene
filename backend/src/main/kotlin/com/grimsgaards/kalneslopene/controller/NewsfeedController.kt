@@ -8,15 +8,8 @@ import com.grimsgaards.kalneslopene.model.input.NewsfeedTagInput
 import com.grimsgaards.kalneslopene.model.input.NewsfeedTagUpdateInput
 import com.grimsgaards.kalneslopene.service.NewsfeedService
 import com.grimsgaards.kalneslopene.service.NewsfeedTagService
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
-import java.util.UUID
+import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @RestController
 @RequestMapping("/api/newsfeeds")
@@ -60,10 +53,10 @@ class NewsfeedController(
     fun createTag(@RequestBody dto: NewsfeedTagInput): NewsfeedTagDTO =
         newsfeedTagService.createTag(dto)
 
-    @PatchMapping("/tags/{uuid}")
-    fun updateTag(@PathVariable uuid: UUID, @RequestBody input: NewsfeedTagUpdateInput): NewsfeedTagDTO =
-        newsfeedTagService.updateTag(uuid, input)
+    @PatchMapping("/tags/{value}")
+    fun updateTag(@PathVariable value: String, @RequestBody input: NewsfeedTagUpdateInput): NewsfeedTagDTO =
+        newsfeedTagService.updateTag(value, input)
 
-    @DeleteMapping("/tags/{uuid}")
-    fun deleteTag(@PathVariable uuid: UUID) = newsfeedTagService.deleteTag(uuid)
+    @DeleteMapping("/tags/{value}")
+    fun deleteTag(@PathVariable value: String) = newsfeedTagService.deleteTag(value)
 }

@@ -92,9 +92,11 @@ export function NewsArticle() {
 
         <Separator className="mb-3" />
 
-        <p className="text-xs leading-relaxed whitespace-pre-line mb-6">
-          {post.content}
-        </p>
+        <p
+          className="text-sm leading-relaxed mb-6 prose prose-sm max-w-none [&_img]:max-w-full [&_img]:rounded-lg [&_img]:my-2"
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: rich text HTML from admin editor
+          dangerouslySetInnerHTML={{ __html: post.content }}
+        />
 
         {headerImage && (
           <Dialog open={open} onOpenChange={setOpen}>

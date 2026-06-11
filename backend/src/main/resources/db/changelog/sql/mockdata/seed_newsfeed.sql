@@ -1,8 +1,8 @@
-INSERT INTO newsfeed_tag (label, value, color)
-VALUES ('Resultater', 'resultater', '#2563EB'),
-       ('Bilder', 'bilder', '#9333EA'),
-       ('Kommende løp', 'kommende løp', '#16A34A'),
-       ('Ukens løp', 'ukens løp', '#F97316');
+INSERT INTO newsfeed_tag (value, color)
+VALUES ('Resultater', '#2563EB'),
+       ('Bilder', '#9333EA'),
+       ('Kommende løp', '#16A34A'),
+       ('Ukens løp', '#F97316');
 
 INSERT INTO newsfeed (uuid, tags, header, content, date)
 VALUES ('c1000000-0000-0000-0000-000000000001',

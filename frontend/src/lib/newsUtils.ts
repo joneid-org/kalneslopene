@@ -1,15 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { QUERIES } from "@/api/queries.ts";
-import type { NewsFeedDTO, NewsfeedTagInput, RaceDTO } from "@/model/DTO.ts";
+import type { NewsFeedDTO, NewsfeedTagDTO, RaceDTO } from "@/model/DTO.ts";
 
-export const PREDEFINED_TAGS: NewsfeedTagInput[] = [
-  { label: "Results", value: "resultater", color: "#2563eb" },
-  { label: "Pictures", value: "bilder", color: "#9333ea" },
-  { label: "Kommende løp", value: "kommende løp", color: "#16a34a" },
-  { label: "Ukens løp", value: "ukens løp", color: "#f97316" },
+export const PREDEFINED_TAGS: NewsfeedTagDTO[] = [
+  { value: "resultater", color: "#2563eb" },
+  { value: "bilder", color: "#9333ea" },
+  { value: "kommende løp", color: "#16a34a" },
+  { value: "ukens løp", color: "#f97316" },
 ];
 
-export function tagColor(tag: string, tags?: NewsfeedTagInput[]): string {
+export function tagColor(tag: string, tags?: NewsfeedTagDTO[]): string {
   const list = tags ?? PREDEFINED_TAGS;
   return (
     list.find((t) => t.value.toLowerCase() === tag.toLowerCase())?.color ??
@@ -17,7 +17,7 @@ export function tagColor(tag: string, tags?: NewsfeedTagInput[]): string {
   );
 }
 
-export function useTags(): NewsfeedTagInput[] {
+export function useTags(): NewsfeedTagDTO[] {
   const { data } = useQuery(QUERIES.newsfeed.getAllTags);
   return data && data.length > 0 ? data : PREDEFINED_TAGS;
 }

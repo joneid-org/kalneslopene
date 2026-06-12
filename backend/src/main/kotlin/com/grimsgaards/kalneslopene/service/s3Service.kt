@@ -36,6 +36,9 @@ class S3Service(
         .credentials(minioAccessKey, minioSecretKey)
         .build()
 
+    /** Public base URL of the bucket, e.g. `https://<endpoint>/<bucket>`, for composing static image URLs. */
+    fun getPublicBaseUrl(): String = "$baseUrl/$minioBucketName"
+
     fun getPresignedUrl(fileName: String, expiryHours: Int = 1): String =
         minioClient.getPresignedObjectUrl(
             GetPresignedObjectUrlArgs.builder()

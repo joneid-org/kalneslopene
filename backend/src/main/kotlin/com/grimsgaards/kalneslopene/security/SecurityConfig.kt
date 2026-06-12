@@ -25,6 +25,8 @@ class SecurityConfig {
             .csrf { it.disable() }
             .authorizeHttpRequests { auth ->
                 auth
+                    .requestMatchers(HttpMethod.GET, "/api/s3/presigned-url")
+                    .hasAuthority(UserRole.ADMIN.toString())
                     .requestMatchers(HttpMethod.GET, "/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/auth/setup").permitAll()

@@ -22,13 +22,15 @@ export function useTags(): NewsfeedTagDTO[] {
   return data && data.length > 0 ? data : PREDEFINED_TAGS;
 }
 
-export const NEWS_IMAGES = [
-  "https://images.unsplash.com/photo-1692170226404-969b6e5cde95?w=600&q=75",
-  "https://images.unsplash.com/photo-1657460684508-7c8fa5ba748b?w=600&q=75",
-  "https://images.unsplash.com/photo-1731991027003-386ac5ae9c72?w=600&q=75",
-  "https://images.unsplash.com/photo-1769867628770-10a544d2a02c?w=600&q=75",
-  "https://images.unsplash.com/photo-1766970096331-78c8af007a3b?w=600&q=75",
-];
+export const NEWS_IMAGES = import.meta.env.DEV
+  ? [
+      "https://images.unsplash.com/photo-1692170226404-969b6e5cde95?w=600&q=75",
+      "https://images.unsplash.com/photo-1657460684508-7c8fa5ba748b?w=600&q=75",
+      "https://images.unsplash.com/photo-1731991027003-386ac5ae9c72?w=600&q=75",
+      "https://images.unsplash.com/photo-1769867628770-10a544d2a02c?w=600&q=75",
+      "https://images.unsplash.com/photo-1766970096331-78c8af007a3b?w=600&q=75",
+    ]
+  : [];
 
 export function sameDate(a: unknown, b: Date): boolean {
   const aStr = String(a).slice(0, 10);

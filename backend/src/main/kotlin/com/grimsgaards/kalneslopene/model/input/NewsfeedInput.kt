@@ -9,7 +9,7 @@ data class NewsfeedInput(
     val header: String,
     val content: String,
     val date: OffsetDateTime,
-    val headerImage: String? = null,
+    val headerImageUuid: UUID? = null,
     val images: List<String> = emptyList(),
 )
 

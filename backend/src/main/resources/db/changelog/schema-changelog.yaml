@@ -111,3 +111,10 @@ databaseChangeLog:
         - sqlFile:
             path: db/changelog/sql/migrate/migrate_newsfeedtag_remove_label.sql
             relativeToChangelogFile: false
+  - changeSet:
+      id: 017-migrate_newsfeed_add_header_image_file
+      author: ejoneid
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_newsfeed_add_header_image_file.sql
+            relativeToChangelogFile: false

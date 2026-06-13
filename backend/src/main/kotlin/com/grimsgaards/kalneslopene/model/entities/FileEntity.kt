@@ -22,7 +22,10 @@ class FileEntity(
           field = value
       }
 
-    fun toDto(): FileDto {
-        return FileDto(uuid, url)
+    fun toDto(): FileDto? {
+        if (uploadConfirmedAt != null ) return toDtoDangerously()
+        return null
     }
+
+    fun toDtoDangerously(): FileDto = FileDto(uuid, url)
 }

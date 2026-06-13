@@ -32,7 +32,7 @@ data class RaceEntity(
             raceDate = raceDate,
             weather = weather,
             runnerCount = runners.size,
-            photos = photos.filter { it.uploadConfirmedAt != null }.map { it.toDto() }
+            photos = photos.mapNotNull { it.toDto() }
         )
     }
 }

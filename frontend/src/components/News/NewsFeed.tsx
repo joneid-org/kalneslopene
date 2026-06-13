@@ -40,7 +40,7 @@ export default function NewsFeed() {
               <div className="aspect-video overflow-hidden shrink-0">
                 <img
                   src={
-                    post.headerImage ??
+                    post.headerImage?.url ??
                     NEWS_IMAGES[idx % NEWS_IMAGES.length] ??
                     ""
                   }

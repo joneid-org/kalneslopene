@@ -7,8 +7,7 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface NewsfeedRepository : JpaRepository<NewsfeedEntity, UUID>{
-
+interface NewsfeedRepository : JpaRepository<NewsfeedEntity, UUID> {
     @Query("SELECT n FROM NewsfeedEntity n ORDER BY n.date DESC LIMIT :limit")
-    fun findAllSortedAndLimited(limit: Int) : List<NewsfeedEntity>
+    fun findAllSortedAndLimited(limit: Int): List<NewsfeedEntity>
 }

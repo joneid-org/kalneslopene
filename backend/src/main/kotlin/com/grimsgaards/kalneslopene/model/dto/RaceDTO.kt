@@ -10,4 +10,3 @@ data class RaceDTO(
     val runnerCount: Int,
     val photos: List<FileDto>,
 )
-

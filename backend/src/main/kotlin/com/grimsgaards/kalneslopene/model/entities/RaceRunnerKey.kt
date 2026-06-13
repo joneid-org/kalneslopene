@@ -7,6 +7,5 @@ import java.util.*
 @Embeddable
 data class RaceRunnerKey(
     val runnerUuid: UUID = UUID.randomUUID(),
-    val raceUuid: UUID = UUID.randomUUID()
+    val raceUuid: UUID = UUID.randomUUID(),
 ) : Serializable
-

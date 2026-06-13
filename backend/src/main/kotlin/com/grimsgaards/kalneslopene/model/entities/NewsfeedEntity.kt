@@ -15,26 +15,21 @@ import java.util.*
 @Entity
 @Table(name = "newsfeed")
 data class NewsfeedEntity(
-
     var tags: List<String>,
     var header: String,
     var content: String,
     var date: OffsetDateTime,
-
     @ManyToOne(fetch = FetchType.EAGER, cascade = [CascadeType.PERSIST])
     @JoinColumn(name = "header_image_uuid")
     var headerImage: FileEntity? = null,
-
     @Column(name = "images", columnDefinition = "TEXT[]")
     var images: List<String> = emptyList(),
-
 ) {
-
     @Id
     val uuid: UUID = UUID.randomUUID()
 
-    fun toDto(): NewsfeedDTO {
-        return NewsfeedDTO(
+    fun toDto(): NewsfeedDTO =
+        NewsfeedDTO(
             uuid,
             tags,
             header,
@@ -43,6 +38,4 @@ data class NewsfeedEntity(
             headerImage?.toDto(),
             images,
         )
-    }
-
 }

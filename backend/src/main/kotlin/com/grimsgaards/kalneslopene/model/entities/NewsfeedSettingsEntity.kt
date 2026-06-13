@@ -8,7 +8,5 @@ data class NewsfeedSettingsEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
-
     var maxArticles: Int = 10,
 )
-

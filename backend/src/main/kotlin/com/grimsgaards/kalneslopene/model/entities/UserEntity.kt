@@ -10,10 +10,8 @@ import java.util.*
 @Entity
 @Table(name = "users")
 data class UserEntity(
-
     var username: String,
     var password: String,
-
     @Enumerated(EnumType.STRING)
     var roles: MutableSet<UserRole>,
 ) {

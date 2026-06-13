@@ -9,33 +9,34 @@ import java.util.*
 
 @Service
 class MilestoneService(
-    val milestoneRepository: MilestoneRepository
+    val milestoneRepository: MilestoneRepository,
 ) {
-    fun getAllMilestones(): List<MilestoneDTO> {
-        return milestoneRepository.findAllByOrderByYearAsc().map { it.toDto() }
-    }
+    fun getAllMilestones(): List<MilestoneDTO> = milestoneRepository.findAllByOrderByYearAsc().map { it.toDto() }
 
-    fun getMilestone(uuid: UUID): MilestoneDTO {
-        return milestoneRepository.findById(uuid).get().toDto()
-    }
+    fun getMilestone(uuid: UUID): MilestoneDTO = milestoneRepository.findById(uuid).get().toDto()
 
-    fun createMilestone(milestone: MilestoneInput): MilestoneDTO {
-        return milestoneRepository.save(
-            MilestoneEntity(
-                year = milestone.year,
-                icon = milestone.icon,
-                title = milestone.title,
-                summary = milestone.summary,
-                extra = milestone.extra,
-                details = milestone.details
-            )
-        ).toDto()
-    }
+    fun createMilestone(milestone: MilestoneInput): MilestoneDTO =
+        milestoneRepository
+            .save(
+                MilestoneEntity(
+                    year = milestone.year,
+                    icon = milestone.icon,
+                    title = milestone.title,
+                    summary = milestone.summary,
+                    extra = milestone.extra,
+                    details = milestone.details,
+                ),
+            ).toDto()
 
-    fun updateMilestone(updatedMilestone: MilestoneInput, uuid: UUID? = null): MilestoneDTO {
+    fun updateMilestone(
+        updatedMilestone: MilestoneInput,
+        uuid: UUID? = null,
+    ): MilestoneDTO {
         val resolvedUuid = updatedMilestone.uuid ?: uuid ?: throw IllegalArgumentException("UUID must be provided")
-        val existing = milestoneRepository.findById(resolvedUuid)
-            .orElseThrow { NoSuchElementException("Milestone with uuid $resolvedUuid not found") }
+        val existing =
+            milestoneRepository
+                .findById(resolvedUuid)
+                .orElseThrow { NoSuchElementException("Milestone with uuid $resolvedUuid not found") }
 
         existing.apply {
             year = updatedMilestone.year

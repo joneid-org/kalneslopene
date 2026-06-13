@@ -9,20 +9,16 @@ import java.time.Duration
 @Entity
 @Table(name = "race_runner")
 data class RaceRunnerEntity(
-
     @EmbeddedId
     val id: RaceRunnerKey = RaceRunnerKey(),
-
     @ManyToOne
     @MapsId("runnerUuid")
     @JoinColumn(name = "runner_uuid")
     val runner: RunnerEntity,
-
     @ManyToOne
     @MapsId("raceUuid")
     @JoinColumn(name = "race_uuid")
     val race: RaceEntity,
-
     @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
     var resultTime: Duration,
     var hideTime: Boolean = false,
@@ -30,12 +26,11 @@ data class RaceRunnerEntity(
     @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
     val previousPersonalRecord: Duration? = runner.personalRecord
 
-    fun toDto(): RaceRunnerDTO {
-        return RaceRunnerDTO(
+    fun toDto(): RaceRunnerDTO =
+        RaceRunnerDTO(
             runner = runner.toDto(),
             race = race.toDto(),
             resultTime = resultTime,
-            hideTime = hideTime
+            hideTime = hideTime,
         )
-    }
 }

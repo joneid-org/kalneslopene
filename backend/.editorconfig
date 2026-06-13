@@ -1,0 +1,6 @@
+root = true
+
+[*.{kt,kts}]
+ktlint_code_style = ktlint_official
+# The codebase intentionally uses wildcard imports (jakarta.persistence.*, Spring Data, etc.)
+ktlint_standard_no-wildcard-imports = disabled

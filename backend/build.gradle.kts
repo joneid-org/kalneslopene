@@ -4,6 +4,8 @@ plugins {
     id("org.springframework.boot") version "4.0.6"
     id("io.spring.dependency-management") version "1.1.7"
     kotlin("plugin.jpa") version "2.3.21"
+    id("org.jlleitschuh.gradle.ktlint") version "14.0.1"
+    id("dev.detekt") version "2.0.0-alpha.3"
 }
 
 group = "com.grimsgaards"
@@ -50,6 +52,11 @@ allOpen {
     annotation("jakarta.persistence.Entity")
     annotation("jakarta.persistence.MappedSuperclass")
     annotation("jakarta.persistence.Embeddable")
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    config.setFrom(files("config/detekt/detekt.yml"))
 }
 
 tasks.withType<Test> {

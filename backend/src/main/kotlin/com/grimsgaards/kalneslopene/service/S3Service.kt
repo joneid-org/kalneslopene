@@ -31,22 +31,28 @@ class S3Service(
     private val logger = logger()
     private val baseUrl = minioEndpoint.let { if (it.startsWith("http")) it else "https://$it" }
 
-    private val minioClient: MinioClient = MinioClient.builder()
-        .endpoint(minioEndpoint)
-        .credentials(minioAccessKey, minioSecretKey)
-        .build()
+    private val minioClient: MinioClient =
+        MinioClient
+            .builder()
+            .endpoint(minioEndpoint)
+            .credentials(minioAccessKey, minioSecretKey)
+            .build()
 
     /** Public base URL of the bucket, e.g. `https://<endpoint>/<bucket>`, for composing static image URLs. */
     fun getPublicBaseUrl(): String = "$baseUrl/$minioBucketName"
 
-    fun getPresignedUrl(fileName: String, expiryHours: Int = 1): String =
+    fun getPresignedUrl(
+        fileName: String,
+        expiryHours: Int = 1,
+    ): String =
         minioClient.getPresignedObjectUrl(
-            GetPresignedObjectUrlArgs.builder()
+            GetPresignedObjectUrlArgs
+                .builder()
                 .method(Http.Method.PUT)
                 .bucket(minioBucketName)
                 .`object`(fileName)
                 .expiry(expiryHours, TimeUnit.HOURS)
-                .build()
+                .build(),
         )
 
     @Transactional
@@ -65,12 +71,14 @@ class S3Service(
 
     private fun deleteFiles(fileEntities: List<FileEntity>) {
         val objectsToDelete = fileEntities.map { DeleteRequest.Object(it.url.substringAfter("$baseUrl/$minioBucketName/")) }
-        minioClient.removeObjects(
-            RemoveObjectsArgs.builder()
-                .bucket(minioBucketName)
-                .objects(objectsToDelete)
-                .build()
-        ).forEach { it.get() }
+        minioClient
+            .removeObjects(
+                RemoveObjectsArgs
+                    .builder()
+                    .bucket(minioBucketName)
+                    .objects(objectsToDelete)
+                    .build(),
+            ).forEach { it.get() }
         fileRepository.deleteAll(fileEntities)
     }
 
@@ -85,16 +93,12 @@ class S3Service(
         logger.info("Deleted ${expiredFiles.size} expired unconfirmed uploads")
     }
 
-    fun createFileEntities(fileNames: List<String>): List<FileEntity> {
-        return fileNames.map {
+    fun createFileEntities(fileNames: List<String>): List<FileEntity> =
+        fileNames.map {
             FileEntity(url = "$baseUrl/$minioBucketName/$it")
         }
-    }
-    fun createFileEntity(fileName: String): FileEntity {
-        return createFileEntities(listOf(fileName)).first()
-    }
 
-    fun createAndSaveFileEntity(fileName: String): FileEntity {
-        return fileRepository.save(createFileEntity(fileName))
-    }
+    fun createFileEntity(fileName: String): FileEntity = createFileEntities(listOf(fileName)).first()
+
+    fun createAndSaveFileEntity(fileName: String): FileEntity = fileRepository.save(createFileEntity(fileName))
 }

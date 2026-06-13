@@ -12,4 +12,3 @@ data class OrganizerInput(
     val contactPerson: Boolean,
     val image: String? = null,
 )
-

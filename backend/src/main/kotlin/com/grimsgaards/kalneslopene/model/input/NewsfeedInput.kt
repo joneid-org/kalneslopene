@@ -12,4 +12,3 @@ data class NewsfeedInput(
     val headerImageUuid: UUID? = null,
     val images: List<String> = emptyList(),
 )
-

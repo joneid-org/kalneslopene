@@ -11,9 +11,8 @@ data class RaceEntity(
     @Column(name = "race_date", columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     var raceDate: LocalDateTime,
     var weather: String?,
-
     @OneToMany(mappedBy = "race", fetch = FetchType.EAGER, cascade = [CascadeType.PERSIST], orphanRemoval = true)
-    val runners: MutableList<RaceRunnerEntity> = mutableListOf()
+    val runners: MutableList<RaceRunnerEntity> = mutableListOf(),
 ) {
     @Id
     val uuid: UUID = UUID.randomUUID()
@@ -22,17 +21,16 @@ data class RaceEntity(
     @JoinTable(
         name = "race_photo",
         joinColumns = [JoinColumn(name = "race_uuid")],
-        inverseJoinColumns = [JoinColumn(name = "file_uuid")]
+        inverseJoinColumns = [JoinColumn(name = "file_uuid")],
     )
     val photos: MutableSet<FileEntity> = mutableSetOf()
 
-    fun toDto(): RaceDTO {
-        return RaceDTO(
+    fun toDto(): RaceDTO =
+        RaceDTO(
             uuid = uuid,
             raceDate = raceDate,
             weather = weather,
             runnerCount = runners.size,
-            photos = photos.mapNotNull { it.toDto() }
+            photos = photos.mapNotNull { it.toDto() },
         )
-    }
 }

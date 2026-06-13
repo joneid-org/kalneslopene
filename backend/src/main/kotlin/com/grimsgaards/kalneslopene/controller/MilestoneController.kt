@@ -9,30 +9,31 @@ import java.util.*
 @RestController
 @RequestMapping("/api/milestones")
 class MilestoneController(
-    val milestoneService: MilestoneService
+    val milestoneService: MilestoneService,
 ) {
     @GetMapping
-    fun getAllMilestones(): List<MilestoneDTO> {
-        return milestoneService.getAllMilestones()
-    }
+    fun getAllMilestones(): List<MilestoneDTO> = milestoneService.getAllMilestones()
 
     @GetMapping("/{uuid}")
-    fun getMilestoneById(@PathVariable uuid: UUID): MilestoneDTO {
-        return milestoneService.getMilestone(uuid)
-    }
+    fun getMilestoneById(
+        @PathVariable uuid: UUID,
+    ): MilestoneDTO = milestoneService.getMilestone(uuid)
 
     @PostMapping()
-    fun createMilestone(@RequestBody milestone: MilestoneInput): MilestoneDTO {
-        return milestoneService.createMilestone(milestone)
-    }
+    fun createMilestone(
+        @RequestBody milestone: MilestoneInput,
+    ): MilestoneDTO = milestoneService.createMilestone(milestone)
 
     @PatchMapping("/{uuid}")
-    fun updateMilestone(@PathVariable uuid: UUID, @RequestBody milestone: MilestoneInput): MilestoneDTO {
-        return milestoneService.updateMilestone(milestone, uuid)
-    }
+    fun updateMilestone(
+        @PathVariable uuid: UUID,
+        @RequestBody milestone: MilestoneInput,
+    ): MilestoneDTO = milestoneService.updateMilestone(milestone, uuid)
 
     @DeleteMapping("/{uuid}")
-    fun deleteMilestone(@PathVariable uuid: UUID) {
+    fun deleteMilestone(
+        @PathVariable uuid: UUID,
+    ) {
         milestoneService.deleteMilestone(uuid)
     }
 }

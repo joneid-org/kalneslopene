@@ -18,7 +18,6 @@ import org.springframework.security.web.SecurityFilterChain
 @Configuration
 @EnableWebSecurity
 class SecurityConfig {
-
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
@@ -27,31 +26,33 @@ class SecurityConfig {
                 auth
                     .requestMatchers(HttpMethod.GET, "/api/s3/presigned-url")
                     .hasAuthority(UserRole.ADMIN.toString())
-                    .requestMatchers(HttpMethod.GET, "/**").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/auth/setup").permitAll()
-                    .anyRequest().hasAuthority(UserRole.ADMIN.toString())
-            }
-            .httpBasic { }
+                    .requestMatchers(HttpMethod.GET, "/**")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/auth/login")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/auth/setup")
+                    .permitAll()
+                    .anyRequest()
+                    .hasAuthority(UserRole.ADMIN.toString())
+            }.httpBasic { }
         return http.build()
     }
 
     @Bean
-    fun userDetailsService(userRepository: UserRepository): UserDetailsService {
-        return UserDetailsService { username ->
-            val user = userRepository.findByUsername(username)
-                ?: throw UsernameNotFoundException("Bruker ikke funnet: $username")
+    fun userDetailsService(userRepository: UserRepository): UserDetailsService =
+        UserDetailsService { username ->
+            val user =
+                userRepository.findByUsername(username)
+                    ?: throw UsernameNotFoundException("Bruker ikke funnet: $username")
             val authorities = user.roles.map { SimpleGrantedAuthority(it.toString()) }
-            User.builder()
+            User
+                .builder()
                 .username(user.username)
                 .password(user.password)
                 .authorities(authorities)
                 .build()
         }
-    }
 
     @Bean
-    fun passwordEncoder(): PasswordEncoder {
-        return BCryptPasswordEncoder()
-    }
+    fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 }

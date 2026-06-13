@@ -23,14 +23,11 @@ import java.util.*
     pkJoinColumns = [PrimaryKeyJoinColumn(name = "runner_uuid", referencedColumnName = "uuid")],
 )
 data class RunnerEntity(
-
     var name: String,
-
     @Enumerated(EnumType.STRING)
     var gender: Gender,
-
     @OneToMany(mappedBy = "runner")
-    val races: MutableList<RaceRunnerEntity> = mutableListOf()
+    val races: MutableList<RaceRunnerEntity> = mutableListOf(),
 ) {
     @Id
     val uuid: UUID = UUID.randomUUID()
@@ -39,7 +36,5 @@ data class RunnerEntity(
     @Column(name = "record", table = "personal_records", insertable = false, updatable = false)
     val personalRecord: Duration? = null
 
-    fun toDto(): RunnerDTO {
-        return RunnerDTO(uuid, name, gender)
-    }
+    fun toDto(): RunnerDTO = RunnerDTO(uuid, name, gender)
 }

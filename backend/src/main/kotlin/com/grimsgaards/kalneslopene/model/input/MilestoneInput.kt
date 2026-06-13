@@ -9,6 +9,5 @@ data class MilestoneInput(
     val title: String,
     val summary: String,
     val extra: String? = null,
-    val details: List<String>
+    val details: List<String>,
 )
-

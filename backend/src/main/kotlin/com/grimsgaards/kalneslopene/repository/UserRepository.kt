@@ -9,4 +9,3 @@ import java.util.*
 interface UserRepository : JpaRepository<UserEntity, UUID> {
     fun findByUsername(username: String): UserEntity?
 }
-

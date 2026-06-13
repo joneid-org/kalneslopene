@@ -11,15 +11,18 @@ import org.springframework.stereotype.Service
 class NewsfeedTagService(
     val newsfeedTagRepository: NewsfeedTagRepository,
 ) {
-    fun getAllTags(): List<NewsfeedTagDTO> =
-        newsfeedTagRepository.findAll().map { it.toDto() }
+    fun getAllTags(): List<NewsfeedTagDTO> = newsfeedTagRepository.findAll().map { it.toDto() }
 
     fun createTag(dto: NewsfeedTagInput): NewsfeedTagDTO =
-        newsfeedTagRepository.save(
-            NewsfeedTagEntity(value = dto.value, color = dto.color)
-        ).toDto()
+        newsfeedTagRepository
+            .save(
+                NewsfeedTagEntity(value = dto.value, color = dto.color),
+            ).toDto()
 
-    fun updateTag(value: String, input: NewsfeedTagUpdateInput): NewsfeedTagDTO {
+    fun updateTag(
+        value: String,
+        input: NewsfeedTagUpdateInput,
+    ): NewsfeedTagDTO {
         val existing =
             newsfeedTagRepository.findById(value).orElseThrow { NoSuchElementException("Tag not found") }
         existing.apply {
@@ -30,4 +33,3 @@ class NewsfeedTagService(
 
     fun deleteTag(value: String) = newsfeedTagRepository.deleteById(value)
 }
-

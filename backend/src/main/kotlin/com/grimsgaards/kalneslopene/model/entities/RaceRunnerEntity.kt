@@ -1,7 +1,12 @@
 package com.grimsgaards.kalneslopene.model.entities
 
 import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
-import jakarta.persistence.*
+import jakarta.persistence.EmbeddedId
+import jakarta.persistence.Entity
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.MapsId
+import jakarta.persistence.Table
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 import java.time.Duration

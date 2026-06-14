@@ -5,7 +5,7 @@ import com.grimsgaards.kalneslopene.model.entities.MilestoneEntity
 import com.grimsgaards.kalneslopene.model.input.MilestoneInput
 import com.grimsgaards.kalneslopene.repository.MilestoneRepository
 import org.springframework.stereotype.Service
-import java.util.*
+import java.util.UUID
 
 @Service
 class MilestoneService(

@@ -4,10 +4,6 @@ style:
   # Line length is owned by ktlint (see .editorconfig), not detekt.
   MaxLineLength:
     active: false
-  # The codebase intentionally uses wildcard imports (jakarta.persistence.*, Spring web, ...);
-  # ktlint's no-wildcard-imports is disabled for the same reason.
-  WildcardImport:
-    active: false
   # SpaController.forward() intentionally returns a constant "forward:/index.html" path.
   FunctionOnlyReturningConstant:
     active: false

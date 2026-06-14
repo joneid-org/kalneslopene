@@ -14,7 +14,7 @@ import jakarta.persistence.Table
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 import java.time.Duration
-import java.util.*
+import java.util.UUID
 
 @Entity
 @Table(name = "runner")

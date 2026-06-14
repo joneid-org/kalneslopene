@@ -1,7 +1,7 @@
 package com.grimsgaards.kalneslopene.model.dto
 
 import java.time.LocalDateTime
-import java.util.*
+import java.util.UUID
 
 data class RaceDTO(
     val uuid: UUID,

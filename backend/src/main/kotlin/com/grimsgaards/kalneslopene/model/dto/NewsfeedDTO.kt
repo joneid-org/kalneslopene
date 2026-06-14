@@ -1,7 +1,7 @@
 package com.grimsgaards.kalneslopene.model.dto
 
 import java.time.OffsetDateTime
-import java.util.*
+import java.util.UUID
 
 data class NewsfeedDTO(
     val uuid: UUID,

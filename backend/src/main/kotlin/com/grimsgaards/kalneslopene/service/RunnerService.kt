@@ -8,7 +8,7 @@ import com.grimsgaards.kalneslopene.model.input.RunnerInput
 import com.grimsgaards.kalneslopene.repository.RunnerRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
-import java.util.*
+import java.util.UUID
 
 @Service
 class RunnerService(

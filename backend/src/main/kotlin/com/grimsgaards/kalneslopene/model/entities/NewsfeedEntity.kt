@@ -10,7 +10,7 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import java.time.OffsetDateTime
-import java.util.*
+import java.util.UUID
 
 @Entity
 @Table(name = "newsfeed")

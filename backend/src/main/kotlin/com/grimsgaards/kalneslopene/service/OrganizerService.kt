@@ -5,7 +5,7 @@ import com.grimsgaards.kalneslopene.model.entities.OrganizerEntity
 import com.grimsgaards.kalneslopene.model.input.OrganizerInput
 import com.grimsgaards.kalneslopene.repository.OrganizerRepository
 import org.springframework.stereotype.Service
-import java.util.*
+import java.util.UUID
 
 @Service
 class OrganizerService(

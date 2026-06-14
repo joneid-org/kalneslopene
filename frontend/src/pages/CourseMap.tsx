@@ -23,6 +23,7 @@ import {
   type Pin,
   pins,
 } from "@/data/loypekartData.ts";
+import { convertImageToWebp } from "@/lib/imageUtils.ts";
 
 const basePinPhotos = pins.flatMap((pin) =>
   (pin.photos ?? []).map((photo) => ({ ...photo, label: pin.label })),
@@ -56,8 +57,9 @@ export function CourseMap() {
 
   const handleReplacePhoto = useCallback(
     async (fileName: string, file: File) => {
+      const webpFile = await convertImageToWebp(file);
       const uploadUrl = await requestStaticPresignedUrl(fileName);
-      await uploadToS3(file, uploadUrl);
+      await uploadToS3(webpFile, uploadUrl);
       setPhotoVersions((prev) => ({ ...prev, [fileName]: Date.now() }));
     },
     [],

@@ -9,35 +9,31 @@ import {
   DialogOverlay,
   DialogPortal,
 } from "@/components/ui/dialog.tsx";
-import type { StaticS3File } from "@/data/loypekartData.ts";
-import type { S3FileDto } from "@/model/DTO.ts";
+import type { RouteSection } from "@/data/200m200mData.ts";
 
 const lightboxNavClass =
   "absolute top-1/2 -translate-y-1/2 z-50 text-white hover:bg-white/20 hover:text-white";
-
-type GalleryPhoto = (S3FileDto | StaticS3File) & { label: string };
-
 type Props = {
-  photos: GalleryPhoto[];
+  routeDetails: RouteSection[];
   onReplacePhoto?: (fileName: string, file: File) => Promise<void> | void;
 };
 
-export function RoutePhotoGallery({ photos, onReplacePhoto }: Props) {
+export function RouteDetails({ routeDetails, onReplacePhoto }: Props) {
   const [photoIndex, setPhotoIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
-  const photo = photos[photoIndex];
+  // biome-ignore lint/style/noNonNullAssertion: reason
+  // biome-ignore lint/suspicious/noExtraNonNullAssertion: reason
+  const photo = routeDetails[photoIndex]!!.photo;
   const currentFileName = "fileName" in photo ? photo.fileName : undefined;
-  const total = photos.length;
+  const total = routeDetails.length;
   const prev = () => setPhotoIndex((i) => (i - 1 + total) % total);
   const next = () => setPhotoIndex((i) => (i + 1) % total);
 
   return (
     <>
       <div className="space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight">
-          Løypa 200 for 200
-        </h2>
+        <h1 className=" font-semibold tracking-tight">Løypa 200m for 200m</h1>
         <p className="text-sm text-muted-foreground">
           Naviger gjennom bildene for å se steder langs ruten.
         </p>
@@ -45,6 +41,7 @@ export function RoutePhotoGallery({ photos, onReplacePhoto }: Props) {
 
       <div className="flex flex-col md:flex-row gap-6 items-stretch">
         <div className="flex-1 flex flex-col justify-between gap-4">
+          {/*Tekst*/}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground tabular-nums">
@@ -52,14 +49,14 @@ export function RoutePhotoGallery({ photos, onReplacePhoto }: Props) {
               </span>
               <div className="h-px flex-1 bg-border" />
             </div>
-            <h3 className="text-2xl font-semibold tracking-tight">
-              {photo.label}
-            </h3>
+            <h2 className=" font-semibold tracking-tight">
+              {routeDetails[photoIndex].title}
+            </h2>
             <p className="text-muted-foreground leading-relaxed">
-              {photo.description}
+              {routeDetails[photoIndex].description}
             </p>
           </div>
-
+          {/*Progressbar*/}
           <div className="flex items-center gap-3 pt-2">
             <Button
               variant="outline"
@@ -70,9 +67,9 @@ export function RoutePhotoGallery({ photos, onReplacePhoto }: Props) {
               <ChevronLeftIcon className="size-4" />
             </Button>
             <div className="flex gap-1.5">
-              {photos.map((p, i) => (
+              {routeDetails.map((p, i) => (
                 <button
-                  key={p.url}
+                  key={p.photo.fileName}
                   type="button"
                   onClick={() => setPhotoIndex(i)}
                   aria-label={`Gå til bilde ${i + 1}`}
@@ -94,7 +91,7 @@ export function RoutePhotoGallery({ photos, onReplacePhoto }: Props) {
             </Button>
           </div>
         </div>
-
+        {/*Bilder*/}
         <div className="md:w-1/2 shrink-0">
           <div className="relative">
             <button
@@ -104,9 +101,9 @@ export function RoutePhotoGallery({ photos, onReplacePhoto }: Props) {
               aria-label="Åpne bilde i fullskjerm"
             >
               <img
-                key={photo.url}
-                src={photo.url}
-                alt={photo.label}
+                key={photo.fileName}
+                src={photo.fileName}
+                alt={photo.description}
                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
@@ -161,14 +158,14 @@ export function RoutePhotoGallery({ photos, onReplacePhoto }: Props) {
             </Button>
             <div className="flex flex-col items-center gap-4 px-16 max-w-5xl w-full">
               <img
-                key={photo.url}
-                src={photo.url}
-                alt={photo.label}
+                key={photo.fileName}
+                src={photo.fileName}
+                alt={photo.description}
                 className="max-h-[80vh] max-w-full rounded-lg object-contain shadow-2xl"
               />
               <div className="text-center space-y-1">
                 <p className="text-white font-semibold text-lg">
-                  {photo.label}
+                  {photo.fileName}
                 </p>
                 <p className="text-white/70 text-sm max-w-xl">
                   {photo.description}

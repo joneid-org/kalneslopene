@@ -1,6 +1,7 @@
 import { kyClient } from "@/api/queryClient.ts";
 import type { RaceFilter } from "@/api/types.ts";
 import type {
+  ConfigDTO,
   LoginRequest,
   LoginResponse,
   MilestoneDTO,
@@ -21,6 +22,13 @@ import type {
 } from "../model/DTO.ts";
 
 export const QUERIES = {
+  config: {
+    get: {
+      queryKey: ["config"],
+      queryFn: () => kyClient.get("/api/config").json<ConfigDTO>(),
+      staleTime: Number.POSITIVE_INFINITY,
+    },
+  },
   yr: {
     getForecast: {
       queryKey: ["yr", "forecast"],

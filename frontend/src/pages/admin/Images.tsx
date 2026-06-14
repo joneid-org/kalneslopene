@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
 import { kyClient, queryClient } from "@/api/queryClient.ts";
+import { uploadToS3 } from "@/api/s3.ts";
 import { AdminPhotoGrid } from "@/components/admin/AdminPhotoGrid.tsx";
 import { UploadDropzone } from "@/components/Pictures/UploadDropzone.tsx";
 import {
@@ -72,34 +73,6 @@ export function ImagesPage() {
         ...prev,
         [raceUuid]: list.filter((item) => item.id !== id),
       };
-    });
-  };
-
-  const uploadToS3 = (
-    file: File,
-    url: string,
-    onProgress: (percent: number) => void,
-  ) => {
-    return new Promise<void>((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open("PUT", url);
-
-      xhr.upload.onprogress = (event) => {
-        if (!event.lengthComputable) return;
-        const percent = Math.round((event.loaded / event.total) * 100);
-        onProgress(percent);
-      };
-
-      xhr.onload = () => {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          resolve();
-        } else {
-          reject(new Error(`Upload failed with status ${xhr.status}`));
-        }
-      };
-
-      xhr.onerror = () => reject(new Error("Upload failed"));
-      xhr.send(file);
     });
   };
 

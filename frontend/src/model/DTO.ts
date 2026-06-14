@@ -4,6 +4,10 @@ export interface S3FileDto {
   description?: string;
 }
 
+export interface ConfigDTO {
+  s3BaseUrl: string;
+}
+
 export type RaceDTO = {
   uuid: string;
   raceDate: string;

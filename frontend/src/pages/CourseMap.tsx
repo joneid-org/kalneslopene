@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   MapContainer,
   Marker,
@@ -7,11 +7,14 @@ import {
   TileLayer,
   Tooltip,
 } from "react-leaflet";
+import { requestStaticPresignedUrl, uploadToS3 } from "@/api/s3.ts";
 import { colorIcon } from "@/components/CourseMap/mapUtils.ts";
 import { PinInfoPanel } from "@/components/CourseMap/PinInfoPanel.tsx";
 import { RoutePhotoGallery } from "@/components/CourseMap/RoutePhotoGallery.tsx";
 import PhotoDialog from "@/components/PhotoDialog.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
+import { useApplicationContext } from "@/context/ApplicationContext.tsx";
+import { useAuth } from "@/context/AuthContext.tsx";
 import { blaaRoute } from "@/data/coordinater";
 import {
   MAP_CENTER,
@@ -19,32 +22,80 @@ import {
   mapLegend,
   type Pin,
   pins,
-  routePhotos,
 } from "@/data/loypekartData.ts";
 
-import type { S3FileDto } from "@/model/DTO.ts"; // Adapt RoutePhoto to the Photo shape PhotoDialog expects
+const basePinPhotos = pins.flatMap((pin) =>
+  (pin.photos ?? []).map((photo) => ({ ...photo, label: pin.label })),
+);
 
-// Adapt RoutePhoto to the Photo shape PhotoDialog expects
-const dialogPhotos: S3FileDto[] = routePhotos.map((rp) => ({
-  url: rp.imageUrl,
-  description: rp.title,
-  raceId: rp.id,
-  uuid: rp.id,
-}));
+/**
+ * Builds the displayed image URL from the runtime S3 base URL (falling back to
+ * the placeholder until config has loaded), plus a cache-busting param so a
+ * replaced image reloads instead of being served from cache.
+ */
+function resolvePhotoUrl(
+  fileName: string,
+  fallback: string,
+  s3BaseUrl: string | undefined,
+  version?: number,
+): string {
+  const base = s3BaseUrl ? `${s3BaseUrl}/static/${fileName}` : fallback;
+  return version
+    ? `${base}${base.includes("?") ? "&" : "?"}v=${version}`
+    : base;
+}
 
 export function CourseMap() {
+  const { isAuthenticated } = useAuth();
+  const { s3BaseUrl } = useApplicationContext();
   const [activePin, setActivePin] = useState<Pin | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [photoVersions, setPhotoVersions] = useState<Record<string, number>>(
+    {},
+  );
 
-  const activePinPhoto = activePin
-    ? routePhotos.find((rp) => rp.id === `rp-${activePin.id}`)
-    : undefined;
+  const handleReplacePhoto = useCallback(
+    async (fileName: string, file: File) => {
+      const uploadUrl = await requestStaticPresignedUrl(fileName);
+      await uploadToS3(file, uploadUrl);
+      setPhotoVersions((prev) => ({ ...prev, [fileName]: Date.now() }));
+    },
+    [],
+  );
 
-  const activePinDialogIndex = activePinPhoto
-    ? // biome-ignore lint/suspicious/noTsIgnore: TODO: Refactor to avoid this
-      // @ts-ignore
-      dialogPhotos.findIndex((p) => p.raceId === activePinPhoto.id)
-    : -1;
+  const allPinPhotos = useMemo(
+    () =>
+      basePinPhotos.map(({ fileName, fallback, description, label }) => ({
+        fileName,
+        description,
+        label,
+        url: resolvePhotoUrl(
+          fileName,
+          fallback,
+          s3BaseUrl,
+          photoVersions[fileName],
+        ),
+      })),
+    [s3BaseUrl, photoVersions],
+  );
+
+  const activePinDialogPhotos = useMemo(
+    () =>
+      (activePin?.photos ?? []).map(({ fileName, fallback, description }) => ({
+        fileName,
+        description,
+        url: resolvePhotoUrl(
+          fileName,
+          fallback,
+          s3BaseUrl,
+          photoVersions[fileName],
+        ),
+      })),
+    [activePin, s3BaseUrl, photoVersions],
+  );
+
+  const activePinPhoto = activePinDialogPhotos[0];
+  const onReplacePhoto = isAuthenticated ? handleReplacePhoto : undefined;
 
   return (
     <div className="page-content space-y-6">
@@ -107,22 +158,23 @@ export function CourseMap() {
             pin={activePin}
             onClose={() => setActivePin(null)}
             photo={activePinPhoto}
-            onPhotoClick={() =>
-              activePinDialogIndex >= 0 &&
-              setLightboxIndex(activePinDialogIndex)
-            }
+            onPhotoClick={() => setLightboxIndex(0)}
           />
         </div>
       </div>
 
       <Separator />
 
-      <RoutePhotoGallery photos={routePhotos} />
+      <RoutePhotoGallery
+        photos={allPinPhotos}
+        onReplacePhoto={onReplacePhoto}
+      />
 
       <PhotoDialog
-        photos={dialogPhotos}
+        photos={activePinDialogPhotos}
         index={lightboxIndex}
         onIndexChange={setLightboxIndex}
+        onReplacePhoto={onReplacePhoto}
       />
     </div>
   );

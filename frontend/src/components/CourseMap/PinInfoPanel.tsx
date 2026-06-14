@@ -11,13 +11,14 @@ import {
   categoryLabel,
   categoryVariant,
   type Pin,
-  type RoutePhoto,
+  type StaticS3File,
 } from "@/data/loypekartData.ts";
+import type { S3FileDto } from "@/model/DTO.ts";
 
 type Props = {
   pin: Pin | null;
   onClose: () => void;
-  photo?: RoutePhoto;
+  photo?: S3FileDto | StaticS3File;
   onPhotoClick?: () => void;
 };
 
@@ -66,8 +67,8 @@ export function PinInfoPanel({ pin, onClose, photo, onPhotoClick }: Props) {
             className="w-full overflow-hidden rounded-md border shadow-sm hover:opacity-90 transition-opacity"
           >
             <img
-              src={photo.imageUrl}
-              alt={photo.title}
+              src={photo.url}
+              alt={pin.label}
               className="w-full h-32 object-cover"
             />
           </button>

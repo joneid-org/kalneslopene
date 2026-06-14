@@ -46,4 +46,4 @@ jobs:
           cache-dependency-path: |
             ./backend/*.gradle*
             ./backend/**/gradle-wrapper.properties
-      - run: ./gradlew test
+      - run: ./gradlew check

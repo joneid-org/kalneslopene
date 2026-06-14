@@ -22,16 +22,14 @@ class NewsfeedService(
     private fun getSettingsEntity(): NewsfeedSettingsEntity =
         newsfeedSettingsRepository.findAll().firstOrNull() ?: newsfeedSettingsRepository.save(
             NewsfeedSettingsEntity(
-                maxArticles = 10
-            )
+                maxArticles = 10,
+            ),
         )
 
     fun getSettings(): NewsfeedSettingsDTO = NewsfeedSettingsDTO(settings.maxArticles)
 
-    fun getSpecifiedNumberOfNewsfeed(): List<NewsfeedDTO> {
-        return newsfeedRepository.findAllSortedAndLimited(settings.maxArticles).map { it.toDto() }
-    }
-
+    fun getSpecifiedNumberOfNewsfeed(): List<NewsfeedDTO> =
+        newsfeedRepository.findAllSortedAndLimited(settings.maxArticles).map { it.toDto() }
 
     fun updateSettings(dto: NewsfeedSettingsDTO): NewsfeedSettingsDTO {
         val existing = getSettingsEntity()
@@ -41,9 +39,7 @@ class NewsfeedService(
         return NewsfeedSettingsDTO(existing.maxArticles)
     }
 
-    fun findByUuid(uuid: UUID): NewsfeedDTO {
-        return newsfeedRepository.findById(uuid).get().toDto()
-    }
+    fun findByUuid(uuid: UUID): NewsfeedDTO = newsfeedRepository.findById(uuid).get().toDto()
 
     fun createHeaderImageUpload(fileName: String): PhotoUploadInfo {
         val key = "newsfeed-photos/${UUID.randomUUID()}/$fileName"
@@ -56,21 +52,27 @@ class NewsfeedService(
 
     fun createNewsfeed(newsfeed: NewsfeedInput): NewsfeedDTO {
         val headerImage = newsfeed.headerImageUuid?.let { s3Service.confirmUpload(it) }
-        return newsfeedRepository.save(
-            NewsfeedEntity(
-                tags = newsfeed.tags,
-                header = newsfeed.header,
-                content = newsfeed.content,
-                date = newsfeed.date,
-                headerImage = headerImage,
-                images = newsfeed.images,
-            )
-        ).toDto()
+        return newsfeedRepository
+            .save(
+                NewsfeedEntity(
+                    tags = newsfeed.tags,
+                    header = newsfeed.header,
+                    content = newsfeed.content,
+                    date = newsfeed.date,
+                    headerImage = headerImage,
+                    images = newsfeed.images,
+                ),
+            ).toDto()
     }
 
-    fun updateNewsfeed(uuid: UUID, updatedNewsfeed: NewsfeedInput): NewsfeedDTO {
-        val existingNews = newsfeedRepository.findById(uuid)
-            .orElseThrow { NoSuchElementException("Newsfeed with uuid ${updatedNewsfeed.uuid} not found") }
+    fun updateNewsfeed(
+        uuid: UUID,
+        updatedNewsfeed: NewsfeedInput,
+    ): NewsfeedDTO {
+        val existingNews =
+            newsfeedRepository
+                .findById(uuid)
+                .orElseThrow { NoSuchElementException("Newsfeed with uuid ${updatedNewsfeed.uuid} not found") }
 
         val oldHeaderImageUuid = existingNews.headerImage?.uuid
         val newHeaderImageUuid = updatedNewsfeed.headerImageUuid
@@ -98,7 +100,12 @@ class NewsfeedService(
     }
 
     fun deleteNewsfeed(uuid: UUID) {
-        val headerImageUuid = newsfeedRepository.findById(uuid).orElse(null)?.headerImage?.uuid
+        val headerImageUuid =
+            newsfeedRepository
+                .findById(uuid)
+                .orElse(null)
+                ?.headerImage
+                ?.uuid
         newsfeedRepository.deleteById(uuid)
         if (headerImageUuid != null) {
             s3Service.deleteFilesByUuid(listOf(headerImageUuid))

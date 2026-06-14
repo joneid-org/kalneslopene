@@ -23,7 +23,8 @@ In production, `Dockerfile` runs a multi-stage build that compiles the frontend 
 
 ### Backend (`cd backend`)
 - `./gradlew bootRun` — run the Spring Boot app. Pick a profile with `--args='--spring.profiles.active=local'` (or set `SPRING_PROFILES_ACTIVE`). Profiles: `local` (drops + reseeds DB with mock data, points at `localhost:5432/torsdagslopet` with `postgres/admin`), `dev` (env-var DB, schema-only changelog), `cloud` (prod env-var DB, schema-only changelog).
-- `./gradlew clean build` — full build incl. tests (this is what CI runs).
+- `./gradlew check` — runs ktlint + detekt + tests (this is what CI runs). `./gradlew clean build` additionally produces the jar.
+- `./gradlew ktlintFormat` — auto-fix formatting; `./gradlew ktlintCheck` / `./gradlew detekt` run them individually. ktlint style is configured in `backend/.editorconfig`; detekt overrides (on top of defaults, `buildUponDefaultConfig`) live in `backend/config/detekt/detekt.yml`. detekt is pinned to `dev.detekt` `2.0.0-alpha.3` for Kotlin 2.3 compatibility. The Docker image build runs `./gradlew assemble`, so lint does not gate prod images.
 - `./gradlew test --tests "ClassName.methodName"` — run a single test. (Note: no tests currently exist under `src/test/`.)
 
 ### Full stack

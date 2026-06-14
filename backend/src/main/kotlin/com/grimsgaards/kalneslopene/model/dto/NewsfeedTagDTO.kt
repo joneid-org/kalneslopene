@@ -4,4 +4,3 @@ data class NewsfeedTagDTO(
     val value: String,
     val color: String,
 )
-

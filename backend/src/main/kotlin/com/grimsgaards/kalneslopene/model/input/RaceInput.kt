@@ -6,6 +6,5 @@ import java.util.UUID
 data class RaceInput(
     val uuid: UUID? = null,
     val raceDate: LocalDateTime,
-    val weather: String?
+    val weather: String?,
 )
-

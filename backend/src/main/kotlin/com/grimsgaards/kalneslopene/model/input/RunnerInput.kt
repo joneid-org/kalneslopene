@@ -1,6 +1,5 @@
 package com.grimsgaards.kalneslopene.model.input
 
-import java.time.Duration
 import java.util.UUID
 
 data class RunnerInput(
@@ -8,4 +7,3 @@ data class RunnerInput(
     val name: String,
     val gender: String,
 )
-

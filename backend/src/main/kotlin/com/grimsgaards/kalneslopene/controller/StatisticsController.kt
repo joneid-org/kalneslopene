@@ -12,9 +12,6 @@ import java.time.Year
 class StatisticsController(
     private val statisticsService: StatisticsService,
 ) {
-
     @GetMapping("/races")
     fun getRaceStatistics(year: Year?): RaceStatisticsDto = statisticsService.getRaceStatistics(year)
-
 }
-

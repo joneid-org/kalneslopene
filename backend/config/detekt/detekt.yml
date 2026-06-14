@@ -1,0 +1,16 @@
+# detekt overrides. `buildUponDefaultConfig = true` (see build.gradle.kts) means this file only
+# needs to list deltas from detekt's bundled defaults — new default rules are picked up on upgrade.
+style:
+  # Line length is owned by ktlint (see .editorconfig), not detekt.
+  MaxLineLength:
+    active: false
+  # SpaController.forward() intentionally returns a constant "forward:/index.html" path.
+  FunctionOnlyReturningConstant:
+    active: false
+  # JPA composite-key classes (e.g. RaceRunnerKey) implement Serializable but don't need an
+  # explicit serialVersionUID.
+  SerialVersionUIDInSerializableClass:
+    active: false
+  # Keep the rule, but don't count leading guard-clause throws (input validation in controllers).
+  ThrowsCount:
+    excludeGuardClauses: true

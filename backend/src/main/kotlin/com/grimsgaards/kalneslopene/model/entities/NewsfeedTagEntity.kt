@@ -14,4 +14,3 @@ data class NewsfeedTagEntity(
 ) {
     fun toDto() = NewsfeedTagDTO(value, color)
 }
-

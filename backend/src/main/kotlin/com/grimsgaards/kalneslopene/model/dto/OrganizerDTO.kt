@@ -1,6 +1,6 @@
 package com.grimsgaards.kalneslopene.model.dto
 
-import java.util.*
+import java.util.UUID
 
 data class OrganizerDTO(
     val uuid: UUID,

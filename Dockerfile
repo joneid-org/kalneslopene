@@ -9,7 +9,7 @@ FROM eclipse-temurin:25-jdk-alpine AS backend-builder
 WORKDIR /app
 COPY backend/ ./
 COPY --from=frontend-builder /app/frontend/dist ./src/main/resources/static
-RUN ./gradlew build -x test --no-daemon
+RUN ./gradlew assemble --no-daemon
 
 FROM eclipse-temurin:25-jre-alpine
 WORKDIR /app

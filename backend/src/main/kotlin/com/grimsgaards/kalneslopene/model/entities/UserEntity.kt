@@ -5,15 +5,13 @@ import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.Id
 import jakarta.persistence.Table
-import java.util.*
+import java.util.UUID
 
 @Entity
 @Table(name = "users")
 data class UserEntity(
-
     var username: String,
     var password: String,
-
     @Enumerated(EnumType.STRING)
     var roles: MutableSet<UserRole>,
 ) {

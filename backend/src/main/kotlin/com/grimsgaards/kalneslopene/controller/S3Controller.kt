@@ -14,18 +14,21 @@ import java.util.UUID
 @RestController
 @RequestMapping("/api/s3")
 class S3Controller(
-    private val s3Service: S3Service
+    private val s3Service: S3Service,
 ) {
-
     @GetMapping("/presigned-url")
     fun getPresignedUrl(
         @RequestParam fileName: String,
-        @RequestParam(defaultValue = "1") expiryHours: Int
+        @RequestParam(defaultValue = "1") expiryHours: Int,
     ): String = s3Service.getPresignedUrl(fileName, expiryHours)
 
     @PatchMapping("/files/{uuid}/confirm-upload")
-    fun confirmUpload(@PathVariable uuid: UUID) = s3Service.confirmUpload(uuid)
+    fun confirmUpload(
+        @PathVariable uuid: UUID,
+    ) = s3Service.confirmUpload(uuid)
 
     @DeleteMapping("/files")
-    fun deleteFiles(@RequestBody fileUuids: List<UUID>) = s3Service.deleteFilesByUuid(fileUuids)
+    fun deleteFiles(
+        @RequestBody fileUuids: List<UUID>,
+    ) = s3Service.deleteFilesByUuid(fileUuids)
 }

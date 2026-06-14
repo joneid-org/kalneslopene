@@ -8,36 +8,37 @@ import com.grimsgaards.kalneslopene.model.input.RunnerInput
 import com.grimsgaards.kalneslopene.repository.RunnerRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
-import java.util.*
+import java.util.UUID
 
 @Service
 class RunnerService(
     val runnerRepository: RunnerRepository,
 ) {
-    fun getAllRunners(): List<RunnerDTO> {
-        return runnerRepository.findAll().map { it.toDto() }
-    }
+    fun getAllRunners(): List<RunnerDTO> = runnerRepository.findAll().map { it.toDto() }
 
-    fun getRunnerById(uuid: UUID): RunnerDTO {
-        return runnerRepository.findById(uuid).get().toDto()
-    }
+    fun getRunnerById(uuid: UUID): RunnerDTO = runnerRepository.findById(uuid).get().toDto()
 
-    fun getRunnerByName(name: String): List<RunnerDTO> {
-        return runnerRepository.findByNameStartsWithIgnoreCase(name).map { it.toDto() }
-    }
+    fun getRunnerByName(name: String): List<RunnerDTO> = runnerRepository.findByNameStartsWithIgnoreCase(name).map { it.toDto() }
 
-    fun createMultipleRunners(runners: List<RunnerInput>): List<RunnerDTO> {
-        return runnerRepository.saveAll(runners.map {
-            RunnerEntity(
-                name = it.name,
-                gender = Gender.valueOf(it.gender.uppercase()),
-            )
-        }).map { it.toDto() }
-    }
+    fun createMultipleRunners(runners: List<RunnerInput>): List<RunnerDTO> =
+        runnerRepository
+            .saveAll(
+                runners.map {
+                    RunnerEntity(
+                        name = it.name,
+                        gender = Gender.valueOf(it.gender.uppercase()),
+                    )
+                },
+            ).map { it.toDto() }
 
-    fun updateRunner(uuid: UUID, updatedRunner: RunnerInput): RunnerDTO {
-        val existingRunner = runnerRepository.findById(uuid)
-        .orElseThrow { NoSuchElementException("Runner with uuid $uuid not found") }
+    fun updateRunner(
+        uuid: UUID,
+        updatedRunner: RunnerInput,
+    ): RunnerDTO {
+        val existingRunner =
+            runnerRepository
+                .findById(uuid)
+                .orElseThrow { NoSuchElementException("Runner with uuid $uuid not found") }
 
         existingRunner.apply {
             name = updatedRunner.name

@@ -39,87 +39,71 @@ export function RouteDetails({ routeDetails, onReplacePhoto }: Props) {
         </p>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-6 items-stretch">
-        <div className="flex-1 flex flex-col justify-between gap-4">
-          {/*Tekst*/}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground tabular-nums">
-                {photoIndex + 1} / {total}
-              </span>
-              <div className="h-px flex-1 bg-border" />
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col md:flex-row gap-6 md:min-h-80">
+          {/*Text*/}
+          <div className="flex-1 space-y-3 flex flex-col justify-between">
+            <div>
+              <h2 className="mt-3 font-semibold tracking-tight">
+                {routeDetails[photoIndex].title}
+              </h2>
+              <p className="mt-3 text-muted-foreground leading-relaxed">
+                {routeDetails[photoIndex].description}
+              </p>
             </div>
-            <h2 className=" font-semibold tracking-tight">
-              {routeDetails[photoIndex].title}
-            </h2>
-            <p className="text-muted-foreground leading-relaxed">
-              {routeDetails[photoIndex].description}
-            </p>
           </div>
-          {/*Progressbar*/}
-          <div className="flex items-center gap-3 pt-2">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={prev}
-              aria-label="Forrige bilde"
-            >
-              <ChevronLeftIcon className="size-4" />
-            </Button>
-            <div className="flex gap-1.5">
-              {routeDetails.map((p, i) => (
-                <button
-                  key={p.photo.fileName}
-                  type="button"
-                  onClick={() => setPhotoIndex(i)}
-                  aria-label={`Gå til bilde ${i + 1}`}
-                  className={`rounded-full transition-all ${
-                    i === photoIndex
-                      ? "w-4 h-2 bg-primary"
-                      : "w-2 h-2 bg-muted-foreground/30 hover:bg-muted-foreground/60"
-                  }`}
+          {/*Images*/}
+          <div className="flex-1">
+            <div className="relative h-full">
+              <button
+                type="button"
+                className="w-full h-full group relative overflow-hidden rounded-xl border shadow-sm aspect-video md:aspect-auto bg-muted block cursor-zoom-in"
+                onClick={() => setLightboxOpen(true)}
+                aria-label="Åpne bilde i fullskjerm"
+              >
+                <img
+                  key={photo.fileName}
+                  src={photo.fileName}
+                  alt={photo.description}
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
-              ))}
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
+                  <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/50 text-white text-xs font-medium px-3 py-1.5 rounded-full">
+                    Klikk for å forstørre
+                  </span>
+                </div>
+              </button>
+              {onReplacePhoto && currentFileName && (
+                <ReplacePhotoButton
+                  fileName={currentFileName}
+                  onReplace={onReplacePhoto}
+                  className="absolute top-2 right-2 z-10"
+                />
+              )}
             </div>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={next}
-              aria-label="Neste bilde"
-            >
-              <ChevronRightIcon className="size-4" />
-            </Button>
           </div>
         </div>
-        {/*Bilder*/}
-        <div className="md:w-1/2 shrink-0">
-          <div className="relative">
-            <button
-              type="button"
-              className="w-full group relative overflow-hidden rounded-xl border shadow-sm aspect-video bg-muted block cursor-zoom-in"
-              onClick={() => setLightboxOpen(true)}
-              aria-label="Åpne bilde i fullskjerm"
-            >
-              <img
-                key={photo.fileName}
-                src={photo.fileName}
-                alt={photo.description}
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
-                <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/50 text-white text-xs font-medium px-3 py-1.5 rounded-full">
-                  Klikk for å forstørre
-                </span>
-              </div>
-            </button>
-            {onReplacePhoto && currentFileName && (
-              <ReplacePhotoButton
-                fileName={currentFileName}
-                onReplace={onReplacePhoto}
-                className="absolute top-2 right-2 z-10"
-              />
-            )}
-          </div>
+        {/*Navigation*/}
+        <div className="flex items-center justify-center gap-4">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={prev}
+            aria-label="Forrige bilde"
+          >
+            <ChevronLeftIcon className="size-4" />
+          </Button>
+          <span className="text-sm font-semibold text-muted-foreground tabular-nums min-w-12 text-center">
+            {photoIndex + 1} / {total}
+          </span>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={next}
+            aria-label="Neste bilde"
+          >
+            <ChevronRightIcon className="size-4" />
+          </Button>
         </div>
       </div>
 

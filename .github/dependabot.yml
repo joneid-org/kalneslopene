@@ -9,6 +9,8 @@ updates:
       frontend-group:
         patterns:
           - "*"
+    cooldown:
+      default-days: 7
 
   - package-ecosystem: "gradle"
     directory: "/backend"
@@ -19,3 +21,5 @@ updates:
       backend-group:
         patterns:
           - "*"
+    cooldown:
+      default-days: 7

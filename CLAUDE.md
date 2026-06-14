@@ -38,6 +38,9 @@ In production, `Dockerfile` runs a multi-stage build that compiles the frontend 
 - Frontend never hand-writes fetch calls inline. All endpoints live in `frontend/src/api/queries.ts` as a single `QUERIES` const object, called via `useQuery(QUERIES.race.getRaceByUuid(uuid))`. HTTP client is `ky`; the shared `kyClient` and `QueryClient` (with `staleTime: 2min`, `retry: false`, `keepPreviousData`) are in `frontend/src/api/queryClient.ts`. New endpoints go in `QUERIES`, not ad-hoc.
 - DTO shapes are duplicated: Kotlin in `backend/.../model/dto/` and TypeScript in `frontend/src/model/DTO.ts`. Keep them in sync manually when changing the API.
 
+### Backend testing conventions
+- Organize tests using JUnit 5 `@Nested` inner classes within a single test file — do not split into multiple files.
+
 ### Backend layering
 Controller → Service → Repository (Spring Data JPA). Entities live in `model/entities/` and expose `toDto()`. `RaceRunnerEntity` uses a composite key (`RaceRunnerKey`) for the race↔runner join table. Liquibase changelogs live in `src/main/resources/db/changelog/`; `changelog-master.yaml` is schema-only (used by `cloud`/`dev`), `changelog-local.yaml` additionally includes mock data (used by `local` with `drop-first: true`). Add new migrations under `db/changelog/sql/create/` and reference them from `schema-changelog.yaml`.
 
@@ -50,6 +53,9 @@ Controller → Service → Repository (Spring Data JPA). Entities live in `model
 ### Language and design
 - **All user-facing copy is Norwegian (bokmål).** Component prop labels, route paths, page titles, button text — all Norwegian. Code identifiers can stay English.
 - **Mobile-first.** Default Tailwind classes target mobile; use `sm:` / `md:` / `lg:` prefixes to scale up.
+
+### Code style
+- **Minimal comments.** Prefer self-explanatory code. Only add a comment when something is genuinely complex and hard to grasp quickly by reading the code.
 
 ## CI / deployment
 

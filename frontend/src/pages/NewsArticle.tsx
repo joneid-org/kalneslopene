@@ -42,7 +42,7 @@ export function NewsArticle() {
       (allNewsfeeds?.findIndex((n) => n.uuid === uuid) ?? 0) %
         NEWS_IMAGES.length
     ] ?? "";
-  const headerImage = post.headerImage ?? fallbackImg;
+  const headerImage = post.headerImage?.url ?? fallbackImg;
   const matchedRace = findRaceForPost(races ?? [], post);
 
   return (

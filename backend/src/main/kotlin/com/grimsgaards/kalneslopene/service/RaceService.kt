@@ -91,7 +91,7 @@ class RaceService(
         race.photos.addAll(s3FileEntitiesMap.values)
         return photoNames.associateWith { PhotoUploadInfo(
             uploadUrl = s3Service.getPresignedUrl("race-photos/$raceUuid/$it"),
-            s3File = s3FileEntitiesMap[it]!!.toDto()
+            s3File = s3FileEntitiesMap[it]!!.toDtoDangerously()
         ) }
     }
 

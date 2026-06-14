@@ -6,6 +6,7 @@ import com.grimsgaards.kalneslopene.model.dto.NewsfeedTagDTO
 import com.grimsgaards.kalneslopene.model.input.NewsfeedInput
 import com.grimsgaards.kalneslopene.model.input.NewsfeedTagInput
 import com.grimsgaards.kalneslopene.model.input.NewsfeedTagUpdateInput
+import com.grimsgaards.kalneslopene.model.input.PhotoUploadInfo
 import com.grimsgaards.kalneslopene.service.NewsfeedService
 import com.grimsgaards.kalneslopene.service.NewsfeedTagService
 import org.springframework.web.bind.annotation.*
@@ -31,6 +32,10 @@ class NewsfeedController(
     @PostMapping("/createNewsfeed")
     fun createNewsFeed(@RequestBody newsfeed: NewsfeedInput): NewsfeedDTO =
         newsfeedService.createNewsfeed(newsfeed)
+
+    @PostMapping("/header-image")
+    fun uploadHeaderImage(@RequestParam fileName: String): PhotoUploadInfo =
+        newsfeedService.createHeaderImageUpload(fileName)
 
     @DeleteMapping("/{uuid}")
     fun deleteNewsFeed(@PathVariable uuid: UUID) = newsfeedService.deleteNewsfeed(uuid)

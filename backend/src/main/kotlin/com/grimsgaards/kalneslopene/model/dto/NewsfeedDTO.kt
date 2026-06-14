@@ -9,6 +9,6 @@ data class NewsfeedDTO(
     val header: String,
     val content: String,
     val date: OffsetDateTime,
-    val headerImage: String? = null,
+    val headerImage: FileDto? = null,
     val images: List<String> = emptyList(),
 )

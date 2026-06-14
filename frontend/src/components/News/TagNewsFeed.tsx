@@ -10,7 +10,7 @@ import { formatDateFull } from "@/lib/timeUtils.ts";
 import type { NewsFeedDTO } from "@/model/DTO.ts";
 
 export function TagNewsFeed({ post, img }: { post: NewsFeedDTO; img: string }) {
-  const displayImg = post.headerImage ?? img;
+  const displayImg = post.headerImage?.url ?? img;
   const tags = useTags();
 
   return (

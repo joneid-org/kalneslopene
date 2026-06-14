@@ -1,5 +1,6 @@
-import { ImagePlus, X } from "lucide-react";
+import { ImagePlus, Loader2, X } from "lucide-react";
 import { useRef, useState } from "react";
+import { requestNewsfeedHeaderUpload } from "@/api/queries.ts";
 import { FormFooter } from "@/components/admin/FormFooter.tsx";
 import { RichTextEditor } from "@/components/admin/RichTextEditor.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
@@ -13,8 +14,7 @@ import {
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { tagColor, useTags } from "@/lib/newsUtils.ts";
-import { readFileAsDataURL } from "@/lib/utils.ts";
-import type { NewsFeedDTO, NewsfeedTagDTO } from "@/model/DTO.ts";
+import type { NewsFeedDTO, NewsfeedTagDTO, S3FileDto } from "@/model/DTO.ts";
 
 export function NewsfeedForm({
   initial,
@@ -37,9 +37,10 @@ export function NewsfeedForm({
       ? new Date(initial.date).toISOString().slice(0, 10)
       : new Date().toISOString().slice(0, 10),
   );
-  const [headerImage, setHeaderImage] = useState<string | undefined>(
+  const [headerImage, setHeaderImage] = useState<S3FileDto | undefined>(
     initial.headerImage,
   );
+  const [uploading, setUploading] = useState(false);
   const availableTags = useTags();
 
   const headerImageRef = useRef<HTMLInputElement>(null);
@@ -54,7 +55,19 @@ export function NewsfeedForm({
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = e.target.files?.[0];
-    if (file) setHeaderImage(await readFileAsDataURL(file));
+    if (!file) return;
+    setUploading(true);
+    try {
+      const { uploadUrl, s3File } = await requestNewsfeedHeaderUpload(
+        file.name,
+      );
+      const res = await fetch(uploadUrl, { method: "PUT", body: file });
+      if (!res.ok) throw new Error(`Opplasting feilet (${res.status})`);
+      setHeaderImage(s3File);
+    } finally {
+      setUploading(false);
+      if (headerImageRef.current) headerImageRef.current.value = "";
+    }
   };
 
   const handleSubmit = () => {
@@ -69,7 +82,10 @@ export function NewsfeedForm({
   };
 
   const isValid =
-    header.trim() && content.replace(/<[^>]+>/g, "").trim() && date;
+    header.trim() &&
+    content.replace(/<[^>]+>/g, "").trim() &&
+    date &&
+    !uploading;
 
   return (
     <div className="space-y-4">
@@ -147,7 +163,11 @@ export function NewsfeedForm({
         />
         {headerImage ? (
           <div className="relative w-full rounded-md overflow-hidden border flex justify-center">
-            <img src={headerImage} alt="Header" className="max-w-full h-auto" />
+            <img
+              src={headerImage.url}
+              alt="Header"
+              className="max-w-full h-auto"
+            />
             <button
               type="button"
               onClick={() => {
@@ -164,10 +184,15 @@ export function NewsfeedForm({
             type="button"
             variant="outline"
             className="w-full gap-2"
+            disabled={uploading}
             onClick={() => headerImageRef.current?.click()}
           >
-            <ImagePlus className="size-4" />
-            Velg header-bilde fra fil
+            {uploading ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <ImagePlus className="size-4" />
+            )}
+            {uploading ? "Laster opp..." : "Velg header-bilde fra fil"}
           </Button>
         )}
       </div>

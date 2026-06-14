@@ -93,4 +93,8 @@ class S3Service(
     fun createFileEntity(fileName: String): FileEntity {
         return createFileEntities(listOf(fileName)).first()
     }
+
+    fun createAndSaveFileEntity(fileName: String): FileEntity {
+        return fileRepository.save(createFileEntity(fileName))
+    }
 }

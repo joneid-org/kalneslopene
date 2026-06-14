@@ -18,8 +18,15 @@ import type {
   RaceStatisticsDTO,
   RunnerDTO,
   RunnerInput,
+  S3FileDto,
   YrForecast,
 } from "../model/DTO.ts";
+
+export function requestNewsfeedHeaderUpload(fileName: string) {
+  return kyClient
+    .post("/api/newsfeeds/header-image", { searchParams: { fileName } })
+    .json<{ uploadUrl: string; s3File: S3FileDto }>();
+}
 
 export const QUERIES = {
   config: {
@@ -207,8 +214,11 @@ export const QUERIES = {
     createNewsFeed: (newsfeed: NewsFeedInput) => ({
       queryKey: ["newsfeed", "create"],
       queryFn: async () => {
+        const { headerImage, ...rest } = newsfeed;
         const data = await kyClient
-          .post("/api/newsfeeds/createNewsfeed", { json: newsfeed })
+          .post("/api/newsfeeds/createNewsfeed", {
+            json: { ...rest, headerImageUuid: headerImage?.uuid },
+          })
           .json<NewsFeedDTO>();
         return { ...data, date: new Date(data.date) };
       },
@@ -216,8 +226,11 @@ export const QUERIES = {
     updateNewsFeed: (uuid: string, newsfeed: NewsFeedDTO) => ({
       queryKey: ["newsfeed", "update", uuid],
       queryFn: async () => {
+        const { headerImage, ...rest } = newsfeed;
         const data = await kyClient
-          .patch(`/api/newsfeeds/${uuid}`, { json: newsfeed })
+          .patch(`/api/newsfeeds/${uuid}`, {
+            json: { ...rest, headerImageUuid: headerImage?.uuid },
+          })
           .json<NewsFeedDTO>();
         return { ...data, date: new Date(data.date) };
       },

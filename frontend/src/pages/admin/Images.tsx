@@ -12,6 +12,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
+import { convertImageToWebp } from "@/lib/imageUtils.ts";
 import { extractYear, formatDDMonth } from "@/lib/timeUtils.ts";
 
 import type { S3FileDto } from "@/model/DTO.ts";
@@ -116,7 +117,9 @@ export function ImagesPage() {
   };
 
   const handleFilesSelected = async (raceUuid: string, fileList: FileList) => {
-    const files = Array.from(fileList);
+    const files = await Promise.all(
+      Array.from(fileList).map((file) => convertImageToWebp(file)),
+    );
     const urlMap = await requestPresignedUrls(
       raceUuid,
       files.map((file) => file.name),

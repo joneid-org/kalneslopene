@@ -25,7 +25,6 @@ export function RouteDetails({ routeDetails, onReplacePhoto }: Props) {
   // biome-ignore lint/style/noNonNullAssertion: reason
   // biome-ignore lint/suspicious/noExtraNonNullAssertion: reason
   const photo = routeDetails[photoIndex]!!.photo;
-  const currentFileName = "fileName" in photo ? photo.fileName : undefined;
   const total = routeDetails.length;
   const prev = () => setPhotoIndex((i) => (i - 1 + total) % total);
   const next = () => setPhotoIndex((i) => (i + 1) % total);
@@ -41,7 +40,6 @@ export function RouteDetails({ routeDetails, onReplacePhoto }: Props) {
 
       <div className="flex flex-col gap-6">
         <div className="flex flex-col md:flex-row gap-6 md:min-h-80">
-          {/*Text*/}
           <div className="flex-1 space-y-3 flex flex-col justify-between">
             <div>
               <h2 className="mt-3 font-semibold tracking-tight">
@@ -52,7 +50,6 @@ export function RouteDetails({ routeDetails, onReplacePhoto }: Props) {
               </p>
             </div>
           </div>
-          {/*Images*/}
           <div className="flex-1">
             <div className="relative h-full">
               <button
@@ -73,9 +70,9 @@ export function RouteDetails({ routeDetails, onReplacePhoto }: Props) {
                   </span>
                 </div>
               </button>
-              {onReplacePhoto && currentFileName && (
+              {onReplacePhoto && photo.fileName && (
                 <ReplacePhotoButton
-                  fileName={currentFileName}
+                  fileName={photo.fileName}
                   onReplace={onReplacePhoto}
                   className="absolute top-2 right-2 z-10"
                 />
@@ -83,7 +80,6 @@ export function RouteDetails({ routeDetails, onReplacePhoto }: Props) {
             </div>
           </div>
         </div>
-        {/*Navigation*/}
         <div className="flex items-center justify-center gap-4">
           <Button
             variant="outline"
@@ -121,9 +117,9 @@ export function RouteDetails({ routeDetails, onReplacePhoto }: Props) {
                 <XIcon className="size-5" />
               </Button>
             </DialogClose>
-            {onReplacePhoto && currentFileName && (
+            {onReplacePhoto && photo.fileName && (
               <ReplacePhotoButton
-                fileName={currentFileName}
+                fileName={photo.fileName}
                 onReplace={onReplacePhoto}
                 className="absolute top-4 left-4 z-50"
               />

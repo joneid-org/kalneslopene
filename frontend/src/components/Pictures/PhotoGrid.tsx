@@ -1,13 +1,23 @@
-import { Card, CardContent } from "@/components/ui/card.tsx";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card.tsx";
 
 import type { S3FileDto } from "@/model/DTO.ts";
 
 type PhotoGridProps = {
   photos: S3FileDto[];
   onPhotoClick: (idx: number) => void;
+  title?: string;
 };
 
-export default function PhotoGrid({ photos, onPhotoClick }: PhotoGridProps) {
+export default function PhotoGrid({
+  photos,
+  onPhotoClick,
+  title,
+}: PhotoGridProps) {
   if (photos.length === 0) {
     return (
       <p className="text-sm text-muted-foreground px-1">
@@ -18,6 +28,13 @@ export default function PhotoGrid({ photos, onPhotoClick }: PhotoGridProps) {
 
   return (
     <Card>
+      {title && (
+        <CardHeader className="py-3 md:py-4 px-4 md:px-6 pb-1">
+          <CardTitle className="text-sm md:text-base font-semibold">
+            {title}
+          </CardTitle>
+        </CardHeader>
+      )}
       <CardContent className="py-3 px-2 sm:px-4">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
           {photos.map((photo, idx) => (

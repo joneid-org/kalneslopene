@@ -7,10 +7,7 @@ import { DynamicDropDownMenu } from "@/components/Navbar/DynamicDropDownMenu.tsx
 import MobileNavBarMenu from "@/components/Navbar/MobileNavBarMenu.tsx";
 import { Button } from "@/components/ui/button.tsx";
 
-const headerBarDynamic = [
-  { path: "/Resultater", label: "Resultater" },
-  { path: "/Bilder", label: "Bilder" },
-];
+const headerBarDynamic = [{ path: "/Resultater", label: "Resultater" }];
 const headerBarStatic = [
   { path: "/Statistikk", label: "Statistikk" },
   { path: "/Løypekart", label: "Løypekart" },

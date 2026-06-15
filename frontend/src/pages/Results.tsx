@@ -4,8 +4,8 @@ import { useMemo, useState } from "react";
 import { useParams } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
 import PhotoDialog from "@/components/PhotoDialog.tsx";
+import PhotoGrid from "@/components/Pictures/PhotoGrid.tsx";
 import NavigationButtons from "@/components/Results/NavigationButtons.tsx";
-import PhotoCarousel from "@/components/Results/PhotoCarousel.tsx";
 import ResultsHeader from "@/components/Results/ResultsHeader.tsx";
 import ResultsTable from "@/components/Results/ResultsTable.tsx";
 import StatBox from "@/components/StatBox.tsx";
@@ -81,13 +81,7 @@ export function Results() {
         path="/Resultater/"
       />
 
-      {race && (
-        <ResultsHeader
-          race={race}
-          photosPath={`/Bilder/${race.uuid}`}
-          title={title}
-        />
-      )}
+      {race && <ResultsHeader race={race} title={title} />}
 
       <div className="grid grid-cols-3 gap-1 sm:gap-2 md:gap-4">
         <StatBox
@@ -116,10 +110,10 @@ export function Results() {
 
       <ResultsTable tableData={tableData} title={title} />
 
-      <PhotoCarousel
+      <PhotoGrid
         photos={racePhotos}
-        uuid={uuid}
         onPhotoClick={setLightboxIndex}
+        title="Bilder"
       />
       <PhotoDialog
         photos={racePhotos}

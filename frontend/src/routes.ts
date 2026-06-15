@@ -17,7 +17,6 @@ import { Home } from "./pages/Home.tsx";
 import { Login } from "./pages/Login.tsx";
 import { NewsArticle } from "./pages/NewsArticle.tsx";
 import { NewsTag } from "./pages/NewsTag.tsx";
-import { Pictures } from "./pages/Pictures.tsx";
 import { Results } from "./pages/Results.tsx";
 import { Statistics } from "./pages/Statistics.tsx";
 
@@ -37,14 +36,6 @@ export const router = createBrowserRouter([
       {
         path: "Resultater/:uuid",
         Component: Results,
-      },
-      {
-        path: "Bilder",
-        Component: Pictures,
-      },
-      {
-        path: "Bilder/:uuid",
-        Component: Pictures,
       },
       {
         path: "Statistikk",

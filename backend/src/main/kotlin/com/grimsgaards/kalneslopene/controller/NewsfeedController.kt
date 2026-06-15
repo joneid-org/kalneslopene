@@ -51,6 +51,11 @@ class NewsfeedController(
         @RequestParam fileName: String,
     ): PhotoUploadInfo = newsfeedService.createHeaderImageUpload(fileName)
 
+    @PostMapping("/content-image")
+    fun uploadContentImage(
+        @RequestParam fileName: String,
+    ): PhotoUploadInfo = newsfeedService.createContentImageUpload(fileName)
+
     @DeleteMapping("/{uuid}")
     fun deleteNewsFeed(
         @PathVariable uuid: UUID,

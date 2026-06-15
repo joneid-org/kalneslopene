@@ -17,9 +17,9 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.inOrder
+import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.verifyNoInteractions
-import org.mockito.Mockito.verifyNoMoreInteractions
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.quality.Strictness
 import org.mockito.stubbing.OngoingStubbing
@@ -71,8 +71,18 @@ class NewsfeedServiceTest {
         fun `without a header image never confirms an upload`() {
             val result = service.createNewsfeed(input(headerImageUuid = null))
 
-            verifyNoInteractions(s3Service)
+            verify(s3Service, never()).confirmUpload(anyValue())
             assertThat(result.headerImage).isNull()
+        }
+
+        @Test
+        fun `confirms the content images referenced in the body`() {
+            val urls = setOf("https://minio.local/bucket/newsfeed-content/x/a.jpg")
+            whenever(s3Service.extractBucketImageUrls("body")).thenReturn(urls)
+
+            service.createNewsfeed(input(content = "body"))
+
+            verify(s3Service).confirmUploadsByUrl(urls)
         }
     }
 
@@ -86,7 +96,8 @@ class NewsfeedServiceTest {
 
             service.updateNewsfeed(existing.uuid, input(headerImageUuid = sameUuid))
 
-            verifyNoInteractions(s3Service)
+            verify(s3Service, never()).confirmUpload(anyValue())
+            verify(s3Service, never()).deleteFilesByUuid(anyValue())
         }
 
         @Test
@@ -99,7 +110,7 @@ class NewsfeedServiceTest {
             val result = service.updateNewsfeed(existing.uuid, input(headerImageUuid = newUuid))
 
             verify(s3Service).confirmUpload(newUuid)
-            verifyNoMoreInteractions(s3Service)
+            verify(s3Service, never()).deleteFilesByUuid(anyValue())
             assertThat(result.headerImage).isNotNull
         }
 
@@ -132,11 +143,27 @@ class NewsfeedServiceTest {
 
             assertThat(result.headerImage).isNull()
             verify(s3Service).deleteFilesByUuid(listOf(oldUuid))
-            verifyNoMoreInteractions(s3Service)
+            verify(s3Service, never()).confirmUpload(anyValue())
 
             val order = inOrder(newsfeedRepository, s3Service)
             order.verify(newsfeedRepository).save(any())
             order.verify(s3Service).deleteFilesByUuid(listOf(oldUuid))
+        }
+
+        @Test
+        fun `confirms new content images and deletes the ones no longer referenced`() {
+            val existing = newsfeed(headerImage = null, content = "old")
+            val keep = "https://minio.local/bucket/newsfeed-content/x/keep.jpg"
+            val drop = "https://minio.local/bucket/newsfeed-content/x/drop.jpg"
+            val add = "https://minio.local/bucket/newsfeed-content/x/add.jpg"
+            whenever(newsfeedRepository.findById(existing.uuid)).thenReturn(Optional.of(existing))
+            whenever(s3Service.extractBucketImageUrls("old")).thenReturn(setOf(keep, drop))
+            whenever(s3Service.extractBucketImageUrls("new")).thenReturn(setOf(keep, add))
+
+            service.updateNewsfeed(existing.uuid, input(content = "new"))
+
+            verify(s3Service).confirmUploadsByUrl(setOf(keep, add))
+            verify(s3Service).deleteFilesByUrl(setOf(drop))
         }
 
         @Test
@@ -174,7 +201,7 @@ class NewsfeedServiceTest {
             service.deleteNewsfeed(existing.uuid)
 
             verify(newsfeedRepository).deleteById(existing.uuid)
-            verifyNoInteractions(s3Service)
+            verify(s3Service, never()).deleteFilesByUuid(anyValue())
         }
 
         @Test
@@ -185,7 +212,19 @@ class NewsfeedServiceTest {
             service.deleteNewsfeed(missing)
 
             verify(newsfeedRepository).deleteById(missing)
-            verifyNoInteractions(s3Service)
+            verify(s3Service, never()).deleteFilesByUuid(anyValue())
+        }
+
+        @Test
+        fun `deletes the content image files referenced in the body`() {
+            val existing = newsfeed(headerImage = null, content = "body")
+            val urls = setOf("https://minio.local/bucket/newsfeed-content/x/a.jpg")
+            whenever(newsfeedRepository.findById(existing.uuid)).thenReturn(Optional.of(existing))
+            whenever(s3Service.extractBucketImageUrls("body")).thenReturn(urls)
+
+            service.deleteNewsfeed(existing.uuid)
+
+            verify(s3Service).deleteFilesByUrl(urls)
         }
     }
 
@@ -220,27 +259,70 @@ class NewsfeedServiceTest {
         }
     }
 
-    private fun newsfeed(headerImage: FileEntity?) =
-        NewsfeedEntity(
-            tags = listOf("nyhet"),
-            header = "Tittel",
-            content = "Innhold",
-            date = OffsetDateTime.parse("2026-06-14T10:00:00Z"),
-            headerImage = headerImage,
-        )
+    @Nested
+    inner class CreateContentImageUpload {
+        @Test
+        fun `saves an unconfirmed file under a namespaced key and presigns it`() {
+            val saved = FileEntity(url = "https://minio.local/bucket/newsfeed-content/x/pic.jpg")
+            val savedKey = AtomicReference<String>()
+            val presignedKey = AtomicReference<String>()
+            whenever(s3Service.createAndSaveFileEntity(anyString())).thenAnswer {
+                savedKey.set(it.getArgument(0))
+                saved
+            }
+            whenever(s3Service.getPresignedUrl(anyString(), anyInt())).thenAnswer {
+                presignedKey.set(it.getArgument(0))
+                "https://minio.local/presigned"
+            }
+
+            val result = service.createContentImageUpload("pic.jpg")
+
+            val key = savedKey.get()
+            assertThat(key).startsWith("newsfeed-content/")
+            assertThat(key).endsWith("/pic.jpg")
+
+            // The exact same key must be presigned, otherwise the client uploads to the wrong object.
+            assertThat(presignedKey.get()).isEqualTo(key)
+
+            assertThat(result.uploadUrl).isEqualTo("https://minio.local/presigned")
+            assertThat(result.s3File.uuid).isEqualTo(saved.uuid)
+            assertThat(result.s3File.url).isEqualTo(saved.url)
+        }
+    }
+
+    private fun newsfeed(
+        headerImage: FileEntity?,
+        content: String = "Innhold",
+    ) = NewsfeedEntity(
+        tags = listOf("nyhet"),
+        header = "Tittel",
+        content = content,
+        date = OffsetDateTime.parse("2026-06-14T10:00:00Z"),
+        headerImage = headerImage,
+    )
 
     private fun confirmedFile() =
         FileEntity(url = "https://minio.local/bucket/${UUID.randomUUID()}.jpg")
             .apply { uploadConfirmedAt = OffsetDateTime.now() }
 
-    private fun input(headerImageUuid: UUID? = null) =
-        NewsfeedInput(
-            tags = listOf("nyhet"),
-            header = "Tittel",
-            content = "Innhold",
-            date = OffsetDateTime.parse("2026-06-14T10:00:00Z"),
-            headerImageUuid = headerImageUuid,
-        )
+    private fun input(
+        headerImageUuid: UUID? = null,
+        content: String = "Innhold",
+    ) = NewsfeedInput(
+        tags = listOf("nyhet"),
+        header = "Tittel",
+        content = content,
+        date = OffsetDateTime.parse("2026-06-14T10:00:00Z"),
+        headerImageUuid = headerImageUuid,
+    )
 
     private fun <T> whenever(call: T): OngoingStubbing<T> = Mockito.`when`(call)
+
+    // Mockito's `any()` returns null, which trips Kotlin's non-null parameter checks; this registers
+    // the matcher and hands back an erased null that flows safely into non-null Kotlin parameters.
+    @Suppress("UNCHECKED_CAST")
+    private fun <T> anyValue(): T {
+        Mockito.any<T>()
+        return null as T
+    }
 }

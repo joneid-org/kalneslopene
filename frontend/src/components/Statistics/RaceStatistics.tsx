@@ -67,7 +67,7 @@ export default function RaceStatistics() {
       {allTimeStatistics?.courseRecord && (
         <Card className="bg-muted/30">
           <CardContent className="py-3 px-4 flex items-center gap-3">
-            <TrophyIcon className="size-4 text-amber-500 shrink-0" />
+            <TrophyIcon className="size-4 text-brand shrink-0" />
             <div className="flex flex-col min-w-0">
               <span className="text-xs text-muted-foreground font-medium">
                 Løyperekord

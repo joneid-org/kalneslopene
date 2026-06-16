@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { Footprints } from "lucide-react";
 import type { Ref } from "react";
 import { Link } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
@@ -34,12 +33,31 @@ export function Header({ ref }: { ref?: Ref<HTMLElement> }) {
         <div className={"flex container justify-between items-center"}>
           <div className="min-w-0">
             <Link to="/" className="flex items-center gap-2 group">
-              <div className="relative flex items-center justify-center size-8 rounded-xl bg-linear-to-br from-blue-500 to-blue-700 text-white shadow-sm group-hover:shadow-blue-300 group-hover:scale-105 transition-all shrink-0">
-                <Footprints className="size-4 rotate-12" />
-                <span className="absolute -top-0.5 -right-0.5 size-2 rounded-full bg-yellow-400 border border-white" />
-              </div>
+              <svg
+                viewBox="0 0 100 100"
+                className="size-8 shrink-0 transition-transform group-hover:scale-105"
+                aria-hidden="true"
+              >
+                <rect
+                  x="4"
+                  y="4"
+                  width="92"
+                  height="92"
+                  rx="26"
+                  fill="#1f7a4d"
+                />
+                <path
+                  d="M27 80 C 27 57, 51 60, 51 41 C 51 25, 75 29, 75 17"
+                  fill="none"
+                  stroke="#fff"
+                  strokeWidth="10"
+                  strokeLinecap="round"
+                />
+                <circle cx="27" cy="80" r="8" fill="#fff" />
+                <circle cx="75" cy="17" r="9" fill="#f2a33c" />
+              </svg>
               <div className="min-w-0 leading-tight">
-                <h1 className="font-semibold text-sm text-gray-900 truncate leading-tight tracking-tight">
+                <h1 className="font-display font-extrabold text-sm text-foreground truncate leading-tight tracking-tight">
                   Torsdagsløpet
                 </h1>
               </div>

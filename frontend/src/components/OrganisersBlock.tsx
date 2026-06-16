@@ -16,7 +16,7 @@ export default function OrganisersBlock() {
 
   return (
     <Card>
-      <CardHeader className="pb-2 text-[#173d2b]">
+      <CardHeader className="pb-2 text-primary">
         <CardTitle className="flex items-center gap-2">
           <Users className="size-4 font-bold" />
           ARRANGØRTEAMET
@@ -34,7 +34,7 @@ export default function OrganisersBlock() {
                   className="size-14 rounded-md object-cover border-2 border-muted shrink-0"
                 />
               ) : (
-                <div className="size-14 rounded-md bg-[#173d2b]/10 flex items-center justify-center text-sm font-semibold text-[#173d2b] shrink-0">
+                <div className="size-14 rounded-md bg-primary/10 flex items-center justify-center text-sm font-semibold text-primary shrink-0">
                   {organizer.initials}
                 </div>
               )}

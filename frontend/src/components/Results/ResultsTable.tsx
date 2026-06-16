@@ -148,12 +148,12 @@ export default function ResultsTable({ tableData, title }: ResultsTableProps) {
             {table.getRowModel().rows.map((row, i) => (
               <TableRow
                 key={row.id}
-                className={i % 2 === 1 ? "bg-gray-50" : ""}
+                className={i % 2 === 1 ? "bg-muted/40" : ""}
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
                     key={cell.id}
-                    className={`px-1 md:px-4 py-0.5 md:py-2.5 align-top${row.original.isPR && cell.column.id === "pr" ? " bg-emerald-100 text-emerald-700 font-semibold rounded" : ""}`}
+                    className={`px-1 md:px-4 py-0.5 md:py-2.5 align-top${row.original.isPR && cell.column.id === "pr" ? " bg-secondary text-secondary-foreground font-semibold rounded" : ""}`}
                     style={
                       cell.column.id === "runnerName"
                         ? {

@@ -20,11 +20,11 @@ export function SeasonStatBoxes() {
   ];
 
   return (
-    <div className="rounded-md bg-[#173d2b] p-2">
+    <div className="rounded-xl bg-brand-ink p-2">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
         <div className="rounded-md p-3 flex flex-col justify-between items-center text-center">
           <p className="text-xs text-white uppercase">Deltakerstatistikk</p>
-          <p className="text-xl text-white font-semibold">
+          <p className="font-display text-xl text-white font-extrabold tracking-tight">
             Årets sesong i tall
           </p>
         </div>
@@ -33,7 +33,7 @@ export function SeasonStatBoxes() {
             key={label}
             className="bg-white rounded-md p-3 flex flex-col justify-between items-center text-center"
           >
-            <p className="text-xl font-black tabular-nums text-gray-900">
+            <p className="font-display text-xl font-black tabular-nums text-foreground">
               {value ?? "–"}
             </p>
             <p className="text-xs font-semibold uppercase tracking-wide">

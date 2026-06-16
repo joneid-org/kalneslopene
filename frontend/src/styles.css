@@ -48,7 +48,7 @@ html {
   /* ─── Page headings ────────────────────────────────────── */
 
   .page-title {
-    @apply text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900 leading-tight tracking-tight;
+    @apply font-display text-2xl sm:text-3xl lg:text-4xl font-black text-foreground leading-tight tracking-tight;
   }
 
   .page-subtitle {
@@ -70,7 +70,7 @@ html {
   /* ─── Interactive links / buttons ─────────────────────── */
 
   .link-hover {
-    @apply transition-colors hover:text-blue-600;
+    @apply transition-colors hover:text-primary;
   }
 
   /* ─── Tag pills ────────────────────────────────────────── */
@@ -92,7 +92,7 @@ html {
   /* ─── Stat number display ──────────────────────────────── */
 
   .stat-value {
-    @apply text-2xl lg:text-3xl font-black tabular-nums;
+    @apply font-display text-2xl lg:text-3xl font-black tabular-nums;
   }
 
   /* ─── Empty state ──────────────────────────────────────── */

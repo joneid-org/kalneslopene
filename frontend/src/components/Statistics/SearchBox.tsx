@@ -1,13 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { SearchIcon } from "lucide-react";
 import { useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card.tsx";
 import {
   Command,
   CommandEmpty,
@@ -42,41 +35,34 @@ export default function SearchBox({ onSelect }: Props) {
   };
 
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base flex items-center gap-2">
-          <SearchIcon className="size-4 text-primary" />
-          Søk etter løper
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Command className="border rounded-lg" shouldFilter={false}>
-          <CommandInput
-            placeholder={selectedName ?? "Skriv et navn..."}
-            value={query}
-            onValueChange={setQuery}
-          />
-          {showResults && (
-            <CommandList>
-              {!runners?.length ? (
-                <CommandEmpty>Ingen løpere funnet.</CommandEmpty>
-              ) : (
-                <CommandGroup>
-                  {runners.map((runner) => (
-                    <CommandItem
-                      key={runner.uuid ?? runner.name}
-                      value={runner.uuid ?? runner.name}
-                      onSelect={() => handleSelect(runner)}
-                    >
-                      {runner.name}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              )}
-            </CommandList>
+    <Command
+      shouldFilter={false}
+      className="rounded-[14px] border bg-card **:data-[slot=command-input-wrapper]:h-12 **:data-[slot=command-input-wrapper]:border-0 **:data-[slot=command-input-wrapper]:px-4"
+    >
+      <CommandInput
+        placeholder={selectedName ?? "Søk etter løper..."}
+        value={query}
+        onValueChange={setQuery}
+      />
+      {showResults && (
+        <CommandList className="border-t">
+          {!runners?.length ? (
+            <CommandEmpty>Ingen løpere funnet.</CommandEmpty>
+          ) : (
+            <CommandGroup>
+              {runners.map((runner) => (
+                <CommandItem
+                  key={runner.uuid ?? runner.name}
+                  value={runner.uuid ?? runner.name}
+                  onSelect={() => handleSelect(runner)}
+                >
+                  {runner.name}
+                </CommandItem>
+              ))}
+            </CommandGroup>
           )}
-        </Command>
-      </CardContent>
-    </Card>
+        </CommandList>
+      )}
+    </Command>
   );
 }

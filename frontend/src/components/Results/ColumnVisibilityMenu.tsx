@@ -1,5 +1,5 @@
 import type { Table, VisibilityState } from "@tanstack/react-table";
-import { SlidersHorizontal } from "lucide-react";
+import { ListFilter } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
 import {
   DropdownMenu,
@@ -26,11 +26,12 @@ export function ColumnVisibilityMenu<T>({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          variant="ghost"
+          variant="outline"
           size="sm"
-          className="text-xs gap-1.5 h-7 md:h-9 md:px-3"
+          className="h-9 gap-2 rounded-[11px] text-[13px] font-semibold"
         >
-          <SlidersHorizontal className="size-3.5 md:size-4" />
+          <ListFilter className="size-3.5" />
+          Filtrer &amp; kolonner
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-40">

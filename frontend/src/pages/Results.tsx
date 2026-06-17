@@ -1,20 +1,24 @@
 import { useQueries, useQuery } from "@tanstack/react-query";
-import { Mars, Star, UsersIcon, Venus } from "lucide-react";
 import { useMemo, useState } from "react";
-import { useParams } from "react-router";
+import { Navigate, useParams } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
 import PhotoDialog from "@/components/PhotoDialog.tsx";
-import NavigationButtons from "@/components/Results/NavigationButtons.tsx";
-import PhotoCarousel from "@/components/Results/PhotoCarousel.tsx";
+import { RacePhotoGrid } from "@/components/Results/RacePhotoGrid.tsx";
+import { RaceSwitcher } from "@/components/Results/RaceSwitcher.tsx";
 import ResultsHeader from "@/components/Results/ResultsHeader.tsx";
 import ResultsTable from "@/components/Results/ResultsTable.tsx";
-import StatBox from "@/components/StatBox.tsx";
+import { StatTile } from "@/components/StatTile.tsx";
 import {
   getNewPersonalBestCount,
   getNewYearBestCount,
 } from "@/lib/statisticsUtils.ts";
 import { formatDateFull } from "@/lib/timeUtils.ts";
-import { buildTableRows, getNextRace, getPreviousRace } from "@/lib/utils.ts";
+import {
+  buildTableRows,
+  getMostRecentRace,
+  getNextRace,
+  getPreviousRace,
+} from "@/lib/utils.ts";
 import type { RaceRunnerDTO } from "@/model/DTO.ts";
 
 export function Results() {
@@ -71,52 +75,46 @@ export function Results() {
     uuid,
     allRacesByRunner,
   );
+  const debutantCount = Object.values(raceCountByRunner).filter(
+    (c) => c === 1,
+  ).length;
   const racePhotos = race?.photos ?? [];
 
+  if (!race) {
+    const latest = getMostRecentRace(allRaces);
+    if (!uuid && latest) {
+      return <Navigate to={`/Resultater/${latest.uuid}`} replace />;
+    }
+    return null;
+  }
+
   return (
-    <div className="page-content space-y-3 md:space-y-5">
-      <NavigationButtons
+    <div className="page-content flex flex-col gap-4 md:gap-6">
+      <RaceSwitcher
+        race={race}
         previousRace={previous}
         nextRace={next}
         path="/Resultater/"
       />
 
-      {race && (
-        <ResultsHeader
-          race={race}
-          photosPath={`/Bilder/${race.uuid}`}
-          title={title}
-        />
-      )}
+      <ResultsHeader race={race} title={title} />
 
-      <div className="grid grid-cols-3 gap-1 sm:gap-2 md:gap-4">
-        <StatBox
-          icon={UsersIcon}
-          value={participants}
-          label="Deltakere"
-          compact
-        />
-        <StatBox icon={Mars} value={maleCount} label="Menn" compact />
-        <StatBox icon={Venus} value={femaleCount} label="Kvinner" compact />
-        <StatBox icon={Star} value={yearBestCount} label="Årsbeste" compact />
-        <StatBox
-          icon={Star}
+      <div className="grid grid-cols-3 gap-2 md:grid-cols-6 md:gap-3">
+        <StatTile value={participants} label="Deltakere" />
+        <StatTile value={maleCount} label="Menn" />
+        <StatTile value={femaleCount} label="Kvinner" />
+        <StatTile value={yearBestCount} label="Årsbeste" tone="primary" />
+        <StatTile
           value={personalBestCount}
-          label="Personlig rekord"
-          compact
+          label="Personlig rek."
+          tone="primary"
         />
-        {/*TODO: Hvor mange er nye i løpet.*/}
-        <StatBox
-          icon={Star}
-          value={personalBestCount}
-          label="Debutanter"
-          compact
-        />
+        <StatTile value={debutantCount} label="Debutanter" tone="brand" />
       </div>
 
-      <ResultsTable tableData={tableData} title={title} />
+      <ResultsTable tableData={tableData} />
 
-      <PhotoCarousel
+      <RacePhotoGrid
         photos={racePhotos}
         uuid={uuid}
         onPhotoClick={setLightboxIndex}

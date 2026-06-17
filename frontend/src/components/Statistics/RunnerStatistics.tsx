@@ -1,12 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { ActivityIcon, TimerIcon } from "lucide-react";
 import { lazy, Suspense, useMemo, useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
-import StatBox from "@/components/StatBox.tsx";
 import RunnerStatisticsHeader from "@/components/Statistics/RunnerStatisticsHeader.tsx";
-import RunnerStatisticsRaceHistory from "@/components/Statistics/RunnerStatisticsRaceHistory.tsx";
 import RunnerStatisticsSeasonBest from "@/components/Statistics/RunnerStatisticsSeasonBest.tsx";
 import SearchBox from "@/components/Statistics/SearchBox.tsx";
+import { StatTile } from "@/components/StatTile.tsx";
 import { extractYear } from "@/lib/timeUtils.ts";
 import { getBestRaceFromRunner } from "@/lib/utils.ts";
 import type { RunnerDTO } from "@/model/DTO.ts";
@@ -39,22 +37,20 @@ export default function RunnerStatistics() {
   }, [raceHistory]);
 
   return (
-    <section className="space-y-4">
-      <h2 className="font-semibold">Løperstatistikk</h2>
+    <section className="flex flex-col gap-3">
+      <h2 className="font-display text-xl font-extrabold tracking-tight md:text-2xl">
+        Løperstatistikk
+      </h2>
 
       <SearchBox onSelect={setSelectedRunner} />
 
       {selectedRunner && (
-        <div className="space-y-4">
+        <div className="flex flex-col gap-3">
           <RunnerStatisticsHeader runner={selectedRunner} />
 
           <div className="grid grid-cols-2 gap-3">
-            <StatBox
-              icon={ActivityIcon}
-              value={totalRaces}
-              label="Løp fullført"
-            />
-            <StatBox icon={TimerIcon} value={pr} label="Personlig rekord" />
+            <StatTile value={totalRaces} label="Løp fullført" />
+            <StatTile value={pr} label="Personlig rekord" tone="primary" />
           </div>
 
           <Suspense fallback={null}>
@@ -66,11 +62,6 @@ export default function RunnerStatistics() {
           </Suspense>
 
           <RunnerStatisticsSeasonBest
-            availableYears={availableYears}
-            raceHistory={raceHistory ?? []}
-          />
-
-          <RunnerStatisticsRaceHistory
             availableYears={availableYears}
             raceHistory={raceHistory ?? []}
           />

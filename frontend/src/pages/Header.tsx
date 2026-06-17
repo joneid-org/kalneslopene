@@ -16,10 +16,7 @@ export function Header({ ref }: { ref?: Ref<HTMLElement> }) {
   const pathname = decodeURIComponent(useLocation().pathname);
 
   return (
-    <header
-      ref={ref}
-      className="sticky top-0 z-50 bg-card/90 backdrop-blur-md"
-    >
+    <header ref={ref} className="sticky top-0 z-50 bg-card/90 backdrop-blur-md">
       <div className="mx-auto flex h-14 w-full max-w-[var(--page-max-width)] items-center gap-3 px-4 md:h-[70px]">
         <Link to="/" className="group flex min-w-0 items-center gap-2.5">
           <svg

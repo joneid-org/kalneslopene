@@ -1,13 +1,6 @@
-import { TrendingUpIcon } from "lucide-react";
 import { useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
-import { Button } from "@/components/ui/button.tsx";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card.tsx";
+import { SegmentedControl } from "@/components/SegmentedControl.tsx";
 import {
   type ChartConfig,
   ChartContainer,
@@ -49,27 +42,16 @@ export default function RunnerTimeChart({
   raceHistory,
   availableYears,
 }: Props) {
-  const [selectedYears, setSelectedYears] = useState<number[]>(() =>
-    availableYears.length > 0 ? [availableYears[0]] : [],
-  );
+  const [range, setRange] = useState<string>("all");
 
-  const toggleYear = (y: number) =>
-    setSelectedYears((prev) =>
-      prev.includes(y)
-        ? prev.length > 1
-          ? prev.filter((x) => x !== y)
-          : prev
-        : [...prev, y],
-    );
+  const selectedYears =
+    range === "all" ? availableYears : [Number.parseInt(range, 10)];
 
-  const toggleAll = () =>
-    setSelectedYears(
-      selectedYears.length === availableYears.length
-        ? [availableYears[0]]
-        : [...availableYears],
-    );
+  const options = [
+    { label: "Alle", value: "all" },
+    ...availableYears.map((y) => ({ label: String(y), value: String(y) })),
+  ];
 
-  // Build chart points from raceHistory
   const filtered = raceHistory.filter(
     (rr) =>
       !rr.hideTime &&
@@ -100,108 +82,69 @@ export default function RunnerTimeChart({
   );
 
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <div className="flex items-start justify-between flex-wrap gap-3">
-          <CardTitle className="text-base flex items-center gap-2">
-            <TrendingUpIcon className="size-4 text-primary" />
-            Utvikling over tid
-          </CardTitle>
-          <div className="flex flex-wrap gap-1.5">
-            <Button
-              size="sm"
-              variant={
-                selectedYears.length === availableYears.length
-                  ? "default"
-                  : "outline"
+    <div className="rounded-2xl border bg-card p-5">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+        <span className="text-sm font-bold">Utvikling over tid</span>
+        <SegmentedControl
+          tone="primary"
+          options={options}
+          value={range}
+          onChange={setRange}
+        />
+      </div>
+      {points.length < 2 ? (
+        <p className="py-10 text-center text-sm text-muted-foreground">
+          Ikke nok data for valgte sesonger.
+        </p>
+      ) : (
+        <ChartContainer config={chartConfig} className="h-52 w-full">
+          <LineChart
+            data={points}
+            margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+            <XAxis
+              dataKey="label"
+              tick={{ fontSize: 11 }}
+              tickLine={false}
+              axisLine={false}
+            />
+            <YAxis
+              tickFormatter={formatSecondsToTime}
+              tick={{ fontSize: 11 }}
+              tickLine={false}
+              axisLine={false}
+              width={44}
+              domain={["auto", "auto"]}
+            />
+            <ChartTooltip
+              content={
+                <ChartTooltipContent
+                  formatter={(value, name) => [
+                    formatSecondsToTime(Number(value)),
+                    chartConfig[String(name)]?.label ?? String(name),
+                  ]}
+                />
               }
-              onClick={toggleAll}
-              className="text-xs h-7 px-2.5"
-            >
-              Alle
-            </Button>
-            {availableYears.map((y, i) => {
+            />
+            {selectedYears.map((y, i) => {
               const color = yearColor(y, i);
-              const active = selectedYears.includes(y);
               return (
-                <Button
+                <Line
                   key={y}
-                  size="sm"
-                  variant={active ? "default" : "outline"}
-                  onClick={() => toggleYear(y)}
-                  className="text-xs h-7 px-2.5"
-                  style={
-                    active
-                      ? {
-                          backgroundColor: color,
-                          borderColor: color,
-                          color: "white",
-                        }
-                      : {}
-                  }
-                >
-                  {y}
-                </Button>
+                  type="monotone"
+                  dataKey={String(y)}
+                  stroke={color}
+                  strokeWidth={2}
+                  dot={{ r: 3, fill: color }}
+                  activeDot={{ r: 5 }}
+                  connectNulls={false}
+                />
               );
             })}
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        {points.length < 2 ? (
-          <p className="text-sm text-muted-foreground py-8 text-center">
-            Ikke nok data for valgte sesonger.
-          </p>
-        ) : (
-          <ChartContainer config={chartConfig} className="h-56 w-full">
-            <LineChart
-              data={points}
-              margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-              <XAxis
-                dataKey="label"
-                tick={{ fontSize: 11 }}
-                tickLine={false}
-                axisLine={false}
-              />
-              <YAxis
-                tickFormatter={formatSecondsToTime}
-                tick={{ fontSize: 11 }}
-                tickLine={false}
-                axisLine={false}
-                width={44}
-                domain={["auto", "auto"]}
-              />
-              <ChartTooltip
-                content={
-                  <ChartTooltipContent
-                    formatter={(value, name) => [
-                      formatSecondsToTime(Number(value)),
-                      chartConfig[String(name)]?.label ?? String(name),
-                    ]}
-                  />
-                }
-              />
-              {selectedYears.map((y, i) => {
-                const color = yearColor(y, i);
-                return (
-                  <Line
-                    key={y}
-                    type="monotone"
-                    dataKey={String(y)}
-                    stroke={color}
-                    strokeWidth={2}
-                    dot={{ r: 3, fill: color }}
-                    activeDot={{ r: 5 }}
-                    connectNulls={false}
-                  />
-                );
-              })}
-            </LineChart>
-          </ChartContainer>
-        )}
-      </CardContent>
-    </Card>
+          </LineChart>
+        </ChartContainer>
+      )}
+    </div>
   );
 }

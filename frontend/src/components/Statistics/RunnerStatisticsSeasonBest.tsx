@@ -1,11 +1,4 @@
-import { CalendarIcon } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card.tsx";
-import { getBestRaceThisYearFromRunner } from "@/lib/utils.ts";
+import { cn, getBestRaceThisYearFromRunner } from "@/lib/utils.ts";
 import type { RaceRunnerDTO } from "@/model/DTO.ts";
 
 type Props = {
@@ -20,32 +13,29 @@ export default function RunnerStatisticsSeasonBest({
   if (availableYears.length === 0) return null;
 
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base flex items-center gap-2">
-          <CalendarIcon className="size-4 text-primary" />
-          Sesongbeste
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="p-0">
-        <ul className="divide-y divide-border">
-          {availableYears.map((year, idx) => (
-            <li
-              key={year}
-              className={`flex items-center justify-between px-6 py-3 ${idx === 0 ? "bg-primary/5" : ""}`}
+    <div className="rounded-2xl border bg-card px-5">
+      <ul className="divide-y divide-border">
+        {availableYears.map((year, idx) => (
+          <li key={year} className="flex items-center justify-between py-3.5">
+            <span
+              className={cn(
+                "text-sm",
+                idx === 0 ? "font-bold text-primary" : "font-semibold",
+              )}
             >
-              <span
-                className={`text-sm font-medium ${idx === 0 ? "text-primary" : ""}`}
-              >
-                {year}
-              </span>
-              <span className="tabular-nums text-sm font-mono font-semibold">
-                {getBestRaceThisYearFromRunner(raceHistory, year)}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </CardContent>
-    </Card>
+              Sesongbeste {year}
+            </span>
+            <span
+              className={cn(
+                "font-display text-[17px] tabular-nums",
+                idx === 0 ? "font-extrabold" : "font-bold",
+              )}
+            >
+              {getBestRaceThisYearFromRunner(raceHistory, year)}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

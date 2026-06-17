@@ -80,6 +80,16 @@ const NORWEGIAN_WEEKDAYS = [
   "Lørdag",
 ];
 
+// "Torsdag 11. Juni 2026"
+export function formatWeekdayDateFull(raceDate: unknown): string | undefined {
+  if (!raceDate) return undefined;
+  const { year, month, day } = parseDateParts(raceDate);
+  const weekday =
+    NORWEGIAN_WEEKDAYS[new Date(year, (month ?? 1) - 1, day).getDay()];
+  const monthName = NORWEGIAN_MONTH_NAMES[(month ?? 1) - 1];
+  return `${weekday} ${day}. ${monthName} ${year}`;
+}
+
 // "Torsdag 18. juni · 19:00"
 export function formatRaceDateTime(raceDate: unknown): string {
   const { year, month, day, hours, minutes } = parseDateParts(raceDate);

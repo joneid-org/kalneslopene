@@ -6,14 +6,8 @@ import {
   useReactTable,
   type VisibilityState,
 } from "@tanstack/react-table";
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useMemo, useState } from "react";
 import { ColumnVisibilityMenu } from "@/components/Results/ColumnVisibilityMenu.tsx";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card.tsx";
 import {
   Table,
   TableBody,
@@ -22,77 +16,126 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table.tsx";
-import { DESKTOP_ONLY_COLUMNS } from "@/lib/constants.ts";
-import type { RowData } from "@/lib/utils.ts";
+import { cn, type RowData } from "@/lib/utils.ts";
 
 type ResultsTableProps = {
-  title?: string;
   tableData: RowData[];
 };
 
-const MOBILE_QUERY = "(max-width: 767px)";
+const VISIBLE_COUNT = 8;
 
-function subscribeMobile(callback: () => void) {
-  const mq = window.matchMedia(MOBILE_QUERY);
-  mq.addEventListener("change", callback);
-  return () => mq.removeEventListener("change", callback);
+const rightAlignedColumns = new Set([
+  "time",
+  "pace",
+  "yearBest",
+  "pr",
+  "races",
+]);
+
+function RankBadge({ rank }: { rank: number }) {
+  if (rank > 3) {
+    return (
+      <span className="inline-flex w-7 justify-center font-display text-sm font-extrabold tabular-nums text-muted-foreground">
+        {rank}
+      </span>
+    );
+  }
+  const tone =
+    rank === 1
+      ? "bg-brand text-brand-foreground"
+      : rank === 2
+        ? "bg-muted text-foreground"
+        : "bg-brand-soft text-brand-soft-foreground";
+  return (
+    <span
+      className={cn(
+        "inline-flex size-7 items-center justify-center rounded-full font-display text-sm font-extrabold",
+        tone,
+      )}
+    >
+      {rank}
+    </span>
+  );
 }
 
-function useIsMobile() {
-  return useSyncExternalStore(
-    subscribeMobile,
-    () => window.matchMedia(MOBILE_QUERY).matches,
+function ResultCard({ row }: { row: RowData }) {
+  return (
+    <div className="flex items-center gap-3 rounded-[14px] border bg-card px-3 py-2.5">
+      <RankBadge rank={row.position} />
+      <div className="min-w-0 flex-1">
+        <div className="truncate text-[15px] font-bold leading-tight">
+          {row.runnerName}
+        </div>
+        {!row.hideTime && (
+          <div className="text-xs tabular-nums text-muted-foreground">
+            {row.pace} min/km
+          </div>
+        )}
+      </div>
+      <span
+        className={cn(
+          "font-display font-extrabold tabular-nums",
+          row.hideTime
+            ? "text-sm font-semibold text-muted-foreground"
+            : "text-lg",
+        )}
+      >
+        {row.time}
+      </span>
+    </div>
   );
 }
 
 const numCell = ({ getValue }: CellContext<RowData, unknown>) => (
-  <span className="tabular-nums">{String(getValue())}</span>
+  <span className="tabular-nums text-muted-foreground">
+    {String(getValue())}
+  </span>
 );
 
-export default function ResultsTable({ tableData, title }: ResultsTableProps) {
-  const isMobile = useIsMobile();
-
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
-    () => Object.fromEntries(DESKTOP_ONLY_COLUMNS.map((c) => [c, !isMobile])),
-  );
-  const [lastIsMobile, setLastIsMobile] = useState(isMobile);
-  if (lastIsMobile !== isMobile) {
-    setLastIsMobile(isMobile);
-    setColumnVisibility((prev) => {
-      const updated = { ...prev };
-      for (const col of DESKTOP_ONLY_COLUMNS) updated[col] = !isMobile;
-      return updated;
-    });
-  }
+export default function ResultsTable({ tableData }: ResultsTableProps) {
+  const [expanded, setExpanded] = useState(false);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+    yearBest: false,
+    pr: false,
+  });
 
   const columns: ColumnDef<RowData>[] = useMemo(
     () => [
       {
         accessorKey: "position",
         header: "#",
-        cell: ({ getValue }) => (
-          <span className="font-medium">{getValue<number>()}</span>
-        ),
-        size: 24,
+        enableHiding: false,
+        cell: ({ getValue }) => <RankBadge rank={getValue<number>()} />,
       },
       {
         accessorKey: "runnerName",
-        header: "NAVN",
+        header: "Navn",
+        enableHiding: false,
+        cell: ({ getValue }) => (
+          <span className="font-semibold">{getValue<string>()}</span>
+        ),
+      },
+      {
+        accessorKey: "time",
+        header: "Tid",
+        enableHiding: false,
         cell: ({ getValue, row }) => (
-          <span className="flex items-start gap-1 w-full">
-            <span
-              className={`inline-block size-1.5 rounded-full shrink-0 mt-0.75 ${row.original.gender === "Mann" ? "bg-blue-500" : "bg-red-500"}`}
-            />
-            <span className="leading-tight">{getValue<string>()}</span>
+          <span
+            className={cn(
+              "font-display font-bold tabular-nums",
+              row.original.hideTime
+                ? "font-semibold text-muted-foreground"
+                : "text-foreground",
+            )}
+          >
+            {getValue<string>()}
           </span>
         ),
-        size: 90,
       },
-      { accessorKey: "time", header: "TID", cell: numCell, size: 44 },
-      { accessorKey: "pace", header: "MIN/KM", cell: numCell, size: 44 },
-      { accessorKey: "yearBest", header: "ÅRSBESTE", cell: numCell, size: 44 },
-      { accessorKey: "pr", header: "PERS", cell: numCell, size: 44 },
-      { accessorKey: "races", header: "LØP", cell: numCell, size: 28 },
+      { accessorKey: "pace", header: "Min/km", cell: numCell },
+      { accessorKey: "yearBest", header: "Årsbeste", cell: numCell },
+      { accessorKey: "pr", header: "Pers", cell: numCell },
+      { accessorKey: "races", header: "Løp totalt", cell: numCell },
     ],
     [],
   );
@@ -105,35 +148,62 @@ export default function ResultsTable({ tableData, title }: ResultsTableProps) {
     getCoreRowModel: getCoreRowModel(),
   });
 
+  const total = tableData.length;
+  const visibleRows = expanded ? tableData : tableData.slice(0, VISIBLE_COUNT);
+  const tableRows = table.getRowModel().rows;
+  const visibleTableRows = expanded
+    ? tableRows
+    : tableRows.slice(0, VISIBLE_COUNT);
+  const hasMore = total > VISIBLE_COUNT;
+  const toggleLabel = expanded ? "Vis færre" : `Vis alle ${total} resultater`;
+
   return (
-    <Card>
-      <CardHeader className="py-3 md:py-4 px-4 md:px-6 pb-0">
-        <div className="flex items-center justify-between gap-2">
-          <CardTitle className="text-sm md:text-base font-semibold leading-tight">
-            {title}
-          </CardTitle>
+    <section>
+      {/* Mobile — card list */}
+      <div className="md:hidden">
+        <h2 className="mb-2.5 font-display text-base font-extrabold tracking-tight">
+          Resultatliste
+        </h2>
+        <div className="flex flex-col gap-2">
+          {visibleRows.map((row) => (
+            <ResultCard key={`${row.position}-${row.runnerName}`} row={row} />
+          ))}
+        </div>
+        {hasMore && (
+          <button
+            type="button"
+            onClick={() => setExpanded((v) => !v)}
+            className="mt-2.5 h-11 w-full rounded-[13px] bg-secondary text-sm font-bold text-secondary-foreground transition-colors hover:bg-secondary/80"
+          >
+            {toggleLabel}
+          </button>
+        )}
+      </div>
+
+      {/* Web — table */}
+      <div className="hidden overflow-hidden rounded-2xl border bg-card shadow-sm md:block">
+        <div className="flex items-center justify-between border-b px-6 py-4">
+          <h2 className="font-display text-lg font-extrabold tracking-tight">
+            Resultatliste
+          </h2>
           <ColumnVisibilityMenu
             table={table}
             columnVisibility={columnVisibility}
             setColumnVisibility={setColumnVisibility}
           />
         </div>
-      </CardHeader>
 
-      <CardContent className="p-0 mt-2">
-        <Table className="text-[10px] sm:text-xs md:text-sm table-fixed w-full">
+        <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="hover:bg-transparent">
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
-                    className="px-1 md:px-4 py-1 md:py-3 text-[9px] sm:text-xs whitespace-nowrap"
-                    style={
-                      header.column.columnDef.size
-                        ? { width: header.column.columnDef.size }
-                        : undefined
-                    }
+                    className={cn(
+                      "h-auto py-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground/80 first:pl-6 last:pr-6",
+                      rightAlignedColumns.has(header.column.id) && "text-right",
+                    )}
                   >
                     {flexRender(
                       header.column.columnDef.header,
@@ -145,24 +215,21 @@ export default function ResultsTable({ tableData, title }: ResultsTableProps) {
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows.map((row, i) => (
+            {visibleTableRows.map((row, i) => (
               <TableRow
                 key={row.id}
-                className={i % 2 === 1 ? "bg-gray-50" : ""}
+                className={cn(
+                  "border-0 hover:bg-transparent",
+                  i % 2 === 1 && "bg-muted/40",
+                )}
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
                     key={cell.id}
-                    className={`px-1 md:px-4 py-0.5 md:py-2.5 align-top${row.original.isPR && cell.column.id === "pr" ? " bg-emerald-100 text-emerald-700 font-semibold rounded" : ""}`}
-                    style={
-                      cell.column.id === "runnerName"
-                        ? {
-                            wordBreak: "break-word",
-                            overflowWrap: "anywhere",
-                            whiteSpace: "normal",
-                          }
-                        : { whiteSpace: "nowrap" }
-                    }
+                    className={cn(
+                      "py-3 text-sm first:pl-6 last:pr-6",
+                      rightAlignedColumns.has(cell.column.id) && "text-right",
+                    )}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
@@ -171,7 +238,17 @@ export default function ResultsTable({ tableData, title }: ResultsTableProps) {
             ))}
           </TableBody>
         </Table>
-      </CardContent>
-    </Card>
+
+        {hasMore && (
+          <button
+            type="button"
+            onClick={() => setExpanded((v) => !v)}
+            className="h-[50px] w-full border-t bg-background text-sm font-bold text-primary transition-colors hover:bg-accent"
+          >
+            {toggleLabel}
+          </button>
+        )}
+      </div>
+    </section>
   );
 }

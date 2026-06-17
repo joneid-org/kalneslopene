@@ -12,17 +12,19 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 });
 
-export function colorIcon(color: string) {
+export function colorIcon(color: string, active = false) {
+  const size = active ? 21 : 15;
+  const box = size + 1;
   return L.divIcon({
     className: "",
     html: `<div style="
-      width:15px;height:15px;border-radius:50% 50% 50% 0;
-      background:${color};border:2px solid white;
+      width:${size}px;height:${size}px;border-radius:50% 50% 50% 0;
+      background:${color};border:${active ? 3 : 2}px solid white;
       box-shadow:0 2px 6px rgba(0,0,0,.4);
       transform:rotate(-45deg);
     "></div>`,
-    iconSize: [16, 16],
-    iconAnchor: [8, 16],
-    popupAnchor: [0, -18],
+    iconSize: [box, box],
+    iconAnchor: [box / 2, box],
+    popupAnchor: [0, -(box + 2)],
   });
 }

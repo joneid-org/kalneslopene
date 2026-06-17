@@ -68,6 +68,20 @@ export function getPreviousRace(
   return best;
 }
 
+export function getMostRecentRace(races: RaceDTO[]): RaceDTO | null {
+  const now = new Date().toISOString();
+  let best: RaceDTO | null = null;
+  let bestKey = "";
+  for (const race of races) {
+    const key = raceDateToSortKey(race.raceDate);
+    if (key <= now && key > bestKey) {
+      best = race;
+      bestKey = key;
+    }
+  }
+  return best;
+}
+
 export function getNextRace(races: RaceDTO[], uuid?: string): RaceDTO | null {
   const now = new Date().toISOString();
   const currentRace = races.find((race) => race.uuid === uuid);

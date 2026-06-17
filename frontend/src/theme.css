@@ -8,12 +8,18 @@
   /* ─── Body ─────────────────────────────────────────────── */
   body {
     font-family:
-      system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      "Hanken Grotesk", system-ui, -apple-system, BlinkMacSystemFont,
+      "Segoe UI", sans-serif;
     font-size: 0.9375rem; /* 15 px mobile */
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     /* @apply bg-background text-foreground; */
+  }
+
+  ::selection {
+    background: var(--primary);
+    color: var(--primary-foreground);
   }
 
   @media (min-width: 768px) {
@@ -22,27 +28,33 @@
     } /* 16 px desktop */
   }
 
-  /* ─── Headings ──────────────────────────────────────────── */
+  /* ─── Headings — Archivo, sporty & confident ───────────── */
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: "Archivo", system-ui, sans-serif;
+  }
   h1 {
     font-size: 1.375rem; /* 22 px */
-    font-weight: 700;
+    font-weight: 800;
     line-height: 1.2;
     letter-spacing: -0.02em;
   }
   h2 {
     font-size: 1.125rem; /* 18 px */
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1.3;
     letter-spacing: -0.01em;
   }
   h3 {
     font-size: 1rem; /* 16 px */
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1.4;
   }
   h4 {
     font-size: 0.9375rem; /* 15 px */
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1.4;
   }
 
@@ -87,44 +99,53 @@
     }
   }
 
-  /* ─── Colour tokens (light theme) ──────────────────────── */
+  /* ─── Colour tokens — "Skog" (light theme) ─────────────── */
+  /* Forest green + warm apple-orange. Hex values are the design
+     system's source of truth (Torsdagsløpet · Designsystem v1). */
   :root {
-    --radius: 0.5rem;
+    --radius: 1rem; /* generous, friendly corners */
 
     /* Backgrounds */
-    --background: oklch(0.98 0.004 250);
-    --foreground: oklch(0.15 0.03 255);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.15 0.03 255);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.15 0.03 255);
+    --background: #f4f6f2; /* Bakgrunn */
+    --foreground: #16241c; /* Blekk */
+    --card: #ffffff;
+    --card-foreground: #16241c;
+    --popover: #ffffff;
+    --popover-foreground: #16241c;
 
-    /* Primary — blue */
-    --primary: oklch(0.5 0.18 255);
-    --primary-foreground: oklch(0.98 0.004 250);
+    /* Primary — skogsgrønn */
+    --primary: #1f7a4d;
+    --primary-foreground: #ffffff;
 
-    /* Secondary — soft blue tint */
-    --secondary: oklch(0.94 0.03 250);
-    --secondary-foreground: oklch(0.3 0.1 255);
+    /* Secondary — grønn tint */
+    --secondary: #e7f1ea;
+    --secondary-foreground: #1f7a4d;
 
     /* Muted */
-    --muted: oklch(0.94 0.008 250);
-    --muted-foreground: oklch(0.5 0.04 255);
+    --muted: #e7eae4;
+    --muted-foreground: #5b6b62;
 
-    /* Accent — neutral (used for button/nav hover states) */
-    --accent: oklch(0.94 0.005 250);
-    --accent-foreground: oklch(0.2 0.03 255);
+    /* Accent — subtle green-tint surface (hover states) */
+    --accent: #e7f1ea;
+    --accent-foreground: #1f7a4d;
+
+    /* Brand accent — eple-oransje (CTAs, records, highlights) */
+    --brand: #f2a33c;
+    --brand-foreground: #3a2606;
+    --brand-soft: #fcefd9; /* warm cream tint */
+    --brand-soft-foreground: #b9772a;
+    --brand-ink: #123a28; /* grønn dyp — dark forest surfaces */
 
     --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.91 0.01 255);
-    --input: oklch(0.91 0.01 255);
-    --ring: oklch(0.5 0.18 255);
+    --border: #e4e8e1;
+    --input: #e4e8e1;
+    --ring: #1f7a4d;
 
-    /* Chart — blue · orange · green */
-    --chart-1: oklch(0.5 0.18 255);
-    --chart-2: oklch(0.65 0.19 55);
-    --chart-3: oklch(0.55 0.16 152);
-    --chart-4: oklch(0.6 0.15 285);
-    --chart-5: oklch(0.6 0.18 25);
+    /* Chart — forest greens + apple orange */
+    --chart-1: #1f7a4d;
+    --chart-2: #f2a33c;
+    --chart-3: #123a28;
+    --chart-4: #7cb59a;
+    --chart-5: #b9772a;
   }
 }

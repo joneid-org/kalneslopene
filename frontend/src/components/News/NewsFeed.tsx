@@ -1,10 +1,9 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: dot indicators by index is fine */
 import { useQuery } from "@tanstack/react-query";
-import { ChevronDown, ChevronUp, Newspaper } from "lucide-react";
+import { ChevronRight, ChevronUp, Newspaper } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
-import { Button } from "@/components/ui/button.tsx";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card.tsx";
 import { NEWS_IMAGES, tagColor, useTags } from "@/lib/newsUtils.ts";
 import { formatDateFull } from "@/lib/timeUtils.ts";
@@ -30,14 +29,39 @@ export default function NewsFeed() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className="flex items-baseline justify-between">
+        <h2 className="font-display font-extrabold text-lg sm:text-2xl tracking-tight">
+          Siste nytt
+        </h2>
+        {hasMore && (
+          <button
+            type="button"
+            onClick={() => setExpanded((v) => !v)}
+            className="flex items-center gap-1 text-sm font-bold text-primary hover:opacity-80 transition-opacity"
+          >
+            {expanded ? (
+              <>
+                Vis færre <ChevronUp className="size-4" />
+              </>
+            ) : (
+              <>
+                Vis flere <ChevronRight className="size-4" />
+              </>
+            )}
+          </button>
+        )}
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4">
         {visible.map((post: NewsFeedDTO, idx) => (
           <Card
             key={post.uuid}
-            className="overflow-hidden card-hover hover:shadow-2xl h-full flex flex-col gap-0 py-0"
+            className="overflow-hidden rounded-2xl card-hover hover:shadow-md h-full flex flex-col gap-0 py-0"
           >
-            <Link to={`/nyheter/${post.uuid}`} className="block group">
-              <div className="aspect-video overflow-hidden shrink-0">
+            <Link
+              to={`/nyheter/${post.uuid}`}
+              className="hidden sm:block group"
+            >
+              <div className="aspect-video overflow-hidden shrink-0 bg-muted">
                 <img
                   src={
                     post.headerImage?.url ??
@@ -49,8 +73,8 @@ export default function NewsFeed() {
                 />
               </div>
             </Link>
-            <CardHeader className="px-2 pt-3 pb-1 gap-1">
-              <div className="flex flex-wrap gap-1 mb-1">
+            <CardHeader className="px-3.5 sm:px-5 pt-3.5 sm:pt-4 pb-1 gap-2">
+              <div className="flex flex-wrap gap-1.5">
                 {post.tags.map((tag) => (
                   <Link
                     key={tag}
@@ -58,7 +82,7 @@ export default function NewsFeed() {
                     onClick={(e) => e.stopPropagation()}
                   >
                     <span
-                      className="tag-pill"
+                      className="tag-pill rounded-full bg-secondary px-2.5 py-1"
                       style={{ color: tagColor(tag, tags) }}
                     >
                       {tag}
@@ -71,10 +95,10 @@ export default function NewsFeed() {
                 to={`/nyheter/${post.uuid}`}
                 className="block group"
               >
-                <p className="text-md font-bold transition-colors leading-snug line-clamp-2">
+                <p className="font-display text-base sm:text-lg font-bold transition-colors leading-snug line-clamp-2">
                   {post.header}
                 </p>
-                <p className="text-sm leading-snug line-clamp-2">
+                <p className="text-sm text-muted-foreground leading-snug line-clamp-2 mt-1">
                   {post.content
                     .replace(/<[^>]+>/g, " ")
                     .replace(/\s+/g, " ")
@@ -82,34 +106,14 @@ export default function NewsFeed() {
                 </p>
               </Link>
             </CardHeader>
-            <CardFooter className="px-2 pb-3 pt-1 mt-auto flex flex-wrap items-center justify-end gap-1">
+            <CardFooter className="px-3.5 sm:px-5 pb-3.5 sm:pb-5 pt-2 sm:pt-3 mt-auto">
               <time className="text-xs lowercase text-muted-foreground">
-                {" "}
                 {formatDateFull(post.date)}
               </time>
             </CardFooter>
           </Card>
         ))}
       </div>
-
-      {hasMore && (
-        <Button
-          variant="ghost"
-          size="sm"
-          className="mx-auto font-semibold gap-1"
-          onClick={() => setExpanded((v) => !v)}
-        >
-          {expanded ? (
-            <>
-              <ChevronUp className="size-4" /> Vis færre
-            </>
-          ) : (
-            <>
-              <ChevronDown className="size-4" /> Vis flere
-            </>
-          )}
-        </Button>
-      )}
     </div>
   );
 }

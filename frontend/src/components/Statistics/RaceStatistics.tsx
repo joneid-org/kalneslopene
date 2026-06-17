@@ -1,16 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
-import { FilterIcon, TimerIcon, TrophyIcon, UsersIcon } from "lucide-react";
+import { Trophy } from "lucide-react";
 import { useMemo, useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
-import StatBox from "@/components/StatBox.tsx";
-import { Button } from "@/components/ui/button.tsx";
-import { Card, CardContent } from "@/components/ui/card.tsx";
+import { SegmentedControl } from "@/components/SegmentedControl.tsx";
+import { AttendanceChart } from "@/components/Statistics/AttendanceChart.tsx";
+import { StatTile } from "@/components/StatTile.tsx";
 import {
+  extractYear,
   formatDateFull,
   formatSecondsToTime,
   mapResultTimeToNumber,
+  raceDateToSortKey,
 } from "@/lib/timeUtils.ts";
-import { getYears } from "@/lib/utils.ts";
+import { getYears, isPast } from "@/lib/utils.ts";
 
 export default function RaceStatistics() {
   const [selectedYear, setSelectedYear] = useState<number | undefined>(
@@ -26,73 +28,81 @@ export default function RaceStatistics() {
   const availableYears = useMemo(() => getYears(races ?? []), [races]);
   const effectiveYear = selectedYear ?? availableYears[0];
 
+  const yearRaces = useMemo(
+    () =>
+      (races ?? [])
+        .filter((r) => isPast(r) && extractYear(r.raceDate) === effectiveYear)
+        .sort((a, b) =>
+          raceDateToSortKey(a.raceDate).localeCompare(
+            raceDateToSortKey(b.raceDate),
+          ),
+        ),
+    [races, effectiveYear],
+  );
+
+  const record = allTimeStatistics?.courseRecord;
+
   return (
-    <section className="space-y-4">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <h2 className="font-semibold">Løpsstatistikk</h2>
-        <div className="flex flex-wrap gap-2">
-          {availableYears.map((y) => (
-            <Button
-              key={y}
-              size="sm"
-              variant={effectiveYear === y ? "default" : "outline"}
-              onClick={() => setSelectedYear(y)}
-            >
-              {y}
-            </Button>
-          ))}
-        </div>
+    <section className="flex flex-col gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="font-display text-xl font-extrabold tracking-tight md:text-2xl">
+          Løpsstatistikk
+        </h2>
+        {availableYears.length > 0 && (
+          <SegmentedControl
+            options={availableYears.map((y) => ({
+              label: String(y),
+              value: y,
+            }))}
+            value={effectiveYear}
+            onChange={setSelectedYear}
+          />
+        )}
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-        <StatBox
-          icon={UsersIcon}
+      <div className="grid grid-cols-3 gap-2 md:gap-3">
+        <StatTile
           value={yearStatistics?.uniqueRunners.total}
           label="Unike løpere"
         />
-        <StatBox
-          icon={FilterIcon}
-          value={yearStatistics?.averageRunnersPerRace?.toFixed(1) ?? "—"}
-          label="Snitt deltakere"
+        <StatTile
+          value={yearStatistics?.averageRunnersPerRace?.toFixed(1)}
+          label="Snitt frammøte"
         />
-        <StatBox
-          icon={TimerIcon}
+        <StatTile
           value={formatSecondsToTime(
             mapResultTimeToNumber(yearStatistics?.courseRecord?.resultTime),
           )}
-          label="Årets raskeste tid"
+          label="Raskeste tid"
+          tone="primary"
         />
       </div>
 
-      {allTimeStatistics?.courseRecord && (
-        <Card className="bg-muted/30">
-          <CardContent className="py-3 px-4 flex items-center gap-3">
-            <TrophyIcon className="size-4 text-amber-500 shrink-0" />
-            <div className="flex flex-col min-w-0">
-              <span className="text-xs text-muted-foreground font-medium">
-                Løyperekord
-              </span>
-              <p className="text-sm">
-                <span className="font-semibold">
-                  {formatSecondsToTime(
-                    mapResultTimeToNumber(
-                      allTimeStatistics.courseRecord.resultTime,
-                    ),
-                  )}
-                </span>
-                {" — "}
-                {allTimeStatistics?.courseRecord.runner.name}
-                <span className="text-muted-foreground">
-                  {", "}
-                  {formatDateFull(
-                    allTimeStatistics?.courseRecord.race.raceDate,
-                  )}
-                </span>
-              </p>
+      {record && (
+        <div className="flex items-center gap-4 rounded-2xl bg-brand-ink p-4 text-white md:p-5">
+          <div className="grid size-11 shrink-0 place-items-center rounded-[14px] bg-brand text-brand-foreground md:size-12">
+            <Trophy className="size-5 md:size-6" />
+          </div>
+          <div className="min-w-0">
+            <div className="text-[11px] font-bold uppercase tracking-wider text-white/60">
+              Løyperekord
             </div>
-          </CardContent>
-        </Card>
+            <div className="mt-0.5 truncate">
+              <span className="font-display text-lg font-extrabold tabular-nums md:text-xl">
+                {formatSecondsToTime(mapResultTimeToNumber(record.resultTime))}
+              </span>
+              <span className="text-sm"> — {record.runner.name}</span>
+            </div>
+            <div className="text-xs text-white/60">
+              {formatDateFull(record.race.raceDate)}
+            </div>
+          </div>
+        </div>
       )}
+
+      <div>
+        <AttendanceChart races={yearRaces} />
+      </div>
     </section>
   );
 }

@@ -76,7 +76,7 @@ export function NewsArticle() {
               <Button
                 size="sm"
                 variant="outline"
-                className="gap-1.5 text-[#173d2b] border-blue-200 hover:bg-[#173d2b]/10 shrink-0"
+                className="gap-1.5 text-primary border-border hover:bg-primary/10 shrink-0"
               >
                 <ExternalLink className="size-3.5" />
                 Se resultater

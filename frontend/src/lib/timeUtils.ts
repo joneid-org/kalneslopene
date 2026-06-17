@@ -70,6 +70,38 @@ export function formatDateFull(raceDate: unknown): string | undefined {
   return `${String(day).padStart(2)}. ${monthName} ${year}`;
 }
 
+const NORWEGIAN_WEEKDAYS = [
+  "Søndag",
+  "Mandag",
+  "Tirsdag",
+  "Onsdag",
+  "Torsdag",
+  "Fredag",
+  "Lørdag",
+];
+
+// "Torsdag 11. Juni 2026"
+export function formatWeekdayDateFull(raceDate: unknown): string | undefined {
+  if (!raceDate) return undefined;
+  const { year, month, day } = parseDateParts(raceDate);
+  const weekday =
+    NORWEGIAN_WEEKDAYS[new Date(year, (month ?? 1) - 1, day).getDay()];
+  const monthName = NORWEGIAN_MONTH_NAMES[(month ?? 1) - 1];
+  return `${weekday} ${day}. ${monthName} ${year}`;
+}
+
+// "Torsdag 18. juni · 19:00"
+export function formatRaceDateTime(raceDate: unknown): string {
+  const { year, month, day, hours, minutes } = parseDateParts(raceDate);
+  const weekday =
+    NORWEGIAN_WEEKDAYS[new Date(year, (month ?? 1) - 1, day).getDay()];
+  const monthName = (
+    NORWEGIAN_MONTH_NAMES[(month ?? 1) - 1] ?? ""
+  ).toLowerCase();
+  const time = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+  return `${weekday} ${day}. ${monthName} · ${time}`;
+}
+
 export function formatTimeStamp(raceDate: unknown): string {
   const { hours, minutes } = parseDateParts(raceDate);
   return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;

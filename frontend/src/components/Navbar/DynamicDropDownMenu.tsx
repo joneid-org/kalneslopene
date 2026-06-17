@@ -1,6 +1,5 @@
 import { ChevronDown } from "lucide-react";
 import { Link } from "react-router";
-import { Button } from "@/components/ui/button.tsx";
 import {
   Menubar,
   MenubarContent,
@@ -12,30 +11,37 @@ import {
   MenubarTrigger,
 } from "@/components/ui/menubar.tsx";
 import { formatDDMonth } from "@/lib/timeUtils.ts";
-import { getRacesDTOByYear, getYears } from "@/lib/utils.ts";
+import { cn, getRacesDTOByYear, getYears } from "@/lib/utils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 
 type MenuBarDropDownButtonProps = {
   label: string;
   basePath: string;
   races: RaceDTO[];
+  active?: boolean;
 };
 
 export function DynamicDropDownMenu({
   races,
   label,
   basePath,
+  active = false,
 }: MenuBarDropDownButtonProps) {
   const years: number[] = getYears(races);
 
   return (
     <Menubar className="border-0 bg-transparent p-0 shadow-none">
       <MenubarMenu>
-        <MenubarTrigger asChild>
-          <Button variant="ghost" className="flex items-center gap-1">
-            {label}
-            <ChevronDown className="size-3.5 opacity-60" />
-          </Button>
+        <MenubarTrigger
+          className={cn(
+            "flex cursor-pointer items-center gap-1.5 rounded-[11px] px-3.5 py-2 text-[15px] font-semibold transition-colors",
+            active
+              ? "bg-secondary text-secondary-foreground"
+              : "text-foreground hover:bg-accent",
+          )}
+        >
+          {label}
+          <ChevronDown className="size-3.5" />
         </MenubarTrigger>
 
         <MenubarContent>

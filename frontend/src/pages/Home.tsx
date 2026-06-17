@@ -7,9 +7,9 @@ import SponsorsBlock from "../components/SponsorsBlock.tsx";
 
 export function Home() {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-3 sm:gap-10">
       <Hero />
-      <div className="flex flex-col page-content gap-6">
+      <div className="flex flex-col page-content gap-6 sm:gap-12">
         <Slogan />
         <NewsFeed />
         <SeasonStatBoxes />

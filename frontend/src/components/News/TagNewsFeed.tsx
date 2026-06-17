@@ -15,7 +15,7 @@ export function TagNewsFeed({ post, img }: { post: NewsFeedDTO; img: string }) {
 
   return (
     <Link to={`/nyheter/${post.uuid}`} className="block group">
-      <Card className="overflow-hidden border-blue-100 hover:shadow-lg transition-all">
+      <Card className="overflow-hidden hover:shadow-lg transition-all">
         <div className="grid sm:grid-cols-[1fr_260px]">
           <div className="order-2 sm:order-1">
             <CardHeader className="pb-2 pt-5 sm:pt-6">

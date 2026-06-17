@@ -10,11 +10,12 @@ import {
 import { requestStaticPresignedUrl, uploadToS3 } from "@/api/s3.ts";
 import { colorIcon } from "@/components/CourseMap/mapUtils.ts";
 import { PinInfoPanel } from "@/components/CourseMap/PinInfoPanel.tsx";
-import { RoutePhotoGallery } from "@/components/CourseMap/RoutePhotoGallery.tsx";
+import { RouteDetails } from "@/components/CourseMap/RouteDetails.tsx";
 import PhotoDialog from "@/components/PhotoDialog.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { useApplicationContext } from "@/context/ApplicationContext.tsx";
 import { useAuth } from "@/context/AuthContext.tsx";
+import { routeDetails } from "@/data/200m200mData.ts";
 import { blaaRoute } from "@/data/coordinater";
 import {
   MAP_CENTER,
@@ -24,10 +25,6 @@ import {
   pins,
 } from "@/data/loypekartData.ts";
 import { convertImageToWebp } from "@/lib/imageUtils.ts";
-
-const basePinPhotos = pins.flatMap((pin) =>
-  (pin.photos ?? []).map((photo) => ({ ...photo, label: pin.label })),
-);
 
 /**
  * Builds the displayed image URL from the runtime S3 base URL (falling back to
@@ -63,22 +60,6 @@ export function CourseMap() {
       setPhotoVersions((prev) => ({ ...prev, [fileName]: Date.now() }));
     },
     [],
-  );
-
-  const allPinPhotos = useMemo(
-    () =>
-      basePinPhotos.map(({ fileName, fallback, description, label }) => ({
-        fileName,
-        description,
-        label,
-        url: resolvePhotoUrl(
-          fileName,
-          fallback,
-          s3BaseUrl,
-          photoVersions[fileName],
-        ),
-      })),
-    [s3BaseUrl, photoVersions],
   );
 
   const activePinDialogPhotos = useMemo(
@@ -167,8 +148,8 @@ export function CourseMap() {
 
       <Separator />
 
-      <RoutePhotoGallery
-        photos={allPinPhotos}
+      <RouteDetails
+        routeDetails={routeDetails}
         onReplacePhoto={onReplacePhoto}
       />
 

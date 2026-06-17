@@ -3,7 +3,6 @@ import type { Ref } from "react";
 import { Link } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
 import { DynamicDropDownMenu } from "@/components/Navbar/DynamicDropDownMenu.tsx";
-import MobileNavBarMenu from "@/components/Navbar/MobileNavBarMenu.tsx";
 import { Button } from "@/components/ui/button.tsx";
 
 const headerBarDynamic = [
@@ -22,14 +21,6 @@ export function Header({ ref }: { ref?: Ref<HTMLElement> }) {
   return (
     <header ref={ref} className="border-b bg-white sticky top-0 z-50 shadow-sm">
       <div className="flex items-center container mx-auto px-4 py-2">
-        <div className="md:hidden pr-2">
-          <MobileNavBarMenu
-            headerBarDynamic={headerBarDynamic}
-            headerBarStatic={headerBarStatic}
-            races={races ?? []}
-          />
-        </div>
-
         <div className={"flex container justify-between items-center"}>
           <div className="min-w-0">
             <Link to="/" className="flex items-center gap-2 group">

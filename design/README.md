@@ -16,6 +16,9 @@ The design medium is **HTML/CSS/JS** — these are prototypes, not production co
 
 **Don't render these files in a browser or take screenshots unless the user asks you to.** Everything you need — dimensions, colors, layout rules — is spelled out in the source. Read the HTML and CSS directly; a screenshot won't tell you anything they don't.
 
+## Before implementing
+The design is a re-design of the existing `torsdagslopet` project. Before you start implementing, **familiarize yourself with the existing project** so you understand what you're building and how it differs from the current version.
+
 ## Bundle contents
 
 - `torsdagslopet/README.md` — this file

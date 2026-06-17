@@ -45,6 +45,12 @@ html {
     max-width: var(--page-max-width);
   }
 
+  /* Centered wrapper without vertical padding — footer controls its own */
+  .footer-content {
+    @apply w-full mx-auto px-3 sm:px-4;
+    max-width: var(--page-max-width);
+  }
+
   /* ─── Page headings ────────────────────────────────────── */
 
   .page-title {

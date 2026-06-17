@@ -8,11 +8,11 @@ const sponsors = [
 
 export default function SponsorsBlock() {
   return (
-    <div className="py-4">
-      <div className="flex  gap-2 mb-4  justify-center">
-        <span className="text-base font-semibold">Våre sponsorer</span>
-      </div>
-      <div className="flex flex-wrap justify-center gap-8">
+    <div className="py-2 text-center">
+      <p className="text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground mb-4">
+        Våre sponsorer
+      </p>
+      <div className="flex flex-wrap items-center justify-center gap-x-10 sm:gap-x-14 gap-y-6 rounded-2xl border bg-card p-5 sm:p-8">
         {sponsors.map(({ name, url, logo }) => (
           <a
             key={name}
@@ -20,9 +20,9 @@ export default function SponsorsBlock() {
             target="_blank"
             rel="noopener noreferrer"
             title={name}
-            className="flex items-center justify-center py-6 px-12 opacity-70 hover:opacity-100 transition-opacity"
+            className="flex items-center justify-center opacity-70 hover:opacity-100 transition-opacity"
           >
-            <img src={logo} alt={name} className="h-15" />
+            <img src={logo} alt={name} className="h-8 sm:h-10 object-contain" />
           </a>
         ))}
       </div>

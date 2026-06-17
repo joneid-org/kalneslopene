@@ -15,34 +15,43 @@ export default function OrganisersBlock() {
   const ordered = applySavedOrder(organizers ?? []);
 
   return (
-    <Card>
-      <CardHeader className="pb-2 text-primary">
-        <CardTitle className="flex items-center gap-2">
-          <Users className="size-4 font-bold" />
-          ARRANGØRTEAMET
+    <Card className="rounded-2xl">
+      <CardHeader className="pb-0">
+        <CardTitle className="flex items-center gap-2 text-primary">
+          <Users className="size-5" />
+          <span className="font-display text-lg sm:text-xl font-extrabold tracking-tight text-foreground">
+            Arrangørteamet
+          </span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <p className="text-sm">{ORGANIZER_DESCRIPTION}</p>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <CardContent className="space-y-5">
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          {ORGANIZER_DESCRIPTION}
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {ordered.map((organizer) => (
-            <div key={organizer.name} className="flex gap-3 items-center">
+            <div
+              key={organizer.name}
+              className="flex gap-3 items-center bg-background border rounded-xl p-3"
+            >
               {organizer.image ? (
                 <img
                   src={organizer.image}
                   alt={organizer.name}
-                  className="size-14 rounded-md object-cover border-2 border-muted shrink-0"
+                  className="size-11 rounded-xl object-cover shrink-0"
                 />
               ) : (
-                <div className="size-14 rounded-md bg-primary/10 flex items-center justify-center text-sm font-semibold text-primary shrink-0">
+                <div className="size-11 rounded-xl bg-secondary flex items-center justify-center font-display text-sm font-extrabold text-secondary-foreground shrink-0">
                   {organizer.initials}
                 </div>
               )}
-              <div>
+              <div className="min-w-0">
                 <p className="text-sm font-bold leading-tight">
                   {organizer.name}
                 </p>
-                <p className="text-xs">{organizer.responsibility.join(", ")}</p>
+                <p className="text-xs text-muted-foreground">
+                  {organizer.responsibility.join(", ")}
+                </p>
               </div>
             </div>
           ))}

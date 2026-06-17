@@ -3,29 +3,46 @@ import { NextRace } from "./NextRace.tsx";
 
 export function Hero() {
   return (
-    <section
-      className="relative overflow-hidden w-full h-[40vh] min-h-60"
-      style={{ maxHeight: "800px" }}
-    >
-      <img
-        src={cardImage}
-        alt="Torsdagsløpet"
-        className="absolute inset-0 w-full h-full object-cover object-center"
-      />
-      <div className="absolute inset-0 bg-linear-to-t from-[#123a28]/85 via-[#123a28]/10 to-transparent" />
-      <div className="absolute inset-0 bg-linear-to-r from-[#123a28]/25 to-transparent" />
+    <>
+      {/* Mobile: rounded hero card with the race card tucked underneath */}
+      <div className="sm:hidden">
+        <section className="relative h-[280px] mx-3 rounded-3xl overflow-hidden">
+          <img
+            src={cardImage}
+            alt="Torsdagsløpet"
+            className="absolute inset-0 w-full h-full object-cover object-[50%_28%]"
+          />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,58,40,0)_32%,rgba(15,30,20,0.55)_70%,rgba(15,30,20,0.82)_100%)]" />
+          <div className="absolute inset-x-0 bottom-0 p-4 text-center">
+            <h1 className="font-display font-black text-white text-4xl leading-none tracking-[-0.03em] drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)]">
+              Torsdagsløpet
+            </h1>
+            <p className="mt-2 text-[11px] font-bold uppercase tracking-[0.16em] text-white/90 drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)]">
+              Lavterskel løpsglede siden 1978
+            </p>
+          </div>
+        </section>
+        <NextRace variant="stacked" />
+      </div>
 
-      <div className="absolute bottom-0 left-0 right-0 px-4 sm:px-8 lg:px-14 py-4 sm:pb-6 max-w-7xl mx-auto">
-        <div className="flex flex-col items-center gap-6 sm:gap-8 mb-6 sm:mb-10 text-center">
-          <h1 className="font-display text-3xl sm:text-5xl lg:text-6xl font-black text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)] tracking-tight leading-none">
+      {/* Desktop: full-bleed hero with the race card overlapping its base */}
+      <section className="hidden sm:block relative overflow-hidden w-full h-[480px] max-h-[480px]">
+        <img
+          src={cardImage}
+          alt="Torsdagsløpet"
+          className="absolute inset-0 w-full h-full object-cover object-[50%_42%]"
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,58,40,0.18)_0%,rgba(18,58,40,0.28)_45%,rgba(15,30,20,0.72)_100%)]" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 pb-28">
+          <h1 className="font-display font-black text-white text-7xl lg:text-[5.25rem] leading-[0.95] tracking-[-0.04em] drop-shadow-[0_4px_24px_rgba(0,0,0,0.4)]">
             Torsdagsløpet
           </h1>
-          <p className="text-xs font-bold uppercase tracking-widest text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
+          <p className="mt-[18px] text-sm font-bold uppercase tracking-[0.2em] text-white/90 drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
             Lavterskel løpsglede siden 1978
           </p>
-          <NextRace />
         </div>
-      </div>
-    </section>
+        <NextRace variant="overlay" />
+      </section>
+    </>
   );
 }

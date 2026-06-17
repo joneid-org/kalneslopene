@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail" data-bg-color="#1f7a4d">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#1f7a4d"/>
+    <path d="M430 560 C 430 400, 600 415, 600 285 C 600 175, 770 200, 770 115" fill="none" stroke="#ffffff" stroke-width="70" stroke-linecap="round"/>
+    <circle cx="430" cy="560" r="56" fill="#ffffff"/>
+    <circle cx="770" cy="115" r="62" fill="#f2a33c"/>
+  </svg>
+</template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;background:#dadfd6;}
+  ::selection{background:#1f7a4d;color:#fff;}
+  .scr{font-family:'Hanken Grotesk',system-ui,sans-serif;color:#16241c;line-height:1.5;-webkit-font-smoothing:antialiased;}
+  .arch{font-family:'Archivo',system-ui,sans-serif;}
+  .num{font-variant-numeric:tabular-nums;}
+  .navlink{display:flex;align-items:center;gap:5px;text-decoration:none;font-size:15px;font-weight:600;color:#2b3a32;padding:9px 15px;border-radius:11px;}
+  .navlink.on{background:#e7f1ea;color:#1f7a4d;}
+  .ctct{display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:14px;font-weight:600;color:#2b3a32;background:#fff;border:1px solid #e4e8e1;border-radius:12px;padding:10px 16px;cursor:pointer;}
+  tr.zeb:nth-child(even){background:#f7f9f5;}
+</style>
+</helmet>
+
+<div ref="{{ root }}" style="--accent:#f2a33c;--accent-tint:#fcefd9;--accent-ink:#3a2606;--accent-deep:#b9772a;--r:20px;font-family:'Hanken Grotesk',system-ui,sans-serif;background:#dadfd6;min-height:100vh;color:#16241c;-webkit-font-smoothing:antialiased;">
+
+  <!-- showcase header -->
+  <header style="max-width:1400px;margin:0 auto;padding:48px 28px 8px;">
+    <div style="display:flex;align-items:center;gap:13px;margin-bottom:26px;">
+      <svg viewBox="0 0 100 100" width="42" height="42" aria-hidden="true"><rect x="4" y="4" width="92" height="92" rx="26" fill="#1f7a4d"/><path d="M27 80 C 27 57, 51 60, 51 41 C 51 25, 75 29, 75 17" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/><circle cx="27" cy="80" r="8" fill="#fff"/><circle cx="75" cy="17" r="9" fill="var(--accent,#f2a33c)"/></svg>
+      <span class="arch" style="font-weight:800;font-size:18px;letter-spacing:-0.02em;">Torsdagsløpet</span>
+      <span style="margin-left:auto;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:#5b6b62;">Web-redesign · retning Skog</span>
+    </div>
+    <h1 class="arch" style="font-weight:900;font-size:clamp(32px,5vw,52px);line-height:1;letter-spacing:-0.03em;margin:0 0 14px;">Samme system, full skjerm.</h1>
+    <p style="font-size:17px;color:#3c4842;max-width:70ch;margin:0 0 8px;">De samme fem sidene i nettleser-bredde — samme farger, type og komponenter som mobilversjonen. Fast toppnavigasjon med tydelig aktiv side, luftige rutenett og store, skannbare resultattabeller. Bytt aksentfarge og hjørner i Tilpass-panelet.</p>
+  </header>
+
+  <div style="max-width:1400px;margin:0 auto;padding:24px 28px 90px;display:flex;flex-direction:column;gap:46px;align-items:center;">
+
+    <!-- ===================================================== HJEM -->
+    <figure data-screen-label="Web · Hjem" style="margin:0;display:flex;flex-direction:column;gap:14px;align-items:center;width:100%;">
+      <figcaption style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#2b3a32;align-self:flex-start;"><span style="width:7px;height:7px;border-radius:99px;background:#1f7a4d;"></span>Hjem</figcaption>
+      <div style="width:1280px;max-width:100%;border-radius:16px;overflow:hidden;background:#f4f6f2;box-shadow:0 40px 80px -40px rgba(15,30,20,.55),0 8px 20px -10px rgba(15,30,20,.25);border:1px solid #cdd4c6;">
+        <div style="height:42px;background:#e7eae3;border-bottom:1px solid #d8ddd2;display:flex;align-items:center;gap:8px;padding:0 16px;">
+          <span style="width:12px;height:12px;border-radius:99px;background:#ed6a5e;"></span><span style="width:12px;height:12px;border-radius:99px;background:#f4bf4f;"></span><span style="width:12px;height:12px;border-radius:99px;background:#61c454;"></span>
+          <div style="margin:0 auto;background:#fff;border-radius:8px;padding:5px 16px;font-size:12px;color:#5b6b62;display:flex;gap:8px;align-items:center;max-width:380px;width:100%;justify-content:center;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#94a097" stroke-width="2.4"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>torsdagslopet.no</div>
+        </div>
+        <div class="scr">
+          <!-- nav -->
+          <header style="position:sticky;top:0;z-index:5;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid #e4e8e1;">
+            <div style="max-width:1120px;margin:0 auto;height:70px;padding:0 36px;display:flex;align-items:center;gap:12px;">
+              <svg viewBox="0 0 100 100" width="32" height="32"><rect x="4" y="4" width="92" height="92" rx="26" fill="#1f7a4d"/><path d="M27 80 C 27 57, 51 60, 51 41 C 51 25, 75 29, 75 17" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/><circle cx="27" cy="80" r="8" fill="#fff"/><circle cx="75" cy="17" r="9" fill="var(--accent,#f2a33c)"/></svg>
+              <span class="arch" style="font-weight:800;font-size:18px;letter-spacing:-0.02em;">Torsdagsløpet</span>
+              <nav style="margin-left:auto;display:flex;align-items:center;gap:4px;">
+                <a class="navlink on" href="#">Resultater <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></a>
+                <a class="navlink" href="#">Statistikk</a>
+                <a class="navlink" href="#">Løypekart</a>
+                <a class="navlink" href="#">Historie</a>
+              </nav>
+            </div>
+          </header>
+          <!-- hero -->
+          <div style="position:relative;height:480px;">
+            <img src="assets/hero-wide.jpg" alt="Løpere i Kalnesskogen" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 42%;">
+            <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,58,40,.18) 0%,rgba(18,58,40,.28) 45%,rgba(15,30,20,.72));"></div>
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 24px 70px;">
+              <div class="arch" style="font-weight:900;font-size:84px;color:#fff;letter-spacing:-0.04em;line-height:0.95;text-shadow:0 4px 24px rgba(0,0,0,.4);">Torsdagsløpet</div>
+              <div style="font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.22em;color:rgba(255,255,255,.92);margin-top:18px;text-shadow:0 2px 10px rgba(0,0,0,.5);">Lavterskel løpsglede siden 1978</div>
+            </div>
+            <!-- next race card -->
+            <div style="position:absolute;left:50%;transform:translateX(-50%);bottom:-1px;width:min(640px,calc(100% - 72px));background:#123a28;border-radius:var(--r,20px) var(--r,20px) 0 0;padding:18px 24px;display:flex;align-items:center;gap:22px;box-shadow:0 -10px 30px -16px rgba(18,58,40,.5);">
+              <div style="text-align:center;flex-shrink:0;background:var(--accent,#f2a33c);border-radius:14px;width:62px;padding:9px 0;">
+                <div class="arch num" style="font-weight:900;font-size:26px;color:var(--accent-ink,#3a2606);line-height:1;">18.</div>
+                <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent-ink,#3a2606);opacity:.8;">Juni</div>
+              </div>
+              <div style="flex:1;border-right:1px solid rgba(255,255,255,.14);padding-right:22px;">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,.6);">Kommende løp</div>
+                <div class="arch" style="font-weight:800;font-size:18px;color:#fff;margin-top:3px;">Torsdag 18. juni · 19:00</div>
+              </div>
+              <div style="display:flex;gap:20px;color:#fff;flex-shrink:0;">
+                <span style="display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2" stroke-linecap="round"/></svg>Delvis skyet</span>
+                <span style="display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="2" stroke-linecap="round"><path d="M3 8h11a3 3 0 100-6"/><path d="M3 16h15a3 3 0 110 6"/></svg>4 m/s</span>
+                <span style="display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="2" stroke-linecap="round"><path d="M12 3v12"/><circle cx="12" cy="18" r="3"/></svg>21°C</span>
+              </div>
+            </div>
+          </div>
+          <!-- content -->
+          <div style="max-width:1120px;margin:0 auto;padding:52px 36px 0;">
+            <!-- CTA -->
+            <div style="background:#1f7a4d;border-radius:var(--r,20px);padding:28px 32px;display:flex;align-items:center;gap:28px;box-shadow:0 20px 40px -24px rgba(18,58,40,.6);">
+              <div style="flex:1;">
+                <h2 class="arch" style="font-weight:800;font-size:26px;letter-spacing:-0.01em;color:#fff;margin:0 0 6px;">Snør på deg skoene — bli med torsdag!</h2>
+                <p style="font-size:15px;color:rgba(255,255,255,.82);margin:0;max-width:62ch;line-height:1.5;">Ingen forhåndspåmelding — skriv deg på deltakerlista før start. Gratis frukt til alle deltakere etter løpet.</p>
+              </div>
+              <button style="flex-shrink:0;border:none;background:var(--accent,#f2a33c);color:var(--accent-ink,#3a2606);font-family:inherit;font-weight:800;font-size:15px;height:52px;padding:0 24px;border-radius:14px;cursor:pointer;display:flex;align-items:center;gap:9px;">Åpne løpskalender <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+            </div>
+            <!-- news -->
+            <div style="display:flex;align-items:baseline;justify-content:space-between;margin:48px 0 18px;">
+              <h2 class="arch" style="font-weight:800;font-size:26px;letter-spacing:-0.02em;margin:0;">Siste nytt</h2>
+              <a href="#" style="display:flex;align-items:center;gap:5px;text-decoration:none;font-size:14px;font-weight:700;color:#1f7a4d;">Vis flere <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></a>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+              <article style="background:#fff;border:1px solid #e4e8e1;border-radius:18px;overflow:hidden;box-shadow:0 1px 2px rgba(16,40,28,.04);display:flex;flex-direction:column;">
+                <div style="height:172px;overflow:hidden;background:#dfe6da;"><img src="assets/hero-wide.jpg" alt="" style="width:100%;height:100%;object-fit:cover;object-position:50% 50%;"></div>
+                <div style="padding:18px 20px 20px;display:flex;flex-direction:column;flex:1;">
+                  <div style="display:flex;gap:6px;margin-bottom:10px;"><span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:#1f7a4d;background:#e7f1ea;padding:4px 9px;border-radius:99px;">Resultater</span><span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:#2b3a32;background:#e7eae4;padding:4px 9px;border-radius:99px;">Vinter</span></div>
+                  <h3 class="arch" style="font-weight:700;font-size:18px;line-height:1.25;margin:0 0 8px;">Flott gjennomføring tross snø og kulde</h3>
+                  <p style="font-size:14px;color:#5b6b62;margin:0;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">22 løpere samlet seg til årets første vinterløp på Kalnessletta. Til tross for minusgrader…</p>
+                  <div style="font-size:13px;color:#94a097;margin-top:auto;padding-top:14px;">19. mars 2026</div>
+                </div>
+              </article>
+              <article style="background:#fff;border:1px solid #e4e8e1;border-radius:18px;overflow:hidden;box-shadow:0 1px 2px rgba(16,40,28,.04);display:flex;flex-direction:column;">
+                <div style="height:172px;overflow:hidden;background:#dfe6da;"><img src="assets/hero.png" alt="" style="width:100%;height:100%;object-fit:cover;object-position:50% 40%;"></div>
+                <div style="padding:18px 20px 20px;display:flex;flex-direction:column;flex:1;">
+                  <div style="display:flex;gap:6px;margin-bottom:10px;"><span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:#fff;background:#1f7a4d;padding:4px 9px;border-radius:99px;">Jubileum</span><span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--accent-deep,#b9772a);background:var(--accent-tint,#fcefd9);padding:4px 9px;border-radius:99px;">Rekord</span></div>
+                  <h3 class="arch" style="font-weight:700;font-size:18px;line-height:1.25;margin:0 0 8px;">100. løp i rekken – en merkedag for Kalneslåpene!</h3>
+                  <p style="font-size:14px;color:#5b6b62;margin:0;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">I kveld ble det løpt det 100. Kalnesløpet siden starten i 2022. Det ble markert med kake og diplom…</p>
+                  <div style="font-size:13px;color:#94a097;margin-top:auto;padding-top:14px;">12. mars 2026</div>
+                </div>
+              </article>
+              <article style="background:#fff;border:1px solid #e4e8e1;border-radius:18px;overflow:hidden;box-shadow:0 1px 2px rgba(16,40,28,.04);display:flex;flex-direction:column;">
+                <div style="height:172px;overflow:hidden;background:#dfe6da;"><img src="assets/hero-portrait.jpg" alt="" style="width:100%;height:100%;object-fit:cover;object-position:50% 28%;"></div>
+                <div style="padding:18px 20px 20px;display:flex;flex-direction:column;flex:1;">
+                  <div style="display:flex;gap:6px;margin-bottom:10px;"><span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:#1f7a4d;background:#e7f1ea;padding:4px 9px;border-radius:99px;">Resultater</span><span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:#2b3a32;background:#e7eae4;padding:4px 9px;border-radius:99px;">Vår</span></div>
+                  <h3 class="arch" style="font-weight:700;font-size:18px;line-height:1.25;margin:0 0 8px;">Vårens første løp – strålende vær og ny deltakelsesrekord</h3>
+                  <p style="font-size:14px;color:#5b6b62;margin:0;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Med 38 påmeldte satte vi ny deltakelsesrekord denne torsdagen. Solen skinte og temperaturen…</p>
+                  <div style="font-size:13px;color:#94a097;margin-top:auto;padding-top:14px;">5. mars 2026</div>
+                </div>
+              </article>
+            </div>
+            <!-- season stats -->
+            <div style="background:#123a28;border-radius:var(--r,20px);padding:28px 32px;margin-top:48px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:var(--accent,#f2a33c);">Deltakerstatistikk</span>
+                </div>
+                <h2 class="arch" style="font-weight:800;font-size:24px;color:#fff;margin:0;letter-spacing:-0.01em;">Årets sesong i tall</h2>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;">
+                <div style="background:rgba(255,255,255,.07);border-radius:14px;padding:18px 14px;text-align:center;"><div class="arch num" style="font-weight:800;font-size:34px;color:#fff;line-height:1;">25</div><div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:rgba(255,255,255,.7);margin-top:8px;">Deltakere totalt</div></div>
+                <div style="background:rgba(255,255,255,.07);border-radius:14px;padding:18px 14px;text-align:center;"><div class="arch num" style="font-weight:800;font-size:34px;color:#fff;line-height:1;">10</div><div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:rgba(255,255,255,.7);margin-top:8px;">Damer</div></div>
+                <div style="background:rgba(255,255,255,.07);border-radius:14px;padding:18px 14px;text-align:center;"><div class="arch num" style="font-weight:800;font-size:34px;color:#fff;line-height:1;">15</div><div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:rgba(255,255,255,.7);margin-top:8px;">Herrer</div></div>
+                <div style="background:rgba(255,255,255,.07);border-radius:14px;padding:18px 14px;text-align:center;"><div class="arch num" style="font-weight:800;font-size:34px;color:#fff;line-height:1;">23</div><div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:rgba(255,255,255,.7);margin-top:8px;">Løp gjennomført</div></div>
+                <div style="background:var(--accent,#f2a33c);border-radius:14px;padding:18px 14px;text-align:center;"><div class="arch num" style="font-weight:800;font-size:34px;color:var(--accent-ink,#3a2606);line-height:1;">1</div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--accent-ink,#3a2606);opacity:.8;margin-top:8px;">Gjenstående løp</div></div>
+              </div>
+            </div>
+            <!-- organizers -->
+            <div style="background:#fff;border:1px solid #e4e8e1;border-radius:var(--r,20px);padding:28px 32px;margin-top:24px;box-shadow:0 1px 2px rgba(16,40,28,.04);">
+              <div style="display:flex;align-items:center;gap:9px;margin-bottom:6px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 20a6 6 0 0112 0M16 6a3 3 0 010 6M21.5 20a6 6 0 00-4.5-5.8"/></svg>
+                <h2 class="arch" style="font-weight:800;font-size:20px;letter-spacing:-0.01em;margin:0;">Arrangørteamet</h2>
+              </div>
+              <p style="font-size:15px;color:#5b6b62;margin:0 0 22px;max-width:80ch;line-height:1.55;">Torsdagsløpet er et frivillig drevet mosjonsløp som har arrangert ukentlige løp siden 1978. Vi er en gjeng entusiaster som brenner for løping og fellesskap.</p>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
+                <div style="display:flex;align-items:center;gap:13px;background:#f4f6f2;border:1px solid #e9ece5;border-radius:14px;padding:13px 15px;"><span class="arch" style="width:44px;height:44px;flex-shrink:0;border-radius:12px;background:#e7f1ea;color:#1f7a4d;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;">EN</span><div><div style="font-weight:700;font-size:15px;">Emilie Nilsen</div><div style="font-size:13px;color:#5b6b62;">Leder · Påmelding</div></div></div>
+                <div style="display:flex;align-items:center;gap:13px;background:#f4f6f2;border:1px solid #e9ece5;border-radius:14px;padding:13px 15px;"><span class="arch" style="width:44px;height:44px;flex-shrink:0;border-radius:12px;background:#e7f1ea;color:#1f7a4d;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;">MH</span><div><div style="font-weight:700;font-size:15px;">Magnus Holm</div><div style="font-size:13px;color:#5b6b62;">Tidtaking · Resultater</div></div></div>
+                <div style="display:flex;align-items:center;gap:13px;background:#f4f6f2;border:1px solid #e9ece5;border-radius:14px;padding:13px 15px;"><span class="arch" style="width:44px;height:44px;flex-shrink:0;border-radius:12px;background:#e7f1ea;color:#1f7a4d;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;">TB</span><div><div style="font-weight:700;font-size:15px;">Turid Bakken</div><div style="font-size:13px;color:#5b6b62;">Løypemerking · Sikkerhet</div></div></div>
+                <div style="display:flex;align-items:center;gap:13px;background:#f4f6f2;border:1px solid #e9ece5;border-radius:14px;padding:13px 15px;"><span class="arch" style="width:44px;height:44px;flex-shrink:0;border-radius:12px;background:#e7f1ea;color:#1f7a4d;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;">RS</span><div><div style="font-weight:700;font-size:15px;">Rune Sørensen</div><div style="font-size:13px;color:#5b6b62;">Utstyr · Teknisk ansvarlig</div></div></div>
+                <div style="display:flex;align-items:center;gap:13px;background:#f4f6f2;border:1px solid #e9ece5;border-radius:14px;padding:13px 15px;"><span class="arch" style="width:44px;height:44px;flex-shrink:0;border-radius:12px;background:#e7f1ea;color:#1f7a4d;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;">AL</span><div><div style="font-weight:700;font-size:15px;">Astrid Lien</div><div style="font-size:13px;color:#5b6b62;">Sosiale medier · Foto</div></div></div>
+              </div>
+            </div>
+            <!-- sponsors -->
+            <div style="text-align:center;margin-top:48px;">
+              <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.16em;color:#94a097;margin-bottom:18px;">Våre sponsorer</div>
+              <div style="display:flex;align-items:center;justify-content:center;gap:56px;background:#fff;border:1px solid #e4e8e1;border-radius:var(--r,20px);padding:30px;">
+                <img src="assets/kiwi.png" alt="Kiwi" style="height:42px;object-fit:contain;">
+                <img src="assets/xxl.svg" alt="XXL" style="height:34px;object-fit:contain;">
+              </div>
+            </div>
+          </div>
+          <!-- footer -->
+          <footer style="background:#fff;border-top:1px solid #e4e8e1;margin-top:56px;">
+            <div style="max-width:1120px;margin:0 auto;padding:44px 36px 30px;text-align:center;">
+              <h3 class="arch" style="font-weight:800;font-size:22px;letter-spacing:-0.01em;margin:0 0 8px;">Kontakt</h3>
+              <p style="font-size:15px;color:#5b6b62;margin:0 0 18px;">Har du spørsmål, innspill eller ønsker å bidra? Send oss en melding!</p>
+              <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;">
+                <button class="ctct"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>E-post</button>
+                <button class="ctct"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L20 13l2 5v3a2 2 0 01-2 2A16 16 0 014 5a2 2 0 011-1z"/></svg>Ring oss</button>
+                <button class="ctct"><svg width="16" height="16" viewBox="0 0 24 24" fill="#1f7a4d"><path d="M22 12a10 10 0 10-11.5 9.9v-7H8v-2.9h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6v1.9h2.8l-.4 2.9h-2.4v7A10 10 0 0022 12z"/></svg>Facebook</button>
+                <button class="ctct"><svg width="16" height="16" viewBox="0 0 24 24" fill="#1f7a4d"><path d="M12 2C6.3 2 2 6.2 2 11.7c0 3.1 1.4 5.8 3.7 7.6V23l3.4-1.9c.9.3 1.9.4 2.9.4 5.7 0 10-4.2 10-9.7S17.7 2 12 2zm1 12.4l-2.5-2.7-4.9 2.7 5.4-5.7 2.6 2.7 4.8-2.7-5.4 5.7z"/></svg>Messenger</button>
+              </div>
+            </div>
+            <div style="border-top:1px solid #eef1ec;">
+              <div style="max-width:1120px;margin:0 auto;padding:16px 36px;display:flex;align-items:center;justify-content:space-between;font-size:13px;color:#94a097;">
+                <span>© 2026 Torsdagsløpet</span>
+                <span style="display:flex;align-items:center;gap:6px;">Drevet av frivillige <svg width="14" height="14" viewBox="0 0 24 24" fill="#e0564f"><path d="M12 21s-7-4.5-9.5-8.5C.5 9 2 5.5 5.3 5.5c2 0 3.2 1.2 3.7 2 .5-.8 1.7-2 3.7-2 3.3 0 4.8 3.5 2.8 7C19 16.5 12 21 12 21z"/></svg> · <a href="#" style="color:#5b6b62;text-decoration:none;font-weight:600;">Admin</a></span>
+              </div>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </figure>
+
+    <!-- ===================================================== RESULTATER -->
+    <figure data-screen-label="Web · Resultater" style="margin:0;display:flex;flex-direction:column;gap:14px;align-items:center;width:100%;">
+      <figcaption style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#2b3a32;align-self:flex-start;"><span style="width:7px;height:7px;border-radius:99px;background:#1f7a4d;"></span>Resultater</figcaption>
+      <div style="width:1280px;max-width:100%;border-radius:16px;overflow:hidden;background:#f4f6f2;box-shadow:0 40px 80px -40px rgba(15,30,20,.55),0 8px 20px -10px rgba(15,30,20,.25);border:1px solid #cdd4c6;">
+        <div style="height:42px;background:#e7eae3;border-bottom:1px solid #d8ddd2;display:flex;align-items:center;gap:8px;padding:0 16px;">
+          <span style="width:12px;height:12px;border-radius:99px;background:#ed6a5e;"></span><span style="width:12px;height:12px;border-radius:99px;background:#f4bf4f;"></span><span style="width:12px;height:12px;border-radius:99px;background:#61c454;"></span>
+          <div style="margin:0 auto;background:#fff;border-radius:8px;padding:5px 16px;font-size:12px;color:#5b6b62;display:flex;gap:8px;align-items:center;max-width:380px;width:100%;justify-content:center;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#94a097" stroke-width="2.4"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>torsdagslopet.no/resultater</div>
+        </div>
+        <div class="scr">
+          <header style="position:sticky;top:0;z-index:5;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid #e4e8e1;">
+            <div style="max-width:1120px;margin:0 auto;height:70px;padding:0 36px;display:flex;align-items:center;gap:12px;">
+              <svg viewBox="0 0 100 100" width="32" height="32"><rect x="4" y="4" width="92" height="92" rx="26" fill="#1f7a4d"/><path d="M27 80 C 27 57, 51 60, 51 41 C 51 25, 75 29, 75 17" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/><circle cx="27" cy="80" r="8" fill="#fff"/><circle cx="75" cy="17" r="9" fill="var(--accent,#f2a33c)"/></svg>
+              <span class="arch" style="font-weight:800;font-size:18px;letter-spacing:-0.02em;">Torsdagsløpet</span>
+              <nav style="margin-left:auto;display:flex;align-items:center;gap:4px;">
+                <a class="navlink on" href="#">Resultater <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></a>
+                <a class="navlink" href="#">Statistikk</a>
+                <a class="navlink" href="#">Løypekart</a>
+                <a class="navlink" href="#">Historie</a>
+              </nav>
+            </div>
+          </header>
+          <div style="max-width:1120px;margin:0 auto;padding:36px 36px 0;">
+            <!-- race switcher -->
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+              <button style="display:flex;align-items:center;gap:8px;border:1px solid #e4e8e1;background:#fff;border-radius:12px;padding:10px 16px;font-family:inherit;font-size:14px;font-weight:600;color:#2b3a32;cursor:pointer;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16241c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>04. juni</button>
+              <div style="text-align:center;"><div class="arch" style="font-weight:800;font-size:24px;letter-spacing:-0.02em;">Torsdag 11. juni 2026</div><div style="font-size:13px;color:#5b6b62;margin-top:2px;">Kalnesskogen · 5,1 km</div></div>
+              <button style="display:flex;align-items:center;gap:8px;border:1px solid #e4e8e1;background:#fff;border-radius:12px;padding:10px 16px;font-family:inherit;font-size:14px;font-weight:600;color:#94a097;cursor:pointer;opacity:.55;">18. juni<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16241c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+            </div>
+            <!-- banner -->
+            <div style="position:relative;height:240px;border-radius:var(--r,20px);overflow:hidden;">
+              <img src="assets/hero.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 42%;">
+              <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,30,20,0) 40%,rgba(15,30,20,.78));"></div>
+              <div style="position:absolute;left:0;bottom:0;padding:24px 28px;">
+                <div class="arch" style="font-weight:900;font-size:30px;color:#fff;letter-spacing:-0.02em;line-height:1;">11. juni 2026</div>
+                <div style="font-size:14px;color:rgba(255,255,255,.85);margin-top:6px;">Sommerkveld i Kalnesskogen</div>
+              </div>
+            </div>
+            <!-- stat tiles -->
+            <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:18px;">
+              <div style="background:#fff;border:1px solid #e4e8e1;border-radius:14px;padding:16px 12px;text-align:center;"><div class="arch num" style="font-weight:800;font-size:28px;line-height:1;">22</div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:#5b6b62;margin-top:6px;">Deltakere</div></div>
+              <div style="background:#fff;border:1px solid #e4e8e1;border-radius:14px;padding:16px 12px;text-align:center;"><div class="arch num" style="font-weight:800;font-size:28px;line-height:1;">12</div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:#5b6b62;margin-top:6px;">Menn</div></div>
+              <div style="background:#fff;border:1px solid #e4e8e1;border-radius:14px;padding:16px 12px;text-align:center;"><div class="arch num" style="font-weight:800;font-size:28px;line-height:1;">10</div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:#5b6b62;margin-top:6px;">Kvinner</div></div>
+              <div style="background:#fff;border:1px solid #e4e8e1;border-radius:14px;padding:16px 12px;text-align:center;"><div class="arch num" style="font-weight:800;font-size:28px;line-height:1;color:#1f7a4d;">6</div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:#5b6b62;margin-top:6px;">Årsbeste</div></div>
+              <div style="background:#fff;border:1px solid #e4e8e1;border-radius:14px;padding:16px 12px;text-align:center;"><div class="arch num" style="font-weight:800;font-size:28px;line-height:1;color:#1f7a4d;">3</div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:#5b6b62;margin-top:6px;">Personlig rek.</div></div>
+              <div style="background:#fff;border:1px solid #e4e8e1;border-radius:14px;padding:16px 12px;text-align:center;"><div class="arch num" style="font-weight:800;font-size:28px;line-height:1;color:var(--accent-deep,#b9772a);">4</div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:#5b6b62;margin-top:6px;">Debutanter</div></div>
+            </div>
+            <!-- table -->
+            <div style="background:#fff;border:1px solid #e4e8e1;border-radius:var(--r,20px);overflow:hidden;margin-top:18px;box-shadow:0 1px 2px rgba(16,40,28,.04);">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid #eef1ec;">
+                <h2 class="arch" style="font-weight:800;font-size:19px;letter-spacing:-0.01em;margin:0;">Resultatliste</h2>
+                <button style="display:flex;align-items:center;gap:7px;border:1px solid #e4e8e1;background:#fff;border-radius:11px;padding:8px 13px;font-family:inherit;font-size:13px;font-weight:600;color:#2b3a32;cursor:pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#16241c" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M7 12h10M11 18h2"/></svg>Filtrer &amp; kolonner</button>
+              </div>
+              <table style="width:100%;border-collapse:collapse;">
+                <thead>
+                  <tr style="text-align:left;">
+                    <th style="padding:12px 24px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#94a097;width:56px;">#</th>
+                    <th style="padding:12px 8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#94a097;">Navn</th>
+                    <th style="padding:12px 8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#94a097;text-align:right;">Tid</th>
+                    <th style="padding:12px 8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#94a097;text-align:right;">Min/km</th>
+                    <th style="padding:12px 8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#94a097;text-align:center;">Merker</th>
+                    <th style="padding:12px 24px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#94a097;text-align:right;">Løp totalt</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="zeb"><td style="padding:13px 24px;"><span class="arch" style="display:inline-flex;width:28px;height:28px;background:var(--accent,#f2a33c);color:var(--accent-ink,#3a2606);border-radius:99px;align-items:center;justify-content:center;font-weight:800;font-size:13px;">1</span></td><td style="padding:13px 8px;font-weight:700;font-size:15px;">Bjørn Lie</td><td class="arch num" style="padding:13px 8px;text-align:right;font-weight:800;font-size:17px;">23:50</td><td class="num" style="padding:13px 8px;text-align:right;color:#5b6b62;font-size:14px;">4:40</td><td style="padding:13px 8px;text-align:center;"><span style="display:inline-block;width:7px;height:7px;border-radius:99px;background:#1f7a4d;"></span></td><td class="num" style="padding:13px 24px;text-align:right;color:#5b6b62;font-size:14px;">41</td></tr>
+                  <tr class="zeb"><td style="padding:13px 24px;"><span class="arch" style="display:inline-flex;width:28px;height:28px;background:#dde6d8;color:#2b3a32;border-radius:99px;align-items:center;justify-content:center;font-weight:800;font-size:13px;">2</span></td><td style="padding:13px 8px;font-weight:700;font-size:15px;">Henrik Nilsen</td><td class="arch num" style="padding:13px 8px;text-align:right;font-weight:800;font-size:17px;">25:09</td><td class="num" style="padding:13px 8px;text-align:right;color:#5b6b62;font-size:14px;">4:56</td><td style="padding:13px 8px;text-align:center;"></td><td class="num" style="padding:13px 24px;text-align:right;color:#5b6b62;font-size:14px;">28</td></tr>
+                  <tr class="zeb"><td style="padding:13px 24px;"><span class="arch" style="display:inline-flex;width:28px;height:28px;background:var(--accent-tint,#fcefd9);color:var(--accent-deep,#b9772a);border-radius:99px;align-items:center;justify-content:center;font-weight:800;font-size:13px;">3</span></td><td style="padding:13px 8px;font-weight:700;font-size:15px;">Knut Holm</td><td class="arch num" style="padding:13px 8px;text-align:right;font-weight:800;font-size:17px;">28:52</td><td class="num" style="padding:13px 8px;text-align:right;color:#5b6b62;font-size:14px;">5:40</td><td style="padding:13px 8px;text-align:center;"><span style="display:inline-block;width:7px;height:7px;border-radius:99px;background:var(--accent,#f2a33c);"></span></td><td class="num" style="padding:13px 24px;text-align:right;color:#5b6b62;font-size:14px;">3</td></tr>
+                  <tr class="zeb"><td style="padding:13px 24px;text-align:center;"><span class="arch num" style="color:#94a097;font-weight:800;font-size:14px;">4</span></td><td style="padding:13px 8px;font-weight:600;font-size:15px;">Ingrid Fossum</td><td class="arch num" style="padding:13px 8px;text-align:right;font-weight:700;font-size:16px;">30:13</td><td class="num" style="padding:13px 8px;text-align:right;color:#5b6b62;font-size:14px;">5:55</td><td style="padding:13px 8px;text-align:center;"></td><td class="num" style="padding:13px 24px;text-align:right;color:#5b6b62;font-size:14px;">12</td></tr>
+                  <tr class="zeb"><td style="padding:13px 24px;text-align:center;"><span class="arch num" style="color:#94a097;font-weight:800;font-size:14px;">5</span></td><td style="padding:13px 8px;font-weight:600;font-size:15px;">Geir Lunde</td><td class="arch num" style="padding:13px 8px;text-align:right;font-weight:700;font-size:16px;">34:14</td><td class="num" style="padding:13px 8px;text-align:right;color:#5b6b62;font-size:14px;">6:43</td><td style="padding:13px 8px;text-align:center;"></td><td class="num" style="padding:13px 24px;text-align:right;color:#5b6b62;font-size:14px;">19</td></tr>
+                  <tr class="zeb"><td style="padding:13px 24px;text-align:center;"><span class="arch num" style="color:#94a097;font-weight:800;font-size:14px;">6</span></td><td style="padding:13px 8px;font-weight:600;font-size:15px;">Kari Moen</td><td class="arch num" style="padding:13px 8px;text-align:right;font-weight:700;font-size:16px;">35:05</td><td class="num" style="padding:13px 8px;text-align:right;color:#5b6b62;font-size:14px;">6:53</td><td style="padding:13px 8px;text-align:center;"><span style="display:inline-block;width:7px;height:7px;border-radius:99px;background:#1f7a4d;"></span></td><td class="num" style="padding:13px 24px;text-align:right;color:#5b6b62;font-size:14px;">7</td></tr>
+                  <tr class="zeb"><td style="padding:13px 24px;text-align:center;"><span class="arch num" style="color:#94a097;font-weight:800;font-size:14px;">7</span></td><td style="padding:13px 8px;font-weight:600;font-size:15px;">Andreas Vold</td><td class="arch num" style="padding:13px 8px;text-align:right;font-weight:700;font-size:16px;">38:40</td><td class="num" style="padding:13px 8px;text-align:right;color:#5b6b62;font-size:14px;">7:35</td><td style="padding:13px 8px;text-align:center;"><span style="display:inline-block;width:7px;height:7px;border-radius:99px;background:var(--accent,#f2a33c);"></span></td><td class="num" style="padding:13px 24px;text-align:right;color:#5b6b62;font-size:14px;">1</td></tr>
+                  <tr class="zeb"><td style="padding:13px 24px;text-align:center;"><span class="arch num" style="color:#94a097;font-weight:800;font-size:14px;">8</span></td><td style="padding:13px 8px;font-weight:600;font-size:15px;">Kristin Ruud</td><td class="arch num" style="padding:13px 8px;text-align:right;font-weight:700;font-size:16px;">40:23</td><td class="num" style="padding:13px 8px;text-align:right;color:#5b6b62;font-size:14px;">7:55</td><td style="padding:13px 8px;text-align:center;"></td><td class="num" style="padding:13px 24px;text-align:right;color:#5b6b62;font-size:14px;">9</td></tr>
+                </tbody>
+              </table>
+              <button style="width:100%;border:none;border-top:1px solid #eef1ec;background:#f4f6f2;color:#1f7a4d;font-family:inherit;font-weight:700;font-size:14px;height:50px;cursor:pointer;">Vis alle 22 resultater</button>
+            </div>
+            <!-- bilder fra løpet -->
+            <div style="margin-top:30px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+                <h2 class="arch" style="font-weight:800;font-size:19px;letter-spacing:-0.01em;margin:0;">Bilder fra løpet</h2>
+                <button style="display:flex;align-items:center;gap:7px;border:1px solid #e4e8e1;background:#fff;border-radius:11px;padding:8px 14px;font-family:inherit;font-size:13px;font-weight:600;color:#2b3a32;cursor:pointer;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#16241c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Se alle 48 bilder</button>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:1fr;gap:12px;">
+                <div style="grid-column:span 2;grid-row:span 2;border-radius:var(--r,20px);overflow:hidden;background:#dfe6da;"><img src="assets/hero-wide.jpg" alt="Løpere på sti i Kalnesskogen" style="width:100%;height:100%;object-fit:cover;object-position:50% 38%;"></div>
+                <div style="aspect-ratio:1/1;border-radius:16px;overflow:hidden;background:#dfe6da;"><img src="assets/hero.png" alt="Løpere i skogen" style="width:100%;height:100%;object-fit:cover;object-position:30% 50%;"></div>
+                <div style="aspect-ratio:1/1;border-radius:16px;overflow:hidden;background:#dfe6da;"><img src="assets/hero-portrait.jpg" alt="Løper på oppløpet" style="width:100%;height:100%;object-fit:cover;object-position:50% 28%;"></div>
+                <div style="aspect-ratio:1/1;border-radius:16px;background:repeating-linear-gradient(135deg,#e6ece2,#e6ece2 11px,#dde6d8 11px,#dde6d8 22px);display:flex;align-items:center;justify-content:center;"><span style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12px;color:#94a097;letter-spacing:0.04em;">løpsbilde</span></div>
+                <div style="position:relative;aspect-ratio:1/1;border-radius:16px;overflow:hidden;background:#0f1611;"><img src="assets/hero.png" alt="" style="width:100%;height:100%;object-fit:cover;object-position:70% 45%;opacity:.6;"><div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#fff;"><span class="arch num" style="font-weight:800;font-size:26px;line-height:1;">+44</span><span style="font-size:12px;font-weight:600;opacity:.85;">flere bilder</span></div></div>
+              </div>
+            </div>
+          </div>
+          <footer style="background:#fff;border-top:1px solid #e4e8e1;margin-top:48px;">
+            <div style="max-width:1120px;margin:0 auto;padding:44px 36px 30px;text-align:center;">
+              <h3 class="arch" style="font-weight:800;font-size:22px;letter-spacing:-0.01em;margin:0 0 8px;">Kontakt</h3>
+              <p style="font-size:15px;color:#5b6b62;margin:0 0 18px;">Har du spørsmål, innspill eller ønsker å bidra? Send oss en melding!</p>
+              <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;">
+                <button class="ctct"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>E-post</button>
+                <button class="ctct"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L20 13l2 5v3a2 2 0 01-2 2A16 16 0 014 5a2 2 0 011-1z"/></svg>Ring oss</button>
+                <button class="ctct"><svg width="16" height="16" viewBox="0 0 24 24" fill="#1f7a4d"><path d="M22 12a10 10 0 10-11.5 9.9v-7H8v-2.9h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6v1.9h2.8l-.4 2.9h-2.4v7A10 10 0 0022 12z"/></svg>Facebook</button>
+                <button class="ctct"><svg width="16" height="16" viewBox="0 0 24 24" fill="#1f7a4d"><path d="M12 2C6.3 2 2 6.2 2 11.7c0 3.1 1.4 5.8 3.7 7.6V23l3.4-1.9c.9.3 1.9.4 2.9.4 5.7 0 10-4.2 10-9.7S17.7 2 12 2zm1 12.4l-2.5-2.7-4.9 2.7 5.4-5.7 2.6 2.7 4.8-2.7-5.4 5.7z"/></svg>Messenger</button>
+              </div>
+            </div>
+            <div style="border-top:1px solid #eef1ec;">
+              <div style="max-width:1120px;margin:0 auto;padding:16px 36px;display:flex;align-items:center;justify-content:space-between;font-size:13px;color:#94a097;">
+                <span>© 2026 Torsdagsløpet</span>
+                <span style="display:flex;align-items:center;gap:6px;">Drevet av frivillige <svg width="14" height="14" viewBox="0 0 24 24" fill="#e0564f"><path d="M12 21s-7-4.5-9.5-8.5C.5 9 2 5.5 5.3 5.5c2 0 3.2 1.2 3.7 2 .5-.8 1.7-2 3.7-2 3.3 0 4.8 3.5 2.8 7C19 16.5 12 21 12 21z"/></svg> · <a href="#" style="color:#5b6b62;text-decoration:none;font-weight:600;">Admin</a></span>
+              </div>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </figure>
+
+    <!-- ===================================================== STATISTIKK -->
+    <figure data-screen-label="Web · Statistikk" style="margin:0;display:flex;flex-direction:column;gap:14px;align-items:center;width:100%;">
+      <figcaption style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#2b3a32;align-self:flex-start;"><span style="width:7px;height:7px;border-radius:99px;background:#1f7a4d;"></span>Statistikk</figcaption>
+      <div style="width:1280px;max-width:100%;border-radius:16px;overflow:hidden;background:#f4f6f2;box-shadow:0 40px 80px -40px rgba(15,30,20,.55),0 8px 20px -10px rgba(15,30,20,.25);border:1px solid #cdd4c6;">
+        <div style="height:42px;background:#e7eae3;border-bottom:1px solid #d8ddd2;display:flex;align-items:center;gap:8px;padding:0 16px;">
+          <span style="width:12px;height:12px;border-radius:99px;background:#ed6a5e;"></span><span style="width:12px;height:12px;border-radius:99px;background:#f4bf4f;"></span><span style="width:12px;height:12px;border-radius:99px;background:#61c454;"></span>
+          <div style="margin:0 auto;background:#fff;border-radius:8px;padding:5px 16px;font-size:12px;color:#5b6b62;display:flex;gap:8px;align-items:center;max-width:380px;width:100%;justify-content:center;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#94a097" stroke-width="2.4"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>torsdagslopet.no/statistikk</div>
+        </div>
+        <div class="scr">
+          <header style="position:sticky;top:0;z-index:5;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid #e4e8e1;">
+            <div style="max-width:1120px;margin:0 auto;height:70px;padding:0 36px;display:flex;align-items:center;gap:12px;">
+              <svg viewBox="0 0 100 100" width="32" height="32"><rect x="4" y="4" width="92" height="92" rx="26" fill="#1f7a4d"/><path d="M27 80 C 27 57, 51 60, 51 41 C 51 25, 75 29, 75 17" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/><circle cx="27" cy="80" r="8" fill="#fff"/><circle cx="75" cy="17" r="9" fill="var(--accent,#f2a33c)"/></svg>
+              <span class="arch" style="font-weight:800;font-size:18px;letter-spacing:-0.02em;">Torsdagsløpet</span>
+              <nav style="margin-left:auto;display:flex;align-items:center;gap:4px;">
+                <a class="navlink" href="#">Resultater <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></a>
+                <a class="navlink on" href="#">Statistikk</a>
+                <a class="navlink" href="#">Løypekart</a>
+                <a class="navlink" href="#">Historie</a>
+              </nav>
+            </div>
+          </header>
+          <div style="max-width:1120px;margin:0 auto;padding:36px 36px 0;display:grid;grid-template-columns:1fr 1.3fr;gap:24px;align-items:start;">
+            <!-- left: race stats -->
+            <div>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                <h2 class="arch" style="font-weight:800;font-size:24px;letter-spacing:-0.02em;margin:0;">Løpsstatistikk</h2>
+                <div style="display:inline-flex;background:#e7eae4;border-radius:99px;padding:4px;"><span style="font-size:13px;font-weight:700;padding:7px 15px;border-radius:99px;background:#fff;box-shadow:0 1px 2px rgba(16,40,28,.12);">2026</span><span style="font-size:13px;font-weight:600;padding:7px 15px;color:#5b6b62;">2025</span></div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+                <div style="background:#fff;border:1px solid #e4e8e1;border-radius:14px;padding:18px 12px;text-align:center;"><div class="arch num" style="font-weight:800;font-size:30px;line-height:1;">25</div><div style="font-size:10px;font-weight:600;text-transform:uppercase;color:#5b6b62;margin-top:6px;">Unike løpere</div></div>
+                <div style="background:#fff;border:1px solid #e4e8e1;border-radius:14px;padding:18px 12px;text-align:center;"><div class="arch num" style="font-weight:800;font-size:30px;line-height:1;">18.3</div><div style="font-size:10px;font-weight:600;text-transform:uppercase;color:#5b6b62;margin-top:6px;">Snitt frammøte</div></div>
+                <div style="background:#fff;border:1px solid #e4e8e1;border-radius:14px;padding:18px 12px;text-align:center;"><div class="arch num" style="font-weight:800;font-size:30px;line-height:1;color:#1f7a4d;">22:02</div><div style="font-size:10px;font-weight:600;text-transform:uppercase;color:#5b6b62;margin-top:6px;">Raskeste tid</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:15px;background:#123a28;border-radius:var(--r,20px);padding:18px 20px;margin-top:12px;">
+                <div style="width:48px;height:48px;flex-shrink:0;background:var(--accent,#f2a33c);border-radius:14px;display:flex;align-items:center;justify-content:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-ink,#3a2606)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0012 0V3H6z"/><path d="M6 5H3v2a3 3 0 003 3M18 5h3v2a3 3 0 01-3 3M9 21h6M12 17v4"/></svg></div>
+                <div style="flex:1;"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,.6);">Løyperekord</div><div style="color:#fff;margin-top:3px;"><span class="arch num" style="font-weight:800;font-size:20px;">22:02</span> <span style="font-size:15px;"> — Hanne Pettersen</span></div><div style="font-size:13px;color:rgba(255,255,255,.6);margin-top:1px;">8. januar 2026</div></div>
+              </div>
+              <div style="background:#fff;border:1px solid #e4e8e1;border-radius:var(--r,20px);padding:20px;margin-top:12px;">
+                <div class="arch" style="font-weight:800;font-size:16px;margin-bottom:12px;">Frammøte gjennom sesongen</div>
+                <svg viewBox="0 0 320 120" width="100%" height="120" preserveAspectRatio="none" style="display:block;">
+                  <line x1="0" y1="30" x2="320" y2="30" stroke="#eef1ec" stroke-width="1"/><line x1="0" y1="60" x2="320" y2="60" stroke="#eef1ec" stroke-width="1"/><line x1="0" y1="90" x2="320" y2="90" stroke="#eef1ec" stroke-width="1"/>
+                  <g>
+                    <rect x="10" y="58" width="20" height="58" rx="4" fill="#cfe2d6"/><rect x="42" y="42" width="20" height="74" rx="4" fill="#cfe2d6"/><rect x="74" y="64" width="20" height="52" rx="4" fill="#cfe2d6"/><rect x="106" y="36" width="20" height="80" rx="4" fill="#1f7a4d"/><rect x="138" y="50" width="20" height="66" rx="4" fill="#cfe2d6"/><rect x="170" y="28" width="20" height="88" rx="4" fill="#cfe2d6"/><rect x="202" y="46" width="20" height="70" rx="4" fill="#cfe2d6"/><rect x="234" y="20" width="20" height="96" rx="4" fill="var(--accent,#f2a33c)"/><rect x="266" y="40" width="20" height="76" rx="4" fill="#cfe2d6"/><rect x="298" y="54" width="14" height="62" rx="4" fill="#cfe2d6"/>
+                  </g>
+                </svg>
+                <div style="display:flex;justify-content:space-between;font-size:10px;color:#94a097;margin-top:6px;" class="num"><span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>Mai</span><span>Jun</span></div>
+              </div>
+            </div>
+            <!-- right: runner stats -->
+            <div>
+              <h2 class="arch" style="font-weight:800;font-size:24px;letter-spacing:-0.02em;margin:0 0 16px;">Løperstatistikk</h2>
+              <div style="display:flex;align-items:center;gap:11px;background:#fff;border:1px solid #e4e8e1;border-radius:14px;padding:0 16px;height:52px;margin-bottom:14px;">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#5b6b62" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+                <span style="font-size:15px;color:#16241c;font-weight:600;">Hanne Pettersen</span>
+                <svg style="margin-left:auto;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a097" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              </div>
+              <div style="display:flex;align-items:center;gap:14px;background:#fff;border:1px solid #e4e8e1;border-radius:16px;padding:16px 18px;margin-bottom:12px;">
+                <div class="arch" style="width:52px;height:52px;border-radius:99px;background:#e7f1ea;color:#1f7a4d;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;">HP</div>
+                <div style="flex:1;"><div class="arch" style="font-weight:800;font-size:19px;">Hanne Pettersen</div><span style="display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:#1f7a4d;background:#e7f1ea;padding:3px 10px;border-radius:99px;margin-top:5px;">Kvinne</span></div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+                <div style="background:#fff;border:1px solid #e4e8e1;border-radius:14px;padding:18px;"><div class="arch num" style="font-weight:800;font-size:30px;line-height:1;">34</div><div style="font-size:11px;font-weight:600;text-transform:uppercase;color:#5b6b62;margin-top:6px;">Løp fullført</div></div>
+                <div style="background:#fff;border:1px solid #e4e8e1;border-radius:14px;padding:18px;"><div class="arch num" style="font-weight:800;font-size:30px;line-height:1;color:#1f7a4d;">22:02</div><div style="font-size:11px;font-weight:600;text-transform:uppercase;color:#5b6b62;margin-top:6px;">Personlig rekord</div></div>
+              </div>
+              <div style="background:#fff;border:1px solid #e4e8e1;border-radius:16px;padding:20px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;"><span style="font-size:15px;font-weight:700;">Utvikling over tid</span><div style="display:inline-flex;background:#f4f6f2;border-radius:99px;padding:3px;"><span style="font-size:11px;font-weight:700;padding:5px 12px;border-radius:99px;background:#1f7a4d;color:#fff;">Alle</span><span style="font-size:11px;font-weight:600;padding:5px 12px;color:#5b6b62;">2026</span><span style="font-size:11px;font-weight:600;padding:5px 12px;color:#5b6b62;">2025</span></div></div>
+                <svg viewBox="0 0 480 160" width="100%" height="160" preserveAspectRatio="none" style="display:block;">
+                  <line x1="0" y1="40" x2="480" y2="40" stroke="#eef1ec" stroke-width="1"/><line x1="0" y1="80" x2="480" y2="80" stroke="#eef1ec" stroke-width="1"/><line x1="0" y1="120" x2="480" y2="120" stroke="#eef1ec" stroke-width="1"/>
+                  <polyline fill="none" stroke="#1f7a4d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" points="8,118 42,50 76,124 110,72 144,100 178,86 212,110 246,56 280,108 314,80 348,36 382,102 416,88 470,62"/>
+                  <circle cx="348" cy="36" r="5" fill="var(--accent,#f2a33c)" stroke="#fff" stroke-width="2.5"/>
+                </svg>
+                <div style="display:flex;justify-content:space-between;font-size:10px;color:#94a097;margin-top:6px;" class="num"><span>22. jan</span><span>12. feb</span><span>12. mar</span><span>02. apr</span><span>23. apr</span><span>21. mai</span><span>11. jun</span></div>
+              </div>
+              <div style="background:#fff;border:1px solid #e4e8e1;border-radius:16px;padding:6px 20px;margin-top:12px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid #eef1ec;"><span style="font-size:15px;font-weight:700;color:#1f7a4d;">Sesongbeste 2026</span><span class="arch num" style="font-weight:800;font-size:17px;">22:02</span></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;"><span style="font-size:15px;font-weight:600;">Sesongbeste 2025</span><span class="arch num" style="font-weight:700;font-size:17px;color:#2b3a32;">30:46</span></div>
+              </div>
+            </div>
+          </div>
+          <footer style="background:#fff;border-top:1px solid #e4e8e1;margin-top:48px;">
+            <div style="max-width:1120px;margin:0 auto;padding:44px 36px 30px;text-align:center;">
+              <h3 class="arch" style="font-weight:800;font-size:22px;letter-spacing:-0.01em;margin:0 0 8px;">Kontakt</h3>
+              <p style="font-size:15px;color:#5b6b62;margin:0 0 18px;">Har du spørsmål, innspill eller ønsker å bidra? Send oss en melding!</p>
+              <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;">
+                <button class="ctct"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>E-post</button>
+                <button class="ctct"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L20 13l2 5v3a2 2 0 01-2 2A16 16 0 014 5a2 2 0 011-1z"/></svg>Ring oss</button>
+                <button class="ctct"><svg width="16" height="16" viewBox="0 0 24 24" fill="#1f7a4d"><path d="M22 12a10 10 0 10-11.5 9.9v-7H8v-2.9h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6v1.9h2.8l-.4 2.9h-2.4v7A10 10 0 0022 12z"/></svg>Facebook</button>
+                <button class="ctct"><svg width="16" height="16" viewBox="0 0 24 24" fill="#1f7a4d"><path d="M12 2C6.3 2 2 6.2 2 11.7c0 3.1 1.4 5.8 3.7 7.6V23l3.4-1.9c.9.3 1.9.4 2.9.4 5.7 0 10-4.2 10-9.7S17.7 2 12 2zm1 12.4l-2.5-2.7-4.9 2.7 5.4-5.7 2.6 2.7 4.8-2.7-5.4 5.7z"/></svg>Messenger</button>
+              </div>
+            </div>
+            <div style="border-top:1px solid #eef1ec;">
+              <div style="max-width:1120px;margin:0 auto;padding:16px 36px;display:flex;align-items:center;justify-content:space-between;font-size:13px;color:#94a097;">
+                <span>© 2026 Torsdagsløpet</span>
+                <span style="display:flex;align-items:center;gap:6px;">Drevet av frivillige <svg width="14" height="14" viewBox="0 0 24 24" fill="#e0564f"><path d="M12 21s-7-4.5-9.5-8.5C.5 9 2 5.5 5.3 5.5c2 0 3.2 1.2 3.7 2 .5-.8 1.7-2 3.7-2 3.3 0 4.8 3.5 2.8 7C19 16.5 12 21 12 21z"/></svg> · <a href="#" style="color:#5b6b62;text-decoration:none;font-weight:600;">Admin</a></span>
+              </div>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </figure>
+
+    <!-- ===================================================== HISTORIE -->
+    <figure data-screen-label="Web · Historie" style="margin:0;display:flex;flex-direction:column;gap:14px;align-items:center;width:100%;">
+      <figcaption style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#2b3a32;align-self:flex-start;"><span style="width:7px;height:7px;border-radius:99px;background:#1f7a4d;"></span>Historie</figcaption>
+      <div style="width:1280px;max-width:100%;border-radius:16px;overflow:hidden;background:#f4f6f2;box-shadow:0 40px 80px -40px rgba(15,30,20,.55),0 8px 20px -10px rgba(15,30,20,.25);border:1px solid #cdd4c6;">
+        <div style="height:42px;background:#e7eae3;border-bottom:1px solid #d8ddd2;display:flex;align-items:center;gap:8px;padding:0 16px;">
+          <span style="width:12px;height:12px;border-radius:99px;background:#ed6a5e;"></span><span style="width:12px;height:12px;border-radius:99px;background:#f4bf4f;"></span><span style="width:12px;height:12px;border-radius:99px;background:#61c454;"></span>
+          <div style="margin:0 auto;background:#fff;border-radius:8px;padding:5px 16px;font-size:12px;color:#5b6b62;display:flex;gap:8px;align-items:center;max-width:380px;width:100%;justify-content:center;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#94a097" stroke-width="2.4"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>torsdagslopet.no/historie</div>
+        </div>
+        <div class="scr">
+          <header style="position:sticky;top:0;z-index:5;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid #e4e8e1;">
+            <div style="max-width:1120px;margin:0 auto;height:70px;padding:0 36px;display:flex;align-items:center;gap:12px;">
+              <svg viewBox="0 0 100 100" width="32" height="32"><rect x="4" y="4" width="92" height="92" rx="26" fill="#1f7a4d"/><path d="M27 80 C 27 57, 51 60, 51 41 C 51 25, 75 29, 75 17" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/><circle cx="27" cy="80" r="8" fill="#fff"/><circle cx="75" cy="17" r="9" fill="var(--accent,#f2a33c)"/></svg>
+              <span class="arch" style="font-weight:800;font-size:18px;letter-spacing:-0.02em;">Torsdagsløpet</span>
+              <nav style="margin-left:auto;display:flex;align-items:center;gap:4px;">
+                <a class="navlink" href="#">Resultater <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></a>
+                <a class="navlink" href="#">Statistikk</a>
+                <a class="navlink" href="#">Løypekart</a>
+                <a class="navlink on" href="#">Historie</a>
+              </nav>
+            </div>
+          </header>
+          <!-- intro -->
+          <div style="max-width:760px;margin:0 auto;padding:56px 36px 0;text-align:center;">
+            <span style="display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.16em;color:#1f7a4d;background:#e7f1ea;padding:6px 14px;border-radius:99px;">Siden 1978</span>
+            <h1 class="arch" style="font-weight:900;font-size:48px;letter-spacing:-0.03em;line-height:1.04;margin:18px 0 16px;">Historien om Torsdagsløpet</h1>
+            <p style="font-size:17px;color:#5b6b62;margin:0;line-height:1.6;">Over 40 år med fellesskap, frisk luft og gode bein på Kalneskrysset. Her er historien bak løpet — fra de første forsiktige stegene til en levende lokal tradisjon.</p>
+          </div>
+          <!-- photo grid -->
+          <div style="max-width:1120px;margin:0 auto;padding:40px 36px 0;display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+            <div style="position:relative;height:320px;border-radius:var(--r,20px);overflow:hidden;background:#dfe6da;"><img src="assets/hero.png" alt="" style="width:100%;height:100%;object-fit:cover;object-position:50% 35%;filter:saturate(.7) contrast(.95);"><div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(15,30,20,.62));"></div><div style="position:absolute;left:0;bottom:0;padding:18px 20px;color:#fff;"><div class="num" style="font-size:12px;font-weight:700;letter-spacing:0.06em;opacity:.85;">1993</div><div class="arch" style="font-weight:700;font-size:17px;">Start på 90-tallet</div></div></div>
+            <div style="position:relative;height:320px;border-radius:var(--r,20px);overflow:hidden;background:#dfe6da;"><img src="assets/hero-wide.jpg" alt="" style="width:100%;height:100%;object-fit:cover;object-position:50% 50%;filter:saturate(.7) contrast(.95);"><div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(15,30,20,.62));"></div><div style="position:absolute;left:0;bottom:0;padding:18px 20px;color:#fff;"><div class="num" style="font-size:12px;font-weight:700;letter-spacing:0.06em;opacity:.85;">2000</div><div class="arch" style="font-weight:700;font-size:17px;">Premieutdeling 2000</div></div></div>
+          </div>
+          <!-- milestones -->
+          <div style="max-width:900px;margin:0 auto;padding:56px 36px 0;">
+            <div style="text-align:center;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:#94a097;margin-bottom:8px;">Milepæler</div>
+            <h2 class="arch" style="text-align:center;font-weight:800;font-size:28px;letter-spacing:-0.02em;margin:0 0 36px;">Fire tiår, steg for steg</h2>
+            <div style="position:relative;">
+              <div style="position:absolute;left:50%;transform:translateX(-50%);top:8px;bottom:8px;width:2px;background:#d7e0d6;"></div>
+              <!-- row 1978 left -->
+              <div style="display:grid;grid-template-columns:1fr 56px 1fr;align-items:center;margin-bottom:24px;">
+                <div style="background:#fff;border:1px solid #e4e8e1;border-radius:16px;padding:18px 20px;text-align:right;box-shadow:0 1px 2px rgba(16,40,28,.04);"><div class="arch num" style="display:inline-block;font-weight:800;font-size:13px;color:var(--accent-deep,#b9772a);background:var(--accent-tint,#fcefd9);padding:3px 10px;border-radius:8px;">1978</div><div class="arch" style="font-weight:700;font-size:17px;margin-top:8px;">Den spede begynnelsen</div><p style="font-size:14px;color:#5b6b62;margin:6px 0 0;line-height:1.5;">Torsdagsløpet starter som et prøveløp, initiert av Bjørn Paulsrud, Ivar Andersen og Eivind Storbugt.</p></div>
+                <div style="display:flex;justify-content:center;"><div style="width:36px;height:36px;border-radius:99px;background:#1f7a4d;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 5px #f4f6f2;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v18M5 4h13l-2 4 2 4H5"/></svg></div></div>
+                <div></div>
+              </div>
+              <!-- row 1981 right -->
+              <div style="display:grid;grid-template-columns:1fr 56px 1fr;align-items:center;margin-bottom:24px;">
+                <div></div>
+                <div style="display:flex;justify-content:center;"><div style="width:36px;height:36px;border-radius:99px;background:#1f7a4d;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 5px #f4f6f2;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0112 0M16 6a3 3 0 010 6M21 20a6 6 0 00-4-5.7"/></svg></div></div>
+                <div style="background:#fff;border:1px solid #e4e8e1;border-radius:16px;padding:18px 20px;box-shadow:0 1px 2px rgba(16,40,28,.04);"><div class="arch num" style="display:inline-block;font-weight:800;font-size:13px;color:var(--accent-deep,#b9772a);background:var(--accent-tint,#fcefd9);padding:3px 10px;border-radius:8px;">1981</div><div class="arch" style="font-weight:700;font-size:17px;margin-top:8px;">Omtalt i Sarpsborg Arbeiderblad</div><p style="font-size:14px;color:#5b6b62;margin:6px 0 0;line-height:1.5;">Løpet får sin første avisomtale. Populariteten øker raskt på 80-tallet, og verken varme eller regn holder deltakerne hjemme.</p></div>
+              </div>
+              <!-- row 1986 left -->
+              <div style="display:grid;grid-template-columns:1fr 56px 1fr;align-items:center;margin-bottom:24px;">
+                <div style="background:#fff;border:1px solid #e4e8e1;border-radius:16px;padding:18px 20px;text-align:right;box-shadow:0 1px 2px rgba(16,40,28,.04);"><div class="arch num" style="display:inline-block;font-weight:800;font-size:13px;color:var(--accent-deep,#b9772a);background:var(--accent-tint,#fcefd9);padding:3px 10px;border-radius:8px;">1986</div><div class="arch" style="font-weight:700;font-size:17px;margin-top:8px;">Frivillige hylles</div><p style="font-size:14px;color:#5b6b62;margin:6px 0 0;line-height:1.5;">De frivillige som stod for den praktiske gjennomføringen fikk fullt fortjent SA-kaka. Løpet var svært populært midt på 80-tallet.</p></div>
+                <div style="display:flex;justify-content:center;"><div style="width:36px;height:36px;border-radius:99px;background:#1f7a4d;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 5px #f4f6f2;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0012 0V3H6z"/><path d="M6 5H3v2a3 3 0 003 3M18 5h3v2a3 3 0 01-3 3M9 21h6M12 17v4"/></svg></div></div>
+                <div></div>
+              </div>
+              <!-- row 1987 right -->
+              <div style="display:grid;grid-template-columns:1fr 56px 1fr;align-items:center;margin-bottom:24px;">
+                <div></div>
+                <div style="display:flex;justify-content:center;"><div style="width:36px;height:36px;border-radius:99px;background:#1f7a4d;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 5px #f4f6f2;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5-7-11a7 7 0 0114 0c0 6-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div></div>
+                <div style="background:#fff;border:1px solid #e4e8e1;border-radius:16px;padding:18px 20px;box-shadow:0 1px 2px rgba(16,40,28,.04);"><div class="arch num" style="display:inline-block;font-weight:800;font-size:13px;color:var(--accent-deep,#b9772a);background:var(--accent-tint,#fcefd9);padding:3px 10px;border-radius:8px;">1987</div><div class="arch" style="font-weight:700;font-size:17px;margin-top:8px;">Kalnesskogen trues</div><p style="font-size:14px;color:#5b6b62;margin:6px 0 0;line-height:1.5;">Engasjementet rundt Kalnesskogen blusser opp. Kommunen ønsker å legge ut deler av skogen til næring.</p></div>
+              </div>
+              <!-- row 2010 left -->
+              <div style="display:grid;grid-template-columns:1fr 56px 1fr;align-items:center;">
+                <div style="background:#fff;border:1px solid #e4e8e1;border-radius:16px;padding:18px 20px;text-align:right;box-shadow:0 1px 2px rgba(16,40,28,.04);"><div class="arch num" style="display:inline-block;font-weight:800;font-size:13px;color:#5b6b62;background:#eef1ec;padding:3px 10px;border-radius:8px;">2010</div><div class="arch" style="font-weight:700;font-size:17px;margin-top:8px;">Bjørn Paulsrud går bort</div><p style="font-size:14px;color:#5b6b62;margin:6px 0 0;line-height:1.5;">Løpets grunnlegger og sjel går bort etter å ha ledet Torsdagsløpet siden 1978. Per Prøitz overtar ledelsen.</p></div>
+                <div style="display:flex;justify-content:center;"><div style="width:36px;height:36px;border-radius:99px;background:#94a097;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 5px #f4f6f2;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg></div></div>
+                <div></div>
+              </div>
+            </div>
+          </div>
+          <!-- quote -->
+          <div style="max-width:1120px;margin:0 auto;padding:56px 36px 0;">
+            <div style="background:#123a28;border-radius:var(--r,20px);padding:48px 40px;text-align:center;">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="var(--accent,#f2a33c)" style="opacity:.9;"><path d="M9 7H5a3 3 0 00-3 3v3a3 3 0 003 3h2v-3H5v-3h4zM19 7h-4a3 3 0 00-3 3v3a3 3 0 003 3h2v-3h-2v-3h4z"/></svg>
+              <p class="arch" style="font-weight:700;font-size:30px;color:#fff;line-height:1.3;margin:16px auto 12px;max-width:20ch;font-style:italic;letter-spacing:-0.01em;">Vi løper ikke for å vinne — vi løper for å møtes.</p>
+              <div style="font-size:14px;color:rgba(255,255,255,.6);">— En av grunnleggerne av Torsdagsløpet</div>
+            </div>
+          </div>
+          <footer style="background:#fff;border-top:1px solid #e4e8e1;margin-top:56px;">
+            <div style="max-width:1120px;margin:0 auto;padding:44px 36px 30px;text-align:center;">
+              <h3 class="arch" style="font-weight:800;font-size:22px;letter-spacing:-0.01em;margin:0 0 8px;">Kontakt</h3>
+              <p style="font-size:15px;color:#5b6b62;margin:0 0 18px;">Har du spørsmål, innspill eller ønsker å bidra? Send oss en melding!</p>
+              <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;">
+                <button class="ctct"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>E-post</button>
+                <button class="ctct"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L20 13l2 5v3a2 2 0 01-2 2A16 16 0 014 5a2 2 0 011-1z"/></svg>Ring oss</button>
+                <button class="ctct"><svg width="16" height="16" viewBox="0 0 24 24" fill="#1f7a4d"><path d="M22 12a10 10 0 10-11.5 9.9v-7H8v-2.9h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6v1.9h2.8l-.4 2.9h-2.4v7A10 10 0 0022 12z"/></svg>Facebook</button>
+                <button class="ctct"><svg width="16" height="16" viewBox="0 0 24 24" fill="#1f7a4d"><path d="M12 2C6.3 2 2 6.2 2 11.7c0 3.1 1.4 5.8 3.7 7.6V23l3.4-1.9c.9.3 1.9.4 2.9.4 5.7 0 10-4.2 10-9.7S17.7 2 12 2zm1 12.4l-2.5-2.7-4.9 2.7 5.4-5.7 2.6 2.7 4.8-2.7-5.4 5.7z"/></svg>Messenger</button>
+              </div>
+            </div>
+            <div style="border-top:1px solid #eef1ec;">
+              <div style="max-width:1120px;margin:0 auto;padding:16px 36px;display:flex;align-items:center;justify-content:space-between;font-size:13px;color:#94a097;">
+                <span>© 2026 Torsdagsløpet</span>
+                <span style="display:flex;align-items:center;gap:6px;">Drevet av frivillige <svg width="14" height="14" viewBox="0 0 24 24" fill="#e0564f"><path d="M12 21s-7-4.5-9.5-8.5C.5 9 2 5.5 5.3 5.5c2 0 3.2 1.2 3.7 2 .5-.8 1.7-2 3.7-2 3.3 0 4.8 3.5 2.8 7C19 16.5 12 21 12 21z"/></svg> · <a href="#" style="color:#5b6b62;text-decoration:none;font-weight:600;">Admin</a></span>
+              </div>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </figure>
+
+    <!-- ===================================================== LØYPEKART -->
+    <figure data-screen-label="Web · Løypekart" style="margin:0;display:flex;flex-direction:column;gap:14px;align-items:center;width:100%;">
+      <figcaption style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#2b3a32;align-self:flex-start;"><span style="width:7px;height:7px;border-radius:99px;background:#1f7a4d;"></span>Løypekart</figcaption>
+      <div style="width:1280px;max-width:100%;border-radius:16px;overflow:hidden;background:#f4f6f2;box-shadow:0 40px 80px -40px rgba(15,30,20,.55),0 8px 20px -10px rgba(15,30,20,.25);border:1px solid #cdd4c6;">
+        <div style="height:42px;background:#e7eae3;border-bottom:1px solid #d8ddd2;display:flex;align-items:center;gap:8px;padding:0 16px;">
+          <span style="width:12px;height:12px;border-radius:99px;background:#ed6a5e;"></span><span style="width:12px;height:12px;border-radius:99px;background:#f4bf4f;"></span><span style="width:12px;height:12px;border-radius:99px;background:#61c454;"></span>
+          <div style="margin:0 auto;background:#fff;border-radius:8px;padding:5px 16px;font-size:12px;color:#5b6b62;display:flex;gap:8px;align-items:center;max-width:380px;width:100%;justify-content:center;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#94a097" stroke-width="2.4"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>torsdagslopet.no/loypekart</div>
+        </div>
+        <div class="scr">
+          <header style="position:sticky;top:0;z-index:5;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid #e4e8e1;">
+            <div style="max-width:1120px;margin:0 auto;height:70px;padding:0 36px;display:flex;align-items:center;gap:12px;">
+              <svg viewBox="0 0 100 100" width="32" height="32"><rect x="4" y="4" width="92" height="92" rx="26" fill="#1f7a4d"/><path d="M27 80 C 27 57, 51 60, 51 41 C 51 25, 75 29, 75 17" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/><circle cx="27" cy="80" r="8" fill="#fff"/><circle cx="75" cy="17" r="9" fill="var(--accent,#f2a33c)"/></svg>
+              <span class="arch" style="font-weight:800;font-size:18px;letter-spacing:-0.02em;">Torsdagsløpet</span>
+              <nav style="margin-left:auto;display:flex;align-items:center;gap:4px;">
+                <a class="navlink" href="#">Resultater <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></a>
+                <a class="navlink" href="#">Statistikk</a>
+                <a class="navlink on" href="#">Løypekart</a>
+                <a class="navlink" href="#">Historie</a>
+              </nav>
+            </div>
+          </header>
+          <div style="max-width:1120px;margin:0 auto;padding:36px 36px 0;">
+            <h1 class="arch" style="font-weight:800;font-size:30px;letter-spacing:-0.02em;margin:0 0 6px;">Løypekart</h1>
+            <p style="font-size:15px;color:#5b6b62;margin:0 0 20px;">Klikk på en pin i kartet for å se informasjon om stedet langs ruten.</p>
+            <div style="display:grid;grid-template-columns:1.55fr 1fr;gap:18px;align-items:stretch;">
+              <!-- map -->
+              <div style="border-radius:var(--r,20px);overflow:hidden;border:1px solid #e4e8e1;position:relative;height:420px;background:#eaf0e6;">
+                <svg viewBox="0 0 560 420" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" style="display:block;">
+                  <rect width="560" height="420" fill="#e6efe1"/>
+                  <path d="M-20 270 Q 120 220 230 270 T 500 260 L 600 250 L 600 460 L -20 460 Z" fill="#dbe8d4"/>
+                  <ellipse cx="120" cy="110" rx="200" ry="140" fill="#cfe3c6" opacity="0.7"/>
+                  <path d="M-20 120 L 600 70" stroke="#c9d3c2" stroke-width="14" fill="none"/>
+                  <path d="M400 -20 L 470 460" stroke="#f0d7a8" stroke-width="10" fill="none"/>
+                  <path d="M120 360 C 100 270, 180 270, 200 200 C 214 150, 150 130, 185 95 C 215 64, 300 80, 330 130 C 360 180, 320 240, 380 270 C 420 300, 410 350, 380 366" fill="none" stroke="#1f7a4d" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+                  <g>
+                    <circle cx="185" cy="95" r="11" fill="#1f7a4d" stroke="#fff" stroke-width="3"/>
+                    <circle cx="330" cy="130" r="11" fill="#1f7a4d" stroke="#fff" stroke-width="3"/>
+                    <circle cx="200" cy="200" r="13" fill="var(--accent,#f2a33c)" stroke="#fff" stroke-width="3"/>
+                    <circle cx="380" cy="270" r="11" fill="#1f7a4d" stroke="#fff" stroke-width="3"/>
+                    <circle cx="120" cy="360" r="14" fill="#123a28" stroke="#fff" stroke-width="3"/>
+                  </g>
+                </svg>
+                <div style="position:absolute;top:14px;left:14px;display:flex;flex-direction:column;gap:1px;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(16,40,28,.2);"><button style="width:36px;height:36px;border:none;background:#fff;font-size:20px;color:#16241c;cursor:pointer;border-bottom:1px solid #eef1ec;">+</button><button style="width:36px;height:36px;border:none;background:#fff;font-size:20px;color:#16241c;cursor:pointer;">−</button></div>
+                <div style="position:absolute;bottom:14px;left:14px;display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.92);border-radius:99px;padding:6px 13px;font-size:12px;font-weight:600;"><span style="width:9px;height:9px;border-radius:99px;background:#1f7a4d;"></span>Navngitte steder i blåløypa</div>
+              </div>
+              <!-- pin info panel (selected state) -->
+              <div style="background:#fff;border:1px solid #e4e8e1;border-radius:var(--r,20px);overflow:hidden;display:flex;flex-direction:column;box-shadow:0 1px 2px rgba(16,40,28,.04);">
+                <div style="height:170px;position:relative;overflow:hidden;background:#dfe6da;"><img src="assets/hero-wide.jpg" alt="Raymondsvingen" style="width:100%;height:100%;object-fit:cover;object-position:20% 60%;"><div style="position:absolute;top:12px;left:12px;background:var(--accent,#f2a33c);color:var(--accent-ink,#3a2606);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;padding:5px 11px;border-radius:99px;">Stopp 1 av 9</div></div>
+                <div style="padding:20px;flex:1;">
+                  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5-7-11a7 7 0 0114 0c0 6-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><h2 class="arch" style="font-weight:800;font-size:20px;letter-spacing:-0.01em;margin:0;">Raymondsvingen</h2></div>
+                  <p style="font-size:14px;color:#5b6b62;margin:0;line-height:1.6;">Den første svingen etter 360 meter, der løypa dreier til høyre ut av Lundestadveien. Oppkalt etter den joviale og trofaste løperen Raymond Westberg, som gjerne er blant de første inn i svingen.</p>
+                </div>
+              </div>
+            </div>
+            <!-- route gallery -->
+            <div style="margin-top:36px;">
+              <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px;">
+                <h2 class="arch" style="font-weight:800;font-size:22px;letter-spacing:-0.02em;margin:0;">Løypa 200 for 200</h2>
+                <span class="num" style="font-size:14px;font-weight:700;color:#94a097;">1 / 9</span>
+              </div>
+              <p style="font-size:14px;color:#5b6b62;margin:0 0 16px;">Naviger gjennom bildene for å se navngitte steder langs ruten.</p>
+              <div style="background:#fff;border:1px solid #e4e8e1;border-radius:var(--r,20px);overflow:hidden;display:grid;grid-template-columns:1fr 1.1fr;box-shadow:0 1px 2px rgba(16,40,28,.04);">
+                <div style="padding:28px 30px;display:flex;flex-direction:column;justify-content:center;">
+                  <div class="arch num" style="font-size:13px;font-weight:700;color:var(--accent-deep,#b9772a);">Stopp 1</div>
+                  <h3 class="arch" style="font-weight:800;font-size:24px;letter-spacing:-0.01em;margin:6px 0 10px;">Raymondsvingen</h3>
+                  <p style="font-size:15px;color:#5b6b62;margin:0 0 20px;line-height:1.6;">Den første svingen etter 360 meter, der løypa dreier til høyre ut av Lundestadveien. Oppkalt etter den joviale og trofaste løperen Raymond Westberg.</p>
+                  <div style="display:flex;gap:10px;">
+                    <button style="border:1px solid #e4e8e1;background:#fff;height:46px;width:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;cursor:pointer;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a097" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+                    <button style="border:none;background:#1f7a4d;height:46px;padding:0 22px;border-radius:13px;display:flex;align-items:center;gap:8px;cursor:pointer;color:#fff;font-family:inherit;font-weight:700;font-size:14px;">Neste sted <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+                  </div>
+                  <div style="display:flex;gap:6px;margin-top:22px;">
+                    <span style="width:24px;height:5px;border-radius:99px;background:#1f7a4d;"></span><span style="width:5px;height:5px;border-radius:99px;background:#cfdacb;"></span><span style="width:5px;height:5px;border-radius:99px;background:#cfdacb;"></span><span style="width:5px;height:5px;border-radius:99px;background:#cfdacb;"></span><span style="width:5px;height:5px;border-radius:99px;background:#cfdacb;"></span><span style="width:5px;height:5px;border-radius:99px;background:#cfdacb;"></span><span style="width:5px;height:5px;border-radius:99px;background:#cfdacb;"></span><span style="width:5px;height:5px;border-radius:99px;background:#cfdacb;"></span><span style="width:5px;height:5px;border-radius:99px;background:#cfdacb;"></span>
+                  </div>
+                </div>
+                <div style="position:relative;min-height:300px;background:#dfe6da;"><img src="assets/hero.png" alt="Raymondsvingen" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 45%;"></div>
+              </div>
+            </div>
+          </div>
+          <footer style="background:#fff;border-top:1px solid #e4e8e1;margin-top:48px;">
+            <div style="max-width:1120px;margin:0 auto;padding:44px 36px 30px;text-align:center;">
+              <h3 class="arch" style="font-weight:800;font-size:22px;letter-spacing:-0.01em;margin:0 0 8px;">Kontakt</h3>
+              <p style="font-size:15px;color:#5b6b62;margin:0 0 18px;">Har du spørsmål, innspill eller ønsker å bidra? Send oss en melding!</p>
+              <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;">
+                <button class="ctct"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>E-post</button>
+                <button class="ctct"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1f7a4d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L20 13l2 5v3a2 2 0 01-2 2A16 16 0 014 5a2 2 0 011-1z"/></svg>Ring oss</button>
+                <button class="ctct"><svg width="16" height="16" viewBox="0 0 24 24" fill="#1f7a4d"><path d="M22 12a10 10 0 10-11.5 9.9v-7H8v-2.9h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6v1.9h2.8l-.4 2.9h-2.4v7A10 10 0 0022 12z"/></svg>Facebook</button>
+                <button class="ctct"><svg width="16" height="16" viewBox="0 0 24 24" fill="#1f7a4d"><path d="M12 2C6.3 2 2 6.2 2 11.7c0 3.1 1.4 5.8 3.7 7.6V23l3.4-1.9c.9.3 1.9.4 2.9.4 5.7 0 10-4.2 10-9.7S17.7 2 12 2zm1 12.4l-2.5-2.7-4.9 2.7 5.4-5.7 2.6 2.7 4.8-2.7-5.4 5.7z"/></svg>Messenger</button>
+              </div>
+            </div>
+            <div style="border-top:1px solid #eef1ec;">
+              <div style="max-width:1120px;margin:0 auto;padding:16px 36px;display:flex;align-items:center;justify-content:space-between;font-size:13px;color:#94a097;">
+                <span>© 2026 Torsdagsløpet</span>
+                <span style="display:flex;align-items:center;gap:6px;">Drevet av frivillige <svg width="14" height="14" viewBox="0 0 24 24" fill="#e0564f"><path d="M12 21s-7-4.5-9.5-8.5C.5 9 2 5.5 5.3 5.5c2 0 3.2 1.2 3.7 2 .5-.8 1.7-2 3.7-2 3.3 0 4.8 3.5 2.8 7C19 16.5 12 21 12 21z"/></svg> · <a href="#" style="color:#5b6b62;text-decoration:none;font-weight:600;">Admin</a></span>
+              </div>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </figure>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1400,&quot;height&quot;:1400},&quot;accent&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Eple-oransje&quot;,&quot;Solgul&quot;,&quot;Korall&quot;,&quot;Skogsgrønn&quot;],&quot;default&quot;:&quot;Eple-oransje&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;radius&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Skarp&quot;,&quot;Avrundet&quot;,&quot;Myk&quot;],&quot;default&quot;:&quot;Skarp&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  constructor(props){ super(props); this.rootRef = React.createRef(); }
+  ACCENTS = {
+    "Eple-oransje": { a:"#f2a33c", tint:"#fcefd9", ink:"#3a2606", deep:"#b9772a" },
+    "Solgul":       { a:"#f5c518", tint:"#fdf3cf", ink:"#3a2e06", deep:"#a8800f" },
+    "Korall":       { a:"#f2683c", tint:"#fbe2d8", ink:"#3a1206", deep:"#c24a23" },
+    "Skogsgrønn":   { a:"#1f7a4d", tint:"#e7f1ea", ink:"#ffffff", deep:"#176039" },
+  };
+  RADII = { "Skarp":"10px", "Avrundet":"20px", "Myk":"28px" };
+  apply(){
+    const el = this.rootRef.current; if(!el) return;
+    const pal = this.ACCENTS[this.props.accent] || this.ACCENTS["Eple-oransje"];
+    el.style.setProperty("--accent", pal.a);
+    el.style.setProperty("--accent-tint", pal.tint);
+    el.style.setProperty("--accent-ink", pal.ink);
+    el.style.setProperty("--accent-deep", pal.deep);
+    el.style.setProperty("--r", this.RADII[this.props.radius] || "20px");
+  }
+  componentDidMount(){ this.apply(); }
+  componentDidUpdate(){ this.apply(); }
+  renderVals(){ return { root: this.rootRef }; }
+}
+</script>
+</body>
+</html>

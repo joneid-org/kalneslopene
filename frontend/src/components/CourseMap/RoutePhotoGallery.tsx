@@ -1,198 +1,135 @@
-import { ChevronLeftIcon, ChevronRightIcon, XIcon } from "lucide-react";
-import { useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ReplacePhotoButton } from "@/components/ReplacePhotoButton.tsx";
-import { Button } from "@/components/ui/button.tsx";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogOverlay,
-  DialogPortal,
-} from "@/components/ui/dialog.tsx";
-import type { StaticS3File } from "@/data/loypekartData.ts";
-import type { S3FileDto } from "@/model/DTO.ts";
-
-const lightboxNavClass =
-  "absolute top-1/2 -translate-y-1/2 z-50 text-white hover:bg-white/20 hover:text-white";
-
-type GalleryPhoto = (S3FileDto | StaticS3File) & { label: string };
+import type { Pin } from "@/data/loypekartData.ts";
+import { cn } from "@/lib/utils.ts";
 
 type Props = {
-  photos: GalleryPhoto[];
+  pins: Pin[];
+  index: number;
+  imageUrl?: string;
+  fileName?: string;
+  onPrev: () => void;
+  onNext: () => void;
+  onSelect: (index: number) => void;
+  onPhotoClick: () => void;
   onReplacePhoto?: (fileName: string, file: File) => Promise<void> | void;
 };
 
-export function RoutePhotoGallery({ photos, onReplacePhoto }: Props) {
-  const [photoIndex, setPhotoIndex] = useState(0);
-  const [lightboxOpen, setLightboxOpen] = useState(false);
-
-  const photo = photos[photoIndex];
-  const currentFileName = "fileName" in photo ? photo.fileName : undefined;
-  const total = photos.length;
-  const prev = () => setPhotoIndex((i) => (i - 1 + total) % total);
-  const next = () => setPhotoIndex((i) => (i + 1) % total);
+export function RoutePhotoGallery({
+  pins,
+  index,
+  imageUrl,
+  fileName,
+  onPrev,
+  onNext,
+  onSelect,
+  onPhotoClick,
+  onReplacePhoto,
+}: Props) {
+  const pin = pins[index];
+  const total = pins.length;
+  const blurb = pin.photos?.[0]?.description ?? pin.description;
 
   return (
-    <>
-      <div className="space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight">
+    <section>
+      <div className="flex items-baseline justify-between gap-3">
+        <h2 className="font-display text-lg font-extrabold tracking-tight sm:text-[22px]">
           Løypa 200 for 200
         </h2>
-        <p className="text-sm text-muted-foreground">
-          Naviger gjennom bildene for å se steder langs ruten.
-        </p>
+        <span className="shrink-0 text-xs font-bold tabular-nums text-muted-foreground sm:text-sm">
+          {index + 1} / {total}
+        </span>
       </div>
+      <p className="mt-1 hidden text-sm text-muted-foreground sm:block">
+        Naviger gjennom bildene for å se navngitte steder langs ruten.
+      </p>
 
-      <div className="flex flex-col md:flex-row gap-6 items-stretch">
-        <div className="flex-1 flex flex-col justify-between gap-4">
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground tabular-nums">
-                {photoIndex + 1} / {total}
-              </span>
-              <div className="h-px flex-1 bg-border" />
-            </div>
-            <h3 className="text-2xl font-semibold tracking-tight">
-              {photo.label}
-            </h3>
-            <p className="text-muted-foreground leading-relaxed">
-              {photo.description}
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3 pt-2">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={prev}
-              aria-label="Forrige bilde"
-            >
-              <ChevronLeftIcon className="size-4" />
-            </Button>
-            <div className="flex gap-1.5">
-              {photos.map((p, i) => (
-                <button
-                  key={p.url}
-                  type="button"
-                  onClick={() => setPhotoIndex(i)}
-                  aria-label={`Gå til bilde ${i + 1}`}
-                  className={`rounded-full transition-all ${
-                    i === photoIndex
-                      ? "w-4 h-2 bg-primary"
-                      : "w-2 h-2 bg-muted-foreground/30 hover:bg-muted-foreground/60"
-                  }`}
-                />
-              ))}
-            </div>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={next}
-              aria-label="Neste bilde"
-            >
-              <ChevronRightIcon className="size-4" />
-            </Button>
-          </div>
-        </div>
-
-        <div className="md:w-1/2 shrink-0">
-          <div className="relative">
+      <div className="mt-3 grid overflow-hidden rounded-2xl border bg-card shadow-sm sm:mt-4 md:grid-cols-[1fr_1.1fr]">
+        <div className="relative order-first min-h-[150px] bg-muted md:order-last md:min-h-[300px]">
+          {imageUrl ? (
             <button
               type="button"
-              className="w-full group relative overflow-hidden rounded-xl border shadow-sm aspect-video bg-muted block cursor-zoom-in"
-              onClick={() => setLightboxOpen(true)}
+              onClick={onPhotoClick}
+              className="group absolute inset-0 block cursor-zoom-in"
               aria-label="Åpne bilde i fullskjerm"
             >
               <img
-                key={photo.url}
-                src={photo.url}
-                alt={photo.label}
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                src={imageUrl}
+                alt={pin.label}
+                className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
-                <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/50 text-white text-xs font-medium px-3 py-1.5 rounded-full">
+              <div className="absolute inset-0 hidden items-center justify-center bg-black/0 transition-colors duration-300 group-hover:bg-black/10 sm:flex">
+                <span className="rounded-full bg-black/50 px-3 py-1.5 text-xs font-medium text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                   Klikk for å forstørre
                 </span>
               </div>
             </button>
-            {onReplacePhoto && currentFileName && (
-              <ReplacePhotoButton
-                fileName={currentFileName}
-                onReplace={onReplacePhoto}
-                className="absolute top-2 right-2 z-10"
+          ) : (
+            <div className="flex size-full items-center justify-center text-sm text-muted-foreground">
+              Bilde kommer
+            </div>
+          )}
+          <span className="absolute left-2.5 top-2.5 rounded-full bg-brand px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wide text-brand-foreground md:hidden">
+            Stopp {index + 1}
+          </span>
+          {onReplacePhoto && fileName && (
+            <ReplacePhotoButton
+              fileName={fileName}
+              onReplace={onReplacePhoto}
+              className="absolute right-2.5 top-2.5 z-10"
+            />
+          )}
+        </div>
+
+        <div className="flex flex-col justify-center p-4 md:p-7">
+          <div className="hidden font-display text-[13px] font-bold tabular-nums text-brand-soft-foreground md:block">
+            Stopp {index + 1}
+          </div>
+          <h3 className="font-display text-lg font-extrabold tracking-tight md:mt-1.5 md:text-2xl">
+            {pin.label}
+          </h3>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground md:mt-2.5 md:text-[15px]">
+            {blurb}
+          </p>
+
+          <div className="mt-3 flex gap-2 md:mt-5 md:gap-2.5">
+            <button
+              type="button"
+              onClick={onPrev}
+              aria-label="Forrige sted"
+              className="flex h-[42px] flex-1 items-center justify-center rounded-xl border bg-card text-muted-foreground transition-colors hover:bg-accent md:size-[46px] md:flex-none"
+            >
+              <ChevronLeft className="size-[18px]" />
+            </button>
+            <button
+              type="button"
+              onClick={onNext}
+              aria-label="Neste sted"
+              className="flex h-[42px] flex-1 items-center justify-center gap-2 rounded-xl bg-primary font-semibold text-primary-foreground transition-colors hover:bg-primary/90 md:h-[46px] md:flex-none md:px-5"
+            >
+              <span className="hidden md:inline">Neste sted</span>
+              <ChevronRight className="size-[18px]" />
+            </button>
+          </div>
+
+          <div className="mt-5 hidden gap-1.5 md:flex">
+            {pins.map((stop, i) => (
+              <button
+                key={stop.id}
+                type="button"
+                onClick={() => onSelect(i)}
+                aria-label={`Gå til stopp ${i + 1}`}
+                className={cn(
+                  "h-[5px] rounded-full transition-all",
+                  i === index
+                    ? "w-6 bg-primary"
+                    : "w-[5px] bg-border hover:bg-muted-foreground/50",
+                )}
               />
-            )}
+            ))}
           </div>
         </div>
       </div>
-
-      <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
-        <DialogPortal>
-          <DialogOverlay className="bg-black/90" />
-          <DialogContent className="max-w-none w-screen h-screen p-0 border-0 bg-transparent shadow-none flex items-center justify-center [&>button]:hidden">
-            <DialogClose asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute top-4 right-4 z-50 text-white hover:bg-white/20 hover:text-white"
-                aria-label="Lukk"
-              >
-                <XIcon className="size-5" />
-              </Button>
-            </DialogClose>
-            {onReplacePhoto && currentFileName && (
-              <ReplacePhotoButton
-                fileName={currentFileName}
-                onReplace={onReplacePhoto}
-                className="absolute top-4 left-4 z-50"
-              />
-            )}
-            <Button
-              variant="ghost"
-              size="icon"
-              className={`absolute left-4 ${lightboxNavClass}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                prev();
-              }}
-              aria-label="Forrige bilde"
-            >
-              <ChevronLeftIcon className="size-6" />
-            </Button>
-            <div className="flex flex-col items-center gap-4 px-16 max-w-5xl w-full">
-              <img
-                key={photo.url}
-                src={photo.url}
-                alt={photo.label}
-                className="max-h-[80vh] max-w-full rounded-lg object-contain shadow-2xl"
-              />
-              <div className="text-center space-y-1">
-                <p className="text-white font-semibold text-lg">
-                  {photo.label}
-                </p>
-                <p className="text-white/70 text-sm max-w-xl">
-                  {photo.description}
-                </p>
-                <p className="text-white/40 text-xs tabular-nums">
-                  {photoIndex + 1} / {total}
-                </p>
-              </div>
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              className={`absolute right-4 ${lightboxNavClass}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                next();
-              }}
-              aria-label="Neste bilde"
-            >
-              <ChevronRightIcon className="size-6" />
-            </Button>
-          </DialogContent>
-        </DialogPortal>
-      </Dialog>
-    </>
+    </section>
   );
 }

@@ -203,25 +203,8 @@ export const pins: Pin[] = [
   },
 ];
 
-export const categoryLabel: Record<PinCategory, string> = {
-  start: "Start / Mål",
-  vending: "Vendepunkt",
-  poi: "Interessepunkt",
-  mal: "Mål",
-};
-
-export const categoryVariant: Record<
-  PinCategory,
-  "default" | "secondary" | "outline" | "destructive"
-> = {
-  start: "default",
-  vending: "secondary",
-  poi: "outline",
-  mal: "default",
-};
-
 export const mapLegend = [
-  { color: "#2563eb", label: "Navngitte steder i blåløypa" },
+  { color: "#1f7a4d", label: "Navngitte steder i blåløypa" },
 ] as const;
 
 export const MAP_CENTER: [number, number] = [59.302, 11.028];

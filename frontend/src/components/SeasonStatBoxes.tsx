@@ -1,6 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import { Trees } from "lucide-react";
-import { QUERIES } from "@/api/queries.ts";
+import {useQuery} from "@tanstack/react-query";
+import {QUERIES} from "@/api/queries.ts";
 
 const CURRENT_YEAR = new Date().getFullYear();
 
@@ -14,6 +13,11 @@ export function SeasonStatBoxes() {
       value: yearStatistics?.uniqueRunners.total,
       label: "Deltakere totalt",
       shortLabel: "Deltakere",
+    },
+    {
+      value: yearStatistics?.averageRunnersPerRace.toFixed(2),
+      label: "Snittdeltakelse",
+      shortLabel: "Snittdeltakelse",
     },
     {
       value: yearStatistics?.uniqueRunners.female,
@@ -51,7 +55,7 @@ export function SeasonStatBoxes() {
           {CURRENT_YEAR}
         </span>
       </div>
-      <div className="grid grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3">
+      <div className="grid grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3">
         {stats.map(({ value, label, shortLabel, accent }) => (
           <div
             key={label}
@@ -78,10 +82,6 @@ export function SeasonStatBoxes() {
             </p>
           </div>
         ))}
-        {/* Decorative tile to balance the 3-up mobile grid */}
-        <div className="lg:hidden flex items-center justify-center rounded-xl bg-white/[0.07] p-2.5">
-          <Trees className="size-[18px] text-brand" />
-        </div>
       </div>
     </div>
   );

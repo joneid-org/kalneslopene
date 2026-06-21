@@ -6,7 +6,7 @@ export function Hero() {
     <>
       {/* Mobile: rounded hero card with the race card tucked underneath */}
       <div className="sm:hidden">
-        <section className="relative h-[280px] mx-3 rounded-3xl overflow-hidden">
+        <section className="relative h-[280px] mx-3 rounded-t-3xl overflow-hidden">
           <img
             src={cardImage}
             alt="Torsdagsløpet"

@@ -1,5 +1,5 @@
 import {useQuery} from "@tanstack/react-query";
-import {QUERIES} from "@/api/queries.ts";
+import {QUERIES } from "@/api/queries.ts";
 
 const CURRENT_YEAR = new Date().getFullYear();
 

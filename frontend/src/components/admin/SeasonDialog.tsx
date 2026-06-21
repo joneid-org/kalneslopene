@@ -17,9 +17,7 @@ import type { RaceDTO, RaceInput } from "@/model/DTO.ts";
 type PreviewRace = { date: string; time: string };
 
 export function createRaces(races: RaceInput[]) {
-  return kyClient
-    .post("/api/races/createRaces", { json: races })
-    .json<RaceDTO[]>();
+  return kyClient.post("/api/races", { json: races }).json<RaceDTO[]>();
 }
 
 export function SeasonDialog({ onClose }: { onClose: () => void }) {

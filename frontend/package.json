@@ -38,7 +38,7 @@
     "ky": "^1.14.3",
     "leaflet": "^1.9.4",
     "lucide-react": "^1.7.0",
-    "radix-ui": "^1.4.3",
+    "radix-ui": "^1.6.0",
     "react": "^19.2.0",
     "react-day-picker": "^10.0.1",
     "react-dom": "^19.2.0",

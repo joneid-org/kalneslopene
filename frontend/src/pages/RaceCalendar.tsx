@@ -1,26 +1,41 @@
 import { useQuery } from "@tanstack/react-query";
-import { ChevronRight } from "lucide-react";
+import {
+  ArrowLeft,
+  Camera,
+  ChevronLeft,
+  ChevronRight,
+  CloudSun,
+  Users,
+} from "lucide-react";
+import { Tooltip as TooltipPrimitive } from "radix-ui";
 import { useState } from "react";
 import { Link } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
-import { Badge } from "@/components/ui/badge.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { Calendar } from "@/components/ui/calendar.tsx";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card.tsx";
-import { Separator } from "@/components/ui/separator.tsx";
-import {
-  extractYear,
-  formatDateFull,
-  formatTimeStamp,
-  raceDateToSortKey,
-} from "@/lib/timeUtils.ts";
-import { isPast } from "@/lib/utils.ts";
+  Tooltip,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip.tsx";
+import { formatTimeStamp } from "@/lib/timeUtils.ts";
+import { cn, isPast } from "@/lib/utils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
+
+const WEEKDAYS = ["Man", "Tir", "Ons", "Tor", "Fre", "Lør", "Søn"];
+const MONTHS = [
+  "Januar",
+  "Februar",
+  "Mars",
+  "April",
+  "Mai",
+  "Juni",
+  "Juli",
+  "August",
+  "September",
+  "Oktober",
+  "November",
+  "Desember",
+];
 
 function raceDateToDate(raceDate: unknown): Date {
   const iso = typeof raceDate === "string" ? raceDate : String(raceDate);
@@ -37,194 +52,221 @@ function isSameDay(a: Date, b: Date) {
   );
 }
 
+type CalendarCell = { date: Date; inMonth: boolean };
+
+function getCalendarDays(year: number, month: number): CalendarCell[] {
+  const firstDay = new Date(year, month, 1);
+  const startOffset = (firstDay.getDay() + 6) % 7;
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  const cells: CalendarCell[] = [];
+  for (let i = startOffset; i > 0; i--) {
+    cells.push({ date: new Date(year, month, 1 - i), inMonth: false });
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    cells.push({ date: new Date(year, month, d), inMonth: true });
+  }
+  while (cells.length % 7 !== 0) {
+    const last = cells[cells.length - 1].date;
+    cells.push({
+      date: new Date(last.getFullYear(), last.getMonth(), last.getDate() + 1),
+      inMonth: false,
+    });
+  }
+  return cells;
+}
+
+function PastRaceTooltip({ race, day }: { race: RaceDTO; day: Date }) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Link to={`/Resultater/${race.uuid}`} className="block h-full">
+          <div className="flex flex-col h-full p-1.5 rounded-md text-left transition-colors bg-muted/60 border border-border hover:bg-muted">
+            <span className="text-base font-semibold leading-none">
+              {day.getDate()}
+            </span>
+            <span className="text-xs mt-1 text-muted-foreground hidden sm:block">
+              kl. {formatTimeStamp(race.raceDate)}
+            </span>
+            <span className="mt-auto text-xs font-medium text-primary underline-offset-2 hover:underline hidden sm:block">
+              Resultater →
+            </span>
+          </div>
+        </Link>
+      </TooltipTrigger>
+      <TooltipPrimitive.Portal>
+        <TooltipPrimitive.Content
+          side="right"
+          align="start"
+          sideOffset={0}
+          className="group z-50 -translate-y-full"
+        >
+          <div className="w-52 origin-bottom-left animate-in rounded-md border bg-popover p-3 text-popover-foreground shadow-md fade-in-0 zoom-in-95 group-data-[state=closed]:animate-out group-data-[state=closed]:fade-out-0 group-data-[state=closed]:zoom-out-95">
+            <p className="font-semibold text-sm">
+              {day.getDate()}. {MONTHS[day.getMonth()].toLowerCase()}{" "}
+              {day.getFullYear()}
+            </p>
+            <div className="mt-2 space-y-1.5 text-sm text-muted-foreground">
+              <p className="flex items-center gap-2">
+                <Users className="size-4 shrink-0 text-primary" />
+                {race.runnerCount} løpere
+              </p>
+              {race.photos.length > 0 && (
+                <p className="flex items-center gap-2">
+                  <Camera className="size-4 shrink-0 text-primary" />
+                  {race.photos.length} bilder
+                </p>
+              )}
+              {race.weather && (
+                <p className="flex items-center gap-2">
+                  <CloudSun className="size-4 shrink-0 text-primary" />
+                  {race.weather}
+                </p>
+              )}
+            </div>
+          </div>
+        </TooltipPrimitive.Content>
+      </TooltipPrimitive.Portal>
+    </Tooltip>
+  );
+}
+
 export function RaceCalendar() {
   const { data: races = [] } = useQuery(QUERIES.race.getAllRaces());
 
-  const allYears = Array.from(
-    new Set(races.map((r) => extractYear(r.raceDate))),
-  ).sort((a, b) => b - a);
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const [month, setMonth] = useState(now.getMonth());
 
-  const currentYear = new Date().getFullYear();
-  const [selectedYear, setSelectedYear] = useState<number>(currentYear);
-  const [month, setMonth] = useState<Date>(new Date());
-  const [selectedRace, setSelectedRace] = useState<RaceDTO | null>(null);
+  // Only show current season — clamp navigation to current year
+  const minMonth = 0;
+  const maxMonth = 11;
 
-  const racesForYear = races
-    .filter((r) => extractYear(r.raceDate) === selectedYear)
-    .sort((a, b) =>
-      raceDateToSortKey(a.raceDate).localeCompare(
-        raceDateToSortKey(b.raceDate),
-      ),
-    );
-
-  const [past, upcoming] = racesForYear.partition(isPast);
-  const pastDates = past.map((r) => raceDateToDate(r.raceDate));
-  const upcomingDates = upcoming.map((r) => raceDateToDate(r.raceDate));
-
-  const selectedDate = selectedRace
-    ? raceDateToDate(selectedRace.raceDate)
-    : undefined;
-
-  function handleDayClick(day: Date) {
-    const race = racesForYear.find((r) =>
-      isSameDay(raceDateToDate(r.raceDate), day),
-    );
-    setSelectedRace(race ?? null);
+  const raceMap = new Map<string, RaceDTO>();
+  for (const race of races.filter(
+    (r) => raceDateToDate(r.raceDate).getFullYear() === currentYear,
+  )) {
+    const d = raceDateToDate(race.raceDate);
+    raceMap.set(`${d.getMonth()}-${d.getDate()}`, race);
   }
 
-  function handleYearChange(year: number) {
-    setSelectedYear(year);
-    setMonth(new Date(year, 0));
-    setSelectedRace(null);
+  function prevMonth() {
+    setMonth((m) => Math.max(minMonth, m - 1));
   }
 
-  const pastCount = pastDates.length;
-  const upcomingCount = upcomingDates.length;
+  function nextMonth() {
+    setMonth((m) => Math.min(maxMonth, m + 1));
+  }
+
+  const cells = getCalendarDays(currentYear, month);
 
   return (
-    <div className="page-content section-stack">
-      <section className="space-y-1">
-        <h1 className="page-title">Løpskalender</h1>
-        <p className="text-muted-foreground text-sm">
-          Oversikt over alle Torsdagsløp — klikk på en dato for å se detaljer.
-        </p>
-      </section>
-
-      {/* Year selector */}
-      <div className="flex flex-wrap gap-2">
-        {allYears.map((year) => (
-          <Button
-            key={year}
-            variant={selectedYear === year ? "default" : "outline"}
-            size="sm"
-            onClick={() => handleYearChange(year)}
-          >
-            {year}
+    <TooltipProvider delayDuration={200}>
+      <div className="page-content section-stack">
+        <Link to="/" className="-mb-2">
+          <Button variant="ghost" size="sm" className="gap-1 -ml-2">
+            <ArrowLeft className="size-4" />
+            Tilbake
           </Button>
-        ))}
-      </div>
+        </Link>
 
-      {racesForYear.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          <Badge variant="secondary" className="gap-1">
-            ✓ {pastCount} gjennomført
-          </Badge>
-          <Badge variant="outline" className="gap-1">
-            ◷ {upcomingCount} kommende
-          </Badge>
-        </div>
-      )}
+        <section className="space-y-1">
+          <h1 className="page-title">Løpskalender {currentYear}</h1>
+          <p className="text-muted-foreground text-sm">
+            Oversikt over Torsdagsløpene denne sesongen. Hold over et
+            gjennomført løp for detaljer.
+          </p>
+        </section>
 
-      <Separator />
-
-      <div className="flex flex-col md:flex-row gap-6 items-start">
         {/* Calendar */}
-        <Card className="shrink-0">
-          <CardContent className="p-0">
-            <Calendar
-              mode="single"
-              month={month}
-              onMonthChange={setMonth}
-              selected={selectedDate}
-              onDayClick={handleDayClick}
-              modifiers={{
-                past: pastDates,
-                upcoming: upcomingDates,
-              }}
-              modifiersClassNames={{
-                past: "bg-muted font-semibold text-foreground rounded-md",
-                upcoming:
-                  "bg-primary/15 font-semibold text-primary rounded-md ring-1 ring-primary/40",
-              }}
-              disabled={(day) =>
-                !racesForYear.some((r) =>
-                  isSameDay(raceDateToDate(r.raceDate), day),
-                )
-              }
-              locale={{
-                localize: {
-                  day: (n: number) =>
-                    ["Søn", "Man", "Tir", "Ons", "Tor", "Fre", "Lør"][n],
-                  month: (n: number) =>
-                    [
-                      "Januar",
-                      "Februar",
-                      "Mars",
-                      "April",
-                      "Mai",
-                      "Juni",
-                      "Juli",
-                      "August",
-                      "September",
-                      "Oktober",
-                      "November",
-                      "Desember",
-                    ][n],
-                  ordinalNumber: (n: number) => `${n}.`,
-                  era: () => "",
-                  quarter: () => "",
-                  dayPeriod: () => "",
-                } as never,
-                formatLong: {
-                  date: () => "dd.MM.yyyy",
-                  time: () => "HH:mm",
-                  dateTime: () => "dd.MM.yyyy HH:mm",
-                } as never,
-                options: { weekStartsOn: 1, firstWeekContainsDate: 4 },
-                code: "nb",
-                match: {} as never,
-                formatDistance: () => "",
-                formatRelative: () => "",
-              }}
-            />
-          </CardContent>
-        </Card>
+        <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
+          {/* Month navigation */}
+          <div className="flex items-center justify-between px-4 py-3 border-b bg-muted/30">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={prevMonth}
+              disabled={month === minMonth}
+            >
+              <ChevronLeft className="size-4" />
+            </Button>
+            <h2 className="font-semibold text-base">
+              {MONTHS[month]} {currentYear}
+            </h2>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={nextMonth}
+              disabled={month === maxMonth}
+            >
+              <ChevronRight className="size-4" />
+            </Button>
+          </div>
 
-        {/* Detail panel */}
-        <div className="flex-1 min-w-0">
-          {selectedRace ? (
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base">
-                  {formatDateFull(selectedRace.raceDate)}
-                </CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  kl. {formatTimeStamp(selectedRace.raceDate)}
-                </p>
-              </CardHeader>
-              <Separator />
-              <CardContent className="pt-4 space-y-4">
-                {isPast(selectedRace) ? (
-                  <>
-                    <Badge variant="secondary">Gjennomført</Badge>
-                    {selectedRace.uuid && (
-                      <div>
-                        <Link to={`/Resultater/${selectedRace.uuid}`}>
-                          <Button className="gap-2">
-                            Se resultater
-                            <ChevronRight className="size-4" />
-                          </Button>
-                        </Link>
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <Badge>Kommende løp</Badge>
-                )}
-              </CardContent>
-            </Card>
-          ) : (
-            <Card className="border-dashed">
-              <CardContent className="py-10 text-center space-y-1">
-                <p className="text-2xl">📅</p>
-                <p className="text-sm text-muted-foreground">
-                  Klikk på en dato i kalenderen for å se detaljer.
-                </p>
-              </CardContent>
-            </Card>
-          )}
+          {/* Weekday headers */}
+          <div className="grid grid-cols-7 border-b">
+            {WEEKDAYS.map((wd) => (
+              <div
+                key={wd}
+                className="py-2 text-center text-sm font-medium text-muted-foreground"
+              >
+                {wd}
+              </div>
+            ))}
+          </div>
+
+          {/* Day grid */}
+          <div className="grid grid-cols-7">
+            {cells.map(({ date, inMonth }) => {
+              const race = inMonth
+                ? raceMap.get(`${date.getMonth()}-${date.getDate()}`)
+                : undefined;
+              const isToday = inMonth && isSameDay(date, now);
+              const past = race ? isPast(race) : false;
+
+              return (
+                <div
+                  key={date.toISOString()}
+                  className={cn(
+                    "min-h-16 sm:min-h-20 border-b border-r p-1",
+                    "[&:nth-child(7n)]:border-r-0",
+                    !inMonth && "bg-muted/20",
+                  )}
+                >
+                  {inMonth && !race && (
+                    <span
+                      className={cn(
+                        "text-base leading-none p-1 inline-flex items-center justify-center size-8 rounded-full",
+                        isToday
+                          ? "bg-primary text-primary-foreground font-semibold"
+                          : "text-muted-foreground",
+                      )}
+                    >
+                      {date.getDate()}
+                    </span>
+                  )}
+                  {inMonth && race && past && race.uuid && (
+                    <PastRaceTooltip race={race} day={date} />
+                  )}
+                  {inMonth && race && !past && (
+                    <div className="flex flex-col h-full p-1.5 rounded-md text-left bg-primary text-primary-foreground shadow-sm">
+                      <span className="text-base font-semibold leading-none">
+                        {date.getDate()}
+                      </span>
+                      <span className="text-xs mt-1 text-primary-foreground/70 hidden sm:block">
+                        kl. {formatTimeStamp(race.raceDate)}
+                      </span>
+                      <span className="mt-auto text-xs font-semibold text-primary-foreground/80 hidden sm:block">
+                        Kommende
+                      </span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
-    </div>
+    </TooltipProvider>
   );
 }

@@ -13,9 +13,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog.tsx";
-import { Input } from "@/components/ui/input.tsx";
-import { Label } from "@/components/ui/label.tsx";
-import { Separator } from "@/components/ui/separator.tsx";
 import type { NewsFeedDTO } from "@/model/DTO.ts";
 
 export function CRUDNewsfeeds() {
@@ -23,17 +20,6 @@ export function CRUDNewsfeeds() {
   const navigate = useNavigate();
 
   const { data: newsfeeds } = useQuery(QUERIES.newsfeed.getAllNewsFeeds);
-  const { data: settings } = useQuery(QUERIES.newsfeed.getSettings);
-  const [maxArticles, setMaxArticles] = useState<number | undefined>(undefined);
-
-  const settingsMutation = useMutation({
-    mutationFn: (max: number) =>
-      QUERIES.newsfeed.updateSettings({ maxArticles: max }).queryFn(),
-    onSuccess: () =>
-      qc.invalidateQueries({ queryKey: ["newsfeed", "settings"] }),
-  });
-
-  const currentMax = maxArticles ?? settings?.maxArticles ?? 10;
 
   const [showAdd, setShowAdd] = useState(false);
   const addMutation = useMutation({
@@ -80,30 +66,6 @@ export function CRUDNewsfeeds() {
         Tilbake
       </Button>
       <h1 className="text-2xl font-semibold tracking-tight">Nyheter</h1>
-
-      <div className="rounded-lg border p-4 space-y-3">
-        <h2 className="text-base font-semibold">Innstillinger</h2>
-        <div className="flex items-end gap-3">
-          <div className="space-y-1.5 flex-1 max-w-50">
-            <Label>Antall artikler på forsiden</Label>
-            <Input
-              type="number"
-              min={1}
-              max={50}
-              value={currentMax}
-              onChange={(e) => setMaxArticles(Number(e.target.value))}
-            />
-          </div>
-          <Button
-            onClick={() => settingsMutation.mutate(currentMax)}
-            disabled={settingsMutation.isPending}
-          >
-            Lagre
-          </Button>
-        </div>
-      </div>
-
-      <Separator />
 
       <div className="flex items-center justify-between">
         <h2 className="text-base font-semibold">Artikler</h2>

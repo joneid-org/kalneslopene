@@ -1,7 +1,6 @@
 package com.grimsgaards.kalneslopene.controller
 
 import com.grimsgaards.kalneslopene.model.dto.NewsfeedDTO
-import com.grimsgaards.kalneslopene.model.dto.NewsfeedSettingsDTO
 import com.grimsgaards.kalneslopene.model.dto.NewsfeedTagDTO
 import com.grimsgaards.kalneslopene.model.input.NewsfeedInput
 import com.grimsgaards.kalneslopene.model.input.NewsfeedTagInput
@@ -9,16 +8,8 @@ import com.grimsgaards.kalneslopene.model.input.NewsfeedTagUpdateInput
 import com.grimsgaards.kalneslopene.model.input.PhotoUploadInfo
 import com.grimsgaards.kalneslopene.service.NewsfeedService
 import com.grimsgaards.kalneslopene.service.NewsfeedTagService
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
-import java.util.UUID
+import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @RestController
 @RequestMapping("/api/newsfeeds")
@@ -28,7 +19,7 @@ class NewsfeedController(
     val newsfeedTagService: NewsfeedTagService,
 ) {
     @GetMapping
-    fun getNewsFeedList(): List<NewsfeedDTO> = newsfeedService.getSpecifiedNumberOfNewsfeed()
+    fun getNewsFeedList(): List<NewsfeedDTO> = newsfeedService.getNewsfeed()
 
     @GetMapping("/{uuid}")
     fun getNewsFeed(
@@ -55,16 +46,6 @@ class NewsfeedController(
     fun deleteNewsFeed(
         @PathVariable uuid: UUID,
     ) = newsfeedService.deleteNewsfeed(uuid)
-
-    // ── Settings ────────────────────────────────────────────────────────────────
-
-    @GetMapping("/settings")
-    fun getSettings(): NewsfeedSettingsDTO = newsfeedService.getSettings()
-
-    @PatchMapping("/settings")
-    fun updateSettings(
-        @RequestBody dto: NewsfeedSettingsDTO,
-    ): NewsfeedSettingsDTO = newsfeedService.updateSettings(dto)
 
     // ── Tags ────────────────────────────────────────────────────────────────────
 

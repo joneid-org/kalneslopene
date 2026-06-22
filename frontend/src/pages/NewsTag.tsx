@@ -9,7 +9,7 @@ import { NEWS_IMAGES, tagColor } from "@/lib/newsUtils.ts";
 
 export function NewsTag() {
   const { tag } = useParams<{ tag: string }>();
-  const { data: newsfeeds } = useQuery(QUERIES.newsfeed.getAllNewsFeeds);
+  const { data: newsfeeds } = useQuery(QUERIES.newsfeed.getNewsArchive);
 
   const filtered = (newsfeeds ?? []).filter((post) =>
     post.tags.some((t) => t.toLowerCase() === tag?.toLowerCase()),

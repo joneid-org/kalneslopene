@@ -118,3 +118,10 @@ databaseChangeLog:
         - sqlFile:
             path: db/changelog/sql/migrate/migrate_newsfeed_add_header_image_file.sql
             relativeToChangelogFile: false
+  - changeSet:
+      id: 018-migrate_newsfeed_drop_settings
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_newsfeed_drop_settings.sql
+            relativeToChangelogFile: false

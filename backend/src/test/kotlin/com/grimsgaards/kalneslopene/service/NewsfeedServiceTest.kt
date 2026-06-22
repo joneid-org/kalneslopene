@@ -2,39 +2,28 @@ package com.grimsgaards.kalneslopene.service
 
 import com.grimsgaards.kalneslopene.model.entities.FileEntity
 import com.grimsgaards.kalneslopene.model.entities.NewsfeedEntity
-import com.grimsgaards.kalneslopene.model.entities.NewsfeedSettingsEntity
 import com.grimsgaards.kalneslopene.model.input.NewsfeedInput
 import com.grimsgaards.kalneslopene.repository.NewsfeedRepository
-import com.grimsgaards.kalneslopene.repository.NewsfeedSettingsRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchers.anyInt
-import org.mockito.ArgumentMatchers.anyString
+import org.mockito.ArgumentMatchers.*
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.Mockito.inOrder
-import org.mockito.Mockito.verify
-import org.mockito.Mockito.verifyNoInteractions
-import org.mockito.Mockito.verifyNoMoreInteractions
+import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.quality.Strictness
 import org.mockito.stubbing.OngoingStubbing
 import java.time.OffsetDateTime
-import java.util.Optional
-import java.util.UUID
+import java.util.*
 import java.util.concurrent.atomic.AtomicReference
 
 @MockitoSettings(strictness = Strictness.LENIENT)
 class NewsfeedServiceTest {
     @Mock
     lateinit var newsfeedRepository: NewsfeedRepository
-
-    @Mock
-    lateinit var newsfeedSettingsRepository: NewsfeedSettingsRepository
 
     @Mock
     lateinit var s3Service: S3Service
@@ -45,11 +34,10 @@ class NewsfeedServiceTest {
     fun setUp() {
         // The service resolves settings in a constructor-time field initializer; returning an
         // existing settings row keeps construction from trying to persist a default.
-        whenever(newsfeedSettingsRepository.findAll())
-            .thenReturn(listOf(NewsfeedSettingsEntity(id = 1, maxArticles = 10)))
+
         whenever(newsfeedRepository.save(any())).thenAnswer { it.getArgument(0) }
 
-        service = NewsfeedService(newsfeedRepository, newsfeedSettingsRepository, s3Service)
+        service = NewsfeedService(newsfeedRepository, s3Service)
     }
 
     @Nested

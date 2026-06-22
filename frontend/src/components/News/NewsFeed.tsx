@@ -1,7 +1,6 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: dot indicators by index is fine */
 import { useQuery } from "@tanstack/react-query";
-import { ChevronRight, ChevronUp, Newspaper } from "lucide-react";
-import { useState } from "react";
+import { ChevronRight, Newspaper } from "lucide-react";
 import { Link } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card.tsx";
@@ -11,7 +10,6 @@ import type { NewsFeedDTO } from "@/model/DTO.ts";
 
 export default function NewsFeed() {
   const { data: newsfeeds } = useQuery(QUERIES.newsfeed.getAllNewsFeeds);
-  const [expanded, setExpanded] = useState(false);
   const tags = useTags();
 
   if (!newsfeeds || newsfeeds.length === 0) {
@@ -24,7 +22,7 @@ export default function NewsFeed() {
   }
 
   const COLS = 3;
-  const visible = expanded ? newsfeeds : newsfeeds.slice(0, COLS);
+  const visible = newsfeeds.slice(0, COLS);
   const hasMore = newsfeeds.length > COLS;
 
   return (
@@ -34,21 +32,12 @@ export default function NewsFeed() {
           Siste nytt
         </h2>
         {hasMore && (
-          <button
-            type="button"
-            onClick={() => setExpanded((v) => !v)}
+          <Link
+            to="/nyheter"
             className="flex items-center gap-1 text-sm font-bold text-primary hover:opacity-80 transition-opacity"
           >
-            {expanded ? (
-              <>
-                Vis færre <ChevronUp className="size-4" />
-              </>
-            ) : (
-              <>
-                Vis flere <ChevronRight className="size-4" />
-              </>
-            )}
-          </button>
+            Vis flere <ChevronRight className="size-4" />
+          </Link>
         )}
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4">

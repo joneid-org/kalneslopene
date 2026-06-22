@@ -10,4 +10,6 @@ import java.util.UUID
 interface NewsfeedRepository : JpaRepository<NewsfeedEntity, UUID> {
     @Query("SELECT n FROM NewsfeedEntity n ORDER BY n.date DESC LIMIT :limit")
     fun findAllSortedAndLimited(limit: Int): List<NewsfeedEntity>
+
+    fun findAllByOrderByDateDesc(): List<NewsfeedEntity>
 }

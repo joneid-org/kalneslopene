@@ -6,16 +6,14 @@ import com.grimsgaards.kalneslopene.model.input.NewsfeedInput
 import com.grimsgaards.kalneslopene.model.input.PhotoUploadInfo
 import com.grimsgaards.kalneslopene.repository.NewsfeedRepository
 import org.springframework.stereotype.Service
-import java.util.*
+import java.util.UUID
 
 @Service
 class NewsfeedService(
     val newsfeedRepository: NewsfeedRepository,
     val s3Service: S3Service,
 ) {
-
-    fun getNewsfeed(): List<NewsfeedDTO> =
-        newsfeedRepository.findAll().map { it.toDto() }
+    fun getNewsfeed(): List<NewsfeedDTO> = newsfeedRepository.findAll().map { it.toDto() }
 
     fun findByUuid(uuid: UUID): NewsfeedDTO = newsfeedRepository.findById(uuid).get().toDto()
 

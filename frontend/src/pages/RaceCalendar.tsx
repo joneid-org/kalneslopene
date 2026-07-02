@@ -1,41 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
-import {
-  ArrowLeft,
-  Camera,
-  ChevronLeft,
-  ChevronRight,
-  CloudSun,
-  Users,
-} from "lucide-react";
-import { Tooltip as TooltipPrimitive } from "radix-ui";
-import { useState } from "react";
+import { ArrowLeft, ArrowRight, Camera, CloudSun, Users } from "lucide-react";
 import { Link } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
 import { Button } from "@/components/ui/button.tsx";
+import { NORWEGIAN_MONTH_NAMES } from "@/lib/constants.ts";
 import {
-  Tooltip,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip.tsx";
-import { formatTimeStamp } from "@/lib/timeUtils.ts";
+  extractYear,
+  formatTimeStamp,
+  formatWeekdayDateFull,
+  raceDateToSortKey,
+} from "@/lib/timeUtils.ts";
 import { cn, isPast } from "@/lib/utils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 
-const WEEKDAYS = ["Man", "Tir", "Ons", "Tor", "Fre", "Lør", "Søn"];
-const MONTHS = [
-  "Januar",
-  "Februar",
-  "Mars",
-  "April",
-  "Mai",
-  "Juni",
-  "Juli",
-  "August",
-  "September",
-  "Oktober",
-  "November",
-  "Desember",
-];
+const WEEKDAYS_SHORT = ["Søn", "Man", "Tir", "Ons", "Tor", "Fre", "Lør"];
 
 function raceDateToDate(raceDate: unknown): Date {
   const iso = typeof raceDate === "string" ? raceDate : String(raceDate);
@@ -44,229 +22,230 @@ function raceDateToDate(raceDate: unknown): Date {
   return new Date(y, (m ?? 1) - 1, d ?? 1);
 }
 
-function isSameDay(a: Date, b: Date) {
+type MonthGroup = { month: number; races: RaceDTO[] };
+
+function groupByMonth(races: RaceDTO[]): MonthGroup[] {
+  const groups: MonthGroup[] = [];
+  for (const race of races) {
+    const month = raceDateToDate(race.raceDate).getMonth();
+    const last = groups[groups.length - 1];
+    if (last && last.month === month) last.races.push(race);
+    else groups.push({ month, races: [race] });
+  }
+  return groups;
+}
+
+type RaceStatus = "past" | "next" | "upcoming";
+
+function DateBadge({ date, status }: { date: Date; status: RaceStatus }) {
   return (
-    a.getFullYear() === b.getFullYear() &&
-    a.getMonth() === b.getMonth() &&
-    a.getDate() === b.getDate()
+    <div
+      className={cn(
+        "flex size-14 shrink-0 flex-col items-center justify-center rounded-xl text-center",
+        status === "next"
+          ? "bg-brand text-brand-foreground"
+          : status === "past"
+            ? "bg-muted text-muted-foreground"
+            : "border border-border bg-card text-foreground",
+      )}
+    >
+      <span className="font-display text-xl font-black leading-none tabular-nums">
+        {date.getDate()}
+      </span>
+      <span className="mt-0.5 text-[10px] font-bold uppercase tracking-wide opacity-80">
+        {WEEKDAYS_SHORT[date.getDay()]}
+      </span>
+    </div>
   );
 }
 
-type CalendarCell = { date: Date; inMonth: boolean };
-
-function getCalendarDays(year: number, month: number): CalendarCell[] {
-  const firstDay = new Date(year, month, 1);
-  const startOffset = (firstDay.getDay() + 6) % 7;
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-  const cells: CalendarCell[] = [];
-  for (let i = startOffset; i > 0; i--) {
-    cells.push({ date: new Date(year, month, 1 - i), inMonth: false });
-  }
-  for (let d = 1; d <= daysInMonth; d++) {
-    cells.push({ date: new Date(year, month, d), inMonth: true });
-  }
-  while (cells.length % 7 !== 0) {
-    const last = cells[cells.length - 1].date;
-    cells.push({
-      date: new Date(last.getFullYear(), last.getMonth(), last.getDate() + 1),
-      inMonth: false,
-    });
-  }
-  return cells;
+function StatItem({
+  icon: Icon,
+  children,
+}: {
+  icon: typeof Users;
+  children: React.ReactNode;
+}) {
+  return (
+    <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
+      <Icon className="size-4 shrink-0 text-primary" />
+      {children}
+    </span>
+  );
 }
 
-function PastRaceTooltip({ race, day }: { race: RaceDTO; day: Date }) {
+function PastRaceRow({ race, date }: { race: RaceDTO; date: Date }) {
+  const content = (
+    <div className="flex min-w-0 flex-1 items-center gap-4 rounded-xl border bg-card p-3 transition-colors group-hover:bg-muted/50">
+      <DateBadge date={date} status="past" />
+      <div className="min-w-0 flex-1">
+        <div className="font-display font-bold text-foreground">
+          {formatWeekdayDateFull(race.raceDate)}
+        </div>
+        <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1">
+          <StatItem icon={Users}>{race.runnerCount} løpere</StatItem>
+          {race.photos.length > 0 && (
+            <StatItem icon={Camera}>{race.photos.length} bilder</StatItem>
+          )}
+          {race.weather && <StatItem icon={CloudSun}>{race.weather}</StatItem>}
+        </div>
+      </div>
+      <ArrowRight className="size-5 shrink-0 text-muted-foreground/50 transition-transform group-hover:translate-x-0.5 group-hover:text-primary" />
+    </div>
+  );
+
+  if (!race.uuid) return content;
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <Link to={`/Resultater/${race.uuid}`} className="block h-full">
-          <div className="flex flex-col h-full p-1.5 rounded-md text-left transition-colors bg-muted/60 border border-border hover:bg-muted">
-            <span className="text-base font-semibold leading-none">
-              {day.getDate()}
-            </span>
-            <span className="text-xs mt-1 text-muted-foreground hidden sm:block">
-              kl. {formatTimeStamp(race.raceDate)}
-            </span>
-            <span className="mt-auto text-xs font-medium text-primary underline-offset-2 hover:underline hidden sm:block">
-              Resultater →
-            </span>
-          </div>
-        </Link>
-      </TooltipTrigger>
-      <TooltipPrimitive.Portal>
-        <TooltipPrimitive.Content
-          side="right"
-          align="start"
-          sideOffset={0}
-          className="group z-50 -translate-y-full"
-        >
-          <div className="w-52 origin-bottom-left animate-in rounded-md border bg-popover p-3 text-popover-foreground shadow-md fade-in-0 zoom-in-95 group-data-[state=closed]:animate-out group-data-[state=closed]:fade-out-0 group-data-[state=closed]:zoom-out-95">
-            <p className="font-semibold text-sm">
-              {day.getDate()}. {MONTHS[day.getMonth()].toLowerCase()}{" "}
-              {day.getFullYear()}
-            </p>
-            <div className="mt-2 space-y-1.5 text-sm text-muted-foreground">
-              <p className="flex items-center gap-2">
-                <Users className="size-4 shrink-0 text-primary" />
-                {race.runnerCount} løpere
-              </p>
-              {race.photos.length > 0 && (
-                <p className="flex items-center gap-2">
-                  <Camera className="size-4 shrink-0 text-primary" />
-                  {race.photos.length} bilder
-                </p>
-              )}
-              {race.weather && (
-                <p className="flex items-center gap-2">
-                  <CloudSun className="size-4 shrink-0 text-primary" />
-                  {race.weather}
-                </p>
-              )}
-            </div>
-          </div>
-        </TooltipPrimitive.Content>
-      </TooltipPrimitive.Portal>
-    </Tooltip>
+    <Link to={`/Resultater/${race.uuid}`} className="group block">
+      {content}
+    </Link>
+  );
+}
+
+function NextRaceRow({ race, date }: { race: RaceDTO; date: Date }) {
+  return (
+    <div className="flex items-center gap-4 rounded-xl bg-brand-ink p-3 shadow-[0_16px_30px_-16px_rgba(18,58,40,0.6)]">
+      <DateBadge date={date} status="next" />
+      <div className="min-w-0 flex-1">
+        <div className="text-[11px] font-bold uppercase tracking-wider text-brand-soft-foreground">
+          Neste løp
+        </div>
+        <div className="mt-0.5 truncate font-display font-extrabold text-white">
+          {formatWeekdayDateFull(race.raceDate)}
+        </div>
+        <div className="mt-0.5 text-sm text-white/70">
+          Start kl. {formatTimeStamp(race.raceDate)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function UpcomingRaceRow({ race, date }: { race: RaceDTO; date: Date }) {
+  return (
+    <div className="flex items-center gap-4 rounded-xl border border-dashed bg-card p-3">
+      <DateBadge date={date} status="upcoming" />
+      <div className="min-w-0 flex-1">
+        <div className="font-display font-bold text-foreground">
+          {formatWeekdayDateFull(race.raceDate)}
+        </div>
+        <div className="mt-0.5 text-sm text-muted-foreground">
+          Start kl. {formatTimeStamp(race.raceDate)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RaceRowSkeleton() {
+  return (
+    <div className="flex items-center gap-4 rounded-xl border bg-card p-3">
+      <div className="size-14 shrink-0 animate-pulse rounded-xl bg-muted" />
+      <div className="flex-1 space-y-2">
+        <div className="h-4 w-48 animate-pulse rounded bg-muted" />
+        <div className="h-3 w-32 animate-pulse rounded bg-muted" />
+      </div>
+    </div>
   );
 }
 
 export function RaceCalendar() {
-  const { data: races = [] } = useQuery(QUERIES.race.getAllRaces());
+  const { data: races = [], isPending } = useQuery(QUERIES.race.getAllRaces());
 
-  const now = new Date();
-  const currentYear = now.getFullYear();
-  const [month, setMonth] = useState(now.getMonth());
+  const currentYear = new Date().getFullYear();
 
-  // Only show current season — clamp navigation to current year
-  const minMonth = 0;
-  const maxMonth = 11;
+  const seasonRaces = races
+    .filter((r) => extractYear(r.raceDate) === currentYear)
+    .sort((a, b) =>
+      raceDateToSortKey(a.raceDate).localeCompare(
+        raceDateToSortKey(b.raceDate),
+      ),
+    );
 
-  const raceMap = new Map<string, RaceDTO>();
-  for (const race of races.filter(
-    (r) => raceDateToDate(r.raceDate).getFullYear() === currentYear,
-  )) {
-    const d = raceDateToDate(race.raceDate);
-    raceMap.set(`${d.getMonth()}-${d.getDate()}`, race);
-  }
-
-  function prevMonth() {
-    setMonth((m) => Math.max(minMonth, m - 1));
-  }
-
-  function nextMonth() {
-    setMonth((m) => Math.min(maxMonth, m + 1));
-  }
-
-  const cells = getCalendarDays(currentYear, month);
+  const completed = seasonRaces.filter(isPast).length;
+  const total = seasonRaces.length;
+  const nextRace = seasonRaces.find((r) => !isPast(r));
+  const groups = groupByMonth(seasonRaces);
 
   return (
-    <TooltipProvider delayDuration={200}>
-      <div className="page-content section-stack">
-        <Link to="/" className="-mb-2">
-          <Button variant="ghost" size="sm" className="gap-1 -ml-2">
-            <ArrowLeft className="size-4" />
-            Tilbake
-          </Button>
-        </Link>
+    <div className="page-content-sm section-stack">
+      <Link to="/" className="-mb-2">
+        <Button variant="ghost" size="sm" className="-ml-2 gap-1">
+          <ArrowLeft className="size-4" />
+          Tilbake
+        </Button>
+      </Link>
 
-        <section className="space-y-1">
+      <section className="space-y-3">
+        <div className="space-y-1">
           <h1 className="page-title">Løpskalender {currentYear}</h1>
           <p className="text-muted-foreground text-sm">
-            Oversikt over Torsdagsløpene denne sesongen. Hold over et
-            gjennomført løp for detaljer.
+            Torsdagsløpene denne sesongen. Trykk på et gjennomført løp for
+            resultater.
           </p>
-        </section>
-
-        {/* Calendar */}
-        <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
-          {/* Month navigation */}
-          <div className="flex items-center justify-between px-4 py-3 border-b bg-muted/30">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={prevMonth}
-              disabled={month === minMonth}
-            >
-              <ChevronLeft className="size-4" />
-            </Button>
-            <h2 className="font-semibold text-base">
-              {MONTHS[month]} {currentYear}
-            </h2>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={nextMonth}
-              disabled={month === maxMonth}
-            >
-              <ChevronRight className="size-4" />
-            </Button>
-          </div>
-
-          {/* Weekday headers */}
-          <div className="grid grid-cols-7 border-b">
-            {WEEKDAYS.map((wd) => (
-              <div
-                key={wd}
-                className="py-2 text-center text-sm font-medium text-muted-foreground"
-              >
-                {wd}
-              </div>
-            ))}
-          </div>
-
-          {/* Day grid */}
-          <div className="grid grid-cols-7">
-            {cells.map(({ date, inMonth }) => {
-              const race = inMonth
-                ? raceMap.get(`${date.getMonth()}-${date.getDate()}`)
-                : undefined;
-              const isToday = inMonth && isSameDay(date, now);
-              const past = race ? isPast(race) : false;
-
-              return (
-                <div
-                  key={date.toISOString()}
-                  className={cn(
-                    "min-h-16 sm:min-h-20 border-b border-r p-1",
-                    "[&:nth-child(7n)]:border-r-0",
-                    !inMonth && "bg-muted/20",
-                  )}
-                >
-                  {inMonth && !race && (
-                    <span
-                      className={cn(
-                        "text-base leading-none p-1 inline-flex items-center justify-center size-8 rounded-full",
-                        isToday
-                          ? "bg-primary text-primary-foreground font-semibold"
-                          : "text-muted-foreground",
-                      )}
-                    >
-                      {date.getDate()}
-                    </span>
-                  )}
-                  {inMonth && race && past && race.uuid && (
-                    <PastRaceTooltip race={race} day={date} />
-                  )}
-                  {inMonth && race && !past && (
-                    <div className="flex flex-col h-full p-1.5 rounded-md text-left bg-primary text-primary-foreground shadow-sm">
-                      <span className="text-base font-semibold leading-none">
-                        {date.getDate()}
-                      </span>
-                      <span className="text-xs mt-1 text-primary-foreground/70 hidden sm:block">
-                        kl. {formatTimeStamp(race.raceDate)}
-                      </span>
-                      <span className="mt-auto text-xs font-semibold text-primary-foreground/80 hidden sm:block">
-                        Kommende
-                      </span>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
         </div>
-      </div>
-    </TooltipProvider>
+
+        {total > 0 && (
+          <div className="flex items-center gap-3">
+            <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
+              <div
+                className="h-full rounded-full bg-brand transition-all"
+                style={{ width: `${(completed / total) * 100}%` }}
+              />
+            </div>
+            <span className="shrink-0 text-sm font-semibold tabular-nums text-muted-foreground">
+              {completed} / {total} løp
+            </span>
+          </div>
+        )}
+      </section>
+
+      {isPending ? (
+        <div className="space-y-3">
+          {[0, 1, 2, 3].map((i) => (
+            <RaceRowSkeleton key={i} />
+          ))}
+        </div>
+      ) : total === 0 ? (
+        <div className="empty-state">
+          <CloudSun className="size-8" />
+          <p>Ingen løp planlagt for sesongen ennå.</p>
+        </div>
+      ) : (
+        <div className="space-y-6">
+          {groups.map((group) => (
+            <section key={group.month} className="space-y-3">
+              <h2 className="text-label sticky top-0 z-10 -mx-3 bg-background/90 px-3 py-1 backdrop-blur sm:-mx-4 sm:px-4">
+                {NORWEGIAN_MONTH_NAMES[group.month]}
+              </h2>
+              <div className="space-y-3">
+                {group.races.map((race) => {
+                  const date = raceDateToDate(race.raceDate);
+                  if (race.uuid === nextRace?.uuid)
+                    return (
+                      <NextRaceRow key={race.uuid} race={race} date={date} />
+                    );
+                  if (isPast(race))
+                    return (
+                      <PastRaceRow
+                        key={race.uuid ?? date.toISOString()}
+                        race={race}
+                        date={date}
+                      />
+                    );
+                  return (
+                    <UpcomingRaceRow
+                      key={race.uuid ?? date.toISOString()}
+                      race={race}
+                      date={date}
+                    />
+                  );
+                })}
+              </div>
+            </section>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }

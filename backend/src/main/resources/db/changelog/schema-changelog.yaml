@@ -118,3 +118,10 @@ databaseChangeLog:
         - sqlFile:
             path: db/changelog/sql/migrate/migrate_newsfeed_add_header_image_file.sql
             relativeToChangelogFile: false
+  - changeSet:
+      id: 018-create_race_runner_stats_view
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/create/create_race_runner_stats_view.sql
+            relativeToChangelogFile: false

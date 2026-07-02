@@ -1,17 +1,17 @@
 info:
   name: Create
   type: http
-  seq: 2
+  seq: 5
 
 http:
   method: POST
-  url: "{{url}}/api/races/createRaces"
+  url: "{{url}}/api/races"
   body:
     type: json
     data: |-
       [
           {
-              "raceDate": "2026-04-18T18:00:00Z",
+              "raceDate": "2026-04-19T18:00:00Z",
               "weather": "Cloudy"
           }
       ]
@@ -22,4 +22,3 @@ settings:
   timeout: 0
   followRedirects: true
   maxRedirects: 5
-

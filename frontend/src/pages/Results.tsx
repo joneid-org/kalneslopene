@@ -1,5 +1,5 @@
-import { useQueries, useQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { Navigate, useParams } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
 import PhotoDialog from "@/components/PhotoDialog.tsx";
@@ -8,10 +8,6 @@ import { RaceSwitcher } from "@/components/Results/RaceSwitcher.tsx";
 import ResultsHeader from "@/components/Results/ResultsHeader.tsx";
 import ResultsTable from "@/components/Results/ResultsTable.tsx";
 import { StatTile } from "@/components/StatTile.tsx";
-import {
-  getNewPersonalBestCount,
-  getNewYearBestCount,
-} from "@/lib/statisticsUtils.ts";
 import { formatDateFull } from "@/lib/timeUtils.ts";
 import {
   buildTableRows,
@@ -19,65 +15,35 @@ import {
   getNextRace,
   getPreviousRace,
 } from "@/lib/utils.ts";
-import type { RaceRunnerDTO } from "@/model/DTO.ts";
 
 export function Results() {
   const { uuid = "" } = useParams<{ uuid: string }>();
 
   const { data: races } = useQuery(QUERIES.race.getAllRaces());
-  const { data: raceRunners } = useQuery(
-    QUERIES.race.getAllRunnersInRace(uuid),
+  const { data: raceResults } = useQuery(
+    QUERIES.race.getAllResultsInRace(uuid),
   );
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-
-  const runnerRaceQueries = useQueries({
-    queries: (raceRunners ?? []).map((rr) =>
-      QUERIES.runner.getAllRacesByRunner(rr.runner.uuid ?? ""),
-    ),
-  });
-
-  const { raceCountByRunner, allRacesByRunner } = useMemo(() => {
-    const count: Record<string, number> = {};
-    const all: Record<string, RaceRunnerDTO[]> = {};
-    (raceRunners ?? []).forEach((rr, index) => {
-      const id = rr.runner.uuid ?? "";
-      count[id] = runnerRaceQueries[index]?.data?.length ?? 0;
-      all[id] = runnerRaceQueries[index]?.data ?? [];
-    });
-    return { raceCountByRunner: count, allRacesByRunner: all };
-  }, [raceRunners, runnerRaceQueries]);
 
   const allRaces = races ?? [];
   const race = allRaces.find((r) => r.uuid === uuid);
   const previous = getPreviousRace(allRaces, uuid);
   const next = getNextRace(allRaces, uuid);
   const title = formatDateFull(race?.raceDate);
-  const tableData = buildTableRows(
-    raceRunners ?? [],
-    raceCountByRunner,
-    allRacesByRunner,
-  );
-  const participants = raceRunners?.length;
-  const maleCount = raceRunners?.filter(
+  const tableData = buildTableRows(raceResults ?? []);
+  const participants = raceResults?.length;
+  const maleCount = raceResults?.filter(
     (r) => r.runner.gender === "Mann",
   ).length;
-  const femaleCount = raceRunners?.filter(
+  const femaleCount = raceResults?.filter(
     (r) => r.runner.gender === "Kvinne",
   ).length;
-  const yearBestCount = getNewYearBestCount(
-    raceRunners ?? [],
-    uuid,
-    allRacesByRunner,
-  );
-  const personalBestCount = getNewPersonalBestCount(
-    raceRunners ?? [],
-    uuid,
-    allRacesByRunner,
-  );
-  const debutantCount = Object.values(raceCountByRunner).filter(
-    (c) => c === 1,
-  ).length;
+  const yearBestCount = raceResults?.filter((r) => r.newSeasonBest).length ?? 0;
+  const personalBestCount =
+    raceResults?.filter((r) => r.newPersonalBest).length ?? 0;
+  const debutantCount =
+    raceResults?.filter((r) => r.totalRaces === 1).length ?? 0;
   const racePhotos = race?.photos ?? [];
 
   if (!race) {

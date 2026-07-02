@@ -11,7 +11,12 @@ import {
   mapResultTimeToNumber,
   raceDateToSortKey,
 } from "@/lib/timeUtils.ts";
-import type { OrganizerDTO, RaceDTO, RaceRunnerDTO } from "@/model/DTO.ts";
+import type {
+  OrganizerDTO,
+  RaceDTO,
+  RaceResultDTO,
+  RaceRunnerDTO,
+} from "@/model/DTO.ts";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -113,41 +118,30 @@ export type RowData = {
   isPR: boolean;
 };
 
-export function buildTableRows(
-  raceRunners: RaceRunnerDTO[],
-  raceCountByRunner: Record<string, number> = {},
-  allRacesByRunner: Record<string, RaceRunnerDTO[]> = {},
-): RowData[] {
-  const sorted = raceRunners.toSorted(
+export function buildTableRows(results: RaceResultDTO[]): RowData[] {
+  const sorted = results.toSorted(
     (a, b) =>
       mapResultTimeToNumber(a.resultTime ?? "") -
       mapResultTimeToNumber(b.resultTime ?? ""),
   );
 
-  const currentYear = new Date().getFullYear();
-
-  return sorted.map((rr, index) => {
-    const timeSeconds = mapResultTimeToNumber(rr.resultTime ?? "");
+  return sorted.map((result, index) => {
+    const timeSeconds = mapResultTimeToNumber(result.resultTime ?? "");
     const paceSeconds =
       DISTANCE_KM > 0 && timeSeconds > 0
         ? timeSeconds / DISTANCE_KM
         : Number.NaN;
-    const runnerHistory = allRacesByRunner[rr.runner.uuid ?? ""] ?? [];
-    const prTime = getBestRaceFromRunner(runnerHistory);
-    const formattedTime = rr.hideTime
-      ? "Deltatt"
-      : formatSecondsToTime(timeSeconds);
     return {
       position: index + 1,
-      runnerName: rr.runner.name,
-      gender: rr.runner.gender,
-      time: formattedTime,
-      hideTime: rr.hideTime,
+      runnerName: result.runner.name,
+      gender: result.runner.gender,
+      time: result.hideTime ? "Deltatt" : formatSecondsToTime(timeSeconds),
+      hideTime: result.hideTime,
       pace: formatSecondsToTime(paceSeconds),
-      races: raceCountByRunner[rr.runner.uuid ?? ""] ?? 0,
-      pr: prTime,
-      yearBest: getBestRaceThisYearFromRunner(runnerHistory, currentYear),
-      isPR: !rr.hideTime && timeSeconds > 0 && formattedTime === prTime,
+      races: result.totalRaces,
+      pr: formatSecondsToTime(mapResultTimeToNumber(result.personalBest)),
+      yearBest: formatSecondsToTime(mapResultTimeToNumber(result.seasonBest)),
+      isPR: result.newPersonalBest,
     };
   });
 }

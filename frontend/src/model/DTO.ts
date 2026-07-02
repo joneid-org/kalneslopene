@@ -65,6 +65,17 @@ export type RaceRunnerDTO = {
   hideTime: boolean;
 };
 
+export type RaceResultDTO = {
+  runner: RunnerDTO;
+  resultTime: string;
+  hideTime: boolean;
+  totalRaces: number;
+  personalBest?: string;
+  seasonBest?: string;
+  newPersonalBest: boolean;
+  newSeasonBest: boolean;
+};
+
 export type MilestoneDTO = {
   uuid: string;
   year: string;

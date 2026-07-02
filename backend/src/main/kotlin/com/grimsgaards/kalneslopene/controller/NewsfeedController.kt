@@ -2,6 +2,7 @@ package com.grimsgaards.kalneslopene.controller
 
 import com.grimsgaards.kalneslopene.model.dto.NewsfeedDTO
 import com.grimsgaards.kalneslopene.model.dto.NewsfeedTagDTO
+import com.grimsgaards.kalneslopene.model.dto.PagedResponse
 import com.grimsgaards.kalneslopene.model.input.NewsfeedInput
 import com.grimsgaards.kalneslopene.model.input.NewsfeedTagInput
 import com.grimsgaards.kalneslopene.model.input.NewsfeedTagUpdateInput
@@ -27,7 +28,10 @@ class NewsfeedController(
     val newsfeedTagService: NewsfeedTagService,
 ) {
     @GetMapping
-    fun getNewsFeedList(): List<NewsfeedDTO> = newsfeedService.getNewsfeed()
+    fun getNewsFeedList(
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "6") pageSize: Int,
+    ): PagedResponse<NewsfeedDTO> = newsfeedService.getNewsfeedPage(page, pageSize)
 
     @GetMapping("/{uuid}")
     fun getNewsFeed(

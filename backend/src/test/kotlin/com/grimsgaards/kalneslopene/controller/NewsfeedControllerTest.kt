@@ -1,6 +1,8 @@
 package com.grimsgaards.kalneslopene.controller
 
 import com.grimsgaards.kalneslopene.model.dto.FileDto
+import com.grimsgaards.kalneslopene.model.dto.NewsfeedDTO
+import com.grimsgaards.kalneslopene.model.dto.PagedResponse
 import com.grimsgaards.kalneslopene.model.input.PhotoUploadInfo
 import com.grimsgaards.kalneslopene.service.NewsfeedService
 import com.grimsgaards.kalneslopene.service.NewsfeedTagService
@@ -12,7 +14,9 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import java.time.OffsetDateTime
 import java.util.UUID
 
 @WebMvcTest(NewsfeedController::class)
@@ -57,5 +61,58 @@ class NewsfeedControllerTest {
             .andExpect {
                 status { isBadRequest() }
             }
+    }
+
+    @Test
+    fun `GET archive passes page and size through and serialises the paged response`() {
+        val newsUuid = UUID.randomUUID()
+        val paged =
+            PagedResponse(
+                content =
+                    listOf(
+                        NewsfeedDTO(
+                            uuid = newsUuid,
+                            tags = listOf("Løp"),
+                            header = "Overskrift",
+                            content = "Innhold",
+                            date = OffsetDateTime.parse("2026-07-01T12:00:00Z"),
+                        ),
+                    ),
+                page = 1,
+                pageSize = 6,
+                totalElements = 7,
+                totalPages = 2,
+            )
+        Mockito.`when`(newsfeedService.getNewsfeedPage(1, 6)).thenReturn(paged)
+
+        mockMvc
+            .get("/api/newsfeeds") {
+                param("page", "1")
+                param("pageSize", "6")
+            }.andExpect {
+                status { isOk() }
+                jsonPath("$.content[0].uuid") { value(newsUuid.toString()) }
+                jsonPath("$.page") { value(1) }
+                jsonPath("$.pageSize") { value(6) }
+                jsonPath("$.totalElements") { value(7) }
+                jsonPath("$.totalPages") { value(2) }
+            }
+
+        verify(newsfeedService).getNewsfeedPage(1, 6)
+    }
+
+    @Test
+    fun `GET archive uses default page and size when omitted`() {
+        Mockito
+            .`when`(newsfeedService.getNewsfeedPage(0, 6))
+            .thenReturn(PagedResponse(emptyList(), 0, 6, 0, 0))
+
+        mockMvc
+            .get("/api/newsfeeds")
+            .andExpect {
+                status { isOk() }
+            }
+
+        verify(newsfeedService).getNewsfeedPage(0, 6)
     }
 }

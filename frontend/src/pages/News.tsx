@@ -21,18 +21,18 @@ function pageItems(current: number, total: number): (number | "...")[] {
 }
 
 export function News() {
-  const { data: newsfeeds } = useQuery(QUERIES.newsfeed.getNewsArchive);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const all = newsfeeds ?? [];
-  const totalPages = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
-  const page = Math.min(
-    Math.max(1, Number(searchParams.get("side")) || 1),
-    totalPages,
+  const page = Math.max(1, Number(searchParams.get("side")) || 1);
+  const { data } = useQuery(
+    QUERIES.newsfeed.getNewsArchivePage(page - 1, PAGE_SIZE),
   );
 
+  const visible = data?.content ?? [];
+  const totalElements = data?.totalElements ?? 0;
+  const totalPages = Math.max(1, data?.totalPages ?? 1);
+
   const start = (page - 1) * PAGE_SIZE;
-  const visible = all.slice(start, start + PAGE_SIZE);
   const items = pageItems(page, totalPages);
 
   const goToPage = (next: number) => {
@@ -58,10 +58,10 @@ export function News() {
       </Link>
       <div className="mb-6">
         <h1 className="page-title">Nyheter</h1>
-        <p className="page-subtitle mt-1">{all.length} nyheter</p>
+        <p className="page-subtitle mt-1">{totalElements} nyheter</p>
       </div>
 
-      {all.length === 0 ? (
+      {totalElements === 0 ? (
         <div className="empty-state">
           <Newspaper className="size-10 text-gray-200" />
           <p className="text-sm text-gray-400">Ingen nyheter ennå.</p>

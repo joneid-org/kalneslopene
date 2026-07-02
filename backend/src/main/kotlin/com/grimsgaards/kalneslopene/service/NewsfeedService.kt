@@ -1,10 +1,13 @@
 package com.grimsgaards.kalneslopene.service
 
 import com.grimsgaards.kalneslopene.model.dto.NewsfeedDTO
+import com.grimsgaards.kalneslopene.model.dto.PagedResponse
 import com.grimsgaards.kalneslopene.model.entities.NewsfeedEntity
 import com.grimsgaards.kalneslopene.model.input.NewsfeedInput
 import com.grimsgaards.kalneslopene.model.input.PhotoUploadInfo
 import com.grimsgaards.kalneslopene.repository.NewsfeedRepository
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import java.util.UUID
 
@@ -13,7 +16,20 @@ class NewsfeedService(
     val newsfeedRepository: NewsfeedRepository,
     val s3Service: S3Service,
 ) {
-    fun getNewsfeed(): List<NewsfeedDTO> = newsfeedRepository.findAll().map { it.toDto() }
+    fun getNewsfeedPage(
+        page: Int,
+        pageSize: Int,
+    ): PagedResponse<NewsfeedDTO> {
+        val pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "date"))
+        val result = newsfeedRepository.findAll(pageable)
+        return PagedResponse(
+            content = result.content.map { it.toDto() },
+            page = result.number,
+            pageSize = result.size,
+            totalElements = result.totalElements,
+            totalPages = result.totalPages,
+        )
+    }
 
     fun findByUuid(uuid: UUID): NewsfeedDTO = newsfeedRepository.findById(uuid).get().toDto()
 

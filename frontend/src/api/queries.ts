@@ -13,6 +13,7 @@ import type {
   NewsfeedTagInput,
   OrganizerDTO,
   OrganizerInput,
+  PagedResponse,
   RaceDTO,
   RaceRunnerDTO,
   RaceStatisticsDTO,
@@ -209,6 +210,21 @@ export const QUERIES = {
         return data.map((feed) => ({ ...feed, date: new Date(feed.date) }));
       },
     },
+    getNewsArchivePage: (page: number, pageSize: number) => ({
+      queryKey: ["newsfeed", "archive", "page", page, pageSize],
+      queryFn: async () => {
+        const data = await kyClient
+          .get("/api/newsfeeds", { searchParams: { page, pageSize } })
+          .json<PagedResponse<NewsFeedDTO>>();
+        return {
+          ...data,
+          content: data.content.map((feed) => ({
+            ...feed,
+            date: new Date(feed.date),
+          })),
+        };
+      },
+    }),
     getNewsFeedByUuid: (uuid: string) => ({
       queryKey: ["newsfeed", "getById", uuid],
       queryFn: async () => {

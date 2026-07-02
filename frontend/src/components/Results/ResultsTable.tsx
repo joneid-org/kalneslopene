@@ -16,13 +16,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table.tsx";
+import { HIDEABLE_COLUMNS } from "@/lib/constants.ts";
 import { cn, type RowData } from "@/lib/utils.ts";
 
 type ResultsTableProps = {
   tableData: RowData[];
 };
-
-const VISIBLE_COUNT = 8;
 
 const rightAlignedColumns = new Set([
   "time",
@@ -58,7 +57,32 @@ function RankBadge({ rank }: { rank: number }) {
   );
 }
 
-function ResultCard({ row }: { row: RowData }) {
+type CardVisibility = {
+  pace: boolean;
+  yearBest: boolean;
+  pr: boolean;
+  races: boolean;
+};
+
+function ResultCard({
+  row,
+  visibility,
+}: {
+  row: RowData;
+  visibility: CardVisibility;
+}) {
+  const details: { key: string; label?: string; value: string }[] = [];
+  if (visibility.yearBest) {
+    details.push({ key: "yearBest", label: "Årsbeste", value: row.yearBest });
+  }
+  if (visibility.pr) {
+    details.push({ key: "pr", label: "Pers", value: row.pr });
+  }
+  if (visibility.races) {
+    details.push({ key: "races", label: "Løp", value: String(row.races) });
+  }
+  const showPace = visibility.pace && !row.hideTime;
+
   return (
     <div className="flex items-center gap-3 rounded-[14px] border bg-card px-3 py-2.5">
       <RankBadge rank={row.position} />
@@ -66,22 +90,34 @@ function ResultCard({ row }: { row: RowData }) {
         <div className="truncate text-[15px] font-bold leading-tight">
           {row.runnerName}
         </div>
-        {!row.hideTime && (
-          <div className="text-xs tabular-nums text-muted-foreground">
-            {row.pace} min/km
+        {details.length > 0 && (
+          <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] tabular-nums text-muted-foreground">
+            {details.map((d) => (
+              <span key={d.key} className="whitespace-nowrap">
+                {d.label && <span className="font-medium">{d.label} </span>}
+                {d.value}
+              </span>
+            ))}
           </div>
         )}
       </div>
-      <span
-        className={cn(
-          "font-display font-extrabold tabular-nums",
-          row.hideTime
-            ? "text-sm font-semibold text-muted-foreground"
-            : "text-lg",
+      <div className="flex shrink-0 flex-col items-end leading-tight">
+        <span
+          className={cn(
+            "font-display font-extrabold tabular-nums",
+            row.hideTime
+              ? "text-sm font-semibold text-muted-foreground"
+              : "text-lg",
+          )}
+        >
+          {row.time}
+        </span>
+        {showPace && (
+          <span className="text-xs tabular-nums text-muted-foreground">
+            {row.pace} min/km
+          </span>
         )}
-      >
-        {row.time}
-      </span>
+      </div>
     </div>
   );
 }
@@ -93,11 +129,15 @@ const numCell = ({ getValue }: CellContext<RowData, unknown>) => (
 );
 
 export default function ResultsTable({ tableData }: ResultsTableProps) {
-  const [expanded, setExpanded] = useState(false);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
-    yearBest: false,
-    pr: false,
+    pace: true,
+    yearBest: true,
+    pr: true,
+    races: true,
   });
+  const [mobileVisibility, setMobileVisibility] = useState<
+    Record<string, boolean>
+  >({ pace: true, yearBest: false, pr: false, races: false });
 
   const columns: ColumnDef<RowData>[] = useMemo(
     () => [
@@ -148,36 +188,39 @@ export default function ResultsTable({ tableData }: ResultsTableProps) {
     getCoreRowModel: getCoreRowModel(),
   });
 
-  const total = tableData.length;
-  const visibleRows = expanded ? tableData : tableData.slice(0, VISIBLE_COUNT);
-  const tableRows = table.getRowModel().rows;
-  const visibleTableRows = expanded
-    ? tableRows
-    : tableRows.slice(0, VISIBLE_COUNT);
-  const hasMore = total > VISIBLE_COUNT;
-  const toggleLabel = expanded ? "Vis færre" : `Vis alle ${total} resultater`;
+  const visibleRows = tableData;
+  const visibleTableRows = table.getRowModel().rows;
+
+  const cardVisibility: CardVisibility = {
+    pace: mobileVisibility.pace ?? false,
+    yearBest: mobileVisibility.yearBest ?? false,
+    pr: mobileVisibility.pr ?? false,
+    races: mobileVisibility.races ?? false,
+  };
 
   return (
     <section>
       {/* Mobile — card list */}
       <div className="md:hidden">
-        <h2 className="mb-2.5 font-display text-base font-extrabold tracking-tight">
-          Resultatliste
-        </h2>
+        <div className="mb-2.5 flex items-center justify-between">
+          <h2 className="font-display text-base font-extrabold tracking-tight">
+            Resultatliste
+          </h2>
+          <ColumnVisibilityMenu
+            columns={HIDEABLE_COLUMNS}
+            visibility={mobileVisibility}
+            setVisibility={setMobileVisibility}
+          />
+        </div>
         <div className="flex flex-col gap-2">
           {visibleRows.map((row) => (
-            <ResultCard key={`${row.position}-${row.runnerName}`} row={row} />
+            <ResultCard
+              key={`${row.position}-${row.runnerName}`}
+              row={row}
+              visibility={cardVisibility}
+            />
           ))}
         </div>
-        {hasMore && (
-          <button
-            type="button"
-            onClick={() => setExpanded((v) => !v)}
-            className="mt-2.5 h-11 w-full rounded-[13px] bg-secondary text-sm font-bold text-secondary-foreground transition-colors hover:bg-secondary/80"
-          >
-            {toggleLabel}
-          </button>
-        )}
       </div>
 
       {/* Web — table */}
@@ -187,9 +230,9 @@ export default function ResultsTable({ tableData }: ResultsTableProps) {
             Resultatliste
           </h2>
           <ColumnVisibilityMenu
-            table={table}
-            columnVisibility={columnVisibility}
-            setColumnVisibility={setColumnVisibility}
+            columns={HIDEABLE_COLUMNS}
+            visibility={columnVisibility}
+            setVisibility={setColumnVisibility}
           />
         </div>
 
@@ -238,16 +281,6 @@ export default function ResultsTable({ tableData }: ResultsTableProps) {
             ))}
           </TableBody>
         </Table>
-
-        {hasMore && (
-          <button
-            type="button"
-            onClick={() => setExpanded((v) => !v)}
-            className="h-[50px] w-full border-t bg-background text-sm font-bold text-primary transition-colors hover:bg-accent"
-          >
-            {toggleLabel}
-          </button>
-        )}
       </div>
     </section>
   );

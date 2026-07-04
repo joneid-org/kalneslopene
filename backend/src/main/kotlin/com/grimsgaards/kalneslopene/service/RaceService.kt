@@ -1,7 +1,9 @@
 package com.grimsgaards.kalneslopene.service
 
+import com.grimsgaards.kalneslopene.model.dto.Gender
 import com.grimsgaards.kalneslopene.model.dto.RaceDTO
 import com.grimsgaards.kalneslopene.model.dto.RaceResultDTO
+import com.grimsgaards.kalneslopene.model.dto.RaceResultSummaryDto
 import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
 import com.grimsgaards.kalneslopene.model.entities.RaceEntity
 import com.grimsgaards.kalneslopene.model.entities.RaceRunnerEntity
@@ -87,6 +89,18 @@ class RaceService(
                 newSeasonBest = hasVisibleTime && (stats?.beatsPreviousSeasonBest(raceRunner.resultTime) ?: true),
             )
         }
+    }
+
+    fun getResultSummary(uuid: UUID): RaceResultSummaryDto {
+        val results = findAllResultsInRace(uuid)
+        return RaceResultSummaryDto(
+            participants = results.size,
+            male = results.count { it.runner.gender == Gender.MALE },
+            female = results.count { it.runner.gender == Gender.FEMALE },
+            seasonBestCount = results.count { it.newSeasonBest },
+            personalBestCount = results.count { it.newPersonalBest },
+            debutantCount = results.count { it.totalRaces == 1 },
+        )
     }
 
     @Transactional

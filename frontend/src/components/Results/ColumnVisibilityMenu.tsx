@@ -32,7 +32,7 @@ export function ColumnVisibilityMenu({
           className="h-9 gap-2 rounded-[11px] text-[13px] font-semibold"
         >
           <ListFilter className="size-3.5" />
-          Filtrer &amp; kolonner
+          Kolonner
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-40">

@@ -57,6 +57,14 @@ function RankBadge({ rank }: { rank: number }) {
   );
 }
 
+function PrBadge() {
+  return (
+    <span className="inline-flex shrink-0 items-center rounded-full bg-brand px-1.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-brand-foreground">
+      Ny pers
+    </span>
+  );
+}
+
 type CardVisibility = {
   pace: boolean;
   yearBest: boolean;
@@ -87,8 +95,11 @@ function ResultCard({
     <div className="flex items-center gap-3 rounded-[14px] border bg-card px-3 py-2.5">
       <RankBadge rank={row.position} />
       <div className="min-w-0 flex-1">
-        <div className="truncate text-[15px] font-bold leading-tight">
-          {row.runnerName}
+        <div className="flex items-center gap-1.5">
+          <span className="min-w-0 truncate text-[15px] font-bold leading-tight">
+            {row.runnerName}
+          </span>
+          {row.isPR && <PrBadge />}
         </div>
         {details.length > 0 && (
           <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] tabular-nums text-muted-foreground">
@@ -151,8 +162,11 @@ export default function ResultsTable({ tableData }: ResultsTableProps) {
         accessorKey: "runnerName",
         header: "Navn",
         enableHiding: false,
-        cell: ({ getValue }) => (
-          <span className="font-semibold">{getValue<string>()}</span>
+        cell: ({ getValue, row }) => (
+          <span className="inline-flex items-center gap-2">
+            <span className="font-semibold">{getValue<string>()}</span>
+            {row.original.isPR && <PrBadge />}
+          </span>
         ),
       },
       {

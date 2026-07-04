@@ -23,6 +23,7 @@ export function Results() {
   const { data: raceResults } = useQuery(
     QUERIES.race.getAllResultsInRace(uuid),
   );
+  const { data: summary } = useQuery(QUERIES.race.getResultSummary(uuid));
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
@@ -32,18 +33,6 @@ export function Results() {
   const next = getNextRace(allRaces, uuid);
   const title = formatDateFull(race?.raceDate);
   const tableData = buildTableRows(raceResults ?? []);
-  const participants = raceResults?.length;
-  const maleCount = raceResults?.filter(
-    (r) => r.runner.gender === "Mann",
-  ).length;
-  const femaleCount = raceResults?.filter(
-    (r) => r.runner.gender === "Kvinne",
-  ).length;
-  const yearBestCount = raceResults?.filter((r) => r.newSeasonBest).length ?? 0;
-  const personalBestCount =
-    raceResults?.filter((r) => r.newPersonalBest).length ?? 0;
-  const debutantCount =
-    raceResults?.filter((r) => r.totalRaces === 1).length ?? 0;
   const racePhotos = race?.photos ?? [];
 
   if (!race) {
@@ -66,16 +55,24 @@ export function Results() {
       <ResultsHeader race={race} title={title} />
 
       <div className="grid grid-cols-3 gap-2 md:grid-cols-6 md:gap-3">
-        <StatTile value={participants} label="Deltakere" />
-        <StatTile value={maleCount} label="Menn" />
-        <StatTile value={femaleCount} label="Kvinner" />
-        <StatTile value={yearBestCount} label="Årsbeste" tone="primary" />
+        <StatTile value={summary?.participants} label="Deltakere" />
+        <StatTile value={summary?.male} label="Menn" />
+        <StatTile value={summary?.female} label="Kvinner" />
         <StatTile
-          value={personalBestCount}
+          value={summary?.seasonBestCount}
+          label="Årsbeste"
+          tone="primary"
+        />
+        <StatTile
+          value={summary?.personalBestCount}
           label="Personlig rek."
           tone="primary"
         />
-        <StatTile value={debutantCount} label="Debutanter" tone="brand" />
+        <StatTile
+          value={summary?.debutantCount}
+          label="Debutanter"
+          tone="brand"
+        />
       </div>
 
       <ResultsTable tableData={tableData} />

@@ -76,6 +76,15 @@ export type RaceResultDTO = {
   newSeasonBest: boolean;
 };
 
+export type RaceResultSummaryDTO = {
+  participants: number;
+  male: number;
+  female: number;
+  seasonBestCount: number;
+  personalBestCount: number;
+  debutantCount: number;
+};
+
 export type MilestoneDTO = {
   uuid: string;
   year: string;

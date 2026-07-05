@@ -1,10 +1,10 @@
-import type { PinPhoto } from "@/data/loypekartData.ts";
+import type { StaticPhoto } from "@/data/loypekartData.ts";
 
 export type RouteSection = {
   title: string;
   position: [number, number];
   description: string;
-  photo: PinPhoto;
+  photo: StaticPhoto;
 };
 
 export const routeDetails: RouteSection[] = [

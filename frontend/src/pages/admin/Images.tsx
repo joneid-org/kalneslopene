@@ -12,7 +12,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
-import { convertImageToWebp } from "@/lib/imageUtils.ts";
+import { convertImageToWebp } from "@/lib/photoUtils.ts";
 import { extractYear, formatDDMonth } from "@/lib/timeUtils.ts";
 
 import type { S3FileDto } from "@/model/DTO.ts";

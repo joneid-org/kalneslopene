@@ -121,6 +121,7 @@ databaseChangeLog:
   - changeSet:
       id: 018-create_race_runner_stats_view
       author: emilie
+      runOnChange: true
       changes:
         - sqlFile:
             path: db/changelog/sql/create/create_race_runner_stats_view.sql

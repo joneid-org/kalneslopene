@@ -169,7 +169,7 @@ export function RaceCalendar() {
 
   return (
     <div className="page-content-sm section-stack">
-      <Link to="/" className="-mb-2">
+      <Link to="/" className="-mb-2 w-fit">
         <Button variant="ghost" size="sm" className="-ml-2 gap-1">
           <ArrowLeft className="size-4" />
           Tilbake

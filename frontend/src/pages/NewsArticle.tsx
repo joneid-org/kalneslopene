@@ -26,7 +26,6 @@ export function NewsArticle() {
     QUERIES.newsfeed.getNewsFeedByUuid(uuid ?? ""),
   );
   const { data: races } = useQuery(QUERIES.race.getAllRaces());
-  const { data: allNewsfeeds } = useQuery(QUERIES.newsfeed.getAllNewsFeeds);
   const tags = useTags();
 
   if (!post) {
@@ -37,11 +36,8 @@ export function NewsArticle() {
     );
   }
 
-  const fallbackImg =
-    NEWS_IMAGES[
-      (allNewsfeeds?.findIndex((n) => n.uuid === uuid) ?? 0) %
-        NEWS_IMAGES.length
-    ] ?? "";
+  const imgIndex = [...post.uuid].reduce((sum, c) => sum + c.charCodeAt(0), 0);
+  const fallbackImg = NEWS_IMAGES[imgIndex % NEWS_IMAGES.length] ?? "";
   const headerImage = post.headerImage?.url ?? fallbackImg;
   const matchedRace = findRaceForPost(races ?? [], post);
 

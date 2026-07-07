@@ -9,10 +9,10 @@ import { formatDateFull } from "@/lib/timeUtils.ts";
 import type { NewsFeedDTO } from "@/model/DTO.ts";
 
 export default function NewsFeed() {
-  const { data: newsfeeds } = useQuery(QUERIES.newsfeed.getAllNewsFeeds);
+  const { data: newsfeeds } = useQuery(QUERIES.newsfeed.getNewsFeed(0, 3));
   const tags = useTags();
 
-  if (!newsfeeds || newsfeeds.length === 0) {
+  if (!newsfeeds || newsfeeds.totalElements === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 gap-3">
         <Newspaper className="size-10 text-gray-200" />
@@ -22,8 +22,8 @@ export default function NewsFeed() {
   }
 
   const COLS = 3;
-  const visible = newsfeeds.slice(0, COLS);
-  const hasMore = newsfeeds.length > COLS;
+  const visible = newsfeeds.content.slice(0, COLS);
+  const hasMore = newsfeeds.totalElements > COLS;
 
   return (
     <div className="flex flex-col gap-4">

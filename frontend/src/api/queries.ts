@@ -196,22 +196,8 @@ export const QUERIES = {
     }),
   },
   newsfeed: {
-    getAllNewsFeeds: {
-      queryKey: ["newsfeed", "getAll"],
-      queryFn: async () => {
-        const data = await kyClient.get("/api/newsfeeds").json<NewsFeedDTO[]>();
-        return data.map((feed) => ({ ...feed, date: new Date(feed.date) }));
-      },
-    },
-    getNewsArchive: {
-      queryKey: ["newsfeed", "archive"],
-      queryFn: async () => {
-        const data = await kyClient.get("/api/newsfeeds").json<NewsFeedDTO[]>();
-        return data.map((feed) => ({ ...feed, date: new Date(feed.date) }));
-      },
-    },
-    getNewsArchivePage: (page: number, pageSize: number) => ({
-      queryKey: ["newsfeed", "archive", "page", page, pageSize],
+    getNewsFeed: (page: number, pageSize: number) => ({
+      queryKey: ["newsfeed", "page", page, pageSize],
       queryFn: async () => {
         const data = await kyClient
           .get("/api/newsfeeds", { searchParams: { page, pageSize } })

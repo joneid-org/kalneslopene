@@ -24,9 +24,7 @@ export function News() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const page = Math.max(1, Number(searchParams.get("side")) || 1);
-  const { data } = useQuery(
-    QUERIES.newsfeed.getNewsArchivePage(page - 1, PAGE_SIZE),
-  );
+  const { data } = useQuery(QUERIES.newsfeed.getNewsFeed(page - 1, PAGE_SIZE));
 
   const visible = data?.content ?? [];
   const totalElements = data?.totalElements ?? 0;

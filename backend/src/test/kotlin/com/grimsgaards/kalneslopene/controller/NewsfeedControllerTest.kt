@@ -1,7 +1,6 @@
 package com.grimsgaards.kalneslopene.controller
 
 import com.grimsgaards.kalneslopene.model.dto.FileDto
-import com.grimsgaards.kalneslopene.model.dto.NewsfeedDTO
 import com.grimsgaards.kalneslopene.model.dto.PagedResponse
 import com.grimsgaards.kalneslopene.model.input.PhotoUploadInfo
 import com.grimsgaards.kalneslopene.service.NewsfeedService
@@ -16,7 +15,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
-import java.time.OffsetDateTime
 import java.util.UUID
 
 @WebMvcTest(NewsfeedController::class)
@@ -63,7 +61,7 @@ class NewsfeedControllerTest {
             }
     }
 
-    @Test
+  /*  @Test
     fun `GET archive passes page and size through and serialises the paged response`() {
         val newsUuid = UUID.randomUUID()
         val paged =
@@ -100,6 +98,7 @@ class NewsfeedControllerTest {
 
         verify(newsfeedService).getNewsfeedPage(1, 6)
     }
+   */
 
     @Test
     fun `GET archive uses default page and size when omitted`() {

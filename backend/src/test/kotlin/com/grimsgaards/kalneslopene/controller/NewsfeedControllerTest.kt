@@ -73,6 +73,22 @@ class NewsfeedControllerTest {
         }
 
         @Test
+        fun `forwards the tag filter to the service`() {
+            whenever(newsfeedService.getNewsfeedPage(0, 6, "Løp"))
+                .thenReturn(PagedResponse(listOf(newsfeedDto(UUID.randomUUID())), 0, 6, 1, 1))
+
+            mockMvc
+                .get("/api/newsfeeds") {
+                    param("tag", "Løp")
+                }.andExpect {
+                    status { isOk() }
+                    jsonPath("$.totalElements") { value(1) }
+                }
+
+            verify(newsfeedService).getNewsfeedPage(0, 6, "Løp")
+        }
+
+        @Test
         fun `uses default page and size when omitted`() {
             whenever(newsfeedService.getNewsfeedPage(0, 6))
                 .thenReturn(PagedResponse(emptyList(), 0, 6, 0, 0))

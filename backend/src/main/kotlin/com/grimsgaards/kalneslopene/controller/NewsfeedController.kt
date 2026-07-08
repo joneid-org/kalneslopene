@@ -31,7 +31,8 @@ class NewsfeedController(
     fun getNewsFeedList(
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "6") pageSize: Int,
-    ): PagedResponse<NewsfeedDTO> = newsfeedService.getNewsfeedPage(page, pageSize)
+        @RequestParam(required = false) tag: String?,
+    ): PagedResponse<NewsfeedDTO> = newsfeedService.getNewsfeedPage(page, pageSize, tag)
 
     @GetMapping("/{uuid}")
     fun getNewsFeed(

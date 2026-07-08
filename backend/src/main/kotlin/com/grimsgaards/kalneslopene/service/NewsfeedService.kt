@@ -19,9 +19,15 @@ class NewsfeedService(
     fun getNewsfeedPage(
         page: Int,
         pageSize: Int,
+        tag: String? = null,
     ): PagedResponse<NewsfeedDTO> {
         val pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "date"))
-        val result = newsfeedRepository.findAll(pageable)
+        val result =
+            if (tag.isNullOrBlank()) {
+                newsfeedRepository.findAll(pageable)
+            } else {
+                newsfeedRepository.findByTagIgnoreCase(tag, pageable)
+            }
         return PagedResponse(
             content = result.content.map { it.toDto() },
             page = result.number,

@@ -21,6 +21,9 @@ import org.mockito.Mockito.verifyNoMoreInteractions
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.quality.Strictness
 import org.mockito.stubbing.OngoingStubbing
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import java.time.OffsetDateTime
 import java.util.Optional
 import java.util.UUID
@@ -44,6 +47,47 @@ class NewsfeedServiceTest {
         whenever(newsfeedRepository.save(any())).thenAnswer { it.getArgument(0) }
 
         service = NewsfeedService(newsfeedRepository, s3Service)
+    }
+
+    @Nested
+    inner class GetNewsfeedPage {
+        // Matches the PageRequest the service builds; equality is by page, size and sort.
+        private val pageable = PageRequest.of(0, 6, Sort.by(Sort.Direction.DESC, "date"))
+
+        @Test
+        fun `without a tag lists every newsfeed`() {
+            whenever(newsfeedRepository.findAll(pageable))
+                .thenReturn(PageImpl(listOf(newsfeed(headerImage = null))))
+
+            val result = service.getNewsfeedPage(0, 6)
+
+            assertThat(result.content).hasSize(1)
+            verify(newsfeedRepository).findAll(pageable)
+            verifyNoMoreInteractions(newsfeedRepository)
+        }
+
+        @Test
+        fun `with a tag filters through the repository`() {
+            whenever(newsfeedRepository.findByTagIgnoreCase("nyhet", pageable))
+                .thenReturn(PageImpl(listOf(newsfeed(headerImage = null))))
+
+            val result = service.getNewsfeedPage(0, 6, "nyhet")
+
+            assertThat(result.content).hasSize(1)
+            verify(newsfeedRepository).findByTagIgnoreCase("nyhet", pageable)
+            verifyNoMoreInteractions(newsfeedRepository)
+        }
+
+        @Test
+        fun `treats a blank tag as no filter`() {
+            whenever(newsfeedRepository.findAll(pageable))
+                .thenReturn(PageImpl(emptyList()))
+
+            service.getNewsfeedPage(0, 6, "  ")
+
+            verify(newsfeedRepository).findAll(pageable)
+            verifyNoMoreInteractions(newsfeedRepository)
+        }
     }
 
     @Nested

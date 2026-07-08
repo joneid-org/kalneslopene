@@ -8,8 +8,10 @@ import { NEWS_IMAGES, tagColor, useTags } from "@/lib/newsUtils.ts";
 import { formatDateFull } from "@/lib/timeUtils.ts";
 import type { NewsFeedDTO } from "@/model/DTO.ts";
 
+const COLS = 3;
+
 export default function NewsFeed() {
-  const { data: newsfeeds } = useQuery(QUERIES.newsfeed.getNewsFeed(0, 3));
+  const { data: newsfeeds } = useQuery(QUERIES.newsfeed.getNewsFeed(0, COLS));
   const tags = useTags();
 
   if (!newsfeeds || newsfeeds.totalElements === 0) {
@@ -21,7 +23,6 @@ export default function NewsFeed() {
     );
   }
 
-  const COLS = 3;
   const visible = newsfeeds.content.slice(0, COLS);
   const hasMore = newsfeeds.totalElements > COLS;
 

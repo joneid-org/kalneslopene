@@ -196,11 +196,16 @@ export const QUERIES = {
     }),
   },
   newsfeed: {
-    getNewsFeed: (page: number, pageSize: number) => ({
-      queryKey: ["newsfeed", "page", page, pageSize],
+    getNewsFeed: (page: number, pageSize: number, tag?: string) => ({
+      queryKey: ["newsfeed", "page", page, pageSize, tag],
       queryFn: async () => {
+        const searchParams: Record<string, string | number> = {
+          page,
+          pageSize,
+        };
+        if (tag) searchParams.tag = tag;
         const data = await kyClient
-          .get("/api/newsfeeds", { searchParams: { page, pageSize } })
+          .get("/api/newsfeeds", { searchParams })
           .json<PagedResponse<NewsFeedDTO>>();
         return {
           ...data,

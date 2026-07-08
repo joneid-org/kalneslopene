@@ -85,6 +85,26 @@ export type RaceResultSummaryDTO = {
   debutantCount: number;
 };
 
+export type DraftEntry = {
+  clientId: string;
+  runnerUuid: string | null;
+  name: string;
+  gender: string;
+  resultTimeSeconds: number | null;
+  hideTime: boolean;
+  createdThisSession: boolean;
+};
+
+export type ResultDraft = {
+  raceUuid: string;
+  weather?: string;
+  entries: DraftEntry[];
+  currentStep: number;
+  updatedAt: string;
+};
+
+export type ResultDraftInput = Omit<ResultDraft, "updatedAt">;
+
 export type MilestoneDTO = {
   uuid: string;
   year: string;

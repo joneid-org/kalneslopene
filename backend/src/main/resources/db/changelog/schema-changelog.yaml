@@ -133,3 +133,10 @@ databaseChangeLog:
         - sqlFile:
             path: db/changelog/sql/create/create_race_runner_stats_view.sql
             relativeToChangelogFile: false
+  - changeSet:
+      id: 019-create_race_result_draft_table
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/create/create_race_result_draft.sql
+            relativeToChangelogFile: false

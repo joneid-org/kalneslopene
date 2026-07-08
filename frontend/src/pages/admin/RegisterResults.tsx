@@ -6,7 +6,6 @@ import { QUERIES } from "@/api/queries.ts";
 import { CompletedRacesCard } from "@/components/admin/CompletedRacesCard.tsx";
 import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog.tsx";
 import { MissingRunnersCard } from "@/components/admin/MissingRunnersCard.tsx";
-import { PastRaceEditDialog } from "@/components/admin/PastRaceEditDialog.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Dialog } from "@/components/ui/dialog.tsx";
 import { formatDDMonth } from "@/lib/timeUtils.ts";
@@ -24,7 +23,6 @@ export function RegisterResults() {
     (r) => r.runnerCount === 0,
   );
 
-  const [editing, setEditing] = useState<RaceDTO | null>(null);
   const [deleting, setDeleting] = useState<RaceDTO | null>(null);
   const [expandedRaceUuid, setExpandedRaceUuid] = useState<string | null>(null);
 
@@ -33,8 +31,8 @@ export function RegisterResults() {
       prev === race.uuid ? null : (race.uuid ?? null),
     );
 
-  const openEditing = async (race: RaceDTO) => {
-    setEditing(race);
+  const openEditing = (race: RaceDTO) => {
+    if (race.uuid) navigate(`/admin/results/${race.uuid}`);
   };
 
   const deleteMutation = useMutation({
@@ -73,17 +71,6 @@ export function RegisterResults() {
         onEdit={openEditing}
         onDelete={setDeleting}
       />
-
-      <Dialog
-        open={!!editing}
-        onOpenChange={(o) => {
-          if (!o) setEditing(null);
-        }}
-      >
-        {editing && (
-          <PastRaceEditDialog race={editing} onClose={() => setEditing(null)} />
-        )}
-      </Dialog>
 
       <Dialog
         open={!!deleting}

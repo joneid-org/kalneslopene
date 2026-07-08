@@ -50,9 +50,6 @@ export function RoutePhotoGallery() {
               </span>
             </div>
           </button>
-          <span className="absolute left-2.5 top-2.5 rounded-full bg-brand px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wide text-brand-foreground md:hidden">
-            Stopp {currentIndex + 1}
-          </span>
           {handleReplacePhoto && photo.fileName && (
             <ReplacePhotoButton
               fileName={photo.fileName}
@@ -63,9 +60,6 @@ export function RoutePhotoGallery() {
         </div>
 
         <div className="flex flex-col justify-center p-4 md:p-7">
-          <div className="hidden font-display text-[13px] font-bold tabular-nums text-brand-soft-foreground md:block">
-            Stopp {currentIndex + 1}
-          </div>
           <h3 className="font-display text-lg font-extrabold tracking-tight md:mt-1.5 md:text-2xl">
             {routeSection.title}
           </h3>

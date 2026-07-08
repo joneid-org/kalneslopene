@@ -16,7 +16,6 @@ const ACTIVE_PIN_COLOR = "#f2a33c";
 
 export function CourseMapPins() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const total = pins.length;
   const currentPin = pins[currentIndex];
   return (
     <div className="grid gap-4 md:grid-cols-[1.55fr_1fr] md:items-stretch">
@@ -68,7 +67,7 @@ export function CourseMapPins() {
         </div>
       </div>
 
-      <PinInfoPanel pin={currentPin} index={currentIndex} total={total} />
+      <PinInfoPanel pin={currentPin} />
     </div>
   );
 }

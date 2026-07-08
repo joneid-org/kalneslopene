@@ -8,11 +8,9 @@ import { useStaticPhotos } from "@/hooks/useStaticPhotos.tsx";
 
 type Props = {
   pin: Pin;
-  index: number;
-  total: number;
 };
 
-export function PinInfoPanel({ pin, index, total }: Props) {
+export function PinInfoPanel({ pin }: Props) {
   const { isAuthenticated } = useAuth();
   const { resolvePhotoUrl, handleReplacePhoto } = useStaticPhotos();
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -35,9 +33,6 @@ export function PinInfoPanel({ pin, index, total }: Props) {
             className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
         </button>
-        <span className="absolute left-3 top-3 rounded-full bg-brand px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wide text-brand-foreground">
-          Stopp {index + 1} av {total}
-        </span>
         {onReplacePhoto && photo?.fileName && (
           <ReplacePhotoButton
             fileName={photo.fileName}

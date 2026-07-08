@@ -5,15 +5,16 @@ import { QUERIES } from "@/api/queries.ts";
 import { TagNewsFeed } from "@/components/News/TagNewsFeed.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
-import { NEWS_IMAGES, tagColor } from "@/lib/newsUtils.ts";
+import { NEWS_IMAGES, tagColor, useTags } from "@/lib/newsUtils.ts";
+
+const ARCHIVE_SIZE = 100;
 
 export function NewsTag() {
   const { tag } = useParams<{ tag: string }>();
-  const { data: newsfeeds } = useQuery(QUERIES.newsfeed.getAllNewsFeeds);
+  const { data } = useQuery(QUERIES.newsfeed.getNewsFeed(0, ARCHIVE_SIZE, tag));
+  const tags = useTags();
 
-  const filtered = (newsfeeds ?? []).filter((post) =>
-    post.tags.some((t) => t.toLowerCase() === tag?.toLowerCase()),
-  );
+  const newsFeed = data?.content ?? [];
 
   return (
     <div className="page-content-sm">
@@ -26,22 +27,25 @@ export function NewsTag() {
         </Link>
         <Separator orientation="vertical" className="h-5" />
         <div className="flex items-center gap-2">
-          <span className="tag-pill" style={{ color: tagColor(tag ?? "") }}>
+          <span
+            className="tag-pill"
+            style={{ color: tagColor(tag ?? "", tags) }}
+          >
             {tag}
           </span>
           <span className="text-sm text-gray-500">
-            {filtered.length} nyheter
+            {newsFeed.length} nyheter
           </span>
         </div>
       </div>
 
-      {filtered.length === 0 ? (
+      {newsFeed.length === 0 ? (
         <p className="text-sm text-gray-400 text-center py-16">
           Ingen nyheter med denne taggen.
         </p>
       ) : (
         <div className="flex flex-col gap-4">
-          {filtered.map((post, idx) => (
+          {newsFeed.map((post, idx) => (
             <TagNewsFeed
               key={post.uuid}
               post={post}

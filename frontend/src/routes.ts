@@ -15,6 +15,7 @@ import { CourseMap } from "./pages/CourseMap.tsx";
 import { History } from "./pages/History.tsx";
 import { Home } from "./pages/Home.tsx";
 import { Login } from "./pages/Login.tsx";
+import { News } from "./pages/News.tsx";
 import { NewsArticle } from "./pages/NewsArticle.tsx";
 import { NewsTag } from "./pages/NewsTag.tsx";
 import { Pictures } from "./pages/Pictures.tsx";
@@ -61,6 +62,10 @@ export const router = createBrowserRouter([
       {
         path: "Løpskalender",
         Component: RaceCalendar,
+      },
+      {
+        path: "nyheter",
+        Component: News,
       },
       {
         path: "nyheter/tag/:tag",

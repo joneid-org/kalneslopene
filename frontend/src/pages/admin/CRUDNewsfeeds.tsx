@@ -1,5 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ChevronLeftIcon, PlusIcon } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronLeftIcon,
+  ChevronRight,
+  PlusIcon,
+} from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
@@ -13,34 +18,38 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog.tsx";
-import { Input } from "@/components/ui/input.tsx";
-import { Label } from "@/components/ui/label.tsx";
-import { Separator } from "@/components/ui/separator.tsx";
 import type { NewsFeedDTO } from "@/model/DTO.ts";
+
+const PAGE_SIZE = 10;
+
+function pageItems(current: number, total: number): (number | "...")[] {
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+  const items: (number | "...")[] = [1];
+  const left = Math.max(2, current - 1);
+  const right = Math.min(total - 1, current + 1);
+  if (left > 2) items.push("...");
+  for (let i = left; i <= right; i++) items.push(i);
+  if (right < total - 1) items.push("...");
+  items.push(total);
+  return items;
+}
 
 export function CRUDNewsfeeds() {
   const qc = useQueryClient();
   const navigate = useNavigate();
 
-  const { data: newsfeeds } = useQuery(QUERIES.newsfeed.getAllNewsFeeds);
-  const { data: settings } = useQuery(QUERIES.newsfeed.getSettings);
-  const [maxArticles, setMaxArticles] = useState<number | undefined>(undefined);
+  const [page, setPage] = useState(1);
+  const { data } = useQuery(QUERIES.newsfeed.getNewsFeed(page - 1, PAGE_SIZE));
 
-  const settingsMutation = useMutation({
-    mutationFn: (max: number) =>
-      QUERIES.newsfeed.updateSettings({ maxArticles: max }).queryFn(),
-    onSuccess: () =>
-      qc.invalidateQueries({ queryKey: ["newsfeed", "settings"] }),
-  });
-
-  const currentMax = maxArticles ?? settings?.maxArticles ?? 10;
+  const invalidate = () =>
+    qc.invalidateQueries({ queryKey: ["newsfeed", "page"] });
 
   const [showAdd, setShowAdd] = useState(false);
   const addMutation = useMutation({
     mutationFn: (newsfeed: Omit<NewsFeedDTO, "uuid">) =>
       QUERIES.newsfeed.createNewsFeed(newsfeed as NewsFeedDTO).queryFn(),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["newsfeed", "getAll"] });
+      invalidate();
       setShowAdd(false);
     },
   });
@@ -50,7 +59,7 @@ export function CRUDNewsfeeds() {
     mutationFn: (newsfeed: NewsFeedDTO) =>
       QUERIES.newsfeed.updateNewsFeed(newsfeed.uuid, newsfeed).queryFn(),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["newsfeed", "getAll"] });
+      invalidate();
       setEditing(null);
     },
   });
@@ -60,14 +69,17 @@ export function CRUDNewsfeeds() {
     mutationFn: (uuid: string) =>
       QUERIES.newsfeed.deleteNewsFeed(uuid).queryFn(),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["newsfeed", "getAll"] });
+      invalidate();
       setDeleting(null);
     },
   });
 
-  const displayed = (newsfeeds ?? []).toSorted(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-  );
+  const displayed = data?.content ?? [];
+  const totalPages = Math.max(1, data?.totalPages ?? 1);
+  const items = pageItems(page, totalPages);
+
+  const goToPage = (next: number) =>
+    setPage(Math.min(Math.max(1, next), totalPages));
 
   return (
     <div className="page-content max-w-3xl mx-auto space-y-6">
@@ -80,30 +92,6 @@ export function CRUDNewsfeeds() {
         Tilbake
       </Button>
       <h1 className="text-2xl font-semibold tracking-tight">Nyheter</h1>
-
-      <div className="rounded-lg border p-4 space-y-3">
-        <h2 className="text-base font-semibold">Innstillinger</h2>
-        <div className="flex items-end gap-3">
-          <div className="space-y-1.5 flex-1 max-w-50">
-            <Label>Antall artikler på forsiden</Label>
-            <Input
-              type="number"
-              min={1}
-              max={50}
-              value={currentMax}
-              onChange={(e) => setMaxArticles(Number(e.target.value))}
-            />
-          </div>
-          <Button
-            onClick={() => settingsMutation.mutate(currentMax)}
-            disabled={settingsMutation.isPending}
-          >
-            Lagre
-          </Button>
-        </div>
-      </div>
-
-      <Separator />
 
       <div className="flex items-center justify-between">
         <h2 className="text-base font-semibold">Artikler</h2>
@@ -118,6 +106,52 @@ export function CRUDNewsfeeds() {
         onEdit={setEditing}
         onDelete={setDeleting}
       />
+
+      {totalPages > 1 && (
+        <nav
+          className="flex items-center justify-center gap-1.5 pt-2"
+          aria-label="Paginering"
+        >
+          <Button
+            variant="outline"
+            size="icon-sm"
+            onClick={() => goToPage(page - 1)}
+            disabled={page === 1}
+            aria-label="Forrige side"
+          >
+            <ChevronLeft className="size-4" />
+          </Button>
+          {items.map((item, idx) =>
+            item === "..." ? (
+              <span
+                key={`ellipsis-${items[idx - 1]}`}
+                className="px-1.5 text-muted-foreground"
+              >
+                …
+              </span>
+            ) : (
+              <Button
+                key={item}
+                variant={item === page ? "default" : "outline"}
+                size="icon-sm"
+                onClick={() => goToPage(item)}
+                aria-current={item === page ? "page" : undefined}
+              >
+                {item}
+              </Button>
+            ),
+          )}
+          <Button
+            variant="outline"
+            size="icon-sm"
+            onClick={() => goToPage(page + 1)}
+            disabled={page === totalPages}
+            aria-label="Neste side"
+          >
+            <ChevronRight className="size-4" />
+          </Button>
+        </nav>
+      )}
 
       <Dialog open={showAdd} onOpenChange={setShowAdd}>
         <DialogContent className="max-h-[90vh] overflow-y-auto">

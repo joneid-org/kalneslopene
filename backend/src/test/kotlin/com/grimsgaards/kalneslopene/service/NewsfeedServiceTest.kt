@@ -2,20 +2,18 @@ package com.grimsgaards.kalneslopene.service
 
 import com.grimsgaards.kalneslopene.model.entities.FileEntity
 import com.grimsgaards.kalneslopene.model.entities.NewsfeedEntity
-import com.grimsgaards.kalneslopene.model.entities.NewsfeedSettingsEntity
 import com.grimsgaards.kalneslopene.model.input.NewsfeedInput
 import com.grimsgaards.kalneslopene.repository.NewsfeedRepository
-import com.grimsgaards.kalneslopene.repository.NewsfeedSettingsRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchers.anyInt
-import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.Mockito.any
+import org.mockito.Mockito.anyInt
+import org.mockito.Mockito.anyString
 import org.mockito.Mockito.inOrder
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.verifyNoInteractions
@@ -23,6 +21,9 @@ import org.mockito.Mockito.verifyNoMoreInteractions
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.quality.Strictness
 import org.mockito.stubbing.OngoingStubbing
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import java.time.OffsetDateTime
 import java.util.Optional
 import java.util.UUID
@@ -34,9 +35,6 @@ class NewsfeedServiceTest {
     lateinit var newsfeedRepository: NewsfeedRepository
 
     @Mock
-    lateinit var newsfeedSettingsRepository: NewsfeedSettingsRepository
-
-    @Mock
     lateinit var s3Service: S3Service
 
     private lateinit var service: NewsfeedService
@@ -45,11 +43,51 @@ class NewsfeedServiceTest {
     fun setUp() {
         // The service resolves settings in a constructor-time field initializer; returning an
         // existing settings row keeps construction from trying to persist a default.
-        whenever(newsfeedSettingsRepository.findAll())
-            .thenReturn(listOf(NewsfeedSettingsEntity(id = 1, maxArticles = 10)))
+
         whenever(newsfeedRepository.save(any())).thenAnswer { it.getArgument(0) }
 
-        service = NewsfeedService(newsfeedRepository, newsfeedSettingsRepository, s3Service)
+        service = NewsfeedService(newsfeedRepository, s3Service)
+    }
+
+    @Nested
+    inner class GetNewsfeedPage {
+        // Matches the PageRequest the service builds; equality is by page, size and sort.
+        private val pageable = PageRequest.of(0, 6, Sort.by(Sort.Direction.DESC, "date"))
+
+        @Test
+        fun `without a tag lists every newsfeed`() {
+            whenever(newsfeedRepository.findAll(pageable))
+                .thenReturn(PageImpl(listOf(newsfeed(headerImage = null))))
+
+            val result = service.getNewsfeedPage(0, 6)
+
+            assertThat(result.content).hasSize(1)
+            verify(newsfeedRepository).findAll(pageable)
+            verifyNoMoreInteractions(newsfeedRepository)
+        }
+
+        @Test
+        fun `with a tag filters through the repository`() {
+            whenever(newsfeedRepository.findByTagIgnoreCase("nyhet", pageable))
+                .thenReturn(PageImpl(listOf(newsfeed(headerImage = null))))
+
+            val result = service.getNewsfeedPage(0, 6, "nyhet")
+
+            assertThat(result.content).hasSize(1)
+            verify(newsfeedRepository).findByTagIgnoreCase("nyhet", pageable)
+            verifyNoMoreInteractions(newsfeedRepository)
+        }
+
+        @Test
+        fun `treats a blank tag as no filter`() {
+            whenever(newsfeedRepository.findAll(pageable))
+                .thenReturn(PageImpl(emptyList()))
+
+            service.getNewsfeedPage(0, 6, "  ")
+
+            verify(newsfeedRepository).findAll(pageable)
+            verifyNoMoreInteractions(newsfeedRepository)
+        }
     }
 
     @Nested

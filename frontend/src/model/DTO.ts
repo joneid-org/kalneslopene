@@ -28,6 +28,14 @@ export type NewsFeedDTO = {
 };
 export type NewsFeedInput = Omit<NewsFeedDTO, "uuid">;
 
+export type PagedResponse<T> = {
+  content: T[];
+  page: number;
+  pageSize: number;
+  totalElements: number;
+  totalPages: number;
+};
+
 export type NewsfeedTagDTO = {
   value: string;
   color: string;

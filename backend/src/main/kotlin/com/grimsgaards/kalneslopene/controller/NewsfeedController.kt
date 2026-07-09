@@ -1,8 +1,8 @@
 package com.grimsgaards.kalneslopene.controller
 
 import com.grimsgaards.kalneslopene.model.dto.NewsfeedDTO
-import com.grimsgaards.kalneslopene.model.dto.NewsfeedSettingsDTO
 import com.grimsgaards.kalneslopene.model.dto.NewsfeedTagDTO
+import com.grimsgaards.kalneslopene.model.dto.PagedResponse
 import com.grimsgaards.kalneslopene.model.input.NewsfeedInput
 import com.grimsgaards.kalneslopene.model.input.NewsfeedTagInput
 import com.grimsgaards.kalneslopene.model.input.NewsfeedTagUpdateInput
@@ -28,7 +28,11 @@ class NewsfeedController(
     val newsfeedTagService: NewsfeedTagService,
 ) {
     @GetMapping
-    fun getNewsFeedList(): List<NewsfeedDTO> = newsfeedService.getSpecifiedNumberOfNewsfeed()
+    fun getNewsFeedList(
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "6") pageSize: Int,
+        @RequestParam(required = false) tag: String?,
+    ): PagedResponse<NewsfeedDTO> = newsfeedService.getNewsfeedPage(page, pageSize, tag)
 
     @GetMapping("/{uuid}")
     fun getNewsFeed(
@@ -55,16 +59,6 @@ class NewsfeedController(
     fun deleteNewsFeed(
         @PathVariable uuid: UUID,
     ) = newsfeedService.deleteNewsfeed(uuid)
-
-    // ── Settings ────────────────────────────────────────────────────────────────
-
-    @GetMapping("/settings")
-    fun getSettings(): NewsfeedSettingsDTO = newsfeedService.getSettings()
-
-    @PatchMapping("/settings")
-    fun updateSettings(
-        @RequestBody dto: NewsfeedSettingsDTO,
-    ): NewsfeedSettingsDTO = newsfeedService.updateSettings(dto)
 
     // ── Tags ────────────────────────────────────────────────────────────────────
 

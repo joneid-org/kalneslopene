@@ -1,7 +1,6 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: dot indicators by index is fine */
 import { useQuery } from "@tanstack/react-query";
-import { ChevronRight, ChevronUp, Newspaper } from "lucide-react";
-import { useState } from "react";
+import { ChevronRight, Newspaper } from "lucide-react";
 import { Link } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card.tsx";
@@ -9,12 +8,13 @@ import { NEWS_IMAGES, tagColor, useTags } from "@/lib/newsUtils.ts";
 import { formatDateFull } from "@/lib/timeUtils.ts";
 import type { NewsFeedDTO } from "@/model/DTO.ts";
 
+const COLS = 3;
+
 export default function NewsFeed() {
-  const { data: newsfeeds } = useQuery(QUERIES.newsfeed.getAllNewsFeeds);
-  const [expanded, setExpanded] = useState(false);
+  const { data: newsfeeds } = useQuery(QUERIES.newsfeed.getNewsFeed(0, COLS));
   const tags = useTags();
 
-  if (!newsfeeds || newsfeeds.length === 0) {
+  if (!newsfeeds || newsfeeds.totalElements === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 gap-3">
         <Newspaper className="size-10 text-gray-200" />
@@ -23,9 +23,8 @@ export default function NewsFeed() {
     );
   }
 
-  const COLS = 3;
-  const visible = expanded ? newsfeeds : newsfeeds.slice(0, COLS);
-  const hasMore = newsfeeds.length > COLS;
+  const visible = newsfeeds.content.slice(0, COLS);
+  const hasMore = newsfeeds.totalElements > COLS;
 
   return (
     <div className="flex flex-col gap-4">
@@ -34,21 +33,12 @@ export default function NewsFeed() {
           Siste nytt
         </h2>
         {hasMore && (
-          <button
-            type="button"
-            onClick={() => setExpanded((v) => !v)}
+          <Link
+            to="/nyheter"
             className="flex items-center gap-1 text-sm font-bold text-primary hover:opacity-80 transition-opacity"
           >
-            {expanded ? (
-              <>
-                Vis færre <ChevronUp className="size-4" />
-              </>
-            ) : (
-              <>
-                Vis flere <ChevronRight className="size-4" />
-              </>
-            )}
-          </button>
+            Vis flere <ChevronRight className="size-4" />
+          </Link>
         )}
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4">

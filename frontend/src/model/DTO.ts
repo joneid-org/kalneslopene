@@ -60,20 +60,12 @@ export type RunnerInput = Omit<RunnerDTO, "uuid">;
 
 export type RaceRunnerDTO = {
   runner: RunnerDTO;
-  race: RaceDTO;
+  raceUuid: string;
   resultTime: string;
   hideTime: boolean;
-};
-
-export type RaceResultDTO = {
-  runner: RunnerDTO;
-  resultTime: string;
-  hideTime: boolean;
+  previousSeasonBest?: string;
+  previousPersonalRecord?: string;
   totalRaces: number;
-  personalBest?: string;
-  seasonBest?: string;
-  newPersonalBest: boolean;
-  newSeasonBest: boolean;
 };
 
 export type RaceResultSummaryDTO = {

@@ -52,11 +52,6 @@ class RaceController(
         @PathVariable uuid: UUID,
     ): List<RaceRunnerDTO> = raceService.findAllRunnersInRace(uuid)
 
-    @GetMapping("/{uuid}/results")
-    fun getResultsInRace(
-        @PathVariable uuid: UUID,
-    ): List<RaceResultDTO> = raceService.findAllResultsInRace(uuid)
-
     @GetMapping("/{uuid}/results/summary")
     fun getResultSummary(
         @PathVariable uuid: UUID,

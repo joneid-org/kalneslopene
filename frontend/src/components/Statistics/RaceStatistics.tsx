@@ -41,6 +41,9 @@ export default function RaceStatistics() {
   );
 
   const record = allTimeStatistics?.courseRecord;
+  const recordRaceDate = (races ?? []).find(
+    (r) => r.uuid === record?.raceUuid,
+  )?.raceDate;
 
   return (
     <section className="flex flex-col gap-3">
@@ -94,7 +97,7 @@ export default function RaceStatistics() {
               <span className="text-sm"> — {record.runner.name}</span>
             </div>
             <div className="text-xs text-white/60">
-              {formatDateFull(record.race.raceDate)}
+              {formatDateFull(recordRaceDate)}
             </div>
           </div>
         </div>

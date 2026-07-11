@@ -20,8 +20,8 @@ export function Results() {
   const { uuid = "" } = useParams<{ uuid: string }>();
 
   const { data: races } = useQuery(QUERIES.race.getAllRaces());
-  const { data: raceResults } = useQuery(
-    QUERIES.race.getAllResultsInRace(uuid),
+  const { data: raceRunners } = useQuery(
+    QUERIES.race.getAllRunnersInRace(uuid),
   );
   const { data: summary } = useQuery(QUERIES.race.getResultSummary(uuid));
 
@@ -32,7 +32,7 @@ export function Results() {
   const previous = getPreviousRace(allRaces, uuid);
   const next = getNextRace(allRaces, uuid);
   const title = formatDateFull(race?.raceDate);
-  const tableData = buildTableRows(raceResults ?? []);
+  const tableData = buildTableRows(raceRunners ?? []);
   const racePhotos = race?.photos ?? [];
 
   if (!race) {

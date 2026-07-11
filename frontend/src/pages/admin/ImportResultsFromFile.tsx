@@ -51,9 +51,10 @@ export function ImportResultsFromFile() {
           : [
               {
                 runner: r.resolvedRunner,
-                race: race,
+                raceUuid: race.uuid,
                 resultTime: secondsToDuration(r.timeSeconds),
                 hideTime: r.timeSeconds === 0,
+                totalRaces: 0,
               },
             ],
       );

@@ -2,7 +2,6 @@ package com.grimsgaards.kalneslopene.service
 
 import com.grimsgaards.kalneslopene.model.dto.Gender
 import com.grimsgaards.kalneslopene.model.dto.RaceDTO
-import com.grimsgaards.kalneslopene.model.dto.RaceResultDTO
 import com.grimsgaards.kalneslopene.model.dto.RaceResultSummaryDto
 import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
 import com.grimsgaards.kalneslopene.model.entities.RaceEntity
@@ -13,12 +12,10 @@ import com.grimsgaards.kalneslopene.model.input.RaceFilter
 import com.grimsgaards.kalneslopene.model.input.RaceInput
 import com.grimsgaards.kalneslopene.repository.RaceRepository
 import com.grimsgaards.kalneslopene.repository.RaceRunnerRepository
-import com.grimsgaards.kalneslopene.repository.RaceRunnerStatsRepository
 import com.grimsgaards.kalneslopene.repository.RunnerRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.Duration
 import java.util.UUID
 
 @Service
@@ -26,7 +23,6 @@ class RaceService(
     val raceRepository: RaceRepository,
     val runnerRepository: RunnerRepository,
     val raceRunnerRepository: RaceRunnerRepository,
-    val raceRunnerStatsRepository: RaceRunnerStatsRepository,
     val s3Service: S3Service,
 ) {
     fun getAll(filter: RaceFilter): List<RaceDTO> = raceRepository.findAllByFilter(filter).map { it.toDto() }
@@ -70,36 +66,15 @@ class RaceService(
         return race?.runners?.map { it.toDto() } ?: throw IllegalArgumentException("no race found with id $uuid")
     }
 
-    fun findAllResultsInRace(uuid: UUID): List<RaceResultDTO> {
-        val race =
-            raceRepository.findByIdOrNull(uuid)
-                ?: throw NoSuchElementException("Race with uuid $uuid not found")
-        val statsByRunner = raceRunnerStatsRepository.findAllByIdRaceUuid(uuid).associateBy { it.id.runnerUuid }
-        return race.runners.map { raceRunner ->
-            val stats = statsByRunner[raceRunner.runner.uuid]
-            val hasVisibleTime = !raceRunner.hideTime && raceRunner.resultTime > Duration.ZERO
-            RaceResultDTO(
-                runner = raceRunner.runner.toDto(),
-                resultTime = raceRunner.resultTime,
-                hideTime = raceRunner.hideTime,
-                totalRaces = stats?.totalRaces ?: 1,
-                personalBest = stats?.personalBest,
-                seasonBest = stats?.seasonBest,
-                newPersonalBest = hasVisibleTime && (stats?.beatsPreviousBest(raceRunner.resultTime) ?: true),
-                newSeasonBest = hasVisibleTime && (stats?.beatsPreviousSeasonBest(raceRunner.resultTime) ?: true),
-            )
-        }
-    }
-
     fun getResultSummary(uuid: UUID): RaceResultSummaryDto {
-        val results = findAllResultsInRace(uuid)
+        val runners = findAllRunnersInRace(uuid)
         return RaceResultSummaryDto(
-            participants = results.size,
-            male = results.count { it.runner.gender == Gender.MALE },
-            female = results.count { it.runner.gender == Gender.FEMALE },
-            seasonBestCount = results.count { it.newSeasonBest },
-            personalBestCount = results.count { it.newPersonalBest },
-            debutantCount = results.count { it.totalRaces == 1 },
+            participants = runners.size,
+            male = runners.count { it.runner.gender == Gender.MALE },
+            female = runners.count { it.runner.gender == Gender.FEMALE },
+            seasonBestCount = runners.count { it.isNewSeasonBest() },
+            personalBestCount = runners.count { it.isNewPersonalRecord() },
+            debutantCount = runners.count { it.totalRaces == 1 },
         )
     }
 

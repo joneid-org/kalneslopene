@@ -62,9 +62,10 @@ export function PastRaceEditDialog({
             race.uuid,
             pendingRunners.map((q) => ({
               runner: q.runner,
-              race,
+              raceUuid: race.uuid,
               resultTime: secondsToDuration(q.resultTime),
               hideTime: q.hideTime,
+              totalRaces: 0,
             })),
           )
           .queryFn();
@@ -115,7 +116,6 @@ export function PastRaceEditDialog({
     if (!editHideTime && !editTime) return;
     updateRunner.mutate({
       ...rr,
-      race,
       resultTime: secondsToDuration(editHideTime ? 0 : timeToSeconds(editTime)),
       hideTime: editHideTime,
     });

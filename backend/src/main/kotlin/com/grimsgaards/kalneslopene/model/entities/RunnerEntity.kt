@@ -19,7 +19,7 @@ import java.util.UUID
 @Entity
 @Table(name = "runner")
 @SecondaryTable(
-    name = "personal_records",
+    name = "runner_stats",
     pkJoinColumns = [PrimaryKeyJoinColumn(name = "runner_uuid", referencedColumnName = "uuid")],
 )
 data class RunnerEntity(
@@ -33,8 +33,15 @@ data class RunnerEntity(
     val uuid: UUID = UUID.randomUUID()
 
     @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
-    @Column(name = "record", table = "personal_records", insertable = false, updatable = false)
+    @Column(name = "personal_record", table = "runner_stats", insertable = false, updatable = false)
     val personalRecord: Duration? = null
+
+    @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
+    @Column(name = "season_record", table = "runner_stats", insertable = false, updatable = false)
+    val seasonBest: Duration? = null
+
+    @Column(name = "total_races", table = "runner_stats", insertable = false, updatable = false)
+    val totalRaces: Int = 0;
 
     fun toDto(): RunnerDTO = RunnerDTO(uuid, name, gender)
 }

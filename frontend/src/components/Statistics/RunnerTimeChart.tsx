@@ -7,13 +7,13 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart.tsx";
+import type { DatedRaceRunner } from "@/lib/statisticsUtils.ts";
 import {
   extractYear,
   formatDDMonth,
   formatSecondsToTime,
   mapResultTimeToNumber,
 } from "@/lib/timeUtils.ts";
-import type { RaceRunnerDTO } from "@/model/DTO.ts";
 
 const YEAR_COLORS: Record<number, string> = {
   2026: "oklch(0.50 0.18 255)",
@@ -36,7 +36,7 @@ type ChartPoint = {
   [year: string]: number | string;
 };
 
-type Props = { raceHistory: RaceRunnerDTO[]; availableYears: number[] };
+type Props = { raceHistory: DatedRaceRunner[]; availableYears: number[] };
 
 export default function RunnerTimeChart({
   raceHistory,
@@ -56,13 +56,13 @@ export default function RunnerTimeChart({
     (rr) =>
       !rr.hideTime &&
       rr.resultTime &&
-      selectedYears.includes(extractYear(rr.race.raceDate)),
+      selectedYears.includes(extractYear(rr.raceDate)),
   );
 
   const byDate = new Map<string, ChartPoint>();
   for (const rr of filtered) {
-    const { raceDate } = rr.race;
-    const key = raceDate as unknown as string;
+    const { raceDate } = rr;
+    const key = raceDate;
     const label = formatDDMonth(raceDate);
     const year = extractYear(raceDate);
     if (!byDate.has(key)) byDate.set(key, { label, sortKey: key });

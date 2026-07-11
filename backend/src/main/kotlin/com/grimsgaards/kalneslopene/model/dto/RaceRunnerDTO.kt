@@ -1,10 +1,25 @@
 package com.grimsgaards.kalneslopene.model.dto
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.time.Duration
+import java.util.UUID
 
 data class RaceRunnerDTO(
     val runner: RunnerDTO,
-    val race: RaceDTO,
+    val raceUuid: UUID,
     val resultTime: Duration,
     val hideTime: Boolean = false,
-)
+    val previousSeasonBest: Duration?,
+    val previousPersonalRecord: Duration?,
+    val totalRaces: Int,
+) {
+    @JsonIgnore
+    fun isNewPersonalRecord(): Boolean {
+        return previousPersonalRecord == null || resultTime < previousPersonalRecord
+    }
+
+    @JsonIgnore
+    fun isNewSeasonBest(): Boolean {
+        return previousSeasonBest == null || resultTime < previousSeasonBest
+    }
+}

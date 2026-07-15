@@ -27,13 +27,12 @@ data class RaceRunnerEntity(
     @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
     var resultTime: Duration,
     var hideTime: Boolean = false,
+    @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
+    val previousPersonalRecord: Duration? = runner.personalRecord,
+    @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
+    val previousSeasonRecord: Duration? = runner.seasonBest,
+    val totalRaces: Int? = runner.totalRaces,
 ) {
-    @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
-    val previousPersonalRecord: Duration? = runner.personalRecord
-
-    @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
-    val previousSeasonRecord: Duration? = runner.seasonBest
-
     fun toDto(): RaceRunnerDTO =
         RaceRunnerDTO(
             runner = runner.toDto(),
@@ -42,6 +41,6 @@ data class RaceRunnerEntity(
             hideTime = hideTime,
             previousPersonalRecord = previousPersonalRecord,
             previousSeasonBest = previousSeasonRecord,
-            totalRaces = runner.totalRaces,
+            totalRaces = totalRaces ?: 0,
         )
 }

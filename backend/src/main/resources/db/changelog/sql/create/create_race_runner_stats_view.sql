@@ -1,7 +1,8 @@
 alter table runner
     add column historic_season_record INTERVAL;
 alter table race_runner
-    add column previous_season_record INTERVAL;
+    add column previous_season_record INTERVAL,
+    add column total_races int4;
 
 drop view personal_records;
 

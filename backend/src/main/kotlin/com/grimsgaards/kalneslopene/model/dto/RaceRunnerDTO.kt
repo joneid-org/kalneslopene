@@ -14,12 +14,8 @@ data class RaceRunnerDTO(
     val totalRaces: Int,
 ) {
     @JsonIgnore
-    fun isNewPersonalRecord(): Boolean {
-        return previousPersonalRecord == null || resultTime < previousPersonalRecord
-    }
+    fun isNewPersonalRecord(): Boolean = previousPersonalRecord == null || resultTime < previousPersonalRecord
 
     @JsonIgnore
-    fun isNewSeasonBest(): Boolean {
-        return previousSeasonBest == null || resultTime < previousSeasonBest
-    }
+    fun isNewSeasonBest(): Boolean = previousSeasonBest == null || resultTime < previousSeasonBest
 }

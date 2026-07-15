@@ -1,55 +1,41 @@
 import { MapPin } from "lucide-react";
+import { useState } from "react";
+import PhotoDialog from "@/components/PhotoDialog.tsx";
 import { ReplacePhotoButton } from "@/components/ReplacePhotoButton.tsx";
+import { useAuth } from "@/context/AuthContext.tsx";
 import type { Pin } from "@/data/loypekartData.ts";
+import { useStaticPhotos } from "@/hooks/useStaticPhotos.tsx";
 
 type Props = {
   pin: Pin;
-  index: number;
-  total: number;
-  imageUrl?: string;
-  fileName?: string;
-  onPhotoClick: () => void;
-  onReplacePhoto?: (fileName: string, file: File) => Promise<void> | void;
 };
 
-export function PinInfoPanel({
-  pin,
-  index,
-  total,
-  imageUrl,
-  fileName,
-  onPhotoClick,
-  onReplacePhoto,
-}: Props) {
-  const blurb = pin.photos?.[0]?.description ?? pin.description;
+export function PinInfoPanel({ pin }: Props) {
+  const { isAuthenticated } = useAuth();
+  const { resolvePhotoUrl, handleReplacePhoto } = useStaticPhotos();
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const photo = pin.photo;
+  const photoUrl = resolvePhotoUrl(photo.fileName, photo.fallback);
+  const onReplacePhoto = isAuthenticated ? handleReplacePhoto : undefined;
 
   return (
     <div className="flex-col overflow-hidden rounded-2xl border bg-card shadow-sm md:flex">
       <div className="relative h-[170px] shrink-0 overflow-hidden bg-muted">
-        {imageUrl ? (
-          <button
-            type="button"
-            onClick={onPhotoClick}
-            className="group block size-full cursor-zoom-in"
-            aria-label="Åpne bilde i fullskjerm"
-          >
-            <img
-              src={imageUrl}
-              alt={pin.label}
-              className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
-            />
-          </button>
-        ) : (
-          <div className="flex size-full items-center justify-center text-sm text-muted-foreground">
-            Bilde kommer
-          </div>
-        )}
-        <span className="absolute left-3 top-3 rounded-full bg-brand px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wide text-brand-foreground">
-          Stopp {index + 1} av {total}
-        </span>
-        {onReplacePhoto && fileName && (
+        <button
+          type="button"
+          className="group block size-full cursor-zoom-in"
+          aria-label="Åpne bilde i fullskjerm"
+          onClick={() => setLightboxIndex(0)}
+        >
+          <img
+            src={photoUrl}
+            alt={pin.label}
+            className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        </button>
+        {onReplacePhoto && photo?.fileName && (
           <ReplacePhotoButton
-            fileName={fileName}
+            fileName={photo.fileName}
             onReplace={onReplacePhoto}
             className="absolute right-3 top-3 z-10"
           />
@@ -63,7 +49,7 @@ export function PinInfoPanel({
           </h2>
         </div>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          {blurb}
+          {pin.description}
         </p>
         {pin.tips && (
           <div className="mt-auto rounded-lg border-l-2 border-primary bg-secondary/60 px-3 py-2">
@@ -74,6 +60,19 @@ export function PinInfoPanel({
           </div>
         )}
       </div>
+
+      <PhotoDialog
+        photos={[
+          {
+            url: photoUrl,
+            description: photo.description,
+            fileName: photo.fileName,
+          },
+        ]}
+        index={lightboxIndex}
+        onIndexChange={setLightboxIndex}
+        onReplacePhoto={onReplacePhoto}
+      />
     </div>
   );
 }

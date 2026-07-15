@@ -13,8 +13,8 @@ import {
 } from "@/components/ui/dropdown-menu.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
-import { convertImageToWebp } from "@/lib/imageUtils.ts";
 import { tagColor, useTags } from "@/lib/newsUtils.ts";
+import { convertImageToWebp } from "@/lib/photoUtils.ts";
 import type { NewsFeedDTO, NewsfeedTagDTO, S3FileDto } from "@/model/DTO.ts";
 
 export function NewsfeedForm({

@@ -1,42 +1,40 @@
 package com.grimsgaards.kalneslopene.service
 
 import com.grimsgaards.kalneslopene.model.dto.NewsfeedDTO
-import com.grimsgaards.kalneslopene.model.dto.NewsfeedSettingsDTO
+import com.grimsgaards.kalneslopene.model.dto.PagedResponse
 import com.grimsgaards.kalneslopene.model.entities.NewsfeedEntity
-import com.grimsgaards.kalneslopene.model.entities.NewsfeedSettingsEntity
 import com.grimsgaards.kalneslopene.model.input.NewsfeedInput
 import com.grimsgaards.kalneslopene.model.input.PhotoUploadInfo
 import com.grimsgaards.kalneslopene.repository.NewsfeedRepository
-import com.grimsgaards.kalneslopene.repository.NewsfeedSettingsRepository
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import java.util.UUID
 
 @Service
 class NewsfeedService(
     val newsfeedRepository: NewsfeedRepository,
-    val newsfeedSettingsRepository: NewsfeedSettingsRepository,
     val s3Service: S3Service,
 ) {
-    private var settings = getSettingsEntity()
-
-    private fun getSettingsEntity(): NewsfeedSettingsEntity =
-        newsfeedSettingsRepository.findAll().firstOrNull() ?: newsfeedSettingsRepository.save(
-            NewsfeedSettingsEntity(
-                maxArticles = 10,
-            ),
+    fun getNewsfeedPage(
+        page: Int,
+        pageSize: Int,
+        tag: String? = null,
+    ): PagedResponse<NewsfeedDTO> {
+        val pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "date"))
+        val result =
+            if (tag.isNullOrBlank()) {
+                newsfeedRepository.findAll(pageable)
+            } else {
+                newsfeedRepository.findByTagIgnoreCase(tag, pageable)
+            }
+        return PagedResponse(
+            content = result.content.map { it.toDto() },
+            page = result.number,
+            pageSize = result.size,
+            totalElements = result.totalElements,
+            totalPages = result.totalPages,
         )
-
-    fun getSettings(): NewsfeedSettingsDTO = NewsfeedSettingsDTO(settings.maxArticles)
-
-    fun getSpecifiedNumberOfNewsfeed(): List<NewsfeedDTO> =
-        newsfeedRepository.findAllSortedAndLimited(settings.maxArticles).map { it.toDto() }
-
-    fun updateSettings(dto: NewsfeedSettingsDTO): NewsfeedSettingsDTO {
-        val existing = getSettingsEntity()
-        existing.maxArticles = dto.maxArticles
-        newsfeedSettingsRepository.save(existing)
-        settings = existing
-        return NewsfeedSettingsDTO(existing.maxArticles)
     }
 
     fun findByUuid(uuid: UUID): NewsfeedDTO = newsfeedRepository.findById(uuid).get().toDto()

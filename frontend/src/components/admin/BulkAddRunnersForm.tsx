@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { UserPlusIcon, XIcon } from "lucide-react";
-import { useState } from "react";
+import { useReducer, useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { DialogFooter } from "@/components/ui/dialog.tsx";
@@ -16,6 +16,42 @@ export type QueuedRunner = {
   hideTime: boolean;
 };
 
+type Draft = {
+  query: string;
+  selected: RunnerDTO | null;
+  time: string;
+  hideTime: boolean;
+};
+
+const emptyDraft: Draft = {
+  query: "",
+  selected: null,
+  time: "",
+  hideTime: false,
+};
+
+type DraftAction =
+  | { type: "search"; query: string }
+  | { type: "select"; runner: RunnerDTO }
+  | { type: "setTime"; time: string }
+  | { type: "setHideTime"; hideTime: boolean }
+  | { type: "reset" };
+
+function draftReducer(state: Draft, action: DraftAction): Draft {
+  switch (action.type) {
+    case "search":
+      return { ...state, query: action.query, selected: null };
+    case "select":
+      return { ...state, selected: action.runner, query: "" };
+    case "setTime":
+      return { ...state, time: action.time };
+    case "setHideTime":
+      return { ...state, hideTime: action.hideTime };
+    case "reset":
+      return emptyDraft;
+  }
+}
+
 export function BulkAddRunnersForm({
   existing,
   pendingUuids,
@@ -27,18 +63,15 @@ export function BulkAddRunnersForm({
   onAdd: (runners: QueuedRunner[]) => void;
   onDone: () => void;
 }) {
-  const [query, setQuery] = useState("");
-  const [selected, setSelected] = useState<RunnerDTO | null>(null);
-  const [time, setTime] = useState("");
-  const [hideTime, setHideTime] = useState(false);
+  const [draft, dispatch] = useReducer(draftReducer, emptyDraft);
   const [queue, setQueue] = useState<QueuedRunner[]>([]);
 
   const existingUuids = new Set(existing.map((r) => r.runner.uuid));
   const queuedUuids = new Set(queue.map((q) => q.runner.uuid));
 
   const { data: searchResults } = useQuery({
-    ...QUERIES.runner.getAllRunners(query),
-    enabled: query.length > 0,
+    ...QUERIES.runner.getAllRunners(draft.query),
+    enabled: draft.query.length > 0,
     staleTime: 0,
     gcTime: 0,
   });
@@ -50,9 +83,10 @@ export function BulkAddRunnersForm({
       !pendingUuids.has(r.uuid),
   );
 
-  const showSuggestions = !selected && suggestions.length > 0;
+  const showSuggestions = !draft.selected && suggestions.length > 0;
 
   const handleAddToQueue = () => {
+    const { selected, time, hideTime } = draft;
     if (!selected || (!time && !hideTime)) return;
     setQueue((prev) => [
       ...prev,
@@ -62,10 +96,7 @@ export function BulkAddRunnersForm({
         hideTime,
       },
     ]);
-    setSelected(null);
-    setQuery("");
-    setTime("");
-    setHideTime(false);
+    dispatch({ type: "reset" });
   };
 
   const handleConfirm = () => {
@@ -80,11 +111,8 @@ export function BulkAddRunnersForm({
         <Label>Søk løper</Label>
         <Input
           placeholder="Skriv navn..."
-          value={selected ? selected.name : query}
-          onChange={(e) => {
-            setQuery(e.target.value);
-            setSelected(null);
-          }}
+          value={draft.selected ? draft.selected.name : draft.query}
+          onChange={(e) => dispatch({ type: "search", query: e.target.value })}
         />
         {showSuggestions && (
           <div className="border rounded-md divide-y max-h-36 overflow-y-auto">
@@ -93,10 +121,7 @@ export function BulkAddRunnersForm({
                 key={r.uuid}
                 type="button"
                 className="w-full text-left px-3 py-2 text-sm hover:bg-muted"
-                onClick={() => {
-                  setSelected(r);
-                  setQuery("");
-                }}
+                onClick={() => dispatch({ type: "select", runner: r })}
               >
                 {r.name}
               </button>
@@ -110,17 +135,21 @@ export function BulkAddRunnersForm({
           <Label>Tid (mm:ss eller hh:mm:ss)</Label>
           <Input
             placeholder="23:45"
-            value={time}
-            disabled={hideTime}
-            onChange={(e) => setTime(e.target.value)}
+            value={draft.time}
+            disabled={draft.hideTime}
+            onChange={(e) =>
+              dispatch({ type: "setTime", time: e.target.value })
+            }
           />
         </div>
         <div className="flex items-center gap-2 pb-0.5">
           <input
             id="hideTimeBulk"
             type="checkbox"
-            checked={hideTime}
-            onChange={(e) => setHideTime(e.target.checked)}
+            checked={draft.hideTime}
+            onChange={(e) =>
+              dispatch({ type: "setHideTime", hideTime: e.target.checked })
+            }
             aria-label="Kun deltatt (skjul tid)"
             className="rounded"
           />
@@ -133,7 +162,7 @@ export function BulkAddRunnersForm({
       <Button
         variant="outline"
         className="w-full gap-1.5"
-        disabled={!selected || (!time && !hideTime)}
+        disabled={!draft.selected || (!draft.time && !draft.hideTime)}
         onClick={handleAddToQueue}
       >
         <UserPlusIcon className="size-4" />
@@ -159,6 +188,7 @@ export function BulkAddRunnersForm({
                   </span>
                   <button
                     type="button"
+                    aria-label={`Fjern ${q.runner.name} fra listen`}
                     className="text-destructive hover:text-destructive/80"
                     onClick={() =>
                       setQueue((prev) =>

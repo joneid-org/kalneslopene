@@ -7,6 +7,10 @@ interface UploadDropzoneProps {
   onFilesSelected: (files: FileList) => void;
 }
 
+function onDragOver(event: React.DragEvent) {
+  event.preventDefault();
+}
+
 export function UploadDropzone({ onFilesSelected }: UploadDropzoneProps) {
   const filePickerRef = useRef<HTMLInputElement>(null);
 
@@ -18,10 +22,6 @@ export function UploadDropzone({ onFilesSelected }: UploadDropzoneProps) {
     if (event.target.files) {
       onFilesSelected(event.target.files);
     }
-  };
-
-  const onDragOver = (event: React.DragEvent) => {
-    event.preventDefault();
   };
 
   const onDropFiles = (event: React.DragEvent) => {

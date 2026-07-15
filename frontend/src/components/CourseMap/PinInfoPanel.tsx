@@ -2,8 +2,8 @@ import { MapPin } from "lucide-react";
 import { useState } from "react";
 import PhotoDialog from "@/components/PhotoDialog.tsx";
 import { ReplacePhotoButton } from "@/components/ReplacePhotoButton.tsx";
-import { useAuth } from "@/context/AuthContext.tsx";
 import type { Pin } from "@/data/loypekartData.ts";
+import { useAuth } from "@/hooks/useAuth.ts";
 import { useStaticPhotos } from "@/hooks/useStaticPhotos.tsx";
 
 type Props = {

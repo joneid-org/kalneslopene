@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
-import { kyClient, queryClient } from "@/api/queryClient.ts";
+import { queryClient } from "@/api/queryClient.ts";
 import { uploadToS3 } from "@/api/s3.ts";
 import { AdminPhotoGrid } from "@/components/admin/AdminPhotoGrid.tsx";
 import { UploadDropzone } from "@/components/Pictures/UploadDropzone.tsx";
@@ -12,9 +12,13 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
+import {
+  confirmUploadedFile,
+  deleteS3Files,
+  requestPresignedUrls,
+} from "@/lib/fileUploadUtils.ts";
 import { convertImageToWebp } from "@/lib/photoUtils.ts";
 import { extractYear, formatDDMonth } from "@/lib/timeUtils.ts";
-
 import type { S3FileDto } from "@/model/DTO.ts";
 
 export interface UploadItem {
@@ -27,24 +31,6 @@ export interface UploadItem {
 }
 
 const NOW = new Date();
-
-export function requestPresignedUrls(raceUuid: string, fileNames: string[]) {
-  return kyClient
-    .post(`/api/races/${raceUuid}/photos`, {
-      json: fileNames,
-    })
-    .json<{ [key in string]: { uploadUrl: string; s3File: S3FileDto } }>();
-}
-
-export function confirmUploadedFile(fileUuid: string) {
-  return kyClient
-    .patch(`/api/s3/files/${fileUuid}/confirm-upload`)
-    .json<S3FileDto>();
-}
-
-export function deleteS3Files(fileUuids: string[]) {
-  return kyClient.delete("/api/s3/files", { json: fileUuids }).json<void>();
-}
 
 export function ImagesPage() {
   const { data, isLoading } = useQuery(QUERIES.race.getAllRaces({ to: NOW }));

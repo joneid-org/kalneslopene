@@ -1,20 +1,6 @@
 import type { ReactNode } from "react";
-import { createContext, use, useCallback, useMemo, useState } from "react";
-
-export type AuthUser = {
-  username: string;
-  roles: string[];
-  credentials: string; // base64 encoded "username:password"
-};
-
-type AuthContextType = {
-  user: AuthUser | null;
-  login: (username: string, password: string, roles: string[]) => void;
-  logout: () => void;
-  isAuthenticated: boolean;
-};
-
-const AuthContext = createContext<AuthContextType | null>(null);
+import { useCallback, useMemo, useState } from "react";
+import { AuthContext, type AuthUser } from "@/context/AuthContext.ts";
 
 const STORAGE_KEY = "auth_credentials";
 
@@ -52,10 +38,4 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   return <AuthContext value={value}>{children}</AuthContext>;
-}
-
-export function useAuth() {
-  const ctx = use(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
-  return ctx;
 }

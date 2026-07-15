@@ -67,6 +67,7 @@ export default function PhotoDialog({
             <div className="absolute inset-y-0 left-0 flex items-center">
               <button
                 type="button"
+                aria-label="Forrige bilde"
                 className="p-1 text-black/70 hover:text-black disabled:opacity-20"
                 disabled={index === 0}
                 onClick={() => onIndexChange(index - 1)}
@@ -77,6 +78,7 @@ export default function PhotoDialog({
             <div className="absolute inset-y-0 right-0 flex items-center">
               <button
                 type="button"
+                aria-label="Neste bilde"
                 className="p-1 text-black/70 hover:text-black disabled:opacity-20"
                 disabled={index === photos.length - 1}
                 onClick={() => onIndexChange(index + 1)}

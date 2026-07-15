@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router";
-import { useAuth } from "@/context/AuthContext.tsx";
+import { useAuth } from "@/hooks/useAuth.ts";
 
 export function AuthGuard() {
   const { isAuthenticated } = useAuth();

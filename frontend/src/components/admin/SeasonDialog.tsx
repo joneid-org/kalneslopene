@@ -27,7 +27,7 @@ export function SeasonDialog({ onClose }: { onClose: () => void }) {
   const [startDate, setStartDate] = useState(todayStr);
   const [endDate, setEndDate] = useState("");
   const [timeOfDay, setTimeOfDay] = useState("18:00");
-  const [interval, setInterval] = useState("7");
+  const [intervalDays, setIntervalDays] = useState("7");
   const [preview, setPreview] = useState<PreviewRace[] | null>(null);
 
   const createMutation = useMutation({
@@ -39,7 +39,7 @@ export function SeasonDialog({ onClose }: { onClose: () => void }) {
   });
 
   const handlePreview = () => {
-    const days = parseInt(interval, 10);
+    const days = parseInt(intervalDays, 10);
     if (!startDate || !endDate || !timeOfDay || !days || days < 1) return;
     const dates = generateRaceDates(startDate, endDate, timeOfDay, days);
     setPreview(
@@ -64,7 +64,7 @@ export function SeasonDialog({ onClose }: { onClose: () => void }) {
     !!startDate &&
     !!endDate &&
     !!timeOfDay &&
-    parseInt(interval, 10) >= 1 &&
+    parseInt(intervalDays, 10) >= 1 &&
     endDate >= startDate;
 
   return (
@@ -117,9 +117,9 @@ export function SeasonDialog({ onClose }: { onClose: () => void }) {
               type="number"
               min={1}
               placeholder="7"
-              value={interval}
+              value={intervalDays}
               onChange={(e) => {
-                setInterval(e.target.value);
+                setIntervalDays(e.target.value);
                 setPreview(null);
               }}
             />

@@ -52,12 +52,6 @@ export function formatDDMonth(raceDate: unknown): string {
   return `${String(day).padStart(2, "0")}. ${monthName}`;
 }
 
-export function toDateString(raceDate: unknown): string {
-  const { day, month, year } = parseDateParts(raceDate);
-  const monthName = NORWEGIAN_MONTH_NAMES[(month ?? 1) - 1];
-  return `${day}. ${monthName} ${year}`;
-}
-
 export function formatDate(raceDate: unknown): string | undefined {
   if (!raceDate) return undefined;
   return formatDDMonth(raceDate);

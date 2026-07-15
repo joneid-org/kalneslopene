@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/a11y/useKeyWithClickEvents: fordi. */
 import { useQuery } from "@tanstack/react-query";
 import { UploadIcon } from "lucide-react";
 import { useRef, useState } from "react";
@@ -99,8 +98,9 @@ export function CsvUploadStep({
 
   return (
     <div className="space-y-4">
-      {/** biome-ignore lint/a11y/noStaticElementInteractions: fordi. */}
-      <div
+      <button
+        type="button"
+        aria-label="Velg eller slipp CSV-fil"
         onDragOver={(e) => {
           e.preventDefault();
           setDragOver(true);
@@ -108,7 +108,7 @@ export function CsvUploadStep({
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
         onClick={() => fileRef.current?.click()}
-        className={`border-2 border-dashed rounded-lg p-10 flex flex-col items-center gap-3 cursor-pointer transition-colors ${
+        className={`w-full border-2 border-dashed rounded-lg p-10 flex flex-col items-center gap-3 cursor-pointer transition-colors ${
           dragOver
             ? "border-primary bg-primary/5"
             : "border-border hover:border-primary/50 hover:bg-muted/30"
@@ -123,15 +123,15 @@ export function CsvUploadStep({
             Format: navn, tid (mm:ss eller hh:mm:ss) – en løper per linje
           </p>
         </div>
-        <input
-          ref={fileRef}
-          type="file"
-          accept=".csv,text/csv"
-          aria-label="Velg CSV-fil"
-          className="hidden"
-          onChange={handleFileChange}
-        />
-      </div>
+      </button>
+      <input
+        ref={fileRef}
+        type="file"
+        accept=".csv,text/csv"
+        aria-label="Velg CSV-fil"
+        className="hidden"
+        onChange={handleFileChange}
+      />
 
       {error && <p className="text-sm text-destructive">{error}</p>}
 

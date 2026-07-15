@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
-import { useAuth } from "@/context/AuthContext.tsx";
+import { useAuth } from "@/hooks/useAuth.ts";
 
 export function Login() {
   const navigate = useNavigate();

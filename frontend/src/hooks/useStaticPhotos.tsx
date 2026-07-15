@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { requestStaticPresignedUrl, uploadToS3 } from "@/api/s3.ts";
-import { useApplicationContext } from "@/context/ApplicationContext.tsx";
+import { useApplicationContext } from "@/hooks/useApplicationContext.ts";
 import { convertImageToWebp } from "@/lib/photoUtils.ts";
 
 export function useStaticPhotos() {
@@ -29,8 +29,10 @@ export function useStaticPhotos() {
 
   const handleReplacePhoto = useCallback(
     async (fileName: string, file: File) => {
-      const webpFile = await convertImageToWebp(file);
-      const uploadUrl = await requestStaticPresignedUrl(fileName);
+      const [webpFile, uploadUrl] = await Promise.all([
+        convertImageToWebp(file),
+        requestStaticPresignedUrl(fileName),
+      ]);
       await uploadToS3(webpFile, uploadUrl);
       setPhotoVersions((prev) => ({ ...prev, [fileName]: Date.now() }));
     },

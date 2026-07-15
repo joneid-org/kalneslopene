@@ -46,6 +46,7 @@ export default function RunnerTimeChart({
 
   const selectedYears =
     range === "all" ? availableYears : [Number.parseInt(range, 10)];
+  const selectedYearsSet = new Set(selectedYears);
 
   const options = [
     { label: "Alle", value: "all" },
@@ -56,7 +57,7 @@ export default function RunnerTimeChart({
     (rr) =>
       !rr.hideTime &&
       rr.resultTime &&
-      selectedYears.includes(extractYear(rr.raceDate)),
+      selectedYearsSet.has(extractYear(rr.raceDate)),
   );
 
   const byDate = new Map<string, ChartPoint>();

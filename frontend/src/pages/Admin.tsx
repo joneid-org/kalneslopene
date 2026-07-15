@@ -16,7 +16,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
-import { useAuth } from "@/context/AuthContext.tsx";
+import { useAuth } from "@/hooks/useAuth.ts";
 
 const actions = [
   { label: "Administrer løp", icon: CalendarIcon, path: "/admin/races" },

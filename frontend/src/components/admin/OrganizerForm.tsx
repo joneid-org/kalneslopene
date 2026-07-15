@@ -77,6 +77,7 @@ export function OrganizerForm({
               />
               <button
                 type="button"
+                aria-label="Fjern profilbilde"
                 onClick={() => {
                   setImage(undefined);
                   if (imageRef.current) imageRef.current.value = "";

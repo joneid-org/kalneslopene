@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import DOMPurify from "dompurify";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { Link, useParams } from "react-router";
@@ -90,8 +91,8 @@ export function NewsArticle() {
 
         <p
           className="text-sm leading-relaxed mb-6 prose prose-sm max-w-none [&_img]:max-w-full [&_img]:rounded-lg [&_img]:my-2"
-          // biome-ignore lint/security/noDangerouslySetInnerHtml: rich text HTML from admin editor
-          dangerouslySetInnerHTML={{ __html: post.content }}
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: rich text HTML from admin editor, sanitized with DOMPurify below
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
         />
 
         {headerImage && (

@@ -281,6 +281,7 @@ export function PastRaceEditDialog({
                     </span>
                     <button
                       type="button"
+                      aria-label={`Fjern ${q.runner.name} fra listen`}
                       className="text-destructive hover:text-destructive/80"
                       onClick={() =>
                         setPendingRunners((prev) =>

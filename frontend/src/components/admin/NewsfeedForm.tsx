@@ -1,5 +1,5 @@
 import { ImagePlus, Loader2, X } from "lucide-react";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { requestNewsfeedHeaderUpload } from "@/api/queries.ts";
 import { FormFooter } from "@/components/admin/FormFooter.tsx";
 import { RichTextEditor } from "@/components/admin/RichTextEditor.tsx";
@@ -43,6 +43,7 @@ export function NewsfeedForm({
   );
   const [uploading, setUploading] = useState(false);
   const availableTags = useTags();
+  const selectedTagsSet = useMemo(() => new Set(selectedTags), [selectedTags]);
 
   const headerImageRef = useRef<HTMLInputElement>(null);
 
@@ -137,7 +138,7 @@ export function NewsfeedForm({
             {availableTags.map((tag: NewsfeedTagDTO) => (
               <DropdownMenuCheckboxItem
                 key={tag.value}
-                checked={selectedTags.includes(tag.value)}
+                checked={selectedTagsSet.has(tag.value)}
                 onCheckedChange={() => toggleTag(tag.value)}
                 className="gap-2"
               >
@@ -172,6 +173,7 @@ export function NewsfeedForm({
             />
             <button
               type="button"
+              aria-label="Fjern header-bilde"
               onClick={() => {
                 setHeaderImage(undefined);
                 if (headerImageRef.current) headerImageRef.current.value = "";

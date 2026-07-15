@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import type { OrganizerDTO } from "@/model/DTO.ts";
 
-const STORAGE_KEY = "organizer-order";
+const STORAGE_KEY = "organizer-order:v1";
 
 function loadOrder(): string[] {
   try {

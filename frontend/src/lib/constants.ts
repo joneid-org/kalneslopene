@@ -10,7 +10,7 @@ export const COLUMN_LABELS: Record<string, string> = {
   races: "LØP",
 };
 
-export const DESKTOP_ONLY_COLUMNS = ["races", "pace", "pr", "yearBest"];
+export const HIDEABLE_COLUMNS = ["pace", "yearBest", "pr", "races"] as const;
 
 export const NORWEGIAN_MONTH_NAMES = [
   "Januar",

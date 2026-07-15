@@ -1,6 +1,7 @@
 package com.grimsgaards.kalneslopene.controller
 
 import com.grimsgaards.kalneslopene.model.dto.RaceDTO
+import com.grimsgaards.kalneslopene.model.dto.RaceResultSummaryDto
 import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
 import com.grimsgaards.kalneslopene.model.input.PhotoUploadInfo
 import com.grimsgaards.kalneslopene.model.input.RaceFilter
@@ -49,6 +50,11 @@ class RaceController(
     fun getRunnersInRace(
         @PathVariable uuid: UUID,
     ): List<RaceRunnerDTO> = raceService.findAllRunnersInRace(uuid)
+
+    @GetMapping("/{uuid}/results/summary")
+    fun getResultSummary(
+        @PathVariable uuid: UUID,
+    ): RaceResultSummaryDto = raceService.getResultSummary(uuid)
 
     @PostMapping("/{uuid}/runners")
     fun addRunnersToRace(

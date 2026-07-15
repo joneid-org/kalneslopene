@@ -125,3 +125,11 @@ databaseChangeLog:
         - sqlFile:
             path: db/changelog/sql/migrate/migrate_newsfeed_drop_settings.sql
             relativeToChangelogFile: false
+  - changeSet:
+      id: create_race_runner_stats_view
+      author: ejoneid
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/create/create_race_runner_stats_view.sql
+            relativeToChangelogFile: false

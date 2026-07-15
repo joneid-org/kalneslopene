@@ -15,6 +15,7 @@ import type {
   OrganizerInput,
   PagedResponse,
   RaceDTO,
+  RaceResultSummaryDTO,
   RaceRunnerDTO,
   RaceStatisticsDTO,
   RunnerDTO,
@@ -87,6 +88,14 @@ export const QUERIES = {
         return await kyClient
           .get(`/api/races/${uuid}/runners`)
           .json<RaceRunnerDTO[]>();
+      },
+    }),
+    getResultSummary: (uuid: string) => ({
+      queryKey: ["race", uuid, "resultSummary"],
+      queryFn: async () => {
+        return await kyClient
+          .get(`/api/races/${uuid}/results/summary`)
+          .json<RaceResultSummaryDTO>();
       },
     }),
     addRunnersToRace: (raceUuid: string, runners: RaceRunnerDTO[]) => ({

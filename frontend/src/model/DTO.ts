@@ -68,9 +68,21 @@ export type RunnerInput = Omit<RunnerDTO, "uuid">;
 
 export type RaceRunnerDTO = {
   runner: RunnerDTO;
-  race: RaceDTO;
+  raceUuid: string;
   resultTime: string;
   hideTime: boolean;
+  previousSeasonBest?: string;
+  previousPersonalRecord?: string;
+  totalRaces: number;
+};
+
+export type RaceResultSummaryDTO = {
+  participants: number;
+  male: number;
+  female: number;
+  seasonBestCount: number;
+  personalBestCount: number;
+  debutantCount: number;
 };
 
 export type MilestoneDTO = {

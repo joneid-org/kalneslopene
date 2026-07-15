@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { DISTANCE_KM } from "@/lib/constants.ts";
 import {
+  type DatedRaceRunner,
   getBestTimeThisYear,
   getFastestRunner,
 } from "@/lib/statisticsUtils.ts";
@@ -113,41 +114,37 @@ export type RowData = {
   isPR: boolean;
 };
 
-export function buildTableRows(
-  raceRunners: RaceRunnerDTO[],
-  raceCountByRunner: Record<string, number> = {},
-  allRacesByRunner: Record<string, RaceRunnerDTO[]> = {},
-): RowData[] {
-  const sorted = raceRunners.toSorted(
+export function buildTableRows(runners: RaceRunnerDTO[]): RowData[] {
+  const sorted = runners.toSorted(
     (a, b) =>
       mapResultTimeToNumber(a.resultTime ?? "") -
       mapResultTimeToNumber(b.resultTime ?? ""),
   );
 
-  const currentYear = new Date().getFullYear();
-
-  return sorted.map((rr, index) => {
-    const timeSeconds = mapResultTimeToNumber(rr.resultTime ?? "");
+  return sorted.map((runner, index) => {
+    const timeSeconds = mapResultTimeToNumber(runner.resultTime ?? "");
     const paceSeconds =
       DISTANCE_KM > 0 && timeSeconds > 0
         ? timeSeconds / DISTANCE_KM
         : Number.NaN;
-    const runnerHistory = allRacesByRunner[rr.runner.uuid ?? ""] ?? [];
-    const prTime = getBestRaceFromRunner(runnerHistory);
-    const formattedTime = rr.hideTime
-      ? "Deltatt"
-      : formatSecondsToTime(timeSeconds);
+    const previousPr = mapResultTimeToNumber(runner.previousPersonalRecord);
+    const hasVisibleTime = !runner.hideTime && timeSeconds > 0;
+    const isPR =
+      hasVisibleTime &&
+      (!Number.isFinite(previousPr) || timeSeconds < previousPr);
     return {
       position: index + 1,
-      runnerName: rr.runner.name,
-      gender: rr.runner.gender,
-      time: formattedTime,
-      hideTime: rr.hideTime,
+      runnerName: runner.runner.name,
+      gender: runner.runner.gender,
+      time: runner.hideTime ? "Deltatt" : formatSecondsToTime(timeSeconds),
+      hideTime: runner.hideTime,
       pace: formatSecondsToTime(paceSeconds),
-      races: raceCountByRunner[rr.runner.uuid ?? ""] ?? 0,
-      pr: prTime,
-      yearBest: getBestRaceThisYearFromRunner(runnerHistory, currentYear),
-      isPR: !rr.hideTime && timeSeconds > 0 && formattedTime === prTime,
+      races: runner.totalRaces,
+      pr: formatSecondsToTime(isPR ? timeSeconds : previousPr),
+      yearBest: formatSecondsToTime(
+        mapResultTimeToNumber(runner.previousSeasonBest),
+      ),
+      isPR,
     };
   });
 }
@@ -160,7 +157,7 @@ export function getBestRaceFromRunner(raceRunner: RaceRunnerDTO[]): string {
 }
 
 export function getBestRaceThisYearFromRunner(
-  raceRunner: RaceRunnerDTO[],
+  raceRunner: DatedRaceRunner[],
   year: number,
 ): string {
   return getBestTimeThisYear(raceRunner, year);

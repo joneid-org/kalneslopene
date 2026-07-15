@@ -1,5 +1,5 @@
-import { useQueries, useQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { Navigate, useParams } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
 import PhotoDialog from "@/components/PhotoDialog.tsx";
@@ -8,10 +8,6 @@ import { RaceSwitcher } from "@/components/Results/RaceSwitcher.tsx";
 import ResultsHeader from "@/components/Results/ResultsHeader.tsx";
 import ResultsTable from "@/components/Results/ResultsTable.tsx";
 import { StatTile } from "@/components/StatTile.tsx";
-import {
-  getNewPersonalBestCount,
-  getNewYearBestCount,
-} from "@/lib/statisticsUtils.ts";
 import { formatDateFull } from "@/lib/timeUtils.ts";
 import {
   buildTableRows,
@@ -19,7 +15,6 @@ import {
   getNextRace,
   getPreviousRace,
 } from "@/lib/utils.ts";
-import type { RaceRunnerDTO } from "@/model/DTO.ts";
 
 export function Results() {
   const { uuid = "" } = useParams<{ uuid: string }>();
@@ -28,56 +23,16 @@ export function Results() {
   const { data: raceRunners } = useQuery(
     QUERIES.race.getAllRunnersInRace(uuid),
   );
+  const { data: summary } = useQuery(QUERIES.race.getResultSummary(uuid));
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-
-  const runnerRaceQueries = useQueries({
-    queries: (raceRunners ?? []).map((rr) =>
-      QUERIES.runner.getAllRacesByRunner(rr.runner.uuid ?? ""),
-    ),
-  });
-
-  const { raceCountByRunner, allRacesByRunner } = useMemo(() => {
-    const count: Record<string, number> = {};
-    const all: Record<string, RaceRunnerDTO[]> = {};
-    (raceRunners ?? []).forEach((rr, index) => {
-      const id = rr.runner.uuid ?? "";
-      count[id] = runnerRaceQueries[index]?.data?.length ?? 0;
-      all[id] = runnerRaceQueries[index]?.data ?? [];
-    });
-    return { raceCountByRunner: count, allRacesByRunner: all };
-  }, [raceRunners, runnerRaceQueries]);
 
   const allRaces = races ?? [];
   const race = allRaces.find((r) => r.uuid === uuid);
   const previous = getPreviousRace(allRaces, uuid);
   const next = getNextRace(allRaces, uuid);
   const title = formatDateFull(race?.raceDate);
-  const tableData = buildTableRows(
-    raceRunners ?? [],
-    raceCountByRunner,
-    allRacesByRunner,
-  );
-  const participants = raceRunners?.length;
-  const maleCount = raceRunners?.filter(
-    (r) => r.runner.gender === "Mann",
-  ).length;
-  const femaleCount = raceRunners?.filter(
-    (r) => r.runner.gender === "Kvinne",
-  ).length;
-  const yearBestCount = getNewYearBestCount(
-    raceRunners ?? [],
-    uuid,
-    allRacesByRunner,
-  );
-  const personalBestCount = getNewPersonalBestCount(
-    raceRunners ?? [],
-    uuid,
-    allRacesByRunner,
-  );
-  const debutantCount = Object.values(raceCountByRunner).filter(
-    (c) => c === 1,
-  ).length;
+  const tableData = buildTableRows(raceRunners ?? []);
   const racePhotos = race?.photos ?? [];
 
   if (!race) {
@@ -100,16 +55,24 @@ export function Results() {
       <ResultsHeader race={race} title={title} />
 
       <div className="grid grid-cols-3 gap-2 md:grid-cols-6 md:gap-3">
-        <StatTile value={participants} label="Deltakere" />
-        <StatTile value={maleCount} label="Menn" />
-        <StatTile value={femaleCount} label="Kvinner" />
-        <StatTile value={yearBestCount} label="Årsbeste" tone="primary" />
+        <StatTile value={summary?.participants} label="Deltakere" />
+        <StatTile value={summary?.male} label="Menn" />
+        <StatTile value={summary?.female} label="Kvinner" />
         <StatTile
-          value={personalBestCount}
+          value={summary?.seasonBestCount}
+          label="Årsbeste"
+          tone="primary"
+        />
+        <StatTile
+          value={summary?.personalBestCount}
           label="Personlig rek."
           tone="primary"
         />
-        <StatTile value={debutantCount} label="Debutanter" tone="brand" />
+        <StatTile
+          value={summary?.debutantCount}
+          label="Debutanter"
+          tone="brand"
+        />
       </div>
 
       <ResultsTable tableData={tableData} />

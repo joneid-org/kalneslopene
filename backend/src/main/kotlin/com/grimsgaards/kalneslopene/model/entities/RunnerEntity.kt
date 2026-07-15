@@ -12,6 +12,7 @@ import jakarta.persistence.PrimaryKeyJoinColumn
 import jakarta.persistence.SecondaryTable
 import jakarta.persistence.Table
 import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.annotations.SecondaryRow
 import org.hibernate.type.SqlTypes
 import java.time.Duration
 import java.util.UUID
@@ -19,9 +20,10 @@ import java.util.UUID
 @Entity
 @Table(name = "runner")
 @SecondaryTable(
-    name = "personal_records",
+    name = "runner_stats",
     pkJoinColumns = [PrimaryKeyJoinColumn(name = "runner_uuid", referencedColumnName = "uuid")],
 )
+@SecondaryRow(table = "runner_stats", optional = true)
 data class RunnerEntity(
     var name: String,
     @Enumerated(EnumType.STRING)
@@ -33,8 +35,15 @@ data class RunnerEntity(
     val uuid: UUID = UUID.randomUUID()
 
     @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
-    @Column(name = "record", table = "personal_records", insertable = false, updatable = false)
+    @Column(name = "personal_record", table = "runner_stats", insertable = false, updatable = false)
     val personalRecord: Duration? = null
+
+    @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
+    @Column(name = "season_record", table = "runner_stats", insertable = false, updatable = false)
+    val seasonBest: Duration? = null
+
+    @Column(name = "total_races", table = "runner_stats", insertable = false, updatable = false)
+    val totalRaces: Int? = null
 
     fun toDto(): RunnerDTO = RunnerDTO(uuid, name, gender)
 }

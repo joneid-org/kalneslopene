@@ -5,6 +5,7 @@ import RunnerStatisticsHeader from "@/components/Statistics/RunnerStatisticsHead
 import RunnerStatisticsSeasonBest from "@/components/Statistics/RunnerStatisticsSeasonBest.tsx";
 import SearchBox from "@/components/Statistics/SearchBox.tsx";
 import { StatTile } from "@/components/StatTile.tsx";
+import { withRaceDates } from "@/lib/statisticsUtils.ts";
 import { extractYear } from "@/lib/timeUtils.ts";
 import { getBestRaceFromRunner } from "@/lib/utils.ts";
 import type { RunnerDTO } from "@/model/DTO.ts";
@@ -16,25 +17,28 @@ const RunnerTimeChart = lazy(
 export default function RunnerStatistics() {
   const [selectedRunner, setSelectedRunner] = useState<RunnerDTO | null>(null);
 
+  const { data: races } = useQuery(QUERIES.race.getAllRaces());
   const { data: raceHistory } = useQuery({
     ...QUERIES.runner.getAllRacesByRunner(selectedRunner?.uuid ?? ""),
     enabled: !!selectedRunner?.uuid,
   });
 
+  const datedHistory = useMemo(
+    () => withRaceDates(raceHistory ?? [], races ?? []),
+    [raceHistory, races],
+  );
+
   const totalRaces = raceHistory?.length ?? 0;
 
-  const pr = useMemo(
-    () => getBestRaceFromRunner(raceHistory ?? []),
-    [raceHistory],
-  );
+  const pr = useMemo(() => getBestRaceFromRunner(datedHistory), [datedHistory]);
 
   const availableYears = useMemo(() => {
     const years = new Set<number>();
-    for (const rr of raceHistory ?? []) {
-      years.add(extractYear(rr.race.raceDate));
+    for (const rr of datedHistory) {
+      years.add(extractYear(rr.raceDate));
     }
     return Array.from(years).toSorted((a, b) => b - a);
-  }, [raceHistory]);
+  }, [datedHistory]);
 
   return (
     <section className="flex flex-col gap-3">
@@ -56,14 +60,14 @@ export default function RunnerStatistics() {
           <Suspense fallback={null}>
             <RunnerTimeChart
               key={availableYears.join(",")}
-              raceHistory={raceHistory ?? []}
+              raceHistory={datedHistory}
               availableYears={availableYears}
             />
           </Suspense>
 
           <RunnerStatisticsSeasonBest
             availableYears={availableYears}
-            raceHistory={raceHistory ?? []}
+            raceHistory={datedHistory}
           />
         </div>
       )}

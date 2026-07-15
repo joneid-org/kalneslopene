@@ -1,10 +1,10 @@
 info:
-  name: Delete
+  name: Get by ID
   type: http
-  seq: 4
+  seq: 2
 
 http:
-  method: DELETE
+  method: GET
   url: "{{url}}/api/races/:uuid"
   params:
     - name: uuid

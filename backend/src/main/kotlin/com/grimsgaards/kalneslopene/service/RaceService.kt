@@ -1,6 +1,8 @@
 package com.grimsgaards.kalneslopene.service
 
+import com.grimsgaards.kalneslopene.model.dto.Gender
 import com.grimsgaards.kalneslopene.model.dto.RaceDTO
+import com.grimsgaards.kalneslopene.model.dto.RaceResultSummaryDto
 import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
 import com.grimsgaards.kalneslopene.model.entities.RaceEntity
 import com.grimsgaards.kalneslopene.model.entities.RaceRunnerEntity
@@ -62,6 +64,18 @@ class RaceService(
     fun findAllRunnersInRace(uuid: UUID): List<RaceRunnerDTO> {
         val race = raceRepository.findByIdOrNull(uuid)
         return race?.runners?.map { it.toDto() } ?: throw IllegalArgumentException("no race found with id $uuid")
+    }
+
+    fun getResultSummary(uuid: UUID): RaceResultSummaryDto {
+        val runners = findAllRunnersInRace(uuid)
+        return RaceResultSummaryDto(
+            participants = runners.size,
+            male = runners.count { it.runner.gender == Gender.MALE },
+            female = runners.count { it.runner.gender == Gender.FEMALE },
+            seasonBestCount = runners.count { it.isNewSeasonBest() },
+            personalBestCount = runners.count { it.isNewPersonalRecord() },
+            debutantCount = runners.count { it.totalRaces == 1 },
+        )
     }
 
     @Transactional

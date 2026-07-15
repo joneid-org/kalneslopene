@@ -27,15 +27,20 @@ data class RaceRunnerEntity(
     @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
     var resultTime: Duration,
     var hideTime: Boolean = false,
-) {
     @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
-    val previousPersonalRecord: Duration? = runner.personalRecord
-
+    val previousPersonalRecord: Duration? = runner.personalRecord,
+    @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
+    val previousSeasonRecord: Duration? = runner.seasonBest,
+    val totalRaces: Int? = runner.totalRaces,
+) {
     fun toDto(): RaceRunnerDTO =
         RaceRunnerDTO(
             runner = runner.toDto(),
-            race = race.toDto(),
+            raceUuid = race.uuid,
             resultTime = resultTime,
             hideTime = hideTime,
+            previousPersonalRecord = previousPersonalRecord,
+            previousSeasonBest = previousSeasonRecord,
+            totalRaces = totalRaces ?: 0,
         )
 }

@@ -1,0 +1,73 @@
+databaseChangeLog:
+  - changeSet:
+      id: 01-seed_runners_perser2018
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/seed/seed_runners_perser2018.sql
+            relativeToChangelogFile: false
+            encoding: UTF-8
+  - changeSet:
+      id: 02-seed_race_results_2019
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/seed/seed_race_results_2019.sql
+            relativeToChangelogFile: false
+            encoding: UTF-8
+  - changeSet:
+      id: 03-seed_race_results_2020
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/seed/seed_race_results_2020.sql
+            relativeToChangelogFile: false
+            encoding: UTF-8
+  - changeSet:
+      id: 04-seed_race_results_2021
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/seed/seed_race_results_2021.sql
+            relativeToChangelogFile: false
+            encoding: UTF-8
+  - changeSet:
+      id: 05-seed_race_results_2022
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/seed/seed_race_results_2022.sql
+            relativeToChangelogFile: false
+            encoding: UTF-8
+  - changeSet:
+      id: 06-seed_race_results_2023
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/seed/seed_race_results_2023.sql
+            relativeToChangelogFile: false
+            encoding: UTF-8
+  - changeSet:
+      id: 07-seed_race_results_2024
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/seed/seed_race_results_2024.sql
+            relativeToChangelogFile: false
+            encoding: UTF-8
+  - changeSet:
+      id: 08-seed_race_results_2025
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/seed/seed_race_results_2025.sql
+            relativeToChangelogFile: false
+            encoding: UTF-8
+  - changeSet:
+      id: 09-seed_race_results_2026
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/seed/seed_race_results_2026.sql
+            relativeToChangelogFile: false
+            encoding: UTF-8

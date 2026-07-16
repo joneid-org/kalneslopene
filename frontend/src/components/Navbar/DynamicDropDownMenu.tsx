@@ -44,12 +44,12 @@ export function DynamicDropDownMenu({
           <ChevronDown className="size-3.5" />
         </MenubarTrigger>
 
-        <MenubarContent className="max-h-[var(--radix-menubar-content-available-height)] overflow-y-auto">
+        <MenubarContent>
           {years.map((year) => (
             <MenubarSub key={year}>
               <MenubarSubTrigger>{year}</MenubarSubTrigger>
 
-              <MenubarSubContent className="max-h-[var(--radix-menubar-content-available-height)] overflow-y-auto">
+              <MenubarSubContent>
                 {getRacesDTOByYear(races, year).map((race) => (
                   <MenubarItem key={race.uuid} asChild>
                     <Link to={`${basePath}/${race.uuid}`}>

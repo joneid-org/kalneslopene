@@ -30,6 +30,12 @@ export function requestNewsfeedHeaderUpload(fileName: string) {
     .json<{ uploadUrl: string; s3File: S3FileDto }>();
 }
 
+export function requestNewsfeedContentUpload(fileName: string) {
+  return kyClient
+    .post("/api/newsfeeds/content-image", { searchParams: { fileName } })
+    .json<{ uploadUrl: string; s3File: S3FileDto }>();
+}
+
 export const QUERIES = {
   config: {
     get: {

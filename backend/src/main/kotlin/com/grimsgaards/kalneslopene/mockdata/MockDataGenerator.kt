@@ -330,7 +330,7 @@ class MockDataGenerator(
 
     companion object {
         private const val RANDOM_SEED = 42L
-        private const val PAST_RACES = 128
+        private const val PAST_RACES = 400
         private const val UPCOMING_RACES = 12
         private const val RACE_HOUR = 18
         private const val BASE_MINUTES = 22L

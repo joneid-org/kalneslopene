@@ -3,6 +3,7 @@ import type { Ref } from "react";
 import { Link, useLocation } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
 import { DynamicDropDownMenu } from "@/components/Navbar/DynamicDropDownMenu.tsx";
+import { MobileNavMenu } from "@/components/Navbar/MobileNavMenu.tsx";
 import { cn } from "@/lib/utils.ts";
 
 const navLinks = [
@@ -18,6 +19,8 @@ export function Header({ ref }: { ref?: Ref<HTMLElement> }) {
   return (
     <header ref={ref} className="sticky top-0 z-50 bg-card/90 backdrop-blur-md">
       <div className="mx-auto flex h-14 w-full max-w-(--page-max-width) items-center gap-3 px-4 md:h-17.5">
+        <MobileNavMenu races={races ?? []} />
+
         <Link to="/" className="group flex min-w-0 items-center gap-2.5">
           <svg
             viewBox="0 0 100 100"

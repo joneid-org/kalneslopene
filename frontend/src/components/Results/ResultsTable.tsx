@@ -31,27 +31,19 @@ const rightAlignedColumns = new Set([
   "races",
 ]);
 
+// position and runnerName keep their natural width; every other column is equal.
+const columnWidths: Record<string, string> = {
+  position: "w-16",
+  time: "w-32",
+  pace: "w-32",
+  yearBest: "w-32",
+  pr: "w-32",
+  races: "w-32",
+};
+
 function RankBadge({ rank }: { rank: number }) {
-  if (rank > 3) {
-    return (
-      <span className="inline-flex w-7 justify-center font-display text-sm font-extrabold tabular-nums text-muted-foreground">
-        {rank}
-      </span>
-    );
-  }
-  const tone =
-    rank === 1
-      ? "bg-brand text-brand-foreground"
-      : rank === 2
-        ? "bg-muted text-foreground"
-        : "bg-brand-soft text-brand-soft-foreground";
   return (
-    <span
-      className={cn(
-        "inline-flex size-7 items-center justify-center rounded-full font-display text-sm font-extrabold",
-        tone,
-      )}
-    >
+    <span className="inline-flex w-7 justify-center font-display text-sm font-extrabold tabular-nums text-muted-foreground">
       {rank}
     </span>
   );
@@ -60,7 +52,7 @@ function RankBadge({ rank }: { rank: number }) {
 function PrBadge() {
   return (
     <span className="inline-flex shrink-0 items-center rounded-full bg-brand px-1.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-brand-foreground">
-      Ny pers
+      Pers
     </span>
   );
 }
@@ -250,7 +242,7 @@ export default function ResultsTable({ tableData }: ResultsTableProps) {
           />
         </div>
 
-        <Table>
+        <Table className="table-fixed">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="hover:bg-transparent">
@@ -259,6 +251,7 @@ export default function ResultsTable({ tableData }: ResultsTableProps) {
                     key={header.id}
                     className={cn(
                       "h-auto py-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground/80 first:pl-6 last:pr-6",
+                      columnWidths[header.column.id],
                       rightAlignedColumns.has(header.column.id) && "text-right",
                     )}
                   >
@@ -285,6 +278,7 @@ export default function ResultsTable({ tableData }: ResultsTableProps) {
                     key={cell.id}
                     className={cn(
                       "py-3 text-sm first:pl-6 last:pr-6",
+                      columnWidths[cell.column.id],
                       rightAlignedColumns.has(cell.column.id) && "text-right",
                     )}
                   >

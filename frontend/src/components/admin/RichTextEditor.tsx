@@ -15,12 +15,14 @@ import {
   Italic,
   List,
   ListOrdered,
+  Loader2,
   Palette,
   Strikethrough,
 } from "lucide-react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { requestNewsfeedContentUpload } from "@/api/queries.ts";
+import { uploadToS3 } from "@/api/s3.ts";
 import { Button } from "@/components/ui/button.tsx";
-import { readFileAsDataURL } from "@/lib/utils.ts";
 
 const COLORS = [
   "#000000",
@@ -50,6 +52,7 @@ interface RichTextEditorProps {
 
 export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
   const imageInputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
 
   const editor = useEditor({
     extensions: [
@@ -70,10 +73,17 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const dataUrl = await readFileAsDataURL(file);
-      editor.chain().focus().setImage({ src: dataUrl }).run();
-      e.target.value = "";
+    e.target.value = "";
+    if (!file) return;
+    setUploading(true);
+    try {
+      const { uploadUrl, s3File } = await requestNewsfeedContentUpload(
+        file.name,
+      );
+      await uploadToS3(file, uploadUrl);
+      editor.chain().focus().setImage({ src: s3File.url }).run();
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -225,9 +235,14 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
         />
         <ToolbarButton
           onClick={() => imageInputRef.current?.click()}
+          disabled={uploading}
           title="Sett inn bilde"
         >
-          <ImagePlus className="size-3.5" />
+          {uploading ? (
+            <Loader2 className="size-3.5 animate-spin" />
+          ) : (
+            <ImagePlus className="size-3.5" />
+          )}
         </ToolbarButton>
       </div>
 
@@ -245,11 +260,13 @@ function ToolbarButton({
   active,
   onClick,
   title,
+  disabled,
 }: {
   children: React.ReactNode;
   active?: boolean;
   onClick: () => void;
   title?: string;
+  disabled?: boolean;
 }) {
   return (
     <Button
@@ -259,6 +276,7 @@ function ToolbarButton({
       className="h-7 w-7 p-0"
       onClick={onClick}
       title={title}
+      disabled={disabled}
     >
       {children}
     </Button>

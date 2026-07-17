@@ -48,19 +48,31 @@ class NewsfeedService(
         )
     }
 
+    fun createContentImageUpload(fileName: String): PhotoUploadInfo {
+        val key = "newsfeed-content/${UUID.randomUUID()}/$fileName"
+        val file = s3Service.createAndSaveFileEntity(key)
+        return PhotoUploadInfo(
+            uploadUrl = s3Service.getPresignedUrl(key),
+            s3File = file.toDtoDangerously(),
+        )
+    }
+
     fun createNewsfeed(newsfeed: NewsfeedInput): NewsfeedDTO {
         val headerImage = newsfeed.headerImageUuid?.let { s3Service.confirmUpload(it) }
-        return newsfeedRepository
-            .save(
-                NewsfeedEntity(
-                    tags = newsfeed.tags,
-                    header = newsfeed.header,
-                    content = newsfeed.content,
-                    date = newsfeed.date,
-                    headerImage = headerImage,
-                    images = newsfeed.images,
-                ),
-            ).toDto()
+        val saved =
+            newsfeedRepository
+                .save(
+                    NewsfeedEntity(
+                        tags = newsfeed.tags,
+                        header = newsfeed.header,
+                        content = newsfeed.content,
+                        date = newsfeed.date,
+                        headerImage = headerImage,
+                        images = newsfeed.images,
+                    ),
+                ).toDto()
+        s3Service.confirmUploadsByUrl(s3Service.extractBucketImageUrls(newsfeed.content))
+        return saved
     }
 
     fun updateNewsfeed(
@@ -79,6 +91,9 @@ class NewsfeedService(
             existingNews.headerImage = newHeaderImageUuid?.let { s3Service.confirmUpload(it) }
         }
 
+        val oldContentImageUrls = s3Service.extractBucketImageUrls(existingNews.content)
+        val newContentImageUrls = s3Service.extractBucketImageUrls(updatedNewsfeed.content)
+
         existingNews.apply {
             tags = updatedNewsfeed.tags
             header = updatedNewsfeed.header
@@ -89,24 +104,25 @@ class NewsfeedService(
 
         val saved = newsfeedRepository.save(existingNews).toDto()
 
-        // Delete the replaced/removed file only after the newsfeed no longer references it.
+        s3Service.confirmUploadsByUrl(newContentImageUrls)
+
+        // Delete the replaced/removed files only after the newsfeed no longer references them.
         if (newHeaderImageUuid != oldHeaderImageUuid && oldHeaderImageUuid != null) {
             s3Service.deleteFilesByUuid(listOf(oldHeaderImageUuid))
         }
+        s3Service.deleteFilesByUrl(oldContentImageUrls - newContentImageUrls)
 
         return saved
     }
 
     fun deleteNewsfeed(uuid: UUID) {
-        val headerImageUuid =
-            newsfeedRepository
-                .findById(uuid)
-                .orElse(null)
-                ?.headerImage
-                ?.uuid
+        val existing = newsfeedRepository.findById(uuid).orElse(null)
+        val headerImageUuid = existing?.headerImage?.uuid
+        val contentImageUrls = existing?.content?.let { s3Service.extractBucketImageUrls(it) } ?: emptySet()
         newsfeedRepository.deleteById(uuid)
         if (headerImageUuid != null) {
             s3Service.deleteFilesByUuid(listOf(headerImageUuid))
         }
+        s3Service.deleteFilesByUrl(contentImageUrls)
     }
 }

@@ -84,16 +84,14 @@ export function formatWeekdayDateFull(raceDate: unknown): string | undefined {
   return `${weekday} ${day}. ${monthName} ${year}`;
 }
 
-// "Torsdag 18. juni · 19:00"
+// "Torsdag Kl. 19:00"
 export function formatRaceDateTime(raceDate: unknown): string {
   const { year, month, day, hours, minutes } = parseDateParts(raceDate);
   const weekday =
     NORWEGIAN_WEEKDAYS[new Date(year, (month ?? 1) - 1, day).getDay()];
-  const monthName = (
-    NORWEGIAN_MONTH_NAMES[(month ?? 1) - 1] ?? ""
-  ).toLowerCase();
+
   const time = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
-  return `${weekday} ${day}. ${monthName} · ${time}`;
+  return `${weekday} Kl. ${time}`;
 }
 
 export function formatTimeStamp(raceDate: unknown): string {

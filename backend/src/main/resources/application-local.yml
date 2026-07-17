@@ -9,7 +9,7 @@ spring:
   liquibase:
     drop-first: true
     enabled: true
-    change-log: classpath:db/changelog/changelog-local.yaml
+    change-log: classpath:db/changelog/changelog-master.yaml
   jpa:
     hibernate:
       ddl-auto: none

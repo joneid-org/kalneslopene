@@ -16,7 +16,10 @@ import java.time.OffsetDateTime
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 
+private val imgSrcRegex = Regex("""<img[^>]+src="([^"]*)"""")
+
 @Service
+@Suppress("TooManyFunctions")
 class S3Service(
     @Value("\${minio.endpoint}")
     private val minioEndpoint: String,
@@ -65,6 +68,34 @@ class S3Service(
     @Transactional
     fun deleteFilesByUuid(fileUuids: List<UUID>) {
         val fileEntities = fileRepository.findAllById(fileUuids)
+        if (fileEntities.isEmpty()) return
+        deleteFiles(fileEntities)
+    }
+
+    /** Bucket image URLs (e.g. inline editor images) referenced from an HTML string. */
+    fun extractBucketImageUrls(html: String): Set<String> {
+        val prefix = "$baseUrl/$minioBucketName/"
+        return imgSrcRegex
+            .findAll(html)
+            .map { it.groupValues[1] }
+            .filter { it.startsWith(prefix) }
+            .toSet()
+    }
+
+    @Transactional
+    fun confirmUploadsByUrl(urls: Collection<String>) {
+        if (urls.isEmpty()) return
+        val unconfirmed = fileRepository.findAllByUrlIn(urls).filter { it.uploadConfirmedAt == null }
+        if (unconfirmed.isEmpty()) return
+        val now = OffsetDateTime.now()
+        unconfirmed.forEach { it.uploadConfirmedAt = now }
+        fileRepository.saveAll(unconfirmed)
+    }
+
+    @Transactional
+    fun deleteFilesByUrl(urls: Collection<String>) {
+        if (urls.isEmpty()) return
+        val fileEntities = fileRepository.findAllByUrlIn(urls)
         if (fileEntities.isEmpty()) return
         deleteFiles(fileEntities)
     }

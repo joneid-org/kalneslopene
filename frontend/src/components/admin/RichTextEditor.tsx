@@ -22,6 +22,8 @@ import {
   Unlink,
 } from "lucide-react";
 import { useRef, useState } from "react";
+import { requestNewsfeedContentUpload } from "@/api/queries.ts";
+import { uploadToS3 } from "@/api/s3.ts";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Dialog,
@@ -32,10 +34,6 @@ import {
 } from "@/components/ui/dialog.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
-import { readFileAsDataURL } from "@/lib/utils.ts";
-import { requestNewsfeedContentUpload } from "@/api/queries.ts";
-import { uploadToS3 } from "@/api/s3.ts";
-import { Button } from "@/components/ui/button.tsx";
 
 const COLORS = [
   "#000000",

@@ -17,6 +17,13 @@ import {
 } from "@/components/ui/dialog.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import {
   formatDDMonth,
@@ -25,7 +32,8 @@ import {
   secondsToDuration,
   timeToSeconds,
 } from "@/lib/timeUtils.ts";
-import type { RaceDTO, RaceRunnerDTO } from "@/model/DTO.ts";
+import { WEATHER_SYMBOL_OPTIONS } from "@/lib/weatherDisplay.ts";
+import type { RaceDTO, RaceRunnerDTO, WeatherDto } from "@/model/DTO.ts";
 
 export function PastRaceEditDialog({
   race,
@@ -35,7 +43,19 @@ export function PastRaceEditDialog({
   onClose: () => void;
 }) {
   const qc = useQueryClient();
-  const [weather, setWeather] = useState(race.weather ?? "");
+  const [symbol, setSymbol] = useState(race.weather?.symbol ?? "");
+  const [temperature, setTemperature] = useState(
+    () => race.weather?.temperature?.toString() ?? "",
+  );
+  const [windSpeed, setWindSpeed] = useState(
+    () => race.weather?.windSpeed?.toString() ?? "",
+  );
+  const [precipitation, setPrecipitation] = useState(
+    () => race.weather?.precipitation?.toString() ?? "",
+  );
+  const [courseCondition, setCourseCondition] = useState(
+    race.courseCondition ?? "",
+  );
   const [showAddRunners, setShowAddRunners] = useState(false);
   const [pendingRunners, setPendingRunners] = useState<QueuedRunner[]>([]);
   const { data: initialRunners } = useQuery(
@@ -53,8 +73,20 @@ export function PastRaceEditDialog({
 
   const saveMutation = useMutation({
     mutationFn: async () => {
+      const weather: WeatherDto | undefined = symbol
+        ? {
+            symbol,
+            temperature: Number(temperature) || 0,
+            windSpeed: Number(windSpeed) || 0,
+            precipitation: Number(precipitation) || 0,
+          }
+        : undefined;
       await QUERIES.race
-        .updateRace(race.uuid, { ...race, weather: weather || undefined })
+        .updateRace(race.uuid, {
+          raceDate: race.raceDate,
+          weather,
+          courseCondition: courseCondition || undefined,
+        })
         .queryFn();
       if (pendingRunners.length > 0) {
         await QUERIES.race
@@ -75,6 +107,20 @@ export function PastRaceEditDialog({
       qc.invalidateQueries({
         queryKey: ["race", race.uuid, "runnersInRace"],
       });
+      qc.invalidateQueries({ queryKey: ["race", "getAll"] });
+      onClose();
+    },
+  });
+
+  const resetToAutoMutation = useMutation({
+    mutationFn: () =>
+      QUERIES.race
+        .updateRace(race.uuid, {
+          raceDate: race.raceDate,
+          weatherManuallyEdited: false,
+        })
+        .queryFn(),
+    onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["race", "getAll"] });
       onClose();
     },
@@ -148,13 +194,88 @@ export function PastRaceEditDialog({
       </DialogHeader>
 
       <div className="space-y-5">
-        <div className="space-y-1.5">
-          <Label>Vær</Label>
-          <Input
-            placeholder="f.eks. Sol og 15°C"
-            value={weather}
-            onChange={(e) => setWeather(e.target.value)}
-          />
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <Label>Vær</Label>
+            {race.weatherManuallyEdited && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 text-xs"
+                disabled={resetToAutoMutation.isPending}
+                onClick={() => resetToAutoMutation.mutate()}
+              >
+                Tilbakestill til automatisk
+              </Button>
+            )}
+          </div>
+          {race.weatherManuallyEdited && (
+            <p className="text-xs text-muted-foreground">
+              Værdata er manuelt overstyrt og oppdateres ikke automatisk fra yr.
+            </p>
+          )}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">Forhold</Label>
+              <Select value={symbol} onValueChange={setSymbol}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Velg vær" />
+                </SelectTrigger>
+                <SelectContent>
+                  {WEATHER_SYMBOL_OPTIONS.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">
+                Temperatur (°C)
+              </Label>
+              <Input
+                type="number"
+                placeholder="f.eks. 15"
+                value={temperature}
+                onChange={(e) => setTemperature(e.target.value)}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">
+                Vind (m/s)
+              </Label>
+              <Input
+                type="number"
+                step="0.1"
+                placeholder="f.eks. 3.5"
+                value={windSpeed}
+                onChange={(e) => setWindSpeed(e.target.value)}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">
+                Nedbør (mm)
+              </Label>
+              <Input
+                type="number"
+                step="0.1"
+                placeholder="f.eks. 0"
+                value={precipitation}
+                onChange={(e) => setPrecipitation(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <Label className="text-xs text-muted-foreground">
+              Løypeforhold
+            </Label>
+            <Input
+              placeholder="f.eks. Tørt og fint"
+              value={courseCondition}
+              onChange={(e) => setCourseCondition(e.target.value)}
+            />
+          </div>
         </div>
         <Separator />
         <div className="space-y-2">

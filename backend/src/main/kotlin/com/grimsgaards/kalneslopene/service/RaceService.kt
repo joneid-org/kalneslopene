@@ -33,14 +33,8 @@ class RaceService(
 
     fun createRaces(races: List<RaceInput>): List<RaceDTO> =
         raceRepository
-            .saveAll(
-                races.map {
-                    RaceEntity(
-                        raceDate = it.raceDate,
-                        weather = it.weather,
-                    )
-                },
-            ).map { it.toDto() }
+            .saveAll(races.map { RaceEntity(raceDate = it.raceDate) })
+            .map { it.toDto() }
 
     fun updateRace(
         uuid: UUID,
@@ -53,8 +47,9 @@ class RaceService(
 
         existingRace.apply {
             raceDate = updatedRace.raceDate
-            weather = updatedRace.weather
+            courseCondition = updatedRace.courseCondition
         }
+        existingRace.applyWeatherOverride(updatedRace.weather)
 
         return raceRepository.save(existingRace).toDto()
     }

@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table.tsx";
+import { WeatherLine } from "@/components/Weather/WeatherLine.tsx";
 import {
   formatDDMonth,
   formatSecondsToTime,
@@ -65,7 +66,13 @@ export function PastRacesTable({
                   {formatTimeStamp(race.raceDate)}
                 </TableCell>
                 <TableCell className="text-muted-foreground">
-                  {race.weather ?? (
+                  {race.weather || race.courseCondition ? (
+                    <WeatherLine
+                      weather={race.weather}
+                      courseCondition={race.courseCondition}
+                      className="text-xs"
+                    />
+                  ) : (
                     <span className="italic text-xs">Ikke registrert</span>
                   )}
                 </TableCell>

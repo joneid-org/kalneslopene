@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, Camera, CloudSun, Users } from "lucide-react";
 import { Link } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
 import { Button } from "@/components/ui/button.tsx";
+import { WeatherLine } from "@/components/Weather/WeatherLine.tsx";
 import { NORWEGIAN_MONTH_NAMES } from "@/lib/constants.ts";
 import {
   extractYear,
@@ -87,7 +88,11 @@ function PastRaceRow({ race, date }: { race: RaceDTO; date: Date }) {
           {race.photos.length > 0 && (
             <StatItem icon={Camera}>{race.photos.length} bilder</StatItem>
           )}
-          {race.weather && <StatItem icon={CloudSun}>{race.weather}</StatItem>}
+          <WeatherLine
+            weather={race.weather}
+            courseCondition={race.courseCondition}
+            className="text-muted-foreground"
+          />
         </div>
       </div>
       <ArrowRight className="size-5 shrink-0 text-muted-foreground/50 transition-transform group-hover:translate-x-0.5 group-hover:text-primary" />

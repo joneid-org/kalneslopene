@@ -133,3 +133,10 @@ databaseChangeLog:
         - sqlFile:
             path: db/changelog/sql/create/create_race_runner_stats_view.sql
             relativeToChangelogFile: false
+  - changeSet:
+      id: 019-migrate_race_weather_structured
+      author: ejoneid
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_race_weather_structured.sql
+            relativeToChangelogFile: false

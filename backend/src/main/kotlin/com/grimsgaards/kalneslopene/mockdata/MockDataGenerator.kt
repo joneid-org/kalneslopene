@@ -74,11 +74,21 @@ class MockDataGenerator(
             (0 until PAST_RACES)
                 .map { lastPast.minusWeeks(it.toLong()) }
                 .reversed()
-                .map { RaceEntity(raceDate = it, weather = WEATHER_POOL.random(random)) }
+                .map { RaceEntity(raceDate = it).also { race -> applyMockWeather(race) } }
         val upcomingRaces =
-            (1..UPCOMING_RACES).map { RaceEntity(raceDate = lastPast.plusWeeks(it.toLong()), weather = UPCOMING_WEATHER) }
+            (1..UPCOMING_RACES).map { RaceEntity(raceDate = lastPast.plusWeeks(it.toLong())) }
 
         return raceRepository.saveAll(pastRaces + upcomingRaces).filter { it.raceDate.isBefore(now) }
+    }
+
+    private fun applyMockWeather(race: RaceEntity) {
+        race.weatherSymbol = MOCK_SYMBOLS.random(random)
+        race.weatherTemperature = random.nextInt(MIN_TEMP, MAX_TEMP).toDouble()
+        race.weatherWindSpeed = random.nextInt(MAX_WIND_DECI).toDouble() / WIND_DECI
+        race.weatherPrecipitation =
+            if (random.nextDouble() < PRECIP_CHANCE) random.nextInt(MAX_PRECIP_DECI).toDouble() / PRECIP_DECI else NO_PRECIP
+        race.weatherUpdatedAt = race.raceDate.atZone(OSLO_ZONE).toInstant()
+        if (random.nextDouble() < COURSE_CONDITION_CHANCE) race.courseCondition = MOCK_COURSE_CONDITIONS.random(random)
     }
 
     private fun generateRaceRunners(
@@ -337,8 +347,18 @@ class MockDataGenerator(
         private const val EXTRA_MINUTES_BOUND = 50
         private const val SECONDS_BOUND = 60
         private const val PARTICIPATION_RATE = 0.75
-        private const val UPCOMING_WEATHER = "Unknown"
-        private val WEATHER_POOL =
-            listOf("Sol,Varmt", "Overskyet", "Sol", "Regn,Kaldt", "Snø,Kaldt", "Vind,Overskyet", "Tåke,Kaldt", "Klart,Kaldt", "Storm,Regn")
+        private const val MIN_TEMP = -15
+        private const val MAX_TEMP = 35
+        private const val MAX_WIND_DECI = 90
+        private const val WIND_DECI = 10.0
+        private const val MAX_PRECIP_DECI = 40
+        private const val PRECIP_DECI = 10.0
+        private const val PRECIP_CHANCE = 0.4
+        private const val COURSE_CONDITION_CHANCE = 0.5
+        private const val NO_PRECIP = 0.0
+        private val OSLO_ZONE: ZoneId = ZoneId.of("Europe/Oslo")
+        private val MOCK_SYMBOLS =
+            listOf("clearsky_day", "fair_day", "partlycloudy_day", "cloudy", "rainshowers_day", "rain", "lightrain", "snow", "fog")
+        private val MOCK_COURSE_CONDITIONS = listOf("Tørt", "Vått", "Gjørmete", "Isete", "Løvdekt")
     }
 }

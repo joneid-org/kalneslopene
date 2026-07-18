@@ -32,7 +32,7 @@ import java.util.UUID
 import kotlin.random.Random
 
 @Component
-@Profile("local | dev")
+@Profile("local | dev") // Remove local to test with baselinedata
 class MockDataGenerator(
     private val runnerRepository: RunnerRepository,
     private val raceRepository: RaceRepository,

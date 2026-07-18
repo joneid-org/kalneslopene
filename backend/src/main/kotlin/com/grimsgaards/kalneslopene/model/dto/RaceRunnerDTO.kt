@@ -7,15 +7,15 @@ import java.util.UUID
 data class RaceRunnerDTO(
     val runner: RunnerDTO,
     val raceUuid: UUID,
-    val resultTime: Duration,
+    val resultTime: Duration?,
     val hideTime: Boolean = false,
     val previousSeasonBest: Duration?,
     val previousPersonalRecord: Duration?,
     val totalRaces: Int,
 ) {
     @JsonIgnore
-    fun isNewPersonalRecord(): Boolean = previousPersonalRecord == null || resultTime < previousPersonalRecord
+    fun isNewPersonalRecord(): Boolean = resultTime != null && (previousPersonalRecord == null || resultTime < previousPersonalRecord)
 
     @JsonIgnore
-    fun isNewSeasonBest(): Boolean = previousSeasonBest == null || resultTime < previousSeasonBest
+    fun isNewSeasonBest(): Boolean = resultTime != null && (previousSeasonBest == null || resultTime < previousSeasonBest)
 }

@@ -133,3 +133,10 @@ databaseChangeLog:
         - sqlFile:
             path: db/changelog/sql/create/create_race_runner_stats_view.sql
             relativeToChangelogFile: false
+  - changeSet:
+      id: 020-migrate_race_runner_result_time_nullable
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_race_runner_result_time_nullable.sql
+            relativeToChangelogFile: false

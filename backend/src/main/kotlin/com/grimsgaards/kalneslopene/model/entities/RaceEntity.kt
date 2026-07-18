@@ -18,7 +18,7 @@ import java.util.UUID
 
 @Entity
 @Table(name = "race")
-data class RaceEntity(
+class RaceEntity(
     @Column(name = "race_date", columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     var raceDate: LocalDateTime,
     @OneToMany(mappedBy = "race", fetch = FetchType.EAGER, cascade = [CascadeType.PERSIST], orphanRemoval = true)
@@ -26,26 +26,12 @@ data class RaceEntity(
 ) {
     @Id
     val uuid: UUID = UUID.randomUUID()
-
-    @Column(name = "course_condition")
     var courseCondition: String? = null
-
-    @Column(name = "weather_symbol")
     var weatherSymbol: String? = null
-
-    @Column(name = "weather_temperature")
     var weatherTemperature: Double? = null
-
-    @Column(name = "weather_wind_speed")
     var weatherWindSpeed: Double? = null
-
-    @Column(name = "weather_precipitation")
     var weatherPrecipitation: Double? = null
-
-    @Column(name = "weather_updated_at")
     var weatherUpdatedAt: Instant? = null
-
-    @Column(name = "weather_manually_edited")
     var weatherManuallyEdited: Boolean = false
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.PERSIST])
@@ -71,6 +57,8 @@ data class RaceEntity(
         weatherPrecipitation = weather.precipitation
         weatherManuallyEdited = true
     }
+
+    fun allowWeatherAutoUpdates(): Boolean = !weatherManuallyEdited
 
     fun toDto(): RaceDTO =
         RaceDTO(

@@ -5,6 +5,11 @@ import com.grimsgaards.kalneslopene.common.logger
 import com.grimsgaards.kalneslopene.model.entities.RaceEntity
 import com.grimsgaards.kalneslopene.repository.RaceRepository
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpRequest
+import org.springframework.http.HttpStatus
+import org.springframework.http.client.ClientHttpRequestExecution
+import org.springframework.http.client.ClientHttpRequestInterceptor
+import org.springframework.http.client.ClientHttpResponse
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -12,19 +17,16 @@ import org.springframework.web.client.RestClient
 import org.springframework.web.client.RestClientException
 import tools.jackson.core.JacksonException
 import tools.jackson.databind.ObjectMapper
+import java.io.InputStream
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
+import java.util.zip.GZIPInputStream
+import java.util.zip.InflaterInputStream
 import kotlin.math.round
 
-/**
- * Fetches the yr.no forecast for the fixed race location once and writes it onto the next
- * upcoming race. The forecast is refreshed at most every 30 minutes, or every 5 minutes in
- * the last 4 hours before the race. Races that an admin has manually overridden are skipped,
- * and past races are never selected — so their last value freezes as the historical record.
- */
 @Service
 class WeatherService(
     private val raceRepository: RaceRepository,
@@ -38,60 +40,65 @@ class WeatherService(
             .baseUrl(FORECAST_URL)
             .defaultHeader(HttpHeaders.USER_AGENT, USER_AGENT)
             .defaultHeader(HttpHeaders.ACCEPT, "application/json")
+            .defaultHeader(HttpHeaders.ACCEPT_ENCODING, "gzip, deflate")
+            .requestInterceptor(GzipDecompressingInterceptor)
             .build()
+
+    @Volatile private var cachedForecast: YrForecast? = null
+
+    @Volatile private var cachedLastModified: String? = null
+
+    @Volatile private var cacheExpiresAt: Instant? = null
 
     @Scheduled(fixedRate = REFRESH_INTERVAL_MS, initialDelay = INITIAL_DELAY_MS)
     @Transactional
     fun refreshUpcomingRaceWeather() {
         val now = LocalDateTime.now(OSLO_ZONE)
         val nextRace = raceRepository.findFirstByRaceDateGreaterThanEqualOrderByRaceDateAsc(now)
-        if (nextRace != null && needsRefresh(nextRace, now)) updateWeather(nextRace, now)
+        if (nextRace == null || !nextRace.allowWeatherAutoUpdates()) return
+
+        val refetched = if (forecastCacheExpired()) refreshForecastCache() else false
+        val needsApply = refetched || nextRace.weatherUpdatedAt == null
+        val entry = cachedForecast?.takeIf { needsApply }?.let { closestEntry(it, nextRace.raceDate) }
+        entry?.let {
+            applyForecast(nextRace, it)
+            raceRepository.save(nextRace)
+            logger.info("Updated weather for race ${nextRace.uuid} at ${nextRace.raceDate}")
+        }
     }
 
-    /** Whether the cached forecast has expired (30 min, or 5 min in the last 4 hours before the race). */
-    private fun needsRefresh(
-        race: RaceEntity,
-        now: LocalDateTime,
-    ): Boolean {
-        if (race.weatherManuallyEdited) return false
-        val updatedAt = race.weatherUpdatedAt
-        return updatedAt == null || Duration.between(updatedAt, Instant.now()) >= ttlUntil(now, race.raceDate)
+    private fun forecastCacheExpired(): Boolean {
+        val expiresAt = cacheExpiresAt
+        return cachedForecast == null || expiresAt == null || !Instant.now().isBefore(expiresAt)
     }
 
-    private fun updateWeather(
-        race: RaceEntity,
-        now: LocalDateTime,
-    ) {
-        val forecast = fetchForecast() ?: return
-        val entry = closestEntry(forecast, race.raceDate) ?: return
-        applyForecast(race, entry)
-        raceRepository.save(race)
-        logger.info("Updated weather for race ${race.uuid} at ${race.raceDate} (ttl=${ttlUntil(now, race.raceDate).toMinutes()}min)")
-    }
-
-    private fun ttlUntil(
-        now: LocalDateTime,
-        raceDate: LocalDateTime,
-    ): Duration {
-        val untilRace = Duration.between(now, raceDate)
-        return if (!untilRace.isNegative && untilRace <= IMMINENT_WINDOW) IMMINENT_TTL else DEFAULT_TTL
-    }
-
-    private fun fetchForecast(): YrForecast? =
+    /**
+     * Refetches the forecast honouring the yr.no caching rules. Returns whether new forecast
+     * data was received (as opposed to a 304 Not Modified, or a failed request).
+     */
+    private fun refreshForecastCache(): Boolean =
         try {
-            val body =
-                restClient
-                    .get()
-                    .uri { it.queryParam("lat", LAT).queryParam("lon", LON).build() }
-                    .retrieve()
-                    .body(String::class.java)
-            body?.let { objectMapper.readValue(it, YrForecast::class.java) }
+            val request = restClient.get().uri { it.queryParam("lat", LAT).queryParam("lon", LON).build() }
+            cachedLastModified?.let { request.header(HttpHeaders.IF_MODIFIED_SINCE, it) }
+            val response = request.retrieve().toEntity(String::class.java)
+
+            val expires = response.headers.expires
+            cacheExpiresAt = if (expires > 0) Instant.ofEpochMilli(expires) else Instant.now().plus(FALLBACK_TTL)
+
+            val body = response.body
+            if (response.statusCode.value() == HttpStatus.NOT_MODIFIED.value() || body == null) {
+                false
+            } else {
+                cachedForecast = objectMapper.readValue(body, YrForecast::class.java)
+                cachedLastModified = response.headers.getFirst(HttpHeaders.LAST_MODIFIED)
+                true
+            }
         } catch (e: RestClientException) {
             logger.warn("Failed to fetch weather forecast from yr", e)
-            null
+            false
         } catch (e: JacksonException) {
             logger.warn("Failed to parse weather forecast from yr", e)
-            null
+            false
         }
 
     /** Picks the forecast entry closest to the race hour (yr entries are UTC; races are Oslo time). */
@@ -132,7 +139,9 @@ class WeatherService(
 
     companion object {
         private const val FORECAST_URL = "https://api.met.no/weatherapi/locationforecast/2.0/compact"
-        private const val LAT = "59.30602"
+
+        // yr.no ToS: coordinates must be truncated to max 4 decimals, or the request gets a 403.
+        private const val LAT = "59.3060"
         private const val LON = "11.0429"
         private const val USER_AGENT = "torsdagslopet.no weather-cache (eirijomine@gmail.com)"
         private const val REFRESH_INTERVAL_MS = 5L * 60L * 1000L
@@ -141,10 +150,30 @@ class WeatherService(
         private const val FALLBACK_PRECIPITATION = 0.0
         private const val WIND_ROUNDING = 10.0
         private val OSLO_ZONE: ZoneId = ZoneId.of("Europe/Oslo")
-        private val IMMINENT_WINDOW: Duration = Duration.ofHours(4)
-        private val IMMINENT_TTL: Duration = Duration.ofMinutes(5)
-        private val DEFAULT_TTL: Duration = Duration.ofMinutes(30)
+
+        // Only used if yr.no ever omits the Expires header, which the compact endpoint always sends in practice.
+        private val FALLBACK_TTL: Duration = Duration.ofMinutes(30)
     }
+}
+
+/** yr.no requires clients to support gzip; the JDK HTTP client backing RestClient does not decompress automatically. */
+private object GzipDecompressingInterceptor : ClientHttpRequestInterceptor {
+    override fun intercept(
+        request: HttpRequest,
+        body: ByteArray,
+        execution: ClientHttpRequestExecution,
+    ): ClientHttpResponse = GzipDecompressingResponse(execution.execute(request, body))
+}
+
+private class GzipDecompressingResponse(
+    private val delegate: ClientHttpResponse,
+) : ClientHttpResponse by delegate {
+    override fun getBody(): InputStream =
+        when (delegate.headers.getFirst(HttpHeaders.CONTENT_ENCODING)?.lowercase()) {
+            "gzip" -> GZIPInputStream(delegate.body)
+            "deflate" -> InflaterInputStream(delegate.body)
+            else -> delegate.body
+        }
 }
 
 private data class YrForecast(

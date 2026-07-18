@@ -111,15 +111,10 @@ export function RegisterResultsWizard() {
           { name: entry.name, gender: entry.gender } as RunnerInput,
         ])
         .queryFn();
-      let updated: DraftEntry[] = [];
-      setEntries((prev) => {
-        updated = prev.map((e) =>
-          e.clientId === entry.clientId
-            ? { ...e, runnerUuid: created.uuid }
-            : e,
-        );
-        return updated;
-      });
+      const updated = entries.map((e) =>
+        e.clientId === entry.clientId ? { ...e, runnerUuid: created.uuid } : e,
+      );
+      setEntries(updated);
       await saveMutation.mutateAsync(buildDraft(step, updated));
       qc.invalidateQueries({ queryKey: ["runner", "getAll"] });
     } finally {

@@ -114,12 +114,7 @@ export function PastRaceEditDialog({
 
   const resetToAutoMutation = useMutation({
     mutationFn: () =>
-      QUERIES.race
-        .updateRace(race.uuid, {
-          raceDate: race.raceDate,
-          weatherManuallyEdited: false,
-        })
-        .queryFn(),
+      QUERIES.race.updateRace(race.uuid, { raceDate: race.raceDate }).queryFn(),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["race", "getAll"] });
       onClose();

@@ -26,10 +26,7 @@ export type RaceDTO = {
 };
 export type RaceInput = Omit<
   RaceDTO,
-  | "uuid"
-  | "runnerCount"
-  | "photos"
-  | "weatherManuallyEdited"
+  "uuid" | "runnerCount" | "photos" | "weatherManuallyEdited"
 >;
 
 export type NewsFeedDTO = {

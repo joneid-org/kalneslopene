@@ -64,9 +64,7 @@ export function RacePhotoGrid({
           className="inline-flex h-9 items-center gap-2 rounded-[11px] border bg-card px-3 text-[13px] font-semibold text-foreground/80 transition-colors hover:bg-accent"
         >
           <Images className="size-3.5 shrink-0" />
-          <span className="hidden sm:inline">
-            Se alle {photos.length} bilder
-          </span>
+          <span className="hidden sm:inline">Se alle bilder</span>
           <span className="sm:hidden">Se alle {photos.length}</span>
         </Link>
       </div>
@@ -76,7 +74,7 @@ export function RacePhotoGrid({
           <PhotoButton
             photo={first}
             onClick={() => onPhotoClick(0)}
-            className="col-span-2 aspect-[2/1] md:row-span-2 md:aspect-square"
+            className="col-span-2 aspect-2/1 md:row-span-2 md:aspect-square"
           />
         )}
         {rest.map((photo, idx) => (

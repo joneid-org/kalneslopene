@@ -1,6 +1,6 @@
-import kiwiLogo from "../../public/kiwi.png";
-import sa from "../../public/sa.svg";
-import xxlLogo from "../../public/xxl.svg";
+import kiwiLogo from "../images/kiwi.png";
+import sa from "../images/sa.svg";
+import xxlLogo from "../images/xxl.svg";
 
 const sponsors = [
   { name: "Kiwi", url: "https://kiwi.no/", logo: kiwiLogo },

@@ -162,10 +162,43 @@ export function RaceCalendar() {
       ),
     );
 
-  const completed = seasonRaces.filter(isPast).length;
+  const [pastRaces, upcomingRaces] = seasonRaces.partition(isPast);
+  const completed = pastRaces.length;
   const total = seasonRaces.length;
-  const nextRace = seasonRaces.find((r) => !isPast(r));
-  const groups = groupByMonth(seasonRaces);
+  const nextRace = upcomingRaces[0];
+  const upcomingGroups = groupByMonth(upcomingRaces);
+  const pastGroups = groupByMonth(pastRaces);
+
+  const renderGroups = (groups: MonthGroup[]) =>
+    groups.map((group) => (
+      <section key={group.month} className="space-y-3">
+        <h2 className="text-label sticky top-0 z-10 -mx-3 bg-background/90 px-3 py-1 backdrop-blur sm:-mx-4 sm:px-4">
+          {NORWEGIAN_MONTH_NAMES[group.month]}
+        </h2>
+        <div className="space-y-3">
+          {group.races.map((race) => {
+            const date = raceDateToDate(race.raceDate);
+            if (race.uuid === nextRace?.uuid)
+              return <NextRaceRow key={race.uuid} race={race} date={date} />;
+            if (isPast(race))
+              return (
+                <PastRaceRow
+                  key={race.uuid ?? date.toISOString()}
+                  race={race}
+                  date={date}
+                />
+              );
+            return (
+              <UpcomingRaceRow
+                key={race.uuid ?? date.toISOString()}
+                race={race}
+                date={date}
+              />
+            );
+          })}
+        </div>
+      </section>
+    ));
 
   return (
     <div className="page-content-sm section-stack">
@@ -213,37 +246,22 @@ export function RaceCalendar() {
         </div>
       ) : (
         <div className="space-y-6">
-          {groups.map((group) => (
-            <section key={group.month} className="space-y-3">
-              <h2 className="text-label sticky top-0 z-10 -mx-3 bg-background/90 px-3 py-1 backdrop-blur sm:-mx-4 sm:px-4">
-                {NORWEGIAN_MONTH_NAMES[group.month]}
-              </h2>
-              <div className="space-y-3">
-                {group.races.map((race) => {
-                  const date = raceDateToDate(race.raceDate);
-                  if (race.uuid === nextRace?.uuid)
-                    return (
-                      <NextRaceRow key={race.uuid} race={race} date={date} />
-                    );
-                  if (isPast(race))
-                    return (
-                      <PastRaceRow
-                        key={race.uuid ?? date.toISOString()}
-                        race={race}
-                        date={date}
-                      />
-                    );
-                  return (
-                    <UpcomingRaceRow
-                      key={race.uuid ?? date.toISOString()}
-                      race={race}
-                      date={date}
-                    />
-                  );
-                })}
+          {upcomingRaces.length > 0 && (
+            <div className="space-y-6">{renderGroups(upcomingGroups)}</div>
+          )}
+
+          {pastRaces.length > 0 && (
+            <>
+              <div className="flex items-center gap-3 pt-2">
+                <div className="h-px flex-1 bg-border" />
+                <span className="text-label shrink-0 text-muted-foreground">
+                  Gjennomførte løp
+                </span>
+                <div className="h-px flex-1 bg-border" />
               </div>
-            </section>
-          ))}
+              <div className="space-y-6">{renderGroups(pastGroups)}</div>
+            </>
+          )}
         </div>
       )}
     </div>

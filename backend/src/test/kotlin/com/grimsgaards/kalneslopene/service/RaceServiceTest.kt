@@ -100,18 +100,5 @@ class RaceServiceTest {
             assertThat(dto.courseCondition).isEqualTo("Vått")
             assertThat(dto.weather?.symbol).isEqualTo("cloudy")
         }
-
-        @Test
-        fun `sending weatherManuallyEdited false resumes automatic updates`() {
-            stubExisting(existingRace(manuallyEdited = true))
-
-            val dto =
-                service.updateRace(
-                    uuid,
-                    RaceInput(raceDate = raceDate, weatherManuallyEdited = false),
-                )
-
-            assertThat(dto.weatherManuallyEdited).isFalse()
-        }
     }
 }

@@ -45,10 +45,10 @@ class RaceEntity(
     fun applyWeatherOverride(weather: WeatherDto?) {
         val unchanged =
             weather != null &&
-                    weather.symbol == weatherSymbol &&
-                    weather.temperature == weatherTemperature &&
-                    weather.windSpeed == weatherWindSpeed &&
-                    weather.precipitation == weatherPrecipitation
+                weather.symbol == weatherSymbol &&
+                weather.temperature == weatherTemperature &&
+                weather.windSpeed == weatherWindSpeed &&
+                weather.precipitation == weatherPrecipitation
         if (weather == null || unchanged) return
 
         weatherSymbol = weather.symbol

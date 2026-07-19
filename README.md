@@ -1,4 +1,8 @@
-# Kalneslopene / Torsdagsløpet
+<h1 align="center">Kalneslopene / Torsdagsløpet</h1>
+
+<p align="center">
+    <img height="400" src="frontend/src/images/logo.svg" />
+</p>
 
 **Torsdagsløpet** ("the Thursday race") is a free, low-threshold 5.1 km recreational run held every
 Thursday at Kalneskrysset, Norway, organized entirely by volunteers since 1978. There's no advance
@@ -38,3 +42,20 @@ bun run check:fix   # fix linting and formatting issues (Biome)
 ```
 
 Requires a local PostgreSQL at `localhost:5432/torsdagslopet` (user `postgres` / `admin`) for the `local` profile.
+
+## 🚀 Deployment
+
+| Trigger | Environment | Automatic? |
+|---|---|---|
+| Merge to `main` | `dev` | ✅ |
+| Publish a GitHub release | `test` | ✅ |
+| Run `deploy.yml` manually (Actions tab) | `dev` / `test` / `prod` | ❌ manual only |
+
+- Merging to `main` and publishing a release are all you need for `dev`/`test` — no manual steps.
+- `prod` **never** deploys automatically. Ship it by running `deploy.yml` from the Actions tab, choosing
+  `prod` and a tag that's already been built (normally one already verified in `dev` and `test`).
+- The same workflow also does rollbacks — run it again with an older tag.
+- Deploys are just a pointer flip: Dokploy already has the image, the workflow just tells it which tag
+  to run and asks it to redeploy. Watch actual rollout progress in Dokploy itself.
+
+Hosting is a Dokploy-managed Hetzner Cloud server provisioned by `infra/` (OpenTofu/Terraform).

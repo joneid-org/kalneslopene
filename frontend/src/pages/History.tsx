@@ -12,7 +12,7 @@ import { useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
 import { MilestoneCard } from "@/components/History/MilestoneCard.tsx";
 import { cn } from "@/lib/utils.ts";
-import historyPhoto from "../../public/hero.png";
+import historyPhoto from "../images/hero.png";
 
 const iconMap: Record<string, LucideIcon> = {
   Flag,

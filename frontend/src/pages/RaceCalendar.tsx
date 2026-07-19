@@ -162,13 +162,10 @@ export function RaceCalendar() {
       ),
     );
 
-  const completed = seasonRaces.filter(isPast).length;
+  const [pastRaces, upcomingRaces] = seasonRaces.partition(isPast);
+  const completed = pastRaces.length;
   const total = seasonRaces.length;
-  const nextRace = seasonRaces.find((r) => !isPast(r));
-
-  const upcomingRaces = seasonRaces.filter((r) => !isPast(r));
-  const pastRaces = seasonRaces.filter(isPast);
-
+  const nextRace = upcomingRaces[0];
   const upcomingGroups = groupByMonth(upcomingRaces);
   const pastGroups = groupByMonth(pastRaces);
 

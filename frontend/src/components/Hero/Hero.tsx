@@ -1,4 +1,4 @@
-import cardImage from "../../../public/hero.png";
+import cardImage from "../../images/hero.png";
 import { NextRace } from "./NextRace.tsx";
 
 export function Hero() {

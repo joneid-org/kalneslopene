@@ -141,7 +141,7 @@ export function buildTableRows(runners: RaceRunnerDTO[]): RowData[] {
       time: runner.hideTime ? "Deltatt" : formatSecondsToTime(timeSeconds),
       hideTime: runner.hideTime,
       pace: formatSecondsToTime(paceSeconds),
-      races: runner.totalRaces,
+      races: runner.seasonRaces,
       pr: formatSecondsToTime(isPR ? timeSeconds : previousPr),
       yearBest: formatSecondsToTime(
         mapResultTimeToNumber(runner.previousSeasonBest),

@@ -33,7 +33,7 @@ data class RaceRunnerEntity(
     val previousSeasonRecord: Duration? = runner.seasonBest,
     val totalRaces: Int? = runner.totalRaces,
 ) {
-    fun toDto(): RaceRunnerDTO =
+    fun toDto(seasonRaces: Int = totalRaces ?: 0): RaceRunnerDTO =
         RaceRunnerDTO(
             runner = runner.toDto(),
             raceUuid = race.uuid,
@@ -42,5 +42,6 @@ data class RaceRunnerEntity(
             previousPersonalRecord = previousPersonalRecord,
             previousSeasonBest = previousSeasonRecord,
             totalRaces = totalRaces ?: 0,
+            seasonRaces = seasonRaces,
         )
 }

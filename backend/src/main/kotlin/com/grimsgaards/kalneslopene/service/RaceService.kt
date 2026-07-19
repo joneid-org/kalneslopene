@@ -62,8 +62,26 @@ class RaceService(
     fun deleteRaceById(uuid: UUID) = raceRepository.deleteById(uuid)
 
     fun findAllRunnersInRace(uuid: UUID): List<RaceRunnerDTO> {
-        val race = raceRepository.findByIdOrNull(uuid)
-        return race?.runners?.map { it.toDto() } ?: throw IllegalArgumentException("no race found with id $uuid")
+        val race =
+            raceRepository.findByIdOrNull(uuid)
+                ?: throw IllegalArgumentException("no race found with id $uuid")
+
+        val runnerUuids = race.runners.map { it.runner.uuid }
+        val seasonStart =
+            race.raceDate
+                .toLocalDate()
+                .withDayOfYear(1)
+                .atStartOfDay()
+        val seasonRacesByRunner =
+            if (runnerUuids.isEmpty()) {
+                emptyMap()
+            } else {
+                raceRunnerRepository
+                    .countRacesPerRunnerInSeason(runnerUuids, seasonStart, race.raceDate)
+                    .associate { it.runnerUuid to it.raceCount.toInt() }
+            }
+
+        return race.runners.map { it.toDto(seasonRaces = seasonRacesByRunner[it.runner.uuid] ?: 0) }
     }
 
     fun getResultSummary(uuid: UUID): RaceResultSummaryDto {

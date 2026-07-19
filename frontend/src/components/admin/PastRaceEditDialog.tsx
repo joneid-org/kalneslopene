@@ -66,6 +66,7 @@ export function PastRaceEditDialog({
               resultTime: secondsToDuration(q.resultTime),
               hideTime: q.hideTime,
               totalRaces: 0,
+              seasonRaces: 0,
             })),
           )
           .queryFn();

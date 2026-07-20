@@ -126,6 +126,14 @@ databaseChangeLog:
             path: db/changelog/sql/migrate/migrate_newsfeed_drop_settings.sql
             relativeToChangelogFile: false
   - changeSet:
+      id: create_race_runner_stats_view
+      author: ejoneid
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/create/create_race_runner_stats_view.sql
+            relativeToChangelogFile: false
+  - changeSet:
       id: migrate_runner_isVerified_race_isPublished_table
       author: emilie
       changes:
@@ -133,10 +141,9 @@ databaseChangeLog:
             path: db/changelog/sql/migrate/migrate_runner_isVerified_race_isPublished_table.sql
             relativeToChangelogFile: false
   - changeSet:
-      id: create_race_runner_stats_view
-      author: ejoneid
-      runOnChange: true
+      id: migrate_race_runner_stats_view
+      author: emilie
       changes:
         - sqlFile:
-            path: db/changelog/sql/create/create_race_runner_stats_view.sql
+            path: db/changelog/sql/migrate/migrate_race_runner_stats_view.sql
             relativeToChangelogFile: false

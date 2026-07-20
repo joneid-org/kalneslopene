@@ -79,7 +79,7 @@ class MockDataGenerator(
                 .map { RaceEntity(raceDate = it, weather = WEATHER_POOL.random(random), isPublished = true) }
         val upcomingRaces =
             (1..UPCOMING_RACES).map {
-                RaceEntity(raceDate = lastPast.plusWeeks(it.toLong()), weather = UPCOMING_WEATHER, isPublished = true)
+                RaceEntity(raceDate = lastPast.plusWeeks(it.toLong()), weather = UPCOMING_WEATHER, isPublished = false)
             }
 
         return raceRepository.saveAll(pastRaces + upcomingRaces).filter { it.raceDate.isBefore(now) }

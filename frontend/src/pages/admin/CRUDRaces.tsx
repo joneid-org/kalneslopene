@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CalendarClockIcon, ChevronLeftIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { MUTATIONS } from "@/api/mutations.ts";
 import { QUERIES } from "@/api/queries.ts";
 import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog.tsx";
 import { RaceDateForm } from "@/components/admin/RaceDateForm.tsx";
@@ -47,12 +48,10 @@ export function CRUDRaces() {
 
   const editMutation = useMutation({
     mutationFn: (update: { race: RaceDTO; raceDate: string }) =>
-      QUERIES.race
-        .updateRace(update.race.uuid, {
-          ...update.race,
-          raceDate: update.raceDate,
-        })
-        .queryFn(),
+      MUTATIONS.race.updateRace(update.race.uuid, {
+        ...update.race,
+        raceDate: update.raceDate,
+      }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["race", "getAll"] });
       setEditing(null);
@@ -60,7 +59,7 @@ export function CRUDRaces() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (uuid: string) => QUERIES.race.deleteRace(uuid).queryFn(),
+    mutationFn: (uuid: string) => MUTATIONS.race.deleteRace(uuid),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["race", "getAll"] });
       setDeleting(null);

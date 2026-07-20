@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { MUTATIONS } from "@/api/mutations.ts";
 import { QUERIES } from "@/api/queries.ts";
 import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog.tsx";
 import { NewsfeedForm } from "@/components/admin/NewsfeedForm.tsx";
@@ -47,7 +48,7 @@ export function CRUDNewsfeeds() {
   const [showAdd, setShowAdd] = useState(false);
   const addMutation = useMutation({
     mutationFn: (newsfeed: Omit<NewsFeedDTO, "uuid">) =>
-      QUERIES.newsfeed.createNewsFeed(newsfeed as NewsFeedDTO).queryFn(),
+      MUTATIONS.newsfeed.createNewsFeed(newsfeed as NewsFeedDTO),
     onSuccess: () => {
       invalidate();
       setShowAdd(false);
@@ -57,7 +58,7 @@ export function CRUDNewsfeeds() {
   const [editing, setEditing] = useState<NewsFeedDTO | null>(null);
   const editMutation = useMutation({
     mutationFn: (newsfeed: NewsFeedDTO) =>
-      QUERIES.newsfeed.updateNewsFeed(newsfeed.uuid, newsfeed).queryFn(),
+      MUTATIONS.newsfeed.updateNewsFeed(newsfeed.uuid, newsfeed),
     onSuccess: () => {
       invalidate();
       setEditing(null);
@@ -66,8 +67,7 @@ export function CRUDNewsfeeds() {
 
   const [deleting, setDeleting] = useState<NewsFeedDTO | null>(null);
   const deleteMutation = useMutation({
-    mutationFn: (uuid: string) =>
-      QUERIES.newsfeed.deleteNewsFeed(uuid).queryFn(),
+    mutationFn: (uuid: string) => MUTATIONS.newsfeed.deleteNewsFeed(uuid),
     onSuccess: () => {
       invalidate();
       setDeleting(null);

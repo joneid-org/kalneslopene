@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronLeftIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { MUTATIONS } from "@/api/mutations.ts";
 import { QUERIES } from "@/api/queries.ts";
 import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog.tsx";
 import { OrganizerForm } from "@/components/admin/OrganizerForm.tsx";
@@ -26,7 +27,7 @@ export function CRUDOrganizers() {
   const [showAdd, setShowAdd] = useState(false);
   const addMutation = useMutation({
     mutationFn: (organizer: Omit<OrganizerDTO, "uuid">) =>
-      QUERIES.organizer.createOrganizer(organizer as OrganizerDTO).queryFn(),
+      MUTATIONS.organizer.createOrganizer(organizer as OrganizerDTO),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["organizer", "getAll"] });
       setShowAdd(false);
@@ -36,7 +37,7 @@ export function CRUDOrganizers() {
   const [editing, setEditing] = useState<OrganizerDTO | null>(null);
   const editMutation = useMutation({
     mutationFn: (organizer: OrganizerDTO) =>
-      QUERIES.organizer.updateOrganizer(organizer.uuid, organizer).queryFn(),
+      MUTATIONS.organizer.updateOrganizer(organizer.uuid, organizer),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["organizer", "getAll"] });
       setEditing(null);
@@ -45,8 +46,7 @@ export function CRUDOrganizers() {
 
   const [deleting, setDeleting] = useState<OrganizerDTO | null>(null);
   const deleteMutation = useMutation({
-    mutationFn: (uuid: string) =>
-      QUERIES.organizer.deleteOrganizer(uuid).queryFn(),
+    mutationFn: (uuid: string) => MUTATIONS.organizer.deleteOrganizer(uuid),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["organizer", "getAll"] });
       setDeleting(null);

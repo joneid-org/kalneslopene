@@ -78,7 +78,7 @@ class BaselineDataGenerator(
                 .map { it.date }
                 .distinct()
                 .sorted()
-                .map { RaceEntity(raceDate = it.atTime(RACE_HOUR, 0), weather = null, isPublished = true) }
+                .map { RaceEntity(raceDate = it.atTime(RACE_HOUR, 0), isPublished = true) }
         return raceRepository.saveAll(races).associateBy { it.raceDate.toLocalDate() }
     }
 

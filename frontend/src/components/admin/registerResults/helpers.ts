@@ -1,5 +1,37 @@
 import { mapResultTimeToNumber } from "@/lib/timeUtils.ts";
-import type { RaceRunnerDTO } from "@/model/DTO.ts";
+import type { RaceRunnerDTO, WeatherDto } from "@/model/DTO.ts";
+
+/** String-backed mirror of WeatherDto for the admin weather inputs. */
+export type WeatherForm = {
+  symbol: string;
+  temperature: string;
+  windSpeed: string;
+  precipitation: string;
+};
+
+export function weatherToForm(weather?: WeatherDto): WeatherForm {
+  return {
+    symbol: weather?.symbol ?? "",
+    temperature: weather?.temperature?.toString() ?? "",
+    windSpeed: weather?.windSpeed?.toString() ?? "",
+    precipitation: weather?.precipitation?.toString() ?? "",
+  };
+}
+
+/** Full WeatherDto when every field is valid, else undefined (leaves stored weather untouched). */
+export function formToWeather(form: WeatherForm): WeatherDto | undefined {
+  const temperature = Number.parseFloat(form.temperature);
+  const windSpeed = Number.parseFloat(form.windSpeed);
+  const precipitation = Number.parseFloat(form.precipitation);
+  if (
+    !form.symbol ||
+    Number.isNaN(temperature) ||
+    Number.isNaN(windSpeed) ||
+    Number.isNaN(precipitation)
+  )
+    return undefined;
+  return { symbol: form.symbol, temperature, windSpeed, precipitation };
+}
 
 export function genderLabel(gender: string): string {
   const g = gender.toUpperCase();

@@ -14,7 +14,6 @@ import type {
   RaceStatisticsDTO,
   RunnerDTO,
   S3FileDto,
-  YrForecast,
 } from "../model/DTO.ts";
 
 export function requestNewsfeedHeaderUpload(fileName: string) {
@@ -35,19 +34,6 @@ export const QUERIES = {
       queryKey: ["config"],
       queryFn: () => kyClient.get("/api/config").json<ConfigDTO>(),
       staleTime: Number.POSITIVE_INFINITY,
-    },
-  },
-  yr: {
-    getForecast: {
-      queryKey: ["yr", "forecast"],
-      queryFn: async () => {
-        const res = await fetch(
-          "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=59.30602&lon=11.0429",
-          { headers: { Accept: "application/json" } },
-        );
-        if (!res.ok) throw new Error("Yr fetch failed");
-        return res.json() as Promise<YrForecast>;
-      },
     },
   },
   race: {

@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router";
-import { DISTANCE_KM } from "@/lib/constants.ts";
+import { WeatherLine } from "@/components/Weather/WeatherLine.tsx";
 import {
   formatDate,
   formatDateFull,
@@ -15,8 +15,6 @@ type RaceSwitcherProps = {
   nextRace: RaceDTO | null;
   path: string;
 };
-
-const subtitle = `Kalnesskogen · ${String(DISTANCE_KM).replace(".", ",")} km`;
 
 function SwitchButton({
   race,
@@ -80,9 +78,11 @@ export function RaceSwitcher({
             {formatWeekdayDateFull(race.raceDate)}
           </span>
         </div>
-        <div className="mt-0.5 text-xs text-muted-foreground md:text-sm">
-          {subtitle}
-        </div>
+        <WeatherLine
+          weather={race.weather}
+          courseCondition={race.courseCondition}
+          className="mt-0.5 text-xs text-muted-foreground md:text-sm"
+        />
       </div>
 
       <SwitchButton race={nextRace} path={path} direction="next" />

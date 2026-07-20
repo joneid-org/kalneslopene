@@ -16,6 +16,7 @@ import com.grimsgaards.kalneslopene.repository.OrganizerRepository
 import com.grimsgaards.kalneslopene.repository.RaceRepository
 import com.grimsgaards.kalneslopene.repository.RaceRunnerRepository
 import com.grimsgaards.kalneslopene.repository.RunnerRepository
+import com.grimsgaards.kalneslopene.service.WeatherServiceMock
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Component
@@ -76,13 +77,21 @@ class MockDataGenerator(
             (0 until PAST_RACES)
                 .map { lastPast.minusWeeks(it.toLong()) }
                 .reversed()
-                .map { RaceEntity(raceDate = it, weather = WEATHER_POOL.random(random), isPublished = true) }
+                .map { RaceEntity(raceDate = it, isPublished = Random.nextInt(100) > 10).also { race -> applyMockWeather(race) } }
         val upcomingRaces =
-            (1..UPCOMING_RACES).map {
-                RaceEntity(raceDate = lastPast.plusWeeks(it.toLong()), weather = UPCOMING_WEATHER, isPublished = false)
-            }
+            (1..UPCOMING_RACES).map { RaceEntity(raceDate = lastPast.plusWeeks(it.toLong()), isPublished = false) }
 
         return raceRepository.saveAll(pastRaces + upcomingRaces).filter { it.raceDate.isBefore(now) }
+    }
+
+    private fun applyMockWeather(race: RaceEntity) {
+        val weather = WeatherServiceMock.randomWeather(random)
+        race.weatherSymbol = weather.symbol
+        race.weatherTemperature = weather.temperature
+        race.weatherWindSpeed = weather.windSpeed
+        race.weatherPrecipitation = weather.precipitation
+        race.weatherUpdatedAt = race.raceDate.atZone(OSLO_ZONE).toInstant()
+        if (random.nextDouble() < COURSE_CONDITION_CHANCE) race.courseCondition = MOCK_COURSE_CONDITIONS.random(random)
     }
 
     private fun generateRaceRunners(
@@ -345,8 +354,8 @@ class MockDataGenerator(
         private const val EXTRA_MINUTES_BOUND = 50
         private const val SECONDS_BOUND = 60
         private const val PARTICIPATION_RATE = 0.75
-        private const val UPCOMING_WEATHER = "Unknown"
-        private val WEATHER_POOL =
-            listOf("Sol,Varmt", "Overskyet", "Sol", "Regn,Kaldt", "Snø,Kaldt", "Vind,Overskyet", "Tåke,Kaldt", "Klart,Kaldt", "Storm,Regn")
+        private const val COURSE_CONDITION_CHANCE = 0.5
+        private val OSLO_ZONE: ZoneId = ZoneId.of("Europe/Oslo")
+        private val MOCK_COURSE_CONDITIONS = listOf("Tørt", "Vått", "Gjørmete", "Isete", "Løvdekt")
     }
 }

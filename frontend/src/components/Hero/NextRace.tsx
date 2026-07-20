@@ -2,38 +2,16 @@ import { useQuery } from "@tanstack/react-query";
 import type { LucideIcon } from "lucide-react";
 import {
   CalendarDays,
-  Cloud,
-  CloudDrizzle,
-  CloudLightning,
-  CloudRain,
-  CloudSnow,
   Droplets,
-  Eye,
-  Sun,
-  SunDim,
+  Footprints,
   Thermometer,
   Wind,
 } from "lucide-react";
 import { QUERIES } from "@/api/queries.ts";
 import { formatDDMonth, formatRaceDateTime } from "@/lib/timeUtils.ts";
-import { useYrWeather, type YrWeatherResult } from "@/lib/useYrWeather.ts";
 import { cn, getUpcomingRaces } from "@/lib/utils.ts";
-import type { RaceDTO } from "@/model/DTO.ts";
-
-function weatherIcon(symbol: string): LucideIcon {
-  const s = symbol.replace(/_day|_night/, "");
-  if (s === "clearsky") return Sun;
-  if (s === "fair") return SunDim;
-  if (s === "partlycloudy") return SunDim;
-  if (s === "cloudy") return Cloud;
-  if (s === "fog") return Eye;
-  if (s.includes("thunder")) return CloudLightning;
-  if (s.includes("snow")) return CloudSnow;
-  if (s.includes("sleet")) return CloudDrizzle;
-  if (s.includes("heavyrain")) return CloudRain;
-  if (s.includes("rain")) return CloudRain;
-  return Cloud;
-}
+import { weatherIcon, weatherLabel } from "@/lib/weatherDisplay.ts";
+import type { RaceDTO, WeatherDto } from "@/model/DTO.ts";
 
 function WeatherItem({
   icon: Icon,
@@ -120,7 +98,7 @@ function OverlaySkeleton() {
 type NextRaceVariantProps = {
   isPending: boolean;
   race: RaceDTO | undefined;
-  weather: YrWeatherResult | undefined;
+  weather: WeatherDto | undefined;
 };
 
 // Mobile: full-rounded card tucked under the hero, weather-forward
@@ -148,7 +126,7 @@ function NextRaceStacked({ isPending, race, weather }: NextRaceVariantProps) {
             {weather && (
               <div className="mt-1.5 space-y-1">
                 <WeatherItem icon={weatherIcon(weather.symbol)}>
-                  {weather.label}
+                  {weatherLabel(weather.symbol)}
                 </WeatherItem>
                 <div className="flex flex-wrap gap-x-4 gap-y-1">
                   <WeatherItem
@@ -209,7 +187,7 @@ function NextRaceOverlay({ isPending, race, weather }: NextRaceVariantProps) {
               {weather ? (
                 <>
                   <WeatherItem icon={weatherIcon(weather.symbol)}>
-                    {weather.label}
+                    {weatherLabel(weather.symbol)}
                   </WeatherItem>
                   <WeatherItem icon={Wind}>{weather.windSpeed} m/s</WeatherItem>
                   <WeatherItem icon={Thermometer}>
@@ -222,8 +200,10 @@ function NextRaceOverlay({ isPending, race, weather }: NextRaceVariantProps) {
                   )}
                 </>
               ) : (
-                race.weather && (
-                  <WeatherItem icon={Cloud}>{race.weather}</WeatherItem>
+                race.courseCondition && (
+                  <WeatherItem icon={Footprints}>
+                    {race.courseCondition}
+                  </WeatherItem>
                 )
               )}
             </div>
@@ -245,7 +225,7 @@ export function NextRace({
     isError,
   } = useQuery(QUERIES.race.getAllRaces());
   const race = getUpcomingRaces(races ?? [])[0];
-  const weather = useYrWeather(race?.raceDate);
+  const weather = race?.weather;
 
   if (isError && !races) return null;
 

@@ -12,6 +12,7 @@ import type {
   OrganizerDTO,
   OrganizerInput,
   RaceDTO,
+  RaceInput,
   RaceRunnerDTO,
   RunnerDTO,
   RunnerInput,
@@ -19,7 +20,7 @@ import type {
 
 export const MUTATIONS = {
   race: {
-    updateRace: (uuid: string, race: RaceDTO) =>
+    updateRace: (uuid: string, race: RaceInput) =>
       kyClient.patch(`/api/races/${uuid}`, { json: race }).json<RaceDTO>(),
     deleteRace: (uuid: string) =>
       kyClient.delete(`/api/races/${uuid}`).json<void>(),

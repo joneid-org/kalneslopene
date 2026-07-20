@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { MUTATIONS } from "@/api/mutations.ts";
 import { QUERIES } from "@/api/queries.ts";
 import {
   formToWeather,
@@ -87,9 +88,9 @@ export function RegisterResultsWizard() {
     if (entries.some((e) => e.runner.uuid === runner.uuid)) return;
     setIsAdding(true);
     try {
-      const [saved] = await QUERIES.race
-        .addRunnersToRace(uuid, [makeEntry(runner)])
-        .queryFn();
+      const [saved] = await MUTATIONS.race.addRunnersToRace(uuid, [
+        makeEntry(runner),
+      ]);
       setEntries((prev) => [...prev, saved]);
       invalidateRaceLists();
     } finally {
@@ -100,12 +101,12 @@ export function RegisterResultsWizard() {
   const addNew = async (name: string, gender: string) => {
     setIsAdding(true);
     try {
-      const [created] = await QUERIES.runner
-        .createRunners([{ name, gender }])
-        .queryFn();
-      const [saved] = await QUERIES.race
-        .addRunnersToRace(uuid, [makeEntry(created)])
-        .queryFn();
+      const [created] = await MUTATIONS.runner.createRunners([
+        { name, gender },
+      ]);
+      const [saved] = await MUTATIONS.race.addRunnersToRace(uuid, [
+        makeEntry(created),
+      ]);
       setEntries((prev) => [...prev, saved]);
       invalidateRaceLists();
     } finally {
@@ -115,7 +116,7 @@ export function RegisterResultsWizard() {
 
   const removeEntry = async (runnerUuid: string) => {
     setEntries((prev) => prev.filter((e) => e.runner.uuid !== runnerUuid));
-    await QUERIES.race.removeRunnersFromRace(uuid, [runnerUuid]).queryFn();
+    await MUTATIONS.race.removeRunnersFromRace(uuid, [runnerUuid]);
     invalidateRaceLists();
   };
 
@@ -129,9 +130,8 @@ export function RegisterResultsWizard() {
     setEntries((prev) =>
       prev.map((e) => (e.runner.uuid === runnerUuid ? updated : e)),
     );
-    QUERIES.race
+    MUTATIONS.race
       .updateRunnerInRace(uuid, runnerUuid, updated)
-      .queryFn()
       .catch(() => {});
   };
 
@@ -139,10 +139,7 @@ export function RegisterResultsWizard() {
     setEntries((prev) =>
       prev.map((e) => (e.runner.uuid === runner.uuid ? { ...e, runner } : e)),
     );
-    QUERIES.runner
-      .updateRunner(runner.uuid, runner)
-      .queryFn()
-      .catch(() => {});
+    MUTATIONS.runner.updateRunner(runner.uuid, runner).catch(() => {});
     qc.invalidateQueries({ queryKey: ["runner", "getAll"] });
   };
 
@@ -160,9 +157,10 @@ export function RegisterResultsWizard() {
     if (!current) return;
     setBusyRunnerUuid(runnerUuid);
     try {
-      const saved = await QUERIES.runner
-        .updateRunner(runnerUuid, { ...current.runner, isVerified: true })
-        .queryFn();
+      const saved = await MUTATIONS.runner.updateRunner(runnerUuid, {
+        ...current.runner,
+        isVerified: true,
+      });
       setEntries((prev) =>
         prev.map((e) =>
           e.runner.uuid === runnerUuid ? { ...e, runner: saved } : e,
@@ -180,16 +178,10 @@ export function RegisterResultsWizard() {
       return;
     setBusyRunnerUuid(oldRunnerUuid);
     try {
-      await QUERIES.race.removeRunnersFromRace(uuid, [oldRunnerUuid]).queryFn();
-      const [saved] = await QUERIES.race
-        .addRunnersToRace(uuid, [
-          makeEntry(
-            newRunner,
-            current.resultTime ?? undefined,
-            current.hideTime,
-          ),
-        ])
-        .queryFn();
+      await MUTATIONS.race.removeRunnersFromRace(uuid, [oldRunnerUuid]);
+      const [saved] = await MUTATIONS.race.addRunnersToRace(uuid, [
+        makeEntry(newRunner, current.resultTime ?? undefined, current.hideTime),
+      ]);
       setEntries((prev) =>
         prev.map((e) => (e.runner.uuid === oldRunnerUuid ? saved : e)),
       );
@@ -200,7 +192,7 @@ export function RegisterResultsWizard() {
 
   const persistRace = async (form: WeatherForm, condition: string) => {
     if (!race) return;
-    await QUERIES.race
+    await MUTATIONS.race
       .updateRace(uuid, {
         ...race,
         weather: formToWeather(form),
@@ -212,7 +204,7 @@ export function RegisterResultsWizard() {
   const publishMutation = useMutation({
     mutationFn: async () => {
       await persistRace(weather, courseCondition);
-      return QUERIES.race.publishResults(uuid).queryFn();
+      return MUTATIONS.race.publishResults(uuid);
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["race", "getAll"] });

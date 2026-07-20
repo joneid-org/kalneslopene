@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronLeftIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { MUTATIONS } from "@/api/mutations.ts";
 import { QUERIES } from "@/api/queries.ts";
 import { CompletedRacesCard } from "@/components/admin/CompletedRacesCard.tsx";
 import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog.tsx";
@@ -36,7 +37,7 @@ export function RegisterResults() {
   };
 
   const deleteMutation = useMutation({
-    mutationFn: (uuid: string) => QUERIES.race.deleteRace(uuid).queryFn(),
+    mutationFn: (uuid: string) => MUTATIONS.race.deleteRace(uuid),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["race", "getAll"] });
       setDeleting(null);

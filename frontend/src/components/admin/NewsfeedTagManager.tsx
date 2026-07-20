@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronLeftIcon, PencilIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { MUTATIONS } from "@/api/mutations.ts";
 import { QUERIES } from "@/api/queries.ts";
 import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog.tsx";
 import { DeleteButton } from "@/components/admin/DeleteButton.tsx";
@@ -120,7 +121,7 @@ export function NewsfeedTagManager() {
   const [showAdd, setShowAdd] = useState(false);
   const addMutation = useMutation({
     mutationFn: (dto: NewsfeedTagDTO) =>
-      QUERIES.newsfeed.createTag(dto as NewsfeedTagDTO).queryFn(),
+      MUTATIONS.newsfeed.createTag(dto as NewsfeedTagDTO),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["newsfeed", "tags"] });
       setShowAdd(false);
@@ -130,7 +131,7 @@ export function NewsfeedTagManager() {
   const [editing, setEditing] = useState<NewsfeedTagDTO | null>(null);
   const editMutation = useMutation({
     mutationFn: (dto: NewsfeedTagDTO) =>
-      QUERIES.newsfeed.updateTag(dto.value, dto).queryFn(),
+      MUTATIONS.newsfeed.updateTag(dto.value, dto),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["newsfeed", "tags"] });
       setEditing(null);
@@ -139,7 +140,7 @@ export function NewsfeedTagManager() {
 
   const [deleting, setDeleting] = useState<NewsfeedTagDTO | null>(null);
   const deleteMutation = useMutation({
-    mutationFn: (value: string) => QUERIES.newsfeed.deleteTag(value).queryFn(),
+    mutationFn: (value: string) => MUTATIONS.newsfeed.deleteTag(value),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["newsfeed", "tags"] });
       setDeleting(null);

@@ -73,7 +73,7 @@ class RaceService(
             }
         }
         race.isPublished = true
-        return raceRepository.save(race).toDto()
+        return race.toDto()
     }
 
     fun findAllRunnersInRace(uuid: UUID): List<RaceRunnerDTO> {

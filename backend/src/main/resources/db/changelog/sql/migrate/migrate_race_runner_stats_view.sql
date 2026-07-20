@@ -17,5 +17,5 @@ from ((select uuid                     as runner_uuid,
                   end as season_time,
               1 as is_race
        from race_runner rr
-                join race r on r.uuid = rr.race_uuid where r.ispublished)) as t
+                join race r on r.uuid = rr.race_uuid where r.is_published)) as t
 group by t.runner_uuid;

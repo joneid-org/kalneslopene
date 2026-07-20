@@ -3,7 +3,6 @@ import { useMemo, useRef, useState } from "react";
 import { requestNewsfeedHeaderUpload } from "@/api/queries.ts";
 import { FormFooter } from "@/components/admin/FormFooter.tsx";
 import { RichTextEditor } from "@/components/admin/RichTextEditor.tsx";
-import { Badge } from "@/components/ui/badge.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
   DropdownMenu,
@@ -125,7 +124,7 @@ export function NewsfeedForm({
                     <span
                       key={tag}
                       className="tag-pill"
-                      style={{ color: tagColor(tag ?? availableTags) }}
+                      style={{ color: tagColor(tag, availableTags) }}
                     >
                       {availableTags.find((t) => t.value === tag)?.value ?? tag}
                     </span>
@@ -142,12 +141,9 @@ export function NewsfeedForm({
                 onCheckedChange={() => toggleTag(tag.value)}
                 className="gap-2"
               >
-                <Badge
-                  className="border text-[9px] font-black uppercase tracking-widest bg-transparent"
-                  style={{ color: tag.color, borderColor: tag.color }}
-                >
+                <span className="tag-pill" style={{ color: tag.color }}>
                   {tag.value}
-                </Badge>
+                </span>
               </DropdownMenuCheckboxItem>
             ))}
           </DropdownMenuContent>

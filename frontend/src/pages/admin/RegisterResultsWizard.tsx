@@ -169,7 +169,11 @@ export function RegisterResultsWizard() {
       await QUERIES.race.removeRunnersFromRace(uuid, [oldRunnerUuid]).queryFn();
       const [saved] = await QUERIES.race
         .addRunnersToRace(uuid, [
-          makeEntry(newRunner, current.resultTime, current.hideTime),
+          makeEntry(
+            newRunner,
+            current.resultTime ?? undefined,
+            current.hideTime,
+          ),
         ])
         .queryFn();
       setEntries((prev) =>

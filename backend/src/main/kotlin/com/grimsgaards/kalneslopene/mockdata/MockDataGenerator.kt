@@ -62,7 +62,9 @@ class MockDataGenerator(
     }
 
     private fun generateRunners(): List<RunnerEntity> =
-        runnerRepository.saveAll(runnerSeed.map { (name, gender) -> RunnerEntity(name = name, gender = gender) })
+        runnerRepository.saveAll(
+            runnerSeed.map { (name, gender) -> RunnerEntity(name = name, gender = gender, isVerified = true) },
+        )
 
     private fun generateRaces(): List<RaceEntity> {
         val now = LocalDateTime.now()
@@ -74,9 +76,11 @@ class MockDataGenerator(
             (0 until PAST_RACES)
                 .map { lastPast.minusWeeks(it.toLong()) }
                 .reversed()
-                .map { RaceEntity(raceDate = it, weather = WEATHER_POOL.random(random)) }
+                .map { RaceEntity(raceDate = it, weather = WEATHER_POOL.random(random), isPublished = true) }
         val upcomingRaces =
-            (1..UPCOMING_RACES).map { RaceEntity(raceDate = lastPast.plusWeeks(it.toLong()), weather = UPCOMING_WEATHER) }
+            (1..UPCOMING_RACES).map {
+                RaceEntity(raceDate = lastPast.plusWeeks(it.toLong()), weather = UPCOMING_WEATHER, isPublished = true)
+            }
 
         return raceRepository.saveAll(pastRaces + upcomingRaces).filter { it.raceDate.isBefore(now) }
     }

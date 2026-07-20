@@ -1,41 +1,56 @@
-import { DatabaseIcon, Loader2Icon, ReplaceIcon, XIcon } from "lucide-react";
+import { CheckIcon, Loader2Icon, ReplaceIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
-import type { DraftEntry } from "@/model/DTO.ts";
+import { secondsToDuration } from "@/lib/timeUtils.ts";
+import type { RaceRunnerDTO, RunnerDTO } from "@/model/DTO.ts";
 import { ChangeRunnerField } from "./ChangeRunnerField.tsx";
-import { genderLabel } from "./helpers.ts";
+import { entrySeconds, genderLabel } from "./helpers.ts";
 import { TimeField } from "./TimeField.tsx";
 
 export function ReviewStep({
   entries,
   weather,
   onWeatherChange,
-  onUpdate,
+  onWeatherBlur,
+  onUpdateResult,
+  onUpdateRunner,
   onRemove,
-  onSaveRunnerToDb,
-  savingClientId,
+  onVerifyRunner,
+  onChangeRunner,
+  busyRunnerUuid,
 }: {
-  entries: DraftEntry[];
+  entries: RaceRunnerDTO[];
   weather: string;
   onWeatherChange: (weather: string) => void;
-  onUpdate: (clientId: string, patch: Partial<DraftEntry>) => void;
-  onRemove: (clientId: string) => void;
-  onSaveRunnerToDb: (entry: DraftEntry) => void;
-  savingClientId: string | null;
+  onWeatherBlur: () => void;
+  onUpdateResult: (
+    runnerUuid: string,
+    patch: { resultTime?: string; hideTime?: boolean },
+  ) => void;
+  onUpdateRunner: (
+    runnerUuid: string,
+    patch: { name?: string; gender?: string },
+  ) => void;
+  onRemove: (runnerUuid: string) => void;
+  onVerifyRunner: (runnerUuid: string) => void;
+  onChangeRunner: (runnerUuid: string, newRunner: RunnerDTO) => void;
+  busyRunnerUuid: string | null;
 }) {
-  const [changingClientId, setChangingClientId] = useState<string | null>(null);
+  const [changingRunnerUuid, setChangingRunnerUuid] = useState<string | null>(
+    null,
+  );
 
   return (
     <div className="space-y-5">
       <div className="space-y-1">
         <h2 className="text-lg font-semibold">Se over</h2>
         <p className="text-sm text-muted-foreground">
-          Rett opp tider. Nye løpere kan endres og lagres i databasen. For
-          løpere som allerede finnes i databasen kan du bytte til en annen løper
-          hvis feil person ble valgt.
+          Rett opp tider. Nye løpere kan endres og bekreftes. For løpere som
+          allerede finnes i databasen kan du bytte til en annen løper hvis feil
+          person ble valgt.
         </p>
       </div>
 
@@ -45,6 +60,7 @@ export function ReviewStep({
           placeholder="f.eks. Sol og 15°C"
           value={weather}
           onChange={(e) => onWeatherChange(e.target.value)}
+          onBlur={onWeatherBlur}
         />
       </div>
 
@@ -60,44 +76,42 @@ export function ReviewStep({
         ) : (
           <div className="space-y-2">
             {entries.map((entry) => {
-              const isNew = entry.runnerUuid == null;
-              const isChanging = changingClientId === entry.clientId;
-              const excludeUuids = new Set(
-                entries
-                  .map((e) => e.runnerUuid)
-                  .filter((u): u is string => u != null),
-              );
+              const runnerUuid = entry.runner.uuid;
+              const isNew = !entry.runner.isVerified;
+              const isChanging = changingRunnerUuid === runnerUuid;
+              const isBusy = busyRunnerUuid === runnerUuid;
+              const excludeUuids = new Set(entries.map((e) => e.runner.uuid));
 
               return (
                 <div
-                  key={entry.clientId}
+                  key={runnerUuid}
                   className="space-y-2 rounded-md border p-3"
                 >
                   <div className="flex items-center gap-2">
                     {isNew ? (
                       <Input
-                        value={entry.name}
+                        value={entry.runner.name}
                         onChange={(e) =>
-                          onUpdate(entry.clientId, { name: e.target.value })
+                          onUpdateRunner(runnerUuid, { name: e.target.value })
                         }
                         className="h-8 flex-1 text-sm"
                       />
                     ) : (
                       <span className="flex-1 truncate text-sm font-medium">
-                        {entry.name}
+                        {entry.runner.name}
                       </span>
                     )}
                     <Badge
                       variant={isNew ? "outline" : "secondary"}
                       className="shrink-0 py-0 text-xs"
                     >
-                      {isNew ? "Ny" : "Lagret"}
+                      {isNew ? "Ny" : "Bekreftet"}
                     </Badge>
                     <button
                       type="button"
                       className="shrink-0 text-destructive hover:text-destructive/80"
-                      onClick={() => onRemove(entry.clientId)}
-                      aria-label={`Fjern ${entry.name}`}
+                      onClick={() => onRemove(runnerUuid)}
+                      aria-label={`Fjern ${entry.runner.name}`}
                     >
                       <XIcon className="size-4" />
                     </button>
@@ -111,10 +125,10 @@ export function ReviewStep({
                             key={g}
                             type="button"
                             onClick={() =>
-                              onUpdate(entry.clientId, { gender: g })
+                              onUpdateRunner(runnerUuid, { gender: g })
                             }
                             className={`rounded-md border px-2.5 py-1 text-xs transition-colors ${
-                              entry.gender.toUpperCase() === g
+                              entry.runner.gender.toUpperCase() === g
                                 ? "border-primary bg-primary text-primary-foreground"
                                 : "border-border bg-background hover:bg-muted"
                             }`}
@@ -125,14 +139,16 @@ export function ReviewStep({
                       </div>
                     ) : (
                       <span className="text-xs text-muted-foreground">
-                        {genderLabel(entry.gender)}
+                        {genderLabel(entry.runner.gender)}
                       </span>
                     )}
                     <TimeField
-                      seconds={entry.resultTimeSeconds}
+                      seconds={entrySeconds(entry)}
                       disabled={entry.hideTime}
                       onChange={(seconds) =>
-                        onUpdate(entry.clientId, { resultTimeSeconds: seconds })
+                        onUpdateResult(runnerUuid, {
+                          resultTime: secondsToDuration(seconds ?? 0),
+                        })
                       }
                       className="h-8 w-24 px-2 text-sm"
                     />
@@ -141,11 +157,9 @@ export function ReviewStep({
                         type="checkbox"
                         checked={entry.hideTime}
                         onChange={(e) =>
-                          onUpdate(entry.clientId, {
+                          onUpdateResult(runnerUuid, {
                             hideTime: e.target.checked,
-                            resultTimeSeconds: e.target.checked
-                              ? null
-                              : entry.resultTimeSeconds,
+                            ...(e.target.checked ? { resultTime: "PT0S" } : {}),
                           })
                         }
                         className="rounded"
@@ -157,13 +171,13 @@ export function ReviewStep({
                         size="sm"
                         variant="outline"
                         className="ml-auto h-8 gap-1.5 text-xs"
-                        disabled={savingClientId === entry.clientId}
-                        onClick={() => onSaveRunnerToDb(entry)}
+                        disabled={isBusy}
+                        onClick={() => onVerifyRunner(runnerUuid)}
                       >
-                        {savingClientId === entry.clientId ? (
+                        {isBusy ? (
                           <Loader2Icon className="size-3.5 animate-spin" />
                         ) : (
-                          <DatabaseIcon className="size-3.5" />
+                          <CheckIcon className="size-3.5" />
                         )}
                         Lagre løper
                       </Button>
@@ -172,10 +186,9 @@ export function ReviewStep({
                         size="sm"
                         variant="outline"
                         className="ml-auto h-8 gap-1.5 text-xs"
+                        disabled={isBusy}
                         onClick={() =>
-                          setChangingClientId(
-                            isChanging ? null : entry.clientId,
-                          )
+                          setChangingRunnerUuid(isChanging ? null : runnerUuid)
                         }
                       >
                         <ReplaceIcon className="size-3.5" />
@@ -188,15 +201,10 @@ export function ReviewStep({
                     <ChangeRunnerField
                       excludeRunnerUuids={excludeUuids}
                       onPick={(runner) => {
-                        onUpdate(entry.clientId, {
-                          runnerUuid: runner.uuid,
-                          name: runner.name,
-                          gender: runner.gender,
-                          createdThisSession: false,
-                        });
-                        setChangingClientId(null);
+                        onChangeRunner(runnerUuid, runner);
+                        setChangingRunnerUuid(null);
                       }}
-                      onCancel={() => setChangingClientId(null)}
+                      onCancel={() => setChangingRunnerUuid(null)}
                     />
                   )}
                 </div>

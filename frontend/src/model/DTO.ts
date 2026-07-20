@@ -13,9 +13,13 @@ export type RaceDTO = {
   raceDate: string;
   weather?: string;
   runnerCount: number;
+  isPublished: boolean;
   photos: S3FileDto[];
 };
-export type RaceInput = Omit<RaceDTO, "uuid" | "runnerCount" | "photos">;
+export type RaceInput = Omit<
+  RaceDTO,
+  "uuid" | "runnerCount" | "isPublished" | "photos"
+>;
 
 export type NewsFeedDTO = {
   uuid: string;
@@ -62,9 +66,12 @@ export type RunnerDTO = {
   uuid: string;
   name: string;
   gender: string;
+  isVerified: boolean;
   pr?: string;
 };
-export type RunnerInput = Omit<RunnerDTO, "uuid">;
+export type RunnerInput = Omit<RunnerDTO, "uuid" | "isVerified"> & {
+  isVerified?: boolean;
+};
 
 export type RaceRunnerDTO = {
   runner: RunnerDTO;
@@ -84,26 +91,6 @@ export type RaceResultSummaryDTO = {
   personalBestCount: number;
   debutantCount: number;
 };
-
-export type DraftEntry = {
-  clientId: string;
-  runnerUuid: string | null;
-  name: string;
-  gender: string;
-  resultTimeSeconds: number | null;
-  hideTime: boolean;
-  createdThisSession: boolean;
-};
-
-export type ResultDraft = {
-  raceUuid: string;
-  weather?: string;
-  entries: DraftEntry[];
-  currentStep: number;
-  updatedAt: string;
-};
-
-export type ResultDraftInput = Omit<ResultDraft, "updatedAt">;
 
 export type MilestoneDTO = {
   uuid: string;

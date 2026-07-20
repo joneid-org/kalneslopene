@@ -1,4 +1,5 @@
-import type { DraftEntry } from "@/model/DTO.ts";
+import { mapResultTimeToNumber } from "@/lib/timeUtils.ts";
+import type { RaceRunnerDTO } from "@/model/DTO.ts";
 
 export function genderLabel(gender: string): string {
   const g = gender.toUpperCase();
@@ -7,19 +8,12 @@ export function genderLabel(gender: string): string {
   return gender;
 }
 
-export function entryHasTime(entry: DraftEntry): boolean {
-  return entry.hideTime || entry.resultTimeSeconds != null;
+/** Seconds parsed from a RaceRunnerDTO's ISO duration, or null when no time. */
+export function entrySeconds(entry: RaceRunnerDTO): number | null {
+  const seconds = mapResultTimeToNumber(entry.resultTime);
+  return Number.isFinite(seconds) && seconds > 0 ? seconds : null;
 }
 
-export function newEntry(fields: Partial<DraftEntry>): DraftEntry {
-  return {
-    clientId: crypto.randomUUID(),
-    runnerUuid: null,
-    name: "",
-    gender: "MALE",
-    resultTimeSeconds: null,
-    hideTime: false,
-    createdThisSession: false,
-    ...fields,
-  };
+export function entryHasTime(entry: RaceRunnerDTO): boolean {
+  return entry.hideTime || entrySeconds(entry) != null;
 }

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
 
+@Suppress("TooManyFunctions")
 @Service
 class RaceService(
     val raceRepository: RaceRepository,
@@ -60,6 +61,20 @@ class RaceService(
     }
 
     fun deleteRaceById(uuid: UUID) = raceRepository.deleteById(uuid)
+
+    @Transactional
+    fun publishRace(uuid: UUID): RaceDTO {
+        val race =
+            raceRepository.findByIdOrNull(uuid)
+                ?: throw NoSuchElementException("Race $uuid not found")
+        race.runners.forEach { raceRunner ->
+            require(raceRunner.hideTime || !raceRunner.resultTime.isZero) {
+                "Løper ${raceRunner.runner.name} mangler tid"
+            }
+        }
+        race.isPublished = true
+        return raceRepository.save(race).toDto()
+    }
 
     fun findAllRunnersInRace(uuid: UUID): List<RaceRunnerDTO> {
         val race = raceRepository.findByIdOrNull(uuid)

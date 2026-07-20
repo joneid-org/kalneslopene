@@ -11,7 +11,7 @@ export function RunnerForm({
   submitLabel,
 }: {
   initial: Partial<RunnerDTO>;
-  onSubmit: (runner: Omit<RunnerDTO, "uuid">) => void;
+  onSubmit: (runner: Omit<RunnerDTO, "uuid" | "isVerified">) => void;
   onCancel: () => void;
   submitLabel: string;
 }) {

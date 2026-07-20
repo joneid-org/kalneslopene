@@ -1,23 +1,30 @@
 import { XIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge.tsx";
-import type { DraftEntry } from "@/model/DTO.ts";
+import { secondsToDuration } from "@/lib/timeUtils.ts";
+import type { RaceRunnerDTO, RunnerDTO } from "@/model/DTO.ts";
 import { AddRunnerForm } from "./AddRunnerForm.tsx";
+import { entrySeconds } from "./helpers.ts";
 import { TimeField } from "./TimeField.tsx";
 
 export function RegisterTimesStep({
   entries,
-  onAdd,
+  onAddExisting,
+  onAddNew,
   onRemove,
-  onUpdate,
+  onUpdateResult,
+  isAdding,
 }: {
-  entries: DraftEntry[];
-  onAdd: (entry: DraftEntry) => void;
-  onRemove: (clientId: string) => void;
-  onUpdate: (clientId: string, patch: Partial<DraftEntry>) => void;
+  entries: RaceRunnerDTO[];
+  onAddExisting: (runner: RunnerDTO) => void;
+  onAddNew: (name: string, gender: string) => void;
+  onRemove: (runnerUuid: string) => void;
+  onUpdateResult: (
+    runnerUuid: string,
+    patch: { resultTime?: string; hideTime?: boolean },
+  ) => void;
+  isAdding: boolean;
 }) {
-  const existingRunnerUuids = new Set(
-    entries.map((e) => e.runnerUuid).filter((u): u is string => u != null),
-  );
+  const existingRunnerUuids = new Set(entries.map((e) => e.runner.uuid));
 
   return (
     <div className="space-y-5">
@@ -29,7 +36,12 @@ export function RegisterTimesStep({
         </p>
       </div>
 
-      <AddRunnerForm existingRunnerUuids={existingRunnerUuids} onAdd={onAdd} />
+      <AddRunnerForm
+        existingRunnerUuids={existingRunnerUuids}
+        onAddExisting={onAddExisting}
+        onAddNew={onAddNew}
+        isAdding={isAdding}
+      />
 
       {entries.length === 0 ? (
         <p className="text-sm italic text-muted-foreground">
@@ -39,22 +51,26 @@ export function RegisterTimesStep({
         <div className="divide-y overflow-hidden rounded-md border">
           {entries.map((entry) => (
             <div
-              key={entry.clientId}
+              key={entry.runner.uuid}
               className="flex items-center gap-2 px-3 py-2 text-sm"
             >
               <div className="flex min-w-0 flex-1 items-center gap-2">
-                <span className="truncate font-medium">{entry.name}</span>
-                {entry.runnerUuid == null && (
+                <span className="truncate font-medium">
+                  {entry.runner.name}
+                </span>
+                {!entry.runner.isVerified && (
                   <Badge variant="outline" className="shrink-0 py-0 text-xs">
                     Ny
                   </Badge>
                 )}
               </div>
               <TimeField
-                seconds={entry.resultTimeSeconds}
+                seconds={entrySeconds(entry)}
                 disabled={entry.hideTime}
                 onChange={(seconds) =>
-                  onUpdate(entry.clientId, { resultTimeSeconds: seconds })
+                  onUpdateResult(entry.runner.uuid, {
+                    resultTime: secondsToDuration(seconds ?? 0),
+                  })
                 }
                 className="h-8 w-24 shrink-0 px-2 text-sm"
               />
@@ -63,11 +79,9 @@ export function RegisterTimesStep({
                   type="checkbox"
                   checked={entry.hideTime}
                   onChange={(e) =>
-                    onUpdate(entry.clientId, {
+                    onUpdateResult(entry.runner.uuid, {
                       hideTime: e.target.checked,
-                      resultTimeSeconds: e.target.checked
-                        ? null
-                        : entry.resultTimeSeconds,
+                      ...(e.target.checked ? { resultTime: "PT0S" } : {}),
                     })
                   }
                   className="rounded"
@@ -77,8 +91,8 @@ export function RegisterTimesStep({
               <button
                 type="button"
                 className="shrink-0 text-destructive hover:text-destructive/80"
-                onClick={() => onRemove(entry.clientId)}
-                aria-label={`Fjern ${entry.name}`}
+                onClick={() => onRemove(entry.runner.uuid)}
+                aria-label={`Fjern ${entry.runner.name}`}
               >
                 <XIcon className="size-4" />
               </button>

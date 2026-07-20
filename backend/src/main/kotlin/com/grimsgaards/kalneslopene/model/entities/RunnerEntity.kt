@@ -28,6 +28,8 @@ data class RunnerEntity(
     var name: String,
     @Enumerated(EnumType.STRING)
     var gender: Gender,
+    @Column(name = "isverified")
+    var isVerified: Boolean = false,
     @OneToMany(mappedBy = "runner")
     val races: MutableList<RaceRunnerEntity> = mutableListOf(),
 ) {
@@ -45,5 +47,5 @@ data class RunnerEntity(
     @Column(name = "total_races", table = "runner_stats", insertable = false, updatable = false)
     val totalRaces: Int? = null
 
-    fun toDto(): RunnerDTO = RunnerDTO(uuid, name, gender)
+    fun toDto(): RunnerDTO = RunnerDTO(uuid, name, gender, isVerified)
 }

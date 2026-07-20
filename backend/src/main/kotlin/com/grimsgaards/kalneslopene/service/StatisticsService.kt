@@ -21,7 +21,7 @@ class StatisticsService(
                 from = year?.atDay(1)?.atStartOfDay(),
                 to = year?.atMonthDay(MonthDay.of(12, 31))?.atTime(LocalTime.MAX),
             )
-        val races = raceRepository.findAllByFilter(filter)
+        val races = raceRepository.findAllByFilter(filter).filter { it.isPublished }
         val allRunners = races.flatMap { it.runners }
 
         val (completedRaces, upcomingRaces) = races.partition { it.raceDate.isBefore(LocalDateTime.now()) }

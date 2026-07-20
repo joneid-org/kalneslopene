@@ -1,33 +1,40 @@
 import { XIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge.tsx";
-import type { DraftEntry } from "@/model/DTO.ts";
+import type { RaceRunnerDTO, RunnerDTO } from "@/model/DTO.ts";
 import { AddRunnerForm } from "./AddRunnerForm.tsx";
 import { genderLabel } from "./helpers.ts";
 
 export function RegisterRunnersStep({
   entries,
-  onAdd,
+  onAddExisting,
+  onAddNew,
   onRemove,
+  isAdding,
 }: {
-  entries: DraftEntry[];
-  onAdd: (entry: DraftEntry) => void;
-  onRemove: (clientId: string) => void;
+  entries: RaceRunnerDTO[];
+  onAddExisting: (runner: RunnerDTO) => void;
+  onAddNew: (name: string, gender: string) => void;
+  onRemove: (runnerUuid: string) => void;
+  isAdding: boolean;
 }) {
-  const existingRunnerUuids = new Set(
-    entries.map((e) => e.runnerUuid).filter((u): u is string => u != null),
-  );
+  const existingRunnerUuids = new Set(entries.map((e) => e.runner.uuid));
 
   return (
     <div className="space-y-5">
       <div className="space-y-1">
         <h2 className="text-lg font-semibold">Registrer løpere</h2>
         <p className="text-sm text-muted-foreground">
-          Søk opp løpere fra databasen, eller opprett nye. Nye løpere lagres
-          ikke i databasen ennå.
+          Søk opp løpere fra databasen, eller opprett nye. Nye løpere lagres med
+          en gang, men er ikke bekreftet før du bekrefter dem.
         </p>
       </div>
 
-      <AddRunnerForm existingRunnerUuids={existingRunnerUuids} onAdd={onAdd} />
+      <AddRunnerForm
+        existingRunnerUuids={existingRunnerUuids}
+        onAddExisting={onAddExisting}
+        onAddNew={onAddNew}
+        isAdding={isAdding}
+      />
 
       <div className="space-y-2">
         <p className="text-sm font-medium">
@@ -42,15 +49,15 @@ export function RegisterRunnersStep({
           <div className="divide-y overflow-hidden rounded-md border">
             {entries.map((entry) => (
               <div
-                key={entry.clientId}
+                key={entry.runner.uuid}
                 className="flex items-center justify-between gap-2 px-3 py-2 text-sm"
               >
                 <div className="flex items-center gap-2">
-                  <span className="font-medium">{entry.name}</span>
+                  <span className="font-medium">{entry.runner.name}</span>
                   <span className="text-xs text-muted-foreground">
-                    {genderLabel(entry.gender)}
+                    {genderLabel(entry.runner.gender)}
                   </span>
-                  {entry.runnerUuid == null && (
+                  {!entry.runner.isVerified && (
                     <Badge variant="outline" className="py-0 text-xs">
                       Ny
                     </Badge>
@@ -59,8 +66,8 @@ export function RegisterRunnersStep({
                 <button
                   type="button"
                   className="text-destructive hover:text-destructive/80"
-                  onClick={() => onRemove(entry.clientId)}
-                  aria-label={`Fjern ${entry.name}`}
+                  onClick={() => onRemove(entry.runner.uuid)}
+                  aria-label={`Fjern ${entry.runner.name}`}
                 >
                   <XIcon className="size-4" />
                 </button>

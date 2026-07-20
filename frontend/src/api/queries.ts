@@ -18,8 +18,6 @@ import type {
   RaceResultSummaryDTO,
   RaceRunnerDTO,
   RaceStatisticsDTO,
-  ResultDraft,
-  ResultDraftInput,
   RunnerDTO,
   RunnerInput,
   S3FileDto,
@@ -126,41 +124,17 @@ export const QUERIES = {
           })
           .json<RaceRunnerDTO>(),
     }),
-    removeRunnersFromRace: (raceUuid: string, runners: RaceRunnerDTO[]) => ({
+    removeRunnersFromRace: (raceUuid: string, runnerUuids: string[]) => ({
       queryKey: ["race", raceUuid, "runnersInRace", "remove"],
       queryFn: () =>
         kyClient
-          .delete(`/api/races/${raceUuid}/runners`, { json: runners })
+          .delete(`/api/races/${raceUuid}/runners`, { json: runnerUuids })
           .json<void>(),
     }),
-  },
-  resultDraft: {
-    getDraft: (raceUuid: string) => ({
-      queryKey: ["race", raceUuid, "resultDraft"],
-      queryFn: async (): Promise<ResultDraft | null> => {
-        const res = await kyClient.get(`/api/races/${raceUuid}/result-draft`);
-        if (res.status === 204) return null;
-        return res.json<ResultDraft>();
-      },
-    }),
-    saveDraft: (raceUuid: string, draft: ResultDraftInput) => ({
-      queryKey: ["race", raceUuid, "resultDraft", "save"],
+    publishResults: (raceUuid: string) => ({
+      queryKey: ["race", raceUuid, "publish"],
       queryFn: () =>
-        kyClient
-          .put(`/api/races/${raceUuid}/result-draft`, { json: draft })
-          .json<ResultDraft>(),
-    }),
-    deleteDraft: (raceUuid: string) => ({
-      queryKey: ["race", raceUuid, "resultDraft", "delete"],
-      queryFn: () =>
-        kyClient.delete(`/api/races/${raceUuid}/result-draft`).json<void>(),
-    }),
-    publishDraft: (raceUuid: string) => ({
-      queryKey: ["race", raceUuid, "resultDraft", "publish"],
-      queryFn: () =>
-        kyClient
-          .post(`/api/races/${raceUuid}/result-draft/publish`)
-          .json<RaceRunnerDTO[]>(),
+        kyClient.post(`/api/races/${raceUuid}/publish`).json<RaceDTO>(),
     }),
   },
   statistics: {

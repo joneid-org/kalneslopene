@@ -1,19 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
-import { PlusIcon, UserPlusIcon } from "lucide-react";
+import { Loader2Icon, PlusIcon, UserPlusIcon } from "lucide-react";
 import { useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
-import type { DraftEntry, RunnerDTO } from "@/model/DTO.ts";
-import { genderLabel, newEntry } from "./helpers.ts";
+import type { RunnerDTO } from "@/model/DTO.ts";
+import { genderLabel } from "./helpers.ts";
 
 export function AddRunnerForm({
   existingRunnerUuids,
-  onAdd,
+  onAddExisting,
+  onAddNew,
+  isAdding = false,
 }: {
   existingRunnerUuids: Set<string>;
-  onAdd: (entry: DraftEntry) => void;
+  onAddExisting: (runner: RunnerDTO) => void;
+  onAddNew: (name: string, gender: string) => void;
+  isAdding?: boolean;
 }) {
   const [query, setQuery] = useState("");
   const [creatingNew, setCreatingNew] = useState(false);
@@ -37,28 +41,14 @@ export function AddRunnerForm({
   };
 
   const addExisting = (r: RunnerDTO) => {
-    onAdd(
-      newEntry({
-        runnerUuid: r.uuid,
-        name: r.name,
-        gender: r.gender,
-        createdThisSession: false,
-      }),
-    );
+    onAddExisting(r);
     reset();
   };
 
   const addNew = () => {
     const name = query.trim();
     if (!name) return;
-    onAdd(
-      newEntry({
-        runnerUuid: null,
-        name,
-        gender: newGender,
-        createdThisSession: true,
-      }),
-    );
+    onAddNew(name, newGender);
     reset();
   };
 
@@ -66,14 +56,19 @@ export function AddRunnerForm({
     <div className="space-y-3 rounded-lg border bg-muted/30 p-3">
       <div className="space-y-1.5">
         <Label>Søk løper</Label>
-        <Input
-          placeholder="Skriv navn..."
-          value={query}
-          onChange={(e) => {
-            setQuery(e.target.value);
-            setCreatingNew(false);
-          }}
-        />
+        <div className="flex items-center gap-2">
+          <Input
+            placeholder="Skriv navn..."
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setCreatingNew(false);
+            }}
+          />
+          {isAdding && (
+            <Loader2Icon className="size-4 shrink-0 animate-spin text-muted-foreground" />
+          )}
+        </div>
       </div>
 
       {query.length > 0 && suggestions.length > 0 && !creatingNew && (
@@ -82,7 +77,8 @@ export function AddRunnerForm({
             <button
               key={r.uuid}
               type="button"
-              className="flex w-full items-center justify-between px-3 py-2 text-left text-sm hover:bg-muted"
+              disabled={isAdding}
+              className="flex w-full items-center justify-between px-3 py-2 text-left text-sm hover:bg-muted disabled:opacity-50"
               onClick={() => addExisting(r)}
             >
               <span className="font-medium">{r.name}</span>
@@ -127,7 +123,11 @@ export function AddRunnerForm({
               >
                 Avbryt
               </Button>
-              <Button className="flex-1 gap-1.5" onClick={addNew}>
+              <Button
+                className="flex-1 gap-1.5"
+                disabled={isAdding}
+                onClick={addNew}
+              >
                 <UserPlusIcon className="size-4" />
                 Legg til
               </Button>
@@ -137,6 +137,7 @@ export function AddRunnerForm({
           <Button
             variant="outline"
             className="w-full gap-1.5"
+            disabled={isAdding}
             onClick={() => setCreatingNew(true)}
           >
             <PlusIcon className="size-4" />

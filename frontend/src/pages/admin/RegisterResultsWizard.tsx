@@ -1,11 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  CheckIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   Loader2Icon,
   LogOutIcon,
-  SaveIcon,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
@@ -17,7 +15,7 @@ import { ReviewStep } from "@/components/admin/registerResults/ReviewStep.tsx";
 import { SegmentedControl } from "@/components/SegmentedControl.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { formatDDMonth } from "@/lib/timeUtils.ts";
-import type { DraftEntry, ResultDraftInput, RunnerInput } from "@/model/DTO.ts";
+import type { RaceRunnerDTO, RunnerDTO } from "@/model/DTO.ts";
 
 const STEP_OPTIONS = [
   { label: "1. Løpere", value: 1 },
@@ -33,53 +31,165 @@ export function RegisterResultsWizard() {
   const qc = useQueryClient();
 
   const { data: race } = useQuery(QUERIES.race.getRaceByUuid(uuid));
-  const draftQuery = useQuery({
-    ...QUERIES.resultDraft.getDraft(uuid),
+  const entriesQuery = useQuery({
+    ...QUERIES.race.getAllRunnersInRace(uuid),
     staleTime: 0,
     gcTime: 0,
   });
 
-  const [entries, setEntries] = useState<DraftEntry[]>([]);
+  const [entries, setEntries] = useState<RaceRunnerDTO[]>([]);
   const [weather, setWeather] = useState("");
   const [step, setStep] = useState(1);
-  const [savingClientId, setSavingClientId] = useState<string | null>(null);
+  const [isAdding, setIsAdding] = useState(false);
+  const [busyRunnerUuid, setBusyRunnerUuid] = useState<string | null>(null);
   const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
-    if (initialized || draftQuery.isPending) return;
-    const draft = draftQuery.data;
-    if (draft) {
-      setEntries(draft.entries);
-      setWeather(draft.weather ?? "");
-      setStep(draft.currentStep || 1);
-    } else if (race?.weather) {
-      setWeather(race.weather);
-    }
+    if (initialized || entriesQuery.isPending || !race) return;
+    setEntries(entriesQuery.data ?? []);
+    setWeather(race.weather ?? "");
     setInitialized(true);
-  }, [draftQuery.isPending, draftQuery.data, race, initialized]);
+  }, [entriesQuery.isPending, entriesQuery.data, race, initialized]);
 
-  const buildDraft = (
-    nextStep: number,
-    nextEntries: DraftEntry[] = entries,
-  ): ResultDraftInput => ({
+  const makeEntry = (
+    runner: RunnerDTO,
+    resultTime = "PT0S",
+    hideTime = false,
+  ): RaceRunnerDTO => ({
+    runner,
     raceUuid: uuid,
-    weather: weather.trim() || undefined,
-    entries: nextEntries,
-    currentStep: nextStep,
+    resultTime,
+    hideTime,
+    totalRaces: 0,
   });
 
-  const saveMutation = useMutation({
-    mutationFn: (draft: ResultDraftInput) =>
-      QUERIES.resultDraft.saveDraft(uuid, draft).queryFn(),
-    onSuccess: (saved) => {
-      qc.setQueryData(QUERIES.resultDraft.getDraft(uuid).queryKey, saved);
-    },
-  });
+  const invalidateRaceLists = () => {
+    qc.invalidateQueries({ queryKey: ["race", "getAll"] });
+    qc.invalidateQueries({ queryKey: ["runner", "getAll"] });
+  };
+
+  const addExisting = async (runner: RunnerDTO) => {
+    if (entries.some((e) => e.runner.uuid === runner.uuid)) return;
+    setIsAdding(true);
+    try {
+      const [saved] = await QUERIES.race
+        .addRunnersToRace(uuid, [makeEntry(runner)])
+        .queryFn();
+      setEntries((prev) => [...prev, saved]);
+      invalidateRaceLists();
+    } finally {
+      setIsAdding(false);
+    }
+  };
+
+  const addNew = async (name: string, gender: string) => {
+    setIsAdding(true);
+    try {
+      const [created] = await QUERIES.runner
+        .createRunners([{ name, gender }])
+        .queryFn();
+      const [saved] = await QUERIES.race
+        .addRunnersToRace(uuid, [makeEntry(created)])
+        .queryFn();
+      setEntries((prev) => [...prev, saved]);
+      invalidateRaceLists();
+    } finally {
+      setIsAdding(false);
+    }
+  };
+
+  const removeEntry = async (runnerUuid: string) => {
+    setEntries((prev) => prev.filter((e) => e.runner.uuid !== runnerUuid));
+    await QUERIES.race.removeRunnersFromRace(uuid, [runnerUuid]).queryFn();
+    invalidateRaceLists();
+  };
+
+  const updateResult = (
+    runnerUuid: string,
+    patch: { resultTime?: string; hideTime?: boolean },
+  ) => {
+    const current = entries.find((e) => e.runner.uuid === runnerUuid);
+    if (!current) return;
+    const updated = { ...current, ...patch };
+    setEntries((prev) =>
+      prev.map((e) => (e.runner.uuid === runnerUuid ? updated : e)),
+    );
+    QUERIES.race
+      .updateRunnerInRace(uuid, runnerUuid, updated)
+      .queryFn()
+      .catch(() => {});
+  };
+
+  const persistRunner = (runner: RunnerDTO) => {
+    setEntries((prev) =>
+      prev.map((e) => (e.runner.uuid === runner.uuid ? { ...e, runner } : e)),
+    );
+    QUERIES.runner
+      .updateRunner(runner.uuid, runner)
+      .queryFn()
+      .catch(() => {});
+    qc.invalidateQueries({ queryKey: ["runner", "getAll"] });
+  };
+
+  const updateRunner = (
+    runnerUuid: string,
+    patch: { name?: string; gender?: string },
+  ) => {
+    const current = entries.find((e) => e.runner.uuid === runnerUuid);
+    if (!current) return;
+    persistRunner({ ...current.runner, ...patch });
+  };
+
+  const verifyRunner = async (runnerUuid: string) => {
+    const current = entries.find((e) => e.runner.uuid === runnerUuid);
+    if (!current) return;
+    setBusyRunnerUuid(runnerUuid);
+    try {
+      const saved = await QUERIES.runner
+        .updateRunner(runnerUuid, { ...current.runner, isVerified: true })
+        .queryFn();
+      setEntries((prev) =>
+        prev.map((e) =>
+          e.runner.uuid === runnerUuid ? { ...e, runner: saved } : e,
+        ),
+      );
+      qc.invalidateQueries({ queryKey: ["runner", "getAll"] });
+    } finally {
+      setBusyRunnerUuid(null);
+    }
+  };
+
+  const changeRunner = async (oldRunnerUuid: string, newRunner: RunnerDTO) => {
+    const current = entries.find((e) => e.runner.uuid === oldRunnerUuid);
+    if (!current || entries.some((e) => e.runner.uuid === newRunner.uuid))
+      return;
+    setBusyRunnerUuid(oldRunnerUuid);
+    try {
+      await QUERIES.race.removeRunnersFromRace(uuid, [oldRunnerUuid]).queryFn();
+      const [saved] = await QUERIES.race
+        .addRunnersToRace(uuid, [
+          makeEntry(newRunner, current.resultTime, current.hideTime),
+        ])
+        .queryFn();
+      setEntries((prev) =>
+        prev.map((e) => (e.runner.uuid === oldRunnerUuid ? saved : e)),
+      );
+    } finally {
+      setBusyRunnerUuid(null);
+    }
+  };
+
+  const persistWeather = async () => {
+    if (!race) return;
+    await QUERIES.race
+      .updateRace(uuid, { ...race, weather: weather.trim() || undefined })
+      .queryFn();
+  };
 
   const publishMutation = useMutation({
     mutationFn: async () => {
-      await saveMutation.mutateAsync(buildDraft(step));
-      return QUERIES.resultDraft.publishDraft(uuid).queryFn();
+      await persistWeather();
+      return QUERIES.race.publishResults(uuid).queryFn();
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["race", "getAll"] });
@@ -89,40 +199,7 @@ export function RegisterResultsWizard() {
     },
   });
 
-  const goToStep = (next: number) => {
-    setStep(next);
-    saveMutation.mutate(buildDraft(next));
-  };
-
-  const addEntry = (entry: DraftEntry) =>
-    setEntries((prev) => [...prev, entry]);
-  const removeEntry = (clientId: string) =>
-    setEntries((prev) => prev.filter((e) => e.clientId !== clientId));
-  const updateEntry = (clientId: string, patch: Partial<DraftEntry>) =>
-    setEntries((prev) =>
-      prev.map((e) => (e.clientId === clientId ? { ...e, ...patch } : e)),
-    );
-
-  const saveRunnerToDb = async (entry: DraftEntry) => {
-    setSavingClientId(entry.clientId);
-    try {
-      const [created] = await QUERIES.runner
-        .createRunners([
-          { name: entry.name, gender: entry.gender } as RunnerInput,
-        ])
-        .queryFn();
-      const updated = entries.map((e) =>
-        e.clientId === entry.clientId ? { ...e, runnerUuid: created.uuid } : e,
-      );
-      setEntries(updated);
-      await saveMutation.mutateAsync(buildDraft(step, updated));
-      qc.invalidateQueries({ queryKey: ["runner", "getAll"] });
-    } finally {
-      setSavingClientId(null);
-    }
-  };
-
-  if (draftQuery.isPending || !initialized) {
+  if (entriesQuery.isPending || !initialized) {
     return (
       <div className="page-content mx-auto flex max-w-2xl justify-center py-20">
         <Loader2Icon className="size-6 animate-spin text-muted-foreground" />
@@ -154,46 +231,42 @@ export function RegisterResultsWizard() {
         <SegmentedControl
           options={STEP_OPTIONS}
           value={step}
-          onChange={goToStep}
+          onChange={setStep}
         />
       </div>
 
       {step === 1 && (
         <RegisterRunnersStep
           entries={entries}
-          onAdd={addEntry}
+          onAddExisting={addExisting}
+          onAddNew={addNew}
           onRemove={removeEntry}
+          isAdding={isAdding}
         />
       )}
       {step === 2 && (
         <RegisterTimesStep
           entries={entries}
-          onAdd={addEntry}
+          onAddExisting={addExisting}
+          onAddNew={addNew}
           onRemove={removeEntry}
-          onUpdate={updateEntry}
+          onUpdateResult={updateResult}
+          isAdding={isAdding}
         />
       )}
-      {step === 3 && (
-        <SaveDraftStep
-          isSaving={saveMutation.isPending}
-          isSaved={saveMutation.isSuccess}
-          onSave={() => saveMutation.mutate(buildDraft(step))}
-          onLeave={() =>
-            saveMutation.mutate(buildDraft(step), {
-              onSuccess: () => navigate("/admin/results"),
-            })
-          }
-        />
-      )}
+      {step === 3 && <SaveStep onLeave={() => navigate("/admin/results")} />}
       {step === 4 && (
         <ReviewStep
           entries={entries}
           weather={weather}
           onWeatherChange={setWeather}
-          onUpdate={updateEntry}
+          onWeatherBlur={persistWeather}
+          onUpdateResult={updateResult}
+          onUpdateRunner={updateRunner}
           onRemove={removeEntry}
-          onSaveRunnerToDb={saveRunnerToDb}
-          savingClientId={savingClientId}
+          onVerifyRunner={verifyRunner}
+          onChangeRunner={changeRunner}
+          busyRunnerUuid={busyRunnerUuid}
         />
       )}
       {step === 5 && (
@@ -210,32 +283,16 @@ export function RegisterResultsWizard() {
           variant="outline"
           className="gap-1.5"
           disabled={step === 1}
-          onClick={() => goToStep(step - 1)}
+          onClick={() => setStep(step - 1)}
         >
           <ChevronLeftIcon className="size-4" />
           Forrige
         </Button>
 
         <Button
-          variant="ghost"
-          className="gap-1.5 text-muted-foreground"
-          disabled={saveMutation.isPending}
-          onClick={() => saveMutation.mutate(buildDraft(step))}
-        >
-          {saveMutation.isPending ? (
-            <Loader2Icon className="size-4 animate-spin" />
-          ) : saveMutation.isSuccess ? (
-            <CheckIcon className="size-4" />
-          ) : (
-            <SaveIcon className="size-4" />
-          )}
-          Lagre utkast
-        </Button>
-
-        <Button
           className="gap-1.5"
           disabled={step === 5}
-          onClick={() => goToStep(step + 1)}
+          onClick={() => setStep(step + 1)}
         >
           Neste
           <ChevronRightIcon className="size-4" />
@@ -245,49 +302,22 @@ export function RegisterResultsWizard() {
   );
 }
 
-function SaveDraftStep({
-  isSaving,
-  isSaved,
-  onSave,
-  onLeave,
-}: {
-  isSaving: boolean;
-  isSaved: boolean;
-  onSave: () => void;
-  onLeave: () => void;
-}) {
+function SaveStep({ onLeave }: { onLeave: () => void }) {
   return (
     <div className="space-y-5">
       <div className="space-y-1">
         <h2 className="text-lg font-semibold">Lagre og fortsett senere</h2>
         <p className="text-sm text-muted-foreground">
-          Arbeidet ditt lagres på serveren. Du kan trygt lukke siden og logge
+          Alt lagres fortløpende på serveren. Du kan trygt lukke siden og logge
           inn igjen senere – ingenting blir borte. Resultatene publiseres ikke
           før du gjør det i siste steg.
         </p>
       </div>
 
-      <div className="flex flex-col gap-2 sm:flex-row">
-        <Button className="flex-1 gap-1.5" disabled={isSaving} onClick={onSave}>
-          {isSaving ? (
-            <Loader2Icon className="size-4 animate-spin" />
-          ) : isSaved ? (
-            <CheckIcon className="size-4" />
-          ) : (
-            <SaveIcon className="size-4" />
-          )}
-          Lagre utkast
-        </Button>
-        <Button
-          variant="outline"
-          className="flex-1 gap-1.5"
-          disabled={isSaving}
-          onClick={onLeave}
-        >
-          <LogOutIcon className="size-4" />
-          Lagre og lukk
-        </Button>
-      </div>
+      <Button variant="outline" className="w-full gap-1.5" onClick={onLeave}>
+        <LogOutIcon className="size-4" />
+        Lukk
+      </Button>
     </div>
   );
 }

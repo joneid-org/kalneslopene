@@ -1,5 +1,5 @@
 alter table runner
-    add column isVerified BOOLEAN;
+    add column is_verified BOOLEAN;
 
 alter table race
-    add column isPublished BOOLEAN;
+    add column is_published BOOLEAN;

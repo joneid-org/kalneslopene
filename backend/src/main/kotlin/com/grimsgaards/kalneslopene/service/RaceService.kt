@@ -29,7 +29,9 @@ class RaceService(
     val s3Service: S3Service,
 ) {
     private fun isAdmin(): Boolean =
-        SecurityContextHolder.getContext().authentication
+        SecurityContextHolder
+            .getContext()
+            .authentication
             ?.authorities
             ?.any { it.authority == UserRole.ADMIN.toString() } == true
 

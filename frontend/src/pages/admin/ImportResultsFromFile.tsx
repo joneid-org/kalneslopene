@@ -55,6 +55,7 @@ export function ImportResultsFromFile() {
                 resultTime: secondsToDuration(r.timeSeconds),
                 hideTime: r.timeSeconds === 0,
                 totalRaces: 0,
+                seasonRaces: 0,
               },
             ],
       );

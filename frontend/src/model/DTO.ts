@@ -81,6 +81,7 @@ export type RaceRunnerDTO = {
   previousSeasonBest?: string;
   previousPersonalRecord?: string;
   totalRaces: number;
+  seasonRaces: number;
 };
 
 export type RaceResultSummaryDTO = {

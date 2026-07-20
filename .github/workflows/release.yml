@@ -1,0 +1,25 @@
+name: "Release"
+
+on:
+  release:
+    types: [published]
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  build-and-push:
+    uses: ./.github/workflows/build-and-push.yml
+    with:
+      tag: ${{ github.event.release.tag_name }}
+      ref: ${{ github.event.release.tag_name }}
+    secrets: inherit
+
+  deploy:
+    needs: build-and-push
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: test
+      tag: ${{ github.event.release.tag_name }}
+    secrets: inherit

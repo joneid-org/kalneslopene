@@ -9,7 +9,6 @@ import type {
   OrganizerDTO,
   PagedResponse,
   RaceDTO,
-  RaceInput,
   RaceResultSummaryDTO,
   RaceRunnerDTO,
   RaceStatisticsDTO,

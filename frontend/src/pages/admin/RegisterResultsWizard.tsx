@@ -192,13 +192,11 @@ export function RegisterResultsWizard() {
 
   const persistRace = async (form: WeatherForm, condition: string) => {
     if (!race) return;
-    await MUTATIONS.race
-      .updateRace(uuid, {
-        ...race,
-        weather: formToWeather(form),
-        courseCondition: condition.trim() || undefined,
-      })
-      .queryFn();
+    await MUTATIONS.race.updateRace(uuid, {
+      ...race,
+      weather: formToWeather(form),
+      courseCondition: condition.trim() || undefined,
+    });
   };
 
   const publishMutation = useMutation({

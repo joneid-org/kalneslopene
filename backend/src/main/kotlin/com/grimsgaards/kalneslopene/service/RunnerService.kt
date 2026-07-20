@@ -27,6 +27,7 @@ class RunnerService(
                     RunnerEntity(
                         name = it.name,
                         gender = Gender.valueOf(it.gender.uppercase()),
+                        isVerified = it.isVerified,
                     )
                 },
             ).map { it.toDto() }
@@ -43,6 +44,7 @@ class RunnerService(
         existingRunner.apply {
             name = updatedRunner.name
             gender = Gender.valueOf(updatedRunner.gender.uppercase())
+            isVerified = updatedRunner.isVerified
         }
         return runnerRepository.save(existingRunner).toDto()
     }
@@ -53,6 +55,7 @@ class RunnerService(
 
     fun findAllRacesByRunner(uuid: UUID): List<RaceRunnerDTO> {
         val runner = runnerRepository.findByIdOrNull(uuid)
-        return runner?.races?.map { it.toDto() } ?: throw IllegalArgumentException("no runner found with id $uuid")
+        return runner?.races?.filter { it.race.isPublished }?.map { it.toDto() }
+            ?: throw IllegalArgumentException("no runner found with id $uuid")
     }
 }

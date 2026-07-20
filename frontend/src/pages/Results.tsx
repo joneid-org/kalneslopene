@@ -27,7 +27,7 @@ export function Results() {
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  const allRaces = races ?? [];
+  const allRaces = (races ?? []).filter((r) => r.isPublished);
   const race = allRaces.find((r) => r.uuid === uuid);
   const previous = getPreviousRace(allRaces, uuid);
   const next = getNextRace(allRaces, uuid);

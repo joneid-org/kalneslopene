@@ -13,9 +13,13 @@ export type RaceDTO = {
   raceDate: string;
   weather?: string;
   runnerCount: number;
+  isPublished: boolean;
   photos: S3FileDto[];
 };
-export type RaceInput = Omit<RaceDTO, "uuid" | "runnerCount" | "photos">;
+export type RaceInput = Omit<
+  RaceDTO,
+  "uuid" | "runnerCount" | "isPublished" | "photos"
+>;
 
 export type NewsFeedDTO = {
   uuid: string;
@@ -62,9 +66,12 @@ export type RunnerDTO = {
   uuid: string;
   name: string;
   gender: string;
+  isVerified: boolean;
   pr?: string;
 };
-export type RunnerInput = Omit<RunnerDTO, "uuid">;
+export type RunnerInput = Omit<RunnerDTO, "uuid" | "isVerified"> & {
+  isVerified?: boolean;
+};
 
 export type RaceRunnerDTO = {
   runner: RunnerDTO;

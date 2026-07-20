@@ -14,6 +14,7 @@ interface RaceRepository : JpaRepository<RaceEntity, UUID> {
         SELECT n FROM RaceEntity n
         WHERE n.raceDate >= COALESCE(:#{#filter.from}, n.raceDate)
           AND n.raceDate <= COALESCE(:#{#filter.to}, n.raceDate)
+          AND n.isPublished = COALESCE(:#{#filter.isPublished}, n.isPublished)
         ORDER BY n.raceDate DESC
     """,
     )

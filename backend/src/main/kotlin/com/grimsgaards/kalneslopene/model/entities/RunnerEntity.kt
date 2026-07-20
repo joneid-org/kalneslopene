@@ -32,9 +32,6 @@ class RunnerEntity(
     @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
     @Column(name = "historic_personal_record")
     var historicPersonalRecord: Duration? = null,
-    @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
-    @Column(name = "historic_season_record")
-    var historicSeasonRecord: Duration? = null,
     @OneToMany(mappedBy = "runner")
     val races: MutableList<RaceRunnerEntity> = mutableListOf(),
 ) {

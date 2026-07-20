@@ -21,4 +21,4 @@ minio:
   bucket-name: ${MINIO_BUCKET_NAME}
 
 baseline-data:
-  enabled: true
+  enabled: false

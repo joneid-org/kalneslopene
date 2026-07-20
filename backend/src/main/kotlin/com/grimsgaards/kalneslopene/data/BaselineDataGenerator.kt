@@ -64,7 +64,7 @@ class BaselineDataGenerator(
                     name = name,
                     gender = gender,
                     historicPersonalRecord = personalRecord,
-                    historicSeasonRecord = personalRecord,
+                    isVerified = true,
                 )
             }
         val saved = runnerRepository.saveAll(runners)
@@ -78,7 +78,7 @@ class BaselineDataGenerator(
                 .map { it.date }
                 .distinct()
                 .sorted()
-                .map { RaceEntity(raceDate = it.atTime(RACE_HOUR, 0), weather = null) }
+                .map { RaceEntity(raceDate = it.atTime(RACE_HOUR, 0), weather = null, isPublished = true) }
         return raceRepository.saveAll(races).associateBy { it.raceDate.toLocalDate() }
     }
 
@@ -94,7 +94,7 @@ class BaselineDataGenerator(
         }
         val seasonRecords = mutableMapOf<Pair<UUID, Int>, Duration>()
         val raceCounts = mutableMapOf<UUID, Int>()
-
+        val seasonRaceCounts = mutableMapOf<Pair<UUID, Int>, Int>()
         val raceRunners =
             results.map { row ->
                 val runner =
@@ -104,6 +104,7 @@ class BaselineDataGenerator(
                 val race = racesByDate.getValue(row.date)
                 val seasonKey = runner.uuid to row.date.year
                 val totalRaces = raceCounts.getOrDefault(runner.uuid, 0) + 1
+                val seasonRaces = seasonRaceCounts.getOrDefault(seasonKey, 0) + 1
                 val raceRunner =
                     RaceRunnerEntity(
                         runner = runner,
@@ -114,12 +115,14 @@ class BaselineDataGenerator(
                         previousPersonalRecord = personalRecords[runner.uuid],
                         previousSeasonRecord = seasonRecords[seasonKey],
                         totalRaces = totalRaces,
+                        seasonRaces = seasonRaces,
                     )
                 row.time?.let {
                     personalRecords.merge(runner.uuid, it, ::minOf)
                     seasonRecords.merge(seasonKey, it, ::minOf)
                 }
                 raceCounts[runner.uuid] = totalRaces
+                seasonRaceCounts[seasonKey] = seasonRaces
                 raceRunner
             }
         raceRunnerRepository.saveAll(raceRunners)

@@ -130,10 +130,15 @@ export function buildTableRows(runners: RaceRunnerDTO[]): RowData[] {
         ? timeSeconds / DISTANCE_KM
         : Number.NaN;
     const previousPr = mapResultTimeToNumber(runner.previousPersonalRecord);
+    const previousSeasonBest = mapResultTimeToNumber(runner.previousSeasonBest);
     const hasVisibleTime = !runner.hideTime && timeSeconds > 0;
     const isPR =
       hasVisibleTime &&
       (!Number.isFinite(previousPr) || timeSeconds < previousPr);
+    const isSeasonBest =
+      hasVisibleTime &&
+      (!Number.isFinite(previousSeasonBest) ||
+        timeSeconds < previousSeasonBest);
     return {
       position: index + 1,
       runnerName: runner.runner.name,
@@ -144,7 +149,7 @@ export function buildTableRows(runners: RaceRunnerDTO[]): RowData[] {
       races: runner.seasonRaces,
       pr: formatSecondsToTime(isPR ? timeSeconds : previousPr),
       yearBest: formatSecondsToTime(
-        mapResultTimeToNumber(runner.previousSeasonBest),
+        isSeasonBest ? timeSeconds : previousSeasonBest,
       ),
       isPR,
     };

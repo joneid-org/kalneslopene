@@ -1,13 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  CheckCircle2Icon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  CircleDashedIcon,
   Loader2Icon,
-  LogOutIcon,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
+import {
+  formToWeather,
+  type WeatherForm,
+  weatherToForm,
+} from "@/components/admin/registerResults/helpers.ts";
 import { PublishStep } from "@/components/admin/registerResults/PublishStep.tsx";
 import { RegisterRunnersStep } from "@/components/admin/registerResults/RegisterRunnersStep.tsx";
 import { RegisterTimesStep } from "@/components/admin/registerResults/RegisterTimesStep.tsx";
@@ -17,13 +23,19 @@ import { Button } from "@/components/ui/button.tsx";
 import { formatDDMonth } from "@/lib/timeUtils.ts";
 import type { RaceRunnerDTO, RunnerDTO } from "@/model/DTO.ts";
 
-const STEP_OPTIONS = [
+const EMPTY_WEATHER: WeatherForm = {
+  symbol: "",
+  temperature: "",
+  windSpeed: "",
+  precipitation: "",
+};
+
+const BASE_STEPS = [
   { label: "1. Løpere", value: 1 },
   { label: "2. Tider", value: 2 },
-  { label: "3. Lagre", value: 3 },
-  { label: "4. Se over", value: 4 },
-  { label: "5. Publiser", value: 5 },
+  { label: "3. Se over", value: 3 },
 ];
+const PUBLISH_STEP = { label: "4. Publiser", value: 4 };
 
 export function RegisterResultsWizard() {
   const { uuid = "" } = useParams();
@@ -38,7 +50,8 @@ export function RegisterResultsWizard() {
   });
 
   const [entries, setEntries] = useState<RaceRunnerDTO[]>([]);
-  const [weather, setWeather] = useState("");
+  const [weather, setWeather] = useState<WeatherForm>(EMPTY_WEATHER);
+  const [courseCondition, setCourseCondition] = useState("");
   const [step, setStep] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
   const [busyRunnerUuid, setBusyRunnerUuid] = useState<string | null>(null);
@@ -47,7 +60,8 @@ export function RegisterResultsWizard() {
   useEffect(() => {
     if (initialized || entriesQuery.isPending || !race) return;
     setEntries(entriesQuery.data ?? []);
-    setWeather(race.weather ?? "");
+    setWeather(weatherToForm(race.weather));
+    setCourseCondition(race.courseCondition ?? "");
     setInitialized(true);
   }, [entriesQuery.isPending, entriesQuery.data, race, initialized]);
 
@@ -184,20 +198,25 @@ export function RegisterResultsWizard() {
     }
   };
 
-  const persistWeather = async () => {
+  const persistRace = async (form: WeatherForm, condition: string) => {
     if (!race) return;
     await QUERIES.race
-      .updateRace(uuid, { ...race, weather: weather.trim() || undefined })
+      .updateRace(uuid, {
+        ...race,
+        weather: formToWeather(form),
+        courseCondition: condition.trim() || undefined,
+      })
       .queryFn();
   };
 
   const publishMutation = useMutation({
     mutationFn: async () => {
-      await persistWeather();
+      await persistRace(weather, courseCondition);
       return QUERIES.race.publishResults(uuid).queryFn();
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["race", "getAll"] });
+      qc.invalidateQueries({ queryKey: ["race", "getById", uuid] });
       qc.invalidateQueries({ queryKey: ["race", uuid, "runnersInRace"] });
       qc.invalidateQueries({ queryKey: ["runner", "getAll"] });
       navigate("/admin/results");
@@ -213,6 +232,9 @@ export function RegisterResultsWizard() {
   }
 
   const raceLabel = race ? formatDDMonth(race.raceDate) : "";
+  const isPublished = race?.isPublished ?? false;
+  const stepOptions = isPublished ? BASE_STEPS : [...BASE_STEPS, PUBLISH_STEP];
+  const lastStep = stepOptions.length;
 
   return (
     <div className="page-content mx-auto max-w-2xl space-y-6">
@@ -232,9 +254,25 @@ export function RegisterResultsWizard() {
         {raceLabel && <p className="text-muted-foreground">{raceLabel}</p>}
       </div>
 
+      {isPublished ? (
+        <div className="flex items-start gap-2 rounded-md border border-green-300 bg-green-50 p-3 text-sm dark:border-green-900 dark:bg-green-950/30">
+          <CheckCircle2Icon className="size-4 shrink-0 text-green-600" />
+          <span>
+            Publisert – endringer lagres og vises på nettsiden umiddelbart.
+          </span>
+        </div>
+      ) : (
+        <div className="flex items-start gap-2 rounded-md border bg-muted/40 p-3 text-sm text-muted-foreground">
+          <CircleDashedIcon className="size-4 shrink-0" />
+          <span>
+            Kladd – endringene vises først når du publiserer i siste steg.
+          </span>
+        </div>
+      )}
+
       <div className="overflow-x-auto">
         <SegmentedControl
-          options={STEP_OPTIONS}
+          options={stepOptions}
           value={step}
           onChange={setStep}
         />
@@ -259,70 +297,53 @@ export function RegisterResultsWizard() {
           isAdding={isAdding}
         />
       )}
-      {step === 3 && <SaveStep onLeave={() => navigate("/admin/results")} />}
-      {step === 4 && (
+      {step === 3 && (
         <ReviewStep
           entries={entries}
           weather={weather}
           onWeatherChange={setWeather}
-          onWeatherBlur={persistWeather}
+          onWeatherPersist={(form) => persistRace(form, courseCondition)}
+          courseCondition={courseCondition}
+          onCourseConditionChange={setCourseCondition}
+          onCourseConditionPersist={(value) => persistRace(weather, value)}
           onUpdateResult={updateResult}
           onUpdateRunner={updateRunner}
           onRemove={removeEntry}
           onVerifyRunner={verifyRunner}
           onChangeRunner={changeRunner}
           busyRunnerUuid={busyRunnerUuid}
+          onClose={isPublished ? () => navigate("/admin/results") : undefined}
         />
       )}
-      {step === 5 && (
+      {!isPublished && step === 4 && (
         <PublishStep
           entries={entries}
           weather={weather}
+          courseCondition={courseCondition}
           onPublish={() => publishMutation.mutate()}
           isPublishing={publishMutation.isPending}
         />
       )}
 
       <div className="flex items-center justify-between border-t pt-4">
-        <Button
-          variant="outline"
-          className="gap-1.5"
-          disabled={step === 1}
-          onClick={() => setStep(step - 1)}
-        >
-          <ChevronLeftIcon className="size-4" />
-          Forrige
-        </Button>
+        {step > 1 && (
+          <Button
+            variant="outline"
+            className="gap-1.5"
+            onClick={() => setStep(step - 1)}
+          >
+            <ChevronLeftIcon className="size-4" />
+            Forrige
+          </Button>
+        )}
 
-        <Button
-          className="gap-1.5"
-          disabled={step === 5}
-          onClick={() => setStep(step + 1)}
-        >
-          Neste
-          <ChevronRightIcon className="size-4" />
-        </Button>
+        {step < lastStep && (
+          <Button className="ml-auto gap-1.5" onClick={() => setStep(step + 1)}>
+            Neste
+            <ChevronRightIcon className="size-4" />
+          </Button>
+        )}
       </div>
-    </div>
-  );
-}
-
-function SaveStep({ onLeave }: { onLeave: () => void }) {
-  return (
-    <div className="space-y-5">
-      <div className="space-y-1">
-        <h2 className="text-lg font-semibold">Lagre og fortsett senere</h2>
-        <p className="text-sm text-muted-foreground">
-          Alt lagres fortløpende på serveren. Du kan trygt lukke siden og logge
-          inn igjen senere – ingenting blir borte. Resultatene publiseres ikke
-          før du gjør det i siste steg.
-        </p>
-      </div>
-
-      <Button variant="outline" className="w-full gap-1.5" onClick={onLeave}>
-        <LogOutIcon className="size-4" />
-        Lukk
-      </Button>
     </div>
   );
 }

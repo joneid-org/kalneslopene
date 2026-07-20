@@ -1,31 +1,61 @@
-import { CheckIcon, Loader2Icon, ReplaceIcon, XIcon } from "lucide-react";
+import {
+  CheckIcon,
+  Loader2Icon,
+  LogOutIcon,
+  ReplaceIcon,
+  XIcon,
+} from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select.tsx";
 import { secondsToDuration } from "@/lib/timeUtils.ts";
+import { WEATHER_SYMBOL_OPTIONS } from "@/lib/weatherDisplay.ts";
 import type { RaceRunnerDTO, RunnerDTO } from "@/model/DTO.ts";
 import { ChangeRunnerField } from "./ChangeRunnerField.tsx";
-import { entrySeconds, genderLabel } from "./helpers.ts";
+import { entrySeconds, genderLabel, type WeatherForm } from "./helpers.ts";
 import { TimeField } from "./TimeField.tsx";
+
+const WEATHER_NUMBER_FIELDS: {
+  key: "temperature" | "windSpeed" | "precipitation";
+  label: string;
+}[] = [
+  { key: "temperature", label: "Temp (°C)" },
+  { key: "windSpeed", label: "Vind (m/s)" },
+  { key: "precipitation", label: "Nedbør (mm)" },
+];
 
 export function ReviewStep({
   entries,
   weather,
   onWeatherChange,
-  onWeatherBlur,
+  onWeatherPersist,
+  courseCondition,
+  onCourseConditionChange,
+  onCourseConditionPersist,
   onUpdateResult,
   onUpdateRunner,
   onRemove,
   onVerifyRunner,
   onChangeRunner,
   busyRunnerUuid,
+  onClose,
 }: {
   entries: RaceRunnerDTO[];
-  weather: string;
-  onWeatherChange: (weather: string) => void;
-  onWeatherBlur: () => void;
+  weather: WeatherForm;
+  onWeatherChange: (weather: WeatherForm) => void;
+  onWeatherPersist: (weather: WeatherForm) => void;
+  courseCondition: string;
+  onCourseConditionChange: (value: string) => void;
+  onCourseConditionPersist: (value: string) => void;
   onUpdateResult: (
     runnerUuid: string,
     patch: { resultTime?: string; hideTime?: boolean },
@@ -38,6 +68,7 @@ export function ReviewStep({
   onVerifyRunner: (runnerUuid: string) => void;
   onChangeRunner: (runnerUuid: string, newRunner: RunnerDTO) => void;
   busyRunnerUuid: string | null;
+  onClose?: () => void;
 }) {
   const [changingRunnerUuid, setChangingRunnerUuid] = useState<string | null>(
     null,
@@ -56,11 +87,56 @@ export function ReviewStep({
 
       <div className="space-y-1.5">
         <Label>Vær</Label>
+        <p className="text-xs text-muted-foreground">
+          Hentet automatisk fra Yr. Overstyr ved behov.
+        </p>
+        <Select
+          value={weather.symbol}
+          onValueChange={(symbol) => {
+            const next = { ...weather, symbol };
+            onWeatherChange(next);
+            onWeatherPersist(next);
+          }}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Velg værtype" />
+          </SelectTrigger>
+          <SelectContent>
+            {WEATHER_SYMBOL_OPTIONS.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <div className="grid grid-cols-3 gap-2">
+          {WEATHER_NUMBER_FIELDS.map(({ key, label }) => (
+            <div key={key} className="space-y-1">
+              <Label className="text-xs font-normal text-muted-foreground">
+                {label}
+              </Label>
+              <Input
+                type="number"
+                inputMode="decimal"
+                step="any"
+                value={weather[key]}
+                onChange={(e) =>
+                  onWeatherChange({ ...weather, [key]: e.target.value })
+                }
+                onBlur={() => onWeatherPersist(weather)}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="space-y-1.5">
+        <Label>Løypeforhold</Label>
         <Input
-          placeholder="f.eks. Sol og 15°C"
-          value={weather}
-          onChange={(e) => onWeatherChange(e.target.value)}
-          onBlur={onWeatherBlur}
+          placeholder="f.eks. Tørt og fint"
+          value={courseCondition}
+          onChange={(e) => onCourseConditionChange(e.target.value)}
+          onBlur={() => onCourseConditionPersist(courseCondition)}
         />
       </div>
 
@@ -213,6 +289,13 @@ export function ReviewStep({
           </div>
         )}
       </div>
+
+      {onClose && (
+        <Button variant="outline" className="w-full gap-1.5" onClick={onClose}>
+          <LogOutIcon className="size-4" />
+          Lukk
+        </Button>
+      )}
     </div>
   );
 }

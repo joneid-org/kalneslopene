@@ -61,6 +61,7 @@ export function RegisterResultsWizard() {
     resultTime,
     hideTime,
     totalRaces: 0,
+    seasonRaces: 0,
   });
 
   const invalidateRaceLists = () => {

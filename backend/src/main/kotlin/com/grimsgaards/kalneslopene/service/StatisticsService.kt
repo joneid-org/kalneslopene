@@ -31,9 +31,16 @@ class StatisticsService(
         val averageRunnersPerRace =
             if (completedRaces.isEmpty()) 0.0 else allRunners.size.toDouble() / completedRaces.size
 
-        val courseRecord =
-            allRunners
-                .filter { !it.hideTime && it.resultTime != null }
+        val eligibleRunners = allRunners.filter { !it.hideTime && it.resultTime != null }
+        val courseRecord = eligibleRunners.minByOrNull { it.resultTime!! }?.toDto()
+        val courseRecordMale =
+            eligibleRunners
+                .filter { it.runner.gender == Gender.MALE }
+                .minByOrNull { it.resultTime!! }
+                ?.toDto()
+        val courseRecordFemale =
+            eligibleRunners
+                .filter { it.runner.gender == Gender.FEMALE }
                 .minByOrNull { it.resultTime!! }
                 ?.toDto()
 
@@ -48,6 +55,8 @@ class StatisticsService(
                 ),
             averageRunnersPerRace = averageRunnersPerRace,
             courseRecord = courseRecord,
+            courseRecordMale = courseRecordMale,
+            courseRecordFemale = courseRecordFemale,
         )
     }
 }

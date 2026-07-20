@@ -6,6 +6,8 @@ data class RaceStatisticsDto(
     val uniqueRunners: UniqueRunnersStats,
     val averageRunnersPerRace: Double,
     val courseRecord: RaceRunnerDTO?,
+    val courseRecordMale: RaceRunnerDTO?,
+    val courseRecordFemale: RaceRunnerDTO?,
 )
 
 data class UniqueRunnersStats(

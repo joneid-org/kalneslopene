@@ -52,6 +52,11 @@ export function formatDDMonth(raceDate: unknown): string {
   return `${String(day).padStart(2, "0")}. ${monthName}`;
 }
 
+export function formatDayMonthShort(raceDate: unknown): string {
+  const { day, month } = parseDateParts(raceDate);
+  return `${String(day).padStart(2, "0")}.${String(month ?? 1).padStart(2, "0")}`;
+}
+
 export function formatDate(raceDate: unknown): string | undefined {
   if (!raceDate) return undefined;
   return formatDDMonth(raceDate);

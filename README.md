@@ -5,7 +5,7 @@
 </p>
 
 **Torsdagsløpet** ("the Thursday race") is a free, low-threshold 5.1 km recreational run held every
-Thursday at Kalneskrysset, Norway, organized entirely by volunteers since 1978. There's no advance
+Thursday (Saturdays towards the end of the season) at Kalnesskogen, Sarpsborg, Norway, organized entirely by volunteers since 1978. There's no advance
 registration — runners sign the participant list just before the start, and everyone gets free fruit
 afterwards. Over more than four decades it's become a local tradition, with generations of regulars
 logging times, chasing personal records, and treating it as a standing weekly meetup as much as a race.

@@ -17,6 +17,7 @@ import com.grimsgaards.kalneslopene.repository.RaceRepository
 import com.grimsgaards.kalneslopene.repository.RaceRunnerRepository
 import com.grimsgaards.kalneslopene.repository.RunnerRepository
 import org.springframework.boot.CommandLineRunner
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
@@ -32,7 +33,7 @@ import java.util.UUID
 import kotlin.random.Random
 
 @Component
-@Profile("local | dev") // Remove local to test with baselinedata
+@ConditionalOnProperty(prefix = "mockdata", name = ["enabled"], havingValue = "true", matchIfMissing = false)
 class MockDataGenerator(
     private val runnerRepository: RunnerRepository,
     private val raceRepository: RaceRepository,

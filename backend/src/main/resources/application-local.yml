@@ -16,6 +16,8 @@ spring:
 
 baseline-data:
   enabled: false # True to test with baselinedata
+mockdata:
+  enabled: true # True to test with mockdata
 
 minio:
   endpoint: http://localhost:9000

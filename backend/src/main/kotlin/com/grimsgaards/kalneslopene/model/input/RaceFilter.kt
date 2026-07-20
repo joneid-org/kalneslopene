@@ -5,4 +5,5 @@ import java.time.LocalDateTime
 data class RaceFilter(
     val from: LocalDateTime? = null,
     val to: LocalDateTime? = null,
+    val isPublished: Boolean? = null,
 )

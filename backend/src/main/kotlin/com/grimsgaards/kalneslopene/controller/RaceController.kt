@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
+@Suppress("TooManyFunctions")
 @RestController
 @RequestMapping("/api/races")
 class RaceController(
@@ -45,6 +46,11 @@ class RaceController(
     fun createRaces(
         @RequestBody races: List<RaceInput>,
     ): List<RaceDTO> = raceService.createRaces(races)
+
+    @PostMapping("/{uuid}/publish")
+    fun publishRace(
+        @PathVariable uuid: UUID,
+    ): RaceDTO = raceService.publishRace(uuid)
 
     @GetMapping("/{uuid}/runners")
     fun getRunnersInRace(

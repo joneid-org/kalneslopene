@@ -23,44 +23,25 @@ type ResultsTableProps = {
   tableData: RowData[];
 };
 
-const rightAlignedColumns = new Set([
-  "time",
-  "pace",
-  "yearBest",
-  "pr",
-  "races",
-]);
+const centeredColumns = new Set(["time", "pace", "yearBest", "pr", "races"]);
 
-function RankBadge({ rank }: { rank: number }) {
-  if (rank > 3) {
-    return (
-      <span className="inline-flex w-7 justify-center font-display text-sm font-extrabold tabular-nums text-muted-foreground">
-        {rank}
-      </span>
-    );
-  }
-  const tone =
-    rank === 1
-      ? "bg-brand text-brand-foreground"
-      : rank === 2
-        ? "bg-muted text-foreground"
-        : "bg-brand-soft text-brand-soft-foreground";
-  return (
-    <span
-      className={cn(
-        "inline-flex size-7 items-center justify-center rounded-full font-display text-sm font-extrabold",
-        tone,
-      )}
-    >
-      {rank}
-    </span>
-  );
-}
+// Percentage widths (fixed layout) so columns fill the full table width and
+// scale proportionally with the screen. The name column gets the largest share
+// and wraps rather than overlapping its neighbour.
+const columnWidths: Record<string, string> = {
+  position: "w-[7%]",
+  runnerName: "w-[30%]",
+  time: "w-[14%]",
+  pace: "w-[13%]",
+  yearBest: "w-[12%]",
+  pr: "w-[12%]",
+  races: "w-[12%]",
+};
 
 function PrBadge() {
   return (
     <span className="inline-flex shrink-0 items-center rounded-full bg-brand px-1.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-brand-foreground">
-      Ny pers
+      Pers
     </span>
   );
 }
@@ -93,7 +74,6 @@ function ResultCard({
 
   return (
     <div className="flex items-center gap-3 rounded-[14px] border bg-card px-3 py-2.5">
-      <RankBadge rank={row.position} />
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5">
           <span className="min-w-0 truncate text-[15px] font-bold leading-tight">
@@ -156,7 +136,7 @@ export default function ResultsTable({ tableData }: ResultsTableProps) {
         accessorKey: "position",
         header: "#",
         enableHiding: false,
-        cell: ({ getValue }) => <RankBadge rank={getValue<number>()} />,
+        cell: numCell,
       },
       {
         accessorKey: "runnerName",
@@ -189,7 +169,7 @@ export default function ResultsTable({ tableData }: ResultsTableProps) {
       { accessorKey: "pace", header: "Min/km", cell: numCell },
       { accessorKey: "yearBest", header: "Årsbeste", cell: numCell },
       { accessorKey: "pr", header: "Pers", cell: numCell },
-      { accessorKey: "races", header: "Løp totalt", cell: numCell },
+      { accessorKey: "races", header: "Løp", cell: numCell },
     ],
     [],
   );
@@ -250,7 +230,7 @@ export default function ResultsTable({ tableData }: ResultsTableProps) {
           />
         </div>
 
-        <Table>
+        <Table className="w-full table-fixed">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="hover:bg-transparent">
@@ -258,8 +238,9 @@ export default function ResultsTable({ tableData }: ResultsTableProps) {
                   <TableHead
                     key={header.id}
                     className={cn(
-                      "h-auto py-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground/80 first:pl-6 last:pr-6",
-                      rightAlignedColumns.has(header.column.id) && "text-right",
+                      "h-auto whitespace-nowrap py-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground/80 first:pl-6 last:pr-6",
+                      columnWidths[header.column.id],
+                      centeredColumns.has(header.column.id) && "text-center",
                     )}
                   >
                     {flexRender(
@@ -285,7 +266,9 @@ export default function ResultsTable({ tableData }: ResultsTableProps) {
                     key={cell.id}
                     className={cn(
                       "py-3 text-sm first:pl-6 last:pr-6",
-                      rightAlignedColumns.has(cell.column.id) && "text-right",
+                      columnWidths[cell.column.id],
+                      cell.column.id !== "runnerName" && "whitespace-nowrap",
+                      centeredColumns.has(cell.column.id) && "text-center",
                     )}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

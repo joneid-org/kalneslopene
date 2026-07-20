@@ -133,3 +133,25 @@ databaseChangeLog:
         - sqlFile:
             path: db/changelog/sql/create/create_race_runner_stats_view.sql
             relativeToChangelogFile: false
+  - changeSet:
+      id: migrate_runner_stats_add_season_races
+      author: ejoneid
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_runner_stats_add_season_races.sql
+            relativeToChangelogFile: false
+
+  - changeSet:
+      id: migrate_runner_isVerified_race_isPublished_table
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_runner_isVerified_race_isPublished_table.sql
+            relativeToChangelogFile: false
+  - changeSet:
+      id: migrate_race_runner_stats_view
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_race_runner_stats_view.sql
+            relativeToChangelogFile: false

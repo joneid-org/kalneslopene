@@ -77,7 +77,7 @@ class MockDataGenerator(
             (0 until PAST_RACES)
                 .map { lastPast.minusWeeks(it.toLong()) }
                 .reversed()
-                .map { RaceEntity(raceDate = it, isPublished = Random.nextInt(100) > 10).also { race -> applyMockWeather(race) }  }
+                .map { RaceEntity(raceDate = it, isPublished = Random.nextInt(100) > 10).also { race -> applyMockWeather(race) } }
         val upcomingRaces =
             (1..UPCOMING_RACES).map { RaceEntity(raceDate = lastPast.plusWeeks(it.toLong()), isPublished = false) }
 

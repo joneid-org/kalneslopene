@@ -145,7 +145,7 @@ class WeatherServiceImpl(
         // yr.no ToS: coordinates must be truncated to max 4 decimals, or the request gets a 403.
         private const val LAT = "59.3060"
         private const val LON = "11.0429"
-        private const val USER_AGENT = "torsdagslopet.no weather-cache (eirijomine@gmail.com)"
+        private const val USER_AGENT = "torsdagstrimmen.no weather-cache (eirijomine@gmail.com)"
         private const val REFRESH_INTERVAL_MS = 5L * 60L * 1000L
         private const val INITIAL_DELAY_MS = 10L * 1000L
         private const val FALLBACK_SYMBOL = "cloudy"

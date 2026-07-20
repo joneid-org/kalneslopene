@@ -11,6 +11,7 @@ import { CRUDRaces } from "./pages/admin/CRUDRaces.tsx";
 import { CRUDRunners } from "./pages/admin/CRUDRunners.tsx";
 import { ImportResultsFromFile } from "./pages/admin/ImportResultsFromFile.tsx";
 import { RegisterResults } from "./pages/admin/RegisterResults.tsx";
+import { RegisterResultsWizard } from "./pages/admin/RegisterResultsWizard.tsx";
 import { CourseMap } from "./pages/CourseMap.tsx";
 import { History } from "./pages/History.tsx";
 import { Home } from "./pages/Home.tsx";
@@ -97,6 +98,10 @@ export const router = createBrowserRouter([
           {
             path: "admin/results/import",
             Component: ImportResultsFromFile,
+          },
+          {
+            path: "admin/results/:uuid",
+            Component: RegisterResultsWizard,
           },
           {
             path: "admin/images",

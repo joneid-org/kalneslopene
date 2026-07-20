@@ -8,5 +8,6 @@ data class RaceDTO(
     val raceDate: LocalDateTime,
     val weather: String?,
     val runnerCount: Int,
+    val isPublished: Boolean,
     val photos: List<FileDto>,
 )

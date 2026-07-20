@@ -20,6 +20,7 @@ data class RaceEntity(
     @Column(name = "race_date", columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     var raceDate: LocalDateTime,
     var weather: String?,
+    var isPublished: Boolean = false,
     @OneToMany(mappedBy = "race", fetch = FetchType.EAGER, cascade = [CascadeType.PERSIST], orphanRemoval = true)
     val runners: MutableList<RaceRunnerEntity> = mutableListOf(),
 ) {
@@ -40,6 +41,7 @@ data class RaceEntity(
             raceDate = raceDate,
             weather = weather,
             runnerCount = runners.size,
+            isPublished = isPublished,
             photos = photos.mapNotNull { it.toDto() },
         )
 }

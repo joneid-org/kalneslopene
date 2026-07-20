@@ -17,7 +17,11 @@ const RunnerTimeChart = lazy(
 export default function RunnerStatistics() {
   const [selectedRunner, setSelectedRunner] = useState<RunnerDTO | null>(null);
 
-  const { data: races } = useQuery(QUERIES.race.getAllRaces());
+  const { data: allRaces } = useQuery(QUERIES.race.getAllRaces());
+  const races = useMemo(
+    () => (allRaces ?? []).filter((r) => r.isPublished),
+    [allRaces],
+  );
   const { data: raceHistory } = useQuery({
     ...QUERIES.runner.getAllRacesByRunner(selectedRunner?.uuid ?? ""),
     enabled: !!selectedRunner?.uuid,

@@ -13,7 +13,7 @@ import java.time.Duration
 
 @Entity
 @Table(name = "race_runner")
-data class RaceRunnerEntity(
+class RaceRunnerEntity(
     @EmbeddedId
     val id: RaceRunnerKey = RaceRunnerKey(),
     @ManyToOne
@@ -32,6 +32,7 @@ data class RaceRunnerEntity(
     @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
     val previousSeasonRecord: Duration? = runner.seasonBest,
     val totalRaces: Int? = runner.totalRaces,
+    val seasonRaces: Int? = runner.seasonRaces,
 ) {
     fun toDto(): RaceRunnerDTO =
         RaceRunnerDTO(
@@ -42,5 +43,6 @@ data class RaceRunnerEntity(
             previousPersonalRecord = previousPersonalRecord,
             previousSeasonBest = previousSeasonRecord,
             totalRaces = totalRaces ?: 0,
+            seasonRaces = seasonRaces ?: 0,
         )
 }

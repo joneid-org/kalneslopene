@@ -44,7 +44,7 @@ export function Header({ ref }: { ref?: Ref<HTMLElement> }) {
           <DynamicDropDownMenu
             label="Resultater"
             basePath="/Resultater"
-            races={races ?? []}
+            races={(races ?? []).filter((r) => r.isPublished)}
             active={pathname.startsWith("/Resultater")}
           />
           {navLinks.map(({ path, label }) => {

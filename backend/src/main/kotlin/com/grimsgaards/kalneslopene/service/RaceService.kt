@@ -7,6 +7,7 @@ import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
 import com.grimsgaards.kalneslopene.model.entities.RaceEntity
 import com.grimsgaards.kalneslopene.model.entities.RaceRunnerEntity
 import com.grimsgaards.kalneslopene.model.entities.RaceRunnerKey
+import com.grimsgaards.kalneslopene.model.entities.UserRole
 import com.grimsgaards.kalneslopene.model.input.PhotoUploadInfo
 import com.grimsgaards.kalneslopene.model.input.RaceFilter
 import com.grimsgaards.kalneslopene.model.input.RaceInput
@@ -14,10 +15,12 @@ import com.grimsgaards.kalneslopene.repository.RaceRepository
 import com.grimsgaards.kalneslopene.repository.RaceRunnerRepository
 import com.grimsgaards.kalneslopene.repository.RunnerRepository
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
 
+@Suppress("TooManyFunctions")
 @Service
 class RaceService(
     val raceRepository: RaceRepository,
@@ -25,11 +28,27 @@ class RaceService(
     val raceRunnerRepository: RaceRunnerRepository,
     val s3Service: S3Service,
 ) {
-    fun getAll(filter: RaceFilter): List<RaceDTO> = raceRepository.findAllByFilter(filter).map { it.toDto() }
+    private fun isAdmin(): Boolean =
+        SecurityContextHolder
+            .getContext()
+            .authentication
+            ?.authorities
+            ?.any { it.authority == UserRole.ADMIN.toString() } == true
 
-    fun findByUuid(uuid: UUID): RaceDTO =
-        raceRepository.findByIdOrNull(uuid)?.toDto()
-            ?: throw NoSuchElementException("Race with id $uuid not found")
+    fun getAll(filter: RaceFilter): List<RaceDTO> {
+        val effectiveFilter = if (isAdmin()) filter else filter.copy(isPublished = true)
+        return raceRepository.findAllByFilter(effectiveFilter).map { it.toDto() }
+    }
+
+    fun findByUuid(uuid: UUID): RaceDTO {
+        val race =
+            raceRepository.findByIdOrNull(uuid)
+                ?: throw NoSuchElementException("Race with id $uuid not found")
+        if (!isAdmin() && !race.isPublished) {
+            throw NoSuchElementException("Race with id $uuid not found")
+        }
+        return race.toDto()
+    }
 
     fun createRaces(races: List<RaceInput>): List<RaceDTO> =
         raceRepository
@@ -61,9 +80,30 @@ class RaceService(
 
     fun deleteRaceById(uuid: UUID) = raceRepository.deleteById(uuid)
 
+    @Transactional
+    fun publishRace(uuid: UUID): RaceDTO {
+        val race =
+            raceRepository.findByIdOrNull(uuid)
+                ?: throw NoSuchElementException("Race $uuid not found")
+        race.runners.forEach { raceRunner ->
+            require(
+                (raceRunner.hideTime && raceRunner.resultTime == null) || (raceRunner.resultTime != null && !raceRunner.resultTime!!.isZero),
+            ) {
+                "Løper ${raceRunner.runner.name} mangler tid"
+            }
+        }
+        race.isPublished = true
+        return race.toDto()
+    }
+
     fun findAllRunnersInRace(uuid: UUID): List<RaceRunnerDTO> {
-        val race = raceRepository.findByIdOrNull(uuid)
-        return race?.runners?.map { it.toDto() } ?: throw IllegalArgumentException("no race found with id $uuid")
+        val race =
+            raceRepository.findByIdOrNull(uuid)
+                ?: throw NoSuchElementException("Race with id $uuid not found")
+        if (!isAdmin() && !race.isPublished) {
+            throw NoSuchElementException("Race with id $uuid not found")
+        }
+        return race.runners.map { it.toDto() }
     }
 
     fun getResultSummary(uuid: UUID): RaceResultSummaryDto {

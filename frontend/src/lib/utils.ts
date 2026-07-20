@@ -115,11 +115,13 @@ export type RowData = {
 };
 
 export function buildTableRows(runners: RaceRunnerDTO[]): RowData[] {
-  const sorted = runners.toSorted(
-    (a, b) =>
+  const sorted = runners.toSorted((a, b) => {
+    if (a.hideTime !== b.hideTime) return a.hideTime ? 1 : -1;
+    return (
       mapResultTimeToNumber(a.resultTime ?? "") -
-      mapResultTimeToNumber(b.resultTime ?? ""),
-  );
+      mapResultTimeToNumber(b.resultTime ?? "")
+    );
+  });
 
   return sorted.map((runner, index) => {
     const timeSeconds = mapResultTimeToNumber(runner.resultTime ?? "");
@@ -139,7 +141,7 @@ export function buildTableRows(runners: RaceRunnerDTO[]): RowData[] {
       time: runner.hideTime ? "Deltatt" : formatSecondsToTime(timeSeconds),
       hideTime: runner.hideTime,
       pace: formatSecondsToTime(paceSeconds),
-      races: runner.totalRaces,
+      races: runner.seasonRaces,
       pr: formatSecondsToTime(isPR ? timeSeconds : previousPr),
       yearBest: formatSecondsToTime(
         mapResultTimeToNumber(runner.previousSeasonBest),

@@ -12,6 +12,7 @@ data class RaceRunnerDTO(
     val previousSeasonBest: Duration?,
     val previousPersonalRecord: Duration?,
     val totalRaces: Int,
+    val seasonRaces: Int,
 ) {
     @JsonIgnore
     fun isNewPersonalRecord(): Boolean = resultTime != null && (previousPersonalRecord == null || resultTime < previousPersonalRecord)

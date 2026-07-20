@@ -19,13 +19,14 @@ export default function SearchBox({ onSelect }: Props) {
   const [query, setQuery] = useState("");
   const [selectedName, setSelectedName] = useState<string | null>(null);
 
-  const { data: runners, isFetching } = useQuery({
+  const { data, isFetching } = useQuery({
     ...QUERIES.runner.getAllRunners(query),
     enabled: query.length > 0,
     staleTime: 0,
     gcTime: 0,
   });
 
+  const runners = (data ?? []).filter((r) => r.isVerified);
   const showResults = query.length > 0 && !isFetching;
 
   const handleSelect = (runner: RunnerDTO) => {

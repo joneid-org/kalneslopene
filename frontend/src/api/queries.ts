@@ -124,12 +124,17 @@ export const QUERIES = {
           })
           .json<RaceRunnerDTO>(),
     }),
-    removeRunnersFromRace: (raceUuid: string, runners: RaceRunnerDTO[]) => ({
+    removeRunnersFromRace: (raceUuid: string, runnerUuids: string[]) => ({
       queryKey: ["race", raceUuid, "runnersInRace", "remove"],
       queryFn: () =>
         kyClient
-          .delete(`/api/races/${raceUuid}/runners`, { json: runners })
+          .delete(`/api/races/${raceUuid}/runners`, { json: runnerUuids })
           .json<void>(),
+    }),
+    publishResults: (raceUuid: string) => ({
+      queryKey: ["race", raceUuid, "publish"],
+      queryFn: () =>
+        kyClient.post(`/api/races/${raceUuid}/publish`).json<RaceDTO>(),
     }),
   },
   statistics: {

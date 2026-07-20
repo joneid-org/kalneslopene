@@ -1,3 +1,9 @@
+resource "minio_s3_bucket" "torsdagslopet_backup_minio_bucket" {
+  bucket         = "torsdagslopet-backup-minio-bucket"
+  acl            = "private"
+  object_locking = true
+}
+
 resource "minio_s3_bucket" "torsdagslopet_minio_bucket" {
   for_each = var.environments
   bucket         = "${var.bucket_name}-${each.key}"

@@ -62,8 +62,8 @@ class RaceService(
     fun deleteRaceById(uuid: UUID) = raceRepository.deleteById(uuid)
 
     fun findAllRunnersInRace(uuid: UUID): List<RaceRunnerDTO> {
-        val race = raceRepository.findByIdOrNull(uuid)
-        return race?.runners?.map { it.toDto() } ?: throw IllegalArgumentException("no race found with id $uuid")
+        val race = raceRepository.findByIdOrNull(uuid) ?: throw IllegalArgumentException("no race found with id $uuid")
+        return race.runners.map { it.toDto() }
     }
 
     fun getResultSummary(uuid: UUID): RaceResultSummaryDto {

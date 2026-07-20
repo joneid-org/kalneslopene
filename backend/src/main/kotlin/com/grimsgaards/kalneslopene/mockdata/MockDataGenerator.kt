@@ -89,6 +89,7 @@ class MockDataGenerator(
         val personalRecords = mutableMapOf<UUID, Duration>()
         val seasonRecords = mutableMapOf<Pair<UUID, Int>, Duration>()
         val raceCounts = mutableMapOf<UUID, Int>()
+        val seasonRaceCounts = mutableMapOf<Pair<UUID, Int>, Int>()
         val raceRunners =
             pastRaces.flatMap { race ->
                 runners
@@ -97,6 +98,7 @@ class MockDataGenerator(
                         val time = randomResultTime()
                         val seasonKey = runner.uuid to race.raceDate.year
                         val totalRaces = raceCounts.getOrDefault(runner.uuid, 0) + 1
+                        val seasonRaces = seasonRaceCounts.getOrDefault(seasonKey, 0) + 1
                         val raceRunner =
                             RaceRunnerEntity(
                                 runner = runner,
@@ -105,10 +107,12 @@ class MockDataGenerator(
                                 previousPersonalRecord = personalRecords[runner.uuid],
                                 previousSeasonRecord = seasonRecords[seasonKey],
                                 totalRaces = totalRaces,
+                                seasonRaces = seasonRaces,
                             )
                         personalRecords.merge(runner.uuid, time, ::minOf)
                         seasonRecords.merge(seasonKey, time, ::minOf)
                         raceCounts[runner.uuid] = totalRaces
+                        seasonRaceCounts[seasonKey] = seasonRaces
                         raceRunner
                     }
             }

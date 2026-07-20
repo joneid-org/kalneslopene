@@ -86,7 +86,10 @@ class RaceService(
             raceRepository.findByIdOrNull(uuid)
                 ?: throw NoSuchElementException("Race $uuid not found")
         race.runners.forEach { raceRunner ->
-            require(raceRunner.hideTime || !raceRunner.resultTime.isZero) {
+            require(
+                (raceRunner.hideTime && raceRunner.resultTime == null) ||
+                    (raceRunner.resultTime != null && !raceRunner.resultTime!!.isZero),
+            ) {
                 "Løper ${raceRunner.runner.name} mangler tid"
             }
         }

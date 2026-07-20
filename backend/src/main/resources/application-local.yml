@@ -7,12 +7,15 @@ spring:
     password: admin
     driver-class-name: org.postgresql.Driver
   liquibase:
-    drop-first: false
+    drop-first: true
     enabled: true
     change-log: classpath:db/changelog/changelog-master.yaml
   jpa:
     hibernate:
       ddl-auto: none
+
+baseline-data:
+  enabled: false # True to test with baselinedata
 
 minio:
   endpoint: http://localhost:9000

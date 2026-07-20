@@ -25,7 +25,7 @@ class RaceRunnerEntity(
     @JoinColumn(name = "race_uuid")
     val race: RaceEntity,
     @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
-    var resultTime: Duration,
+    var resultTime: Duration?,
     var hideTime: Boolean = false,
     @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
     val previousPersonalRecord: Duration? = runner.personalRecord,

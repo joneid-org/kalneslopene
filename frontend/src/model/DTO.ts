@@ -76,7 +76,7 @@ export type RunnerInput = Omit<RunnerDTO, "uuid" | "isVerified"> & {
 export type RaceRunnerDTO = {
   runner: RunnerDTO;
   raceUuid: string;
-  resultTime: string;
+  resultTime: string | null;
   hideTime: boolean;
   previousSeasonBest?: string;
   previousPersonalRecord?: string;

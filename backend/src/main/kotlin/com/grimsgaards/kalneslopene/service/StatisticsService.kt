@@ -33,8 +33,8 @@ class StatisticsService(
 
         val courseRecord =
             allRunners
-                .filter { !it.hideTime }
-                .minByOrNull { it.resultTime }
+                .filter { !it.hideTime && it.resultTime != null }
+                .minByOrNull { it.resultTime!! }
                 ?.toDto()
 
         return RaceStatisticsDto(

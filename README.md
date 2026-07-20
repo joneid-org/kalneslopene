@@ -1,7 +1,7 @@
 <h1 align="center">Kalneslopene / Torsdagsløpet</h1>
 
 <p align="center">
-    <img height="400" src="frontend/src/images/logo.svg" />
+    <img width="200" src="frontend/src/images/logo.svg" />
 </p>
 
 **Torsdagsløpet** ("the Thursday race") is a free, low-threshold 5.1 km recreational run held every

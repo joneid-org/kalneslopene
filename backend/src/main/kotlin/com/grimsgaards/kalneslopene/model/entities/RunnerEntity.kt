@@ -24,7 +24,7 @@ import java.util.UUID
     pkJoinColumns = [PrimaryKeyJoinColumn(name = "runner_uuid", referencedColumnName = "uuid")],
 )
 @SecondaryRow(table = "runner_stats", optional = true)
-data class RunnerEntity(
+class RunnerEntity(
     var name: String,
     @Enumerated(EnumType.STRING)
     var gender: Gender,
@@ -44,6 +44,9 @@ data class RunnerEntity(
 
     @Column(name = "total_races", table = "runner_stats", insertable = false, updatable = false)
     val totalRaces: Int? = null
+
+    @Column(name = "season_races", table = "runner_stats", insertable = false, updatable = false)
+    val seasonRaces: Int? = null
 
     fun toDto(): RunnerDTO = RunnerDTO(uuid, name, gender)
 }

@@ -81,7 +81,7 @@ class RaceService(
                     .associate { it.runnerUuid to it.raceCount.toInt() }
             }
 
-        return race.runners.map { it.toDto(seasonRaces = seasonRacesByRunner[it.runner.uuid] ?: 0) }
+        return race.runners.map { it.toDto() }
     }
 
     fun getResultSummary(uuid: UUID): RaceResultSummaryDto {

@@ -2,7 +2,9 @@ create or replace view runner_stats as
 select t.runner_uuid,
        min(t.race_time)     as personal_record,
        min(t.season_time)   as season_record,
-       sum(t.is_race)       as total_races
+       sum(t.is_race)       as total_races,
+       sum(case when t.season_time is not null then 1 else 0 end) as season_races
+
 from ((select uuid                     as runner_uuid,
               historic_personal_record as race_time,
               null::interval           as season_time,

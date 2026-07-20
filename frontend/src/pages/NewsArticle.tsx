@@ -90,7 +90,7 @@ export function NewsArticle() {
         <Separator className="mb-3" />
 
         <p
-          className="text-sm leading-relaxed mb-6 prose prose-sm max-w-none [&_img]:max-w-full [&_img]:rounded-lg [&_img]:my-2"
+          className="text-sm leading-relaxed mb-6 prose prose-sm max-w-none [&_img]:max-w-full [&_img]:rounded-lg [&_img]:my-2 [&_a]:text-blue-600 [&_a]:underline"
           // biome-ignore lint/security/noDangerouslySetInnerHtml: rich text HTML from admin editor, sanitized with DOMPurify below
           dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
         />

@@ -134,9 +134,38 @@ databaseChangeLog:
             path: db/changelog/sql/create/create_race_runner_stats_view.sql
             relativeToChangelogFile: false
   - changeSet:
-      id: 019-migrate_race_weather_structured
+      id: migrate_runner_stats_add_season_races
+      author: ejoneid
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_runner_stats_add_season_races.sql
+            relativeToChangelogFile: false
+  - changeSet:
+      id: migrate_runner_isVerified_race_isPublished_table
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_runner_isVerified_race_isPublished_table.sql
+            relativeToChangelogFile: false
+  - changeSet:
+      id: migrate_race_runner_stats_view
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_race_runner_stats_view.sql
+            relativeToChangelogFile: false
+  - changeSet:
+      id: 020-migrate_race_runner_result_time_nullable
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_race_runner_result_time_nullable.sql
+            relativeToChangelogFile: false
+  - changeSet:
+      id: migrate_race_weather_structured
       author: ejoneid
       changes:
         - sqlFile:
             path: db/changelog/sql/migrate/migrate_race_weather_structured.sql
             relativeToChangelogFile: false
+

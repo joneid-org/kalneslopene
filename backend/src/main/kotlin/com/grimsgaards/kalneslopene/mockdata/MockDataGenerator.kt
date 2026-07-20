@@ -18,7 +18,7 @@ import com.grimsgaards.kalneslopene.repository.RaceRunnerRepository
 import com.grimsgaards.kalneslopene.repository.RunnerRepository
 import com.grimsgaards.kalneslopene.service.WeatherServiceMock
 import org.springframework.boot.CommandLineRunner
-import org.springframework.context.annotation.Profile
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.time.DayOfWeek
@@ -33,7 +33,7 @@ import java.util.UUID
 import kotlin.random.Random
 
 @Component
-@Profile("local | dev")
+@ConditionalOnProperty(prefix = "mockdata", name = ["enabled"], havingValue = "true", matchIfMissing = false)
 class MockDataGenerator(
     private val runnerRepository: RunnerRepository,
     private val raceRepository: RaceRepository,
@@ -63,7 +63,9 @@ class MockDataGenerator(
     }
 
     private fun generateRunners(): List<RunnerEntity> =
-        runnerRepository.saveAll(runnerSeed.map { (name, gender) -> RunnerEntity(name = name, gender = gender) })
+        runnerRepository.saveAll(
+            runnerSeed.map { (name, gender) -> RunnerEntity(name = name, gender = gender, isVerified = true) },
+        )
 
     private fun generateRaces(): List<RaceEntity> {
         val now = LocalDateTime.now()
@@ -75,9 +77,9 @@ class MockDataGenerator(
             (0 until PAST_RACES)
                 .map { lastPast.minusWeeks(it.toLong()) }
                 .reversed()
-                .map { RaceEntity(raceDate = it).also { race -> applyMockWeather(race) } }
+                .map { RaceEntity(raceDate = it, isPublished = true).also { race -> applyMockWeather(race) }  }
         val upcomingRaces =
-            (1..UPCOMING_RACES).map { RaceEntity(raceDate = lastPast.plusWeeks(it.toLong())) }
+            (1..UPCOMING_RACES).map { RaceEntity(raceDate = lastPast.plusWeeks(it.toLong()), isPublished = false) }
 
         return raceRepository.saveAll(pastRaces + upcomingRaces).filter { it.raceDate.isBefore(now) }
     }
@@ -100,6 +102,7 @@ class MockDataGenerator(
         val personalRecords = mutableMapOf<UUID, Duration>()
         val seasonRecords = mutableMapOf<Pair<UUID, Int>, Duration>()
         val raceCounts = mutableMapOf<UUID, Int>()
+        val seasonRaceCounts = mutableMapOf<Pair<UUID, Int>, Int>()
         val raceRunners =
             pastRaces.flatMap { race ->
                 runners
@@ -108,6 +111,7 @@ class MockDataGenerator(
                         val time = randomResultTime()
                         val seasonKey = runner.uuid to race.raceDate.year
                         val totalRaces = raceCounts.getOrDefault(runner.uuid, 0) + 1
+                        val seasonRaces = seasonRaceCounts.getOrDefault(seasonKey, 0) + 1
                         val raceRunner =
                             RaceRunnerEntity(
                                 runner = runner,
@@ -116,10 +120,12 @@ class MockDataGenerator(
                                 previousPersonalRecord = personalRecords[runner.uuid],
                                 previousSeasonRecord = seasonRecords[seasonKey],
                                 totalRaces = totalRaces,
+                                seasonRaces = seasonRaces,
                             )
                         personalRecords.merge(runner.uuid, time, ::minOf)
                         seasonRecords.merge(seasonKey, time, ::minOf)
                         raceCounts[runner.uuid] = totalRaces
+                        seasonRaceCounts[seasonKey] = seasonRaces
                         raceRunner
                     }
             }

@@ -26,8 +26,8 @@ export function CRUDRunners() {
 
   const [showAdd, setShowAdd] = useState(false);
   const addMutation = useMutation({
-    mutationFn: (runner: Omit<RunnerDTO, "uuid">) =>
-      QUERIES.runner.createRunners([runner as RunnerDTO]).queryFn(),
+    mutationFn: (runner: Omit<RunnerDTO, "uuid" | "isVerified">) =>
+      QUERIES.runner.createRunners([{ ...runner, isVerified: true }]).queryFn(),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["runner", "getAll"] });
       setShowAdd(false);

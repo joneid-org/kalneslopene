@@ -20,6 +20,7 @@ class StatisticsService(
             RaceFilter(
                 from = year?.atDay(1)?.atStartOfDay(),
                 to = year?.atMonthDay(MonthDay.of(12, 31))?.atTime(LocalTime.MAX),
+                isPublished = true,
             )
         val races = raceRepository.findAllByFilter(filter)
         val allRunners = races.flatMap { it.runners }
@@ -32,8 +33,8 @@ class StatisticsService(
 
         val courseRecord =
             allRunners
-                .filter { !it.hideTime }
-                .minByOrNull { it.resultTime }
+                .filter { !it.hideTime && it.resultTime != null }
+                .minByOrNull { it.resultTime!! }
                 ?.toDto()
 
         return RaceStatisticsDto(

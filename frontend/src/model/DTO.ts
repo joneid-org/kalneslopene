@@ -22,11 +22,12 @@ export type RaceDTO = {
   courseCondition?: string;
   weatherManuallyEdited: boolean;
   runnerCount: number;
+  isPublished: boolean;
   photos: S3FileDto[];
 };
 export type RaceInput = Omit<
   RaceDTO,
-  "uuid" | "runnerCount" | "photos" | "weatherManuallyEdited"
+  "uuid" | "runnerCount" | "isPublished" | "photos" | "weatherManuallyEdited"
 >;
 
 export type NewsFeedDTO = {
@@ -74,18 +75,22 @@ export type RunnerDTO = {
   uuid: string;
   name: string;
   gender: string;
+  isVerified: boolean;
   pr?: string;
 };
-export type RunnerInput = Omit<RunnerDTO, "uuid">;
+export type RunnerInput = Omit<RunnerDTO, "uuid" | "isVerified"> & {
+  isVerified?: boolean;
+};
 
 export type RaceRunnerDTO = {
   runner: RunnerDTO;
   raceUuid: string;
-  resultTime: string;
+  resultTime: string | null;
   hideTime: boolean;
   previousSeasonBest?: string;
   previousPersonalRecord?: string;
   totalRaces: number;
+  seasonRaces: number;
 };
 
 export type RaceResultSummaryDTO = {

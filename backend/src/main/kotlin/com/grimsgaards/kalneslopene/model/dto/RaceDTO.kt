@@ -10,5 +10,6 @@ data class RaceDTO(
     val courseCondition: String?,
     val weatherManuallyEdited: Boolean,
     val runnerCount: Int,
+    val isPublished: Boolean,
     val photos: List<FileDto>,
 )

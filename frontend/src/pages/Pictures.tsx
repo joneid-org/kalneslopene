@@ -15,7 +15,7 @@ export function Pictures() {
 
   const { data: races } = useQuery(QUERIES.race.getAllRaces());
 
-  const allRaces = races ?? [];
+  const allRaces = (races ?? []).filter((r) => r.isPublished);
   const race = allRaces.find((r) => r.uuid === uuid);
   const previous = getPreviousRace(allRaces, uuid);
   const next = getNextRace(allRaces, uuid);

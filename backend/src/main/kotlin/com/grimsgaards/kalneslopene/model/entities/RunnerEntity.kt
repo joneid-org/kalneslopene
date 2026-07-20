@@ -24,10 +24,14 @@ import java.util.UUID
     pkJoinColumns = [PrimaryKeyJoinColumn(name = "runner_uuid", referencedColumnName = "uuid")],
 )
 @SecondaryRow(table = "runner_stats", optional = true)
-data class RunnerEntity(
+class RunnerEntity(
     var name: String,
     @Enumerated(EnumType.STRING)
     var gender: Gender,
+    var isVerified: Boolean = false,
+    @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
+    @Column(name = "historic_personal_record")
+    var historicPersonalRecord: Duration? = null,
     @OneToMany(mappedBy = "runner")
     val races: MutableList<RaceRunnerEntity> = mutableListOf(),
 ) {
@@ -45,5 +49,8 @@ data class RunnerEntity(
     @Column(name = "total_races", table = "runner_stats", insertable = false, updatable = false)
     val totalRaces: Int? = null
 
-    fun toDto(): RunnerDTO = RunnerDTO(uuid, name, gender)
+    @Column(name = "season_races", table = "runner_stats", insertable = false, updatable = false)
+    val seasonRaces: Int? = null
+
+    fun toDto(): RunnerDTO = RunnerDTO(uuid, name, gender, isVerified)
 }

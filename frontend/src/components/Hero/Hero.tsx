@@ -1,4 +1,4 @@
-import cardImage from "../../../public/hero.png";
+import cardImage from "../../images/hero.webp";
 import { NextRace } from "./NextRace.tsx";
 
 export function Hero() {
@@ -10,6 +10,8 @@ export function Hero() {
           <img
             src={cardImage}
             alt="Torsdagsløpet"
+            fetchPriority="high"
+            decoding="async"
             className="absolute inset-0 w-full h-full object-cover object-[50%_28%]"
           />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,58,40,0)_32%,rgba(15,30,20,0.55)_70%,rgba(15,30,20,0.82)_100%)]" />
@@ -30,6 +32,8 @@ export function Hero() {
         <img
           src={cardImage}
           alt="Torsdagsløpet"
+          fetchPriority="high"
+          decoding="async"
           className="absolute inset-0 w-full h-full object-cover object-[50%_42%]"
         />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,58,40,0.18)_0%,rgba(18,58,40,0.28)_45%,rgba(15,30,20,0.72)_100%)]" />

@@ -21,6 +21,7 @@ import java.util.UUID
 class RaceEntity(
     @Column(name = "race_date", columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     var raceDate: LocalDateTime,
+    var isPublished: Boolean = false,
     @OneToMany(mappedBy = "race", fetch = FetchType.EAGER, cascade = [CascadeType.PERSIST], orphanRemoval = true)
     val runners: MutableList<RaceRunnerEntity> = mutableListOf(),
 ) {
@@ -68,6 +69,7 @@ class RaceEntity(
             courseCondition = courseCondition,
             weatherManuallyEdited = weatherManuallyEdited,
             runnerCount = runners.size,
+            isPublished = isPublished,
             photos = photos.mapNotNull { it.toDto() },
         )
 

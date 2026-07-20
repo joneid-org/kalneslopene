@@ -99,7 +99,7 @@ class BaselineDataGenerator(
             results.map { row ->
                 val runner =
                     runnersByName.getOrPut(row.name) {
-                        runnerRepository.save(RunnerEntity(name = row.name, gender = row.gender))
+                        runnerRepository.save(RunnerEntity(name = row.name, gender = row.gender, isVerified = true))
                     }
                 val race = racesByDate.getValue(row.date)
                 val seasonKey = runner.uuid to row.date.year

@@ -18,6 +18,13 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function genderLabel(gender: string): string {
+  const g = gender.toUpperCase();
+  if (g === "MALE") return "Mann";
+  if (g === "FEMALE") return "Kvinne";
+  return gender;
+}
+
 export function getYears(races: RaceDTO[]): number[] {
   const now = new Date().toISOString();
   const years = new Set<number>();

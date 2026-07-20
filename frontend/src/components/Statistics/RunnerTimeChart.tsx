@@ -10,6 +10,7 @@ import {
 import type { DatedRaceRunner } from "@/lib/statisticsUtils.ts";
 import {
   extractYear,
+  formatDDMMYYYY,
   formatDDMonth,
   formatSecondsToTime,
   mapResultTimeToNumber,
@@ -42,7 +43,9 @@ export default function RunnerTimeChart({
   raceHistory,
   availableYears,
 }: Props) {
-  const [range, setRange] = useState<string>("all");
+  const [range, setRange] = useState<string>(
+    availableYears.length > 0 ? String(availableYears[0]) : "all",
+  );
 
   const selectedYears =
     range === "all" ? availableYears : [Number.parseInt(range, 10)];
@@ -121,10 +124,15 @@ export default function RunnerTimeChart({
             <ChartTooltip
               content={
                 <ChartTooltipContent
-                  formatter={(value, name) => [
-                    formatSecondsToTime(Number(value)),
-                    chartConfig[String(name)]?.label ?? String(name),
-                  ]}
+                  labelFormatter={(_label, payload) => {
+                    const sortKey = payload?.[0]?.payload?.sortKey;
+                    return sortKey ? formatDDMMYYYY(sortKey) : "";
+                  }}
+                  formatter={(value) => (
+                    <span className="font-mono font-medium tabular-nums">
+                      {formatSecondsToTime(Number(value))}
+                    </span>
+                  )}
                 />
               }
             />

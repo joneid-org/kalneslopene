@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { lazy, Suspense, useMemo, useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
+import RunnerRaceResults from "@/components/Statistics/RunnerRaceResults.tsx";
 import RunnerStatisticsHeader from "@/components/Statistics/RunnerStatisticsHeader.tsx";
 import RunnerStatisticsSeasonBest from "@/components/Statistics/RunnerStatisticsSeasonBest.tsx";
 import SearchBox from "@/components/Statistics/SearchBox.tsx";
@@ -70,6 +71,12 @@ export default function RunnerStatistics() {
           </Suspense>
 
           <RunnerStatisticsSeasonBest
+            availableYears={availableYears}
+            raceHistory={datedHistory}
+          />
+
+          <RunnerRaceResults
+            key={availableYears.join(",")}
             availableYears={availableYears}
             raceHistory={datedHistory}
           />

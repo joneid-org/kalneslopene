@@ -74,11 +74,11 @@ export function AttendanceChart({ races }: Props) {
                       height: `${Math.max((race.runnerCount / axisMax) * 100, 5)}%`,
                     }}
                   >
-                    <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1.5 hidden -translate-x-1/2 whitespace-nowrap rounded-md bg-brand-ink px-2 py-1 text-center text-white group-hover:block">
-                      <div className="font-semibold">
+                    <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1.5 hidden min-w-32 -translate-x-1/2 flex-col gap-1.5 whitespace-nowrap rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl group-hover:flex">
+                      <div className="font-medium">
                         {formatDDMonth(race.raceDate)}
                       </div>
-                      <div className="text-[11px] text-white/70">
+                      <div className="font-mono font-medium tabular-nums">
                         {race.runnerCount} deltakere
                       </div>
                     </div>

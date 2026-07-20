@@ -8,6 +8,7 @@ import {
   XIcon,
 } from "lucide-react";
 import { useState } from "react";
+import { MUTATIONS } from "@/api/mutations.ts";
 import { QUERIES } from "@/api/queries.ts";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Button } from "@/components/ui/button.tsx";
@@ -66,9 +67,9 @@ function RowEditor({
 
   const createMutation = useMutation({
     mutationFn: () =>
-      QUERIES.runner
-        .createRunners([{ name: newName.trim(), gender: newGender }])
-        .queryFn(),
+      MUTATIONS.runner.createRunners([
+        { name: newName.trim(), gender: newGender },
+      ]),
     onSuccess: (created) => {
       qc.invalidateQueries({ queryKey: ["runner"] });
       onUpdate({ resolvedRunner: created[0] });

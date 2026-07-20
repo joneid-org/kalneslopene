@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronLeftIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { MUTATIONS } from "@/api/mutations.ts";
 import { QUERIES } from "@/api/queries.ts";
 import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog.tsx";
 import { RunnerForm } from "@/components/admin/RunnerForm.tsx";
@@ -27,7 +28,7 @@ export function CRUDRunners() {
   const [showAdd, setShowAdd] = useState(false);
   const addMutation = useMutation({
     mutationFn: (runner: Omit<RunnerDTO, "uuid" | "isVerified">) =>
-      QUERIES.runner.createRunners([{ ...runner, isVerified: true }]).queryFn(),
+      MUTATIONS.runner.createRunners([{ ...runner, isVerified: true }]),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["runner", "getAll"] });
       setShowAdd(false);
@@ -37,7 +38,7 @@ export function CRUDRunners() {
   const [editing, setEditing] = useState<RunnerDTO | null>(null);
   const editMutation = useMutation({
     mutationFn: (runner: RunnerDTO) =>
-      QUERIES.runner.updateRunner(runner.uuid, runner).queryFn(),
+      MUTATIONS.runner.updateRunner(runner.uuid, runner),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["runner", "getAll"] });
       setEditing(null);
@@ -46,7 +47,7 @@ export function CRUDRunners() {
 
   const [deleting, setDeleting] = useState<RunnerDTO | null>(null);
   const deleteMutation = useMutation({
-    mutationFn: (uuid: string) => QUERIES.runner.deleteRunner(uuid).queryFn(),
+    mutationFn: (uuid: string) => MUTATIONS.runner.deleteRunner(uuid),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["runner", "getAll"] });
       setDeleting(null);

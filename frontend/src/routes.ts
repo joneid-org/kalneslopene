@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router";
 import { NewsfeedTagManager } from "@/components/admin/NewsfeedTagManager.tsx";
 import { ImagesPage } from "@/pages/admin/Images.tsx";
 import { RaceCalendar } from "@/pages/RaceCalendar.tsx";
+import { RouteError } from "@/pages/RouteError.tsx";
 import { AuthGuard } from "./components/admin/AuthGuard.tsx";
 import { Layout } from "./Layout.tsx";
 import { Admin } from "./pages/Admin.tsx";
@@ -27,101 +28,111 @@ export const router = createBrowserRouter([
   {
     path: "/",
     Component: Layout,
+    ErrorBoundary: RouteError,
     children: [
       {
-        index: true,
-        Component: Home,
-      },
-      {
-        path: "resultater",
-        Component: Results,
-      },
-      {
-        path: "resultater/:uuid",
-        Component: Results,
-      },
-      {
-        path: "bilder",
-        Component: Pictures,
-      },
-      {
-        path: "bilder/:uuid",
-        Component: Pictures,
-      },
-      {
-        path: "statistikk",
-        Component: Statistics,
-      },
-      {
-        path: "historie",
-        Component: History,
-      },
-      {
-        path: "løypekart",
-        Component: CourseMap,
-      },
-      {
-        path: "løpskalender",
-        Component: RaceCalendar,
-      },
-      {
-        path: "nyheter",
-        Component: News,
-      },
-      {
-        path: "nyheter/tagg/:tag",
-        Component: NewsTag,
-      },
-      {
-        path: "nyheter/:uuid",
-        Component: NewsArticle,
-      },
-      {
-        path: "logg-inn",
-        Component: Login,
-      },
-      {
-        Component: AuthGuard,
+        ErrorBoundary: RouteError,
         children: [
           {
-            path: "admin",
-            Component: Admin,
+            index: true,
+            Component: Home,
           },
           {
-            path: "admin/løp",
-            Component: CRUDRaces,
+            path: "resultater",
+            Component: Results,
           },
           {
-            path: "admin/resultater",
-            Component: RegisterResults,
+            path: "resultater/:uuid",
+            Component: Results,
           },
           {
-            path: "admin/resultater/import",
-            Component: ImportResultsFromFile,
+            path: "bilder",
+            Component: Pictures,
           },
           {
-            path: "admin/resultater/:uuid",
-            Component: RegisterResultsWizard,
+            path: "bilder/:uuid",
+            Component: Pictures,
           },
           {
-            path: "admin/bilder",
-            Component: ImagesPage,
+            path: "statistikk",
+            Component: Statistics,
           },
           {
-            path: "admin/løpere",
-            Component: CRUDRunners,
+            path: "historie",
+            Component: History,
           },
           {
-            path: "admin/organisatorer",
-            Component: CRUDOrganizers,
+            path: "løypekart",
+            Component: CourseMap,
           },
           {
-            path: "admin/nyheter",
-            Component: CRUDNewsfeeds,
+            path: "løpskalender",
+            Component: RaceCalendar,
           },
           {
-            path: "admin/tagger",
-            Component: NewsfeedTagManager,
+            path: "nyheter",
+            Component: News,
+          },
+          {
+            path: "nyheter/tagg/:tag",
+            Component: NewsTag,
+          },
+          {
+            path: "nyheter/:uuid",
+            Component: NewsArticle,
+          },
+          {
+            path: "logg-inn",
+            Component: Login,
+          },
+          {
+            Component: AuthGuard,
+            children: [
+              {
+                path: "admin",
+                Component: Admin,
+              },
+              {
+                path: "admin/løp",
+                Component: CRUDRaces,
+              },
+              {
+                path: "admin/resultater",
+                Component: RegisterResults,
+              },
+              {
+                path: "admin/resultater/import",
+                Component: ImportResultsFromFile,
+              },
+              {
+                path: "admin/resultater/:uuid",
+                Component: RegisterResultsWizard,
+              },
+              {
+                path: "admin/bilder",
+                Component: ImagesPage,
+              },
+              {
+                path: "admin/løpere",
+                Component: CRUDRunners,
+              },
+              {
+                path: "admin/organisatorer",
+                Component: CRUDOrganizers,
+              },
+              {
+                path: "admin/nyheter",
+                Component: CRUDNewsfeeds,
+              },
+              {
+                path: "admin/tagger",
+                Component: NewsfeedTagManager,
+              },
+            ],
+          },
+          {
+            path: "*",
+            Component: RouteError,
           },
         ],
       },

@@ -13,7 +13,8 @@ export function Pictures() {
   const { uuid = "" } = useParams<{ uuid: string }>();
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  const { data: races } = useQuery(QUERIES.race.getAllRaces());
+  const racesQuery = useQuery(QUERIES.race.getAllRaces());
+  const races = racesQuery.data;
 
   const allRaces = (races ?? []).filter((r) => r.isPublished);
   const race = allRaces.find((r) => r.uuid === uuid);
@@ -22,6 +23,10 @@ export function Pictures() {
   const title = formatDateFull(race?.raceDate);
 
   const racePhotos = race?.photos ?? [];
+
+  if (uuid && !race && !racesQuery.isPending) {
+    throw new Response("Fant ikke løpet", { status: 404 });
+  }
 
   return (
     <div className="page-content space-y-3 md:space-y-5">

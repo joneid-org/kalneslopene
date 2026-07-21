@@ -2,11 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, ChevronLeft, ChevronRight, Newspaper } from "lucide-react";
 import { Link, useSearchParams } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
-import { TagNewsFeed } from "@/components/News/TagNewsFeed.tsx";
+import { NewsCard } from "@/components/News/NewsCard.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { NEWS_IMAGES } from "@/lib/newsUtils.ts";
 
-const PAGE_SIZE = 6;
+const PAGE_SIZE = 9;
 
 function pageItems(current: number, total: number): (number | "...")[] {
   if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
@@ -66,13 +66,15 @@ export function News() {
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          {visible.map((post, idx) => (
-            <TagNewsFeed
-              key={post.uuid}
-              post={post}
-              img={NEWS_IMAGES[(start + idx) % NEWS_IMAGES.length] ?? ""}
-            />
-          ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4">
+            {visible.map((post, idx) => (
+              <NewsCard
+                key={post.uuid}
+                post={post}
+                img={NEWS_IMAGES[(start + idx) % NEWS_IMAGES.length] ?? ""}
+              />
+            ))}
+          </div>
 
           {totalPages > 1 && (
             <nav

@@ -1,18 +1,15 @@
-/** biome-ignore-all lint/suspicious/noArrayIndexKey: dot indicators by index is fine */
 import { useQuery } from "@tanstack/react-query";
 import { ChevronRight, Newspaper } from "lucide-react";
 import { Link } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
-import { Card, CardFooter, CardHeader } from "@/components/ui/card.tsx";
-import { NEWS_IMAGES, tagColor, useTags } from "@/lib/newsUtils.ts";
-import { formatDateFull } from "@/lib/timeUtils.ts";
+import { NewsCard } from "@/components/News/NewsCard.tsx";
+import { NEWS_IMAGES } from "@/lib/newsUtils.ts";
 import type { NewsFeedDTO } from "@/model/DTO.ts";
 
 const COLS = 3;
 
 export default function NewsFeed() {
   const { data: newsfeeds } = useQuery(QUERIES.newsfeed.getNewsFeed(0, COLS));
-  const tags = useTags();
 
   if (!newsfeeds || newsfeeds.totalElements === 0) {
     return (
@@ -43,65 +40,11 @@ export default function NewsFeed() {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4">
         {visible.map((post: NewsFeedDTO, idx) => (
-          <Card
+          <NewsCard
             key={post.uuid}
-            className="overflow-hidden rounded-2xl card-hover hover:shadow-md h-full flex flex-col gap-0 py-0"
-          >
-            <Link
-              to={`/nyheter/${post.uuid}`}
-              className="hidden sm:block group"
-            >
-              <div className="aspect-video overflow-hidden shrink-0 bg-muted">
-                <img
-                  src={
-                    post.headerImage?.url ??
-                    NEWS_IMAGES[idx % NEWS_IMAGES.length] ??
-                    ""
-                  }
-                  alt={post.header}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-            </Link>
-            <CardHeader className="px-3.5 sm:px-5 pt-3.5 sm:pt-4 pb-1 gap-2">
-              <div className="flex flex-wrap gap-1.5">
-                {post.tags.map((tag) => (
-                  <Link
-                    key={tag}
-                    to={`/nyheter/tag/${tag.toLowerCase()}`}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <span
-                      className="tag-pill"
-                      style={{ color: tagColor(tag, tags) }}
-                    >
-                      {tag}
-                    </span>
-                  </Link>
-                ))}
-              </div>
-              <Link
-                key={post.uuid}
-                to={`/nyheter/${post.uuid}`}
-                className="block group"
-              >
-                <p className="font-display text-base sm:text-lg font-bold transition-colors leading-snug line-clamp-2">
-                  {post.header}
-                </p>
-                <p className="text-sm text-muted-foreground leading-snug line-clamp-2 mt-1">
-                  {post.content
-                    .replace(/<[^>]+>/g, " ")
-                    .replace(/\s+/g, " ")
-                    .trim()}
-                </p>
-              </Link>
-            </CardHeader>
-            <CardFooter className="px-3.5 sm:px-5 pb-3.5 sm:pb-5 pt-2 sm:pt-3 mt-auto">
-              <time className="text-xs lowercase text-muted-foreground">
-                {formatDateFull(post.date)}
-              </time>
-            </CardFooter>
-          </Card>
+            post={post}
+            img={NEWS_IMAGES[idx % NEWS_IMAGES.length] ?? ""}
+          />
         ))}
       </div>
     </div>

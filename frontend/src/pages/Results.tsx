@@ -38,7 +38,7 @@ export function Results() {
   if (!race) {
     const latest = getMostRecentRace(allRaces);
     if (!uuid && latest) {
-      return <Navigate to={`/Resultater/${latest.uuid}`} replace />;
+      return <Navigate to={`/resultater/${latest.uuid}`} replace />;
     }
     return null;
   }
@@ -49,7 +49,7 @@ export function Results() {
         race={race}
         previousRace={previous}
         nextRace={next}
-        path="/Resultater/"
+        path="/resultater/"
       />
 
       <ResultsHeader race={race} title={title} />

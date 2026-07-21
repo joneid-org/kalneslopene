@@ -33,35 +33,35 @@ export const router = createBrowserRouter([
         Component: Home,
       },
       {
-        path: "Resultater",
+        path: "resultater",
         Component: Results,
       },
       {
-        path: "Resultater/:uuid",
+        path: "resultater/:uuid",
         Component: Results,
       },
       {
-        path: "Bilder",
+        path: "bilder",
         Component: Pictures,
       },
       {
-        path: "Bilder/:uuid",
+        path: "bilder/:uuid",
         Component: Pictures,
       },
       {
-        path: "Statistikk",
+        path: "statistikk",
         Component: Statistics,
       },
       {
-        path: "Historie",
+        path: "historie",
         Component: History,
       },
       {
-        path: "Løypekart",
+        path: "løypekart",
         Component: CourseMap,
       },
       {
-        path: "Løpskalender",
+        path: "løpskalender",
         Component: RaceCalendar,
       },
       {

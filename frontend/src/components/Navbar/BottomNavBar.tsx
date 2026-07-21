@@ -75,16 +75,16 @@ type Tab = {
 const tabs: Tab[] = [
   { path: "/", label: "Hjem", Icon: HomeIcon, isActive: (p) => p === "/" },
   {
-    path: "/Resultater",
+    path: "/resultater",
     label: "Resultater",
     Icon: ResultsIcon,
-    isActive: (p) => p.startsWith("/Resultater"),
+    isActive: (p) => p.startsWith("/resultater"),
   },
   {
-    path: "/Statistikk",
+    path: "/statistikk",
     label: "Statistikk",
     Icon: StatsIcon,
-    isActive: (p) => p.startsWith("/Statistikk"),
+    isActive: (p) => p.startsWith("/statistikk"),
   },
 ];
 
@@ -93,9 +93,9 @@ const moreItems: {
   label: string;
   Icon: ComponentType<SVGProps<SVGSVGElement>>;
 }[] = [
-  { path: "/Bilder", label: "Bilder", Icon: ImageIcon },
-  { path: "/Løypekart", label: "Løypekart", Icon: MapIcon },
-  { path: "/Historie", label: "Historie", Icon: History },
+  { path: "/bilder", label: "Bilder", Icon: ImageIcon },
+  { path: "/løypekart", label: "Løypekart", Icon: MapIcon },
+  { path: "/historie", label: "Historie", Icon: History },
 ];
 
 const tabClasses = (active: boolean) =>

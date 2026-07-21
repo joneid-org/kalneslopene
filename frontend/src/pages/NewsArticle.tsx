@@ -69,7 +69,7 @@ export function NewsArticle() {
             ))}
           </div>
           {matchedRace?.uuid && (
-            <Link to={`/Resultater/${matchedRace.uuid}`}>
+            <Link to={`/resultater/${matchedRace.uuid}`}>
               <Button
                 size="sm"
                 variant="outline"

@@ -21,7 +21,7 @@ export function Slogan() {
         asChild
         className="shrink-0 w-full sm:w-auto h-12 sm:h-[52px] px-6 rounded-2xl bg-primary sm:bg-brand text-primary-foreground sm:text-brand-foreground hover:bg-primary/90 sm:hover:bg-brand/90 font-extrabold text-[15px]"
       >
-        <Link to="/Løpskalender">
+        <Link to="/løpskalender">
           Åpne løpskalender
           <ArrowRight />
         </Link>

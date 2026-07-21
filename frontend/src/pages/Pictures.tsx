@@ -29,7 +29,7 @@ export function Pictures() {
         <NavigationButtons
           previousRace={previous}
           nextRace={next}
-          path="/Bilder/"
+          path="/bilder/"
         />
       )}
 
@@ -37,7 +37,7 @@ export function Pictures() {
         title={title ?? ""}
         photoCount={racePhotos.length}
         photographers={[]}
-        resultsPath={race ? `/Resultater/${race.uuid}` : undefined}
+        resultsPath={race ? `/resultater/${race.uuid}` : undefined}
       />
 
       <PhotoGrid photos={racePhotos} onPhotoClick={setLightboxIndex} />

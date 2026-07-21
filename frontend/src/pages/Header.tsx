@@ -6,9 +6,9 @@ import { DynamicDropDownMenu } from "@/components/Navbar/DynamicDropDownMenu.tsx
 import { cn } from "@/lib/utils.ts";
 
 const navLinks = [
-  { path: "/Statistikk", label: "Statistikk" },
-  { path: "/Løypekart", label: "Løypekart" },
-  { path: "/Historie", label: "Historie" },
+  { path: "/statistikk", label: "Statistikk" },
+  { path: "/løypekart", label: "Løypekart" },
+  { path: "/historie", label: "Historie" },
 ];
 
 export function Header({ ref }: { ref?: Ref<HTMLElement> }) {
@@ -43,9 +43,9 @@ export function Header({ ref }: { ref?: Ref<HTMLElement> }) {
         <nav className="ml-auto hidden items-center gap-1 md:flex">
           <DynamicDropDownMenu
             label="Resultater"
-            basePath="/Resultater"
+            basePath="/resultater"
             races={(races ?? []).filter((r) => r.isPublished)}
-            active={pathname.startsWith("/Resultater")}
+            active={pathname.startsWith("/resultater")}
           />
           {navLinks.map(({ path, label }) => {
             const active = pathname.startsWith(path);

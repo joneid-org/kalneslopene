@@ -1,15 +1,22 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronLeftIcon } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import { MUTATIONS } from "@/api/mutations.ts";
 import { QUERIES } from "@/api/queries.ts";
 import { CompletedRacesCard } from "@/components/admin/CompletedRacesCard.tsx";
 import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog.tsx";
 import { MissingRunnersCard } from "@/components/admin/MissingRunnersCard.tsx";
+import { UnpublishedResultsCard } from "@/components/admin/UnpublishedResultsCard.tsx";
+import { SegmentedControl } from "@/components/SegmentedControl.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Dialog } from "@/components/ui/dialog.tsx";
-import { formatDDMonth } from "@/lib/timeUtils.ts";
+import {
+  extractYear,
+  formatDDMonth,
+  raceDateToSortKey,
+} from "@/lib/timeUtils.ts";
+import { getYears } from "@/lib/utils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 
 const now = new Date();
@@ -20,8 +27,30 @@ export function RegisterResults() {
 
   const { data: races } = useQuery(QUERIES.race.getAllRaces({ to: now }));
 
-  const [withoutRunners, withRunners] = (races ?? []).partition(
+  const [selectedYear, setSelectedYear] = useState<number | undefined>(
+    undefined,
+  );
+
+  const availableYears = useMemo(() => getYears(races ?? []), [races]);
+  const effectiveYear = selectedYear ?? availableYears[0];
+
+  const yearRaces = useMemo(
+    () =>
+      (races ?? [])
+        .filter((r) => extractYear(r.raceDate) === effectiveYear)
+        .sort((a, b) =>
+          raceDateToSortKey(b.raceDate).localeCompare(
+            raceDateToSortKey(a.raceDate),
+          ),
+        ),
+    [races, effectiveYear],
+  );
+
+  const [withoutRunners, withRunners] = yearRaces.partition(
     (r) => r.runnerCount === 0,
+  );
+  const [publishedRaces, unpublishedRaces] = withRunners.partition(
+    (r) => r.isPublished,
   );
 
   const [deleting, setDeleting] = useState<RaceDTO | null>(null);
@@ -55,9 +84,21 @@ export function RegisterResults() {
         Tilbake
       </Button>
 
-      <h1 className="text-2xl font-semibold tracking-tight">
-        Registrer resultater
-      </h1>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-2xl font-semibold tracking-tight">
+          Registrer resultater
+        </h1>
+        {availableYears.length > 0 && (
+          <SegmentedControl
+            options={availableYears.map((y) => ({
+              label: String(y),
+              value: y,
+            }))}
+            value={effectiveYear}
+            onChange={setSelectedYear}
+          />
+        )}
+      </div>
 
       <MissingRunnersCard
         races={withoutRunners}
@@ -65,8 +106,16 @@ export function RegisterResults() {
         onDelete={setDeleting}
       />
 
+      <UnpublishedResultsCard
+        races={unpublishedRaces}
+        expandedRaceUuid={expandedRaceUuid}
+        onToggleExpand={toggleExpanded}
+        onEdit={openEditing}
+        onDelete={setDeleting}
+      />
+
       <CompletedRacesCard
-        races={withRunners}
+        races={publishedRaces}
         expandedRaceUuid={expandedRaceUuid}
         onToggleExpand={toggleExpanded}
         onEdit={openEditing}

@@ -13,18 +13,18 @@ export const COLUMN_LABELS: Record<string, string> = {
 export const HIDEABLE_COLUMNS = ["pace", "yearBest", "pr", "races"] as const;
 
 export const NORWEGIAN_MONTH_NAMES = [
-  "Januar",
-  "Februar",
-  "Mars",
-  "April",
-  "Mai",
-  "Juni",
-  "Juli",
-  "August",
-  "September",
-  "Oktober",
-  "November",
-  "Desember",
+  "januar",
+  "februar",
+  "mars",
+  "april",
+  "mai",
+  "juni",
+  "juli",
+  "august",
+  "september",
+  "oktober",
+  "november",
+  "desember",
 ];
 
 export const ORGANIZER_DESCRIPTION =

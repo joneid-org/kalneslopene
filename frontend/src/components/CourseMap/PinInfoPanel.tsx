@@ -48,7 +48,7 @@ export function PinInfoPanel({ pin }: Props) {
             {pin.label}
           </h2>
         </div>
-        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
           {pin.description}
         </p>
         {pin.tips && (

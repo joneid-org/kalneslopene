@@ -39,18 +39,20 @@ export default function PhotoDialog({
       onOpenChange={(open) => !open && onIndexChange(null)}
     >
       <DialogContent
-        className="p-2 sm:p-4 bg-white border-0"
-        style={{ maxWidth: "var(--page-max-width)", width: "95vw" }}
+        className="fixed inset-0 flex w-screen h-screen max-w-none sm:max-w-none translate-x-0 translate-y-0 overflow-auto rounded-none border-0 bg-transparent p-4 shadow-none gap-0"
+        onClick={(e) => {
+          if (e.target === e.currentTarget) onIndexChange(null);
+        }}
       >
         <DialogTitle className="sr-only">
           Bilde {(index ?? 0) + 1} av {photos.length}
         </DialogTitle>
         {index !== null && (
-          <div className="relative">
+          <div className="relative m-auto w-fit rounded-md bg-white p-2 sm:p-4">
             <img
               src={photos[index].url}
               alt={photos[index].description}
-              className="w-full rounded-md object-contain max-h-[88vh]"
+              className="block max-w-none rounded-md"
             />
             {onReplacePhoto && currentFileName && (
               <ReplacePhotoButton

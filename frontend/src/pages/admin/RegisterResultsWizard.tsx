@@ -209,7 +209,7 @@ export function RegisterResultsWizard() {
       qc.invalidateQueries({ queryKey: ["race", "getById", uuid] });
       qc.invalidateQueries({ queryKey: ["race", uuid, "runnersInRace"] });
       qc.invalidateQueries({ queryKey: ["runner", "getAll"] });
-      navigate("/admin/results");
+      navigate("/admin/resultater");
     },
   });
 
@@ -231,7 +231,7 @@ export function RegisterResultsWizard() {
       <Button
         variant="ghost"
         className="-ml-2 gap-1.5 text-muted-foreground"
-        onClick={() => navigate("/admin/results")}
+        onClick={() => navigate("/admin/resultater")}
       >
         <ChevronLeftIcon className="size-4" />
         Tilbake
@@ -302,7 +302,9 @@ export function RegisterResultsWizard() {
           onVerifyRunner={verifyRunner}
           onChangeRunner={changeRunner}
           busyRunnerUuid={busyRunnerUuid}
-          onClose={isPublished ? () => navigate("/admin/results") : undefined}
+          onClose={
+            isPublished ? () => navigate("/admin/resultater") : undefined
+          }
         />
       )}
       {!isPublished && step === 4 && (

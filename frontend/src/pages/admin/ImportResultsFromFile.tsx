@@ -67,7 +67,7 @@ export function ImportResultsFromFile() {
         queryKey: ["race", race.uuid, "runnersInRace"],
       });
       queryClient.invalidateQueries({ queryKey: ["race", "getAll"] });
-      navigate("/admin/results");
+      navigate("/admin/resultater");
     },
   });
 

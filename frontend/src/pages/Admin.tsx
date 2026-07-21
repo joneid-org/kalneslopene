@@ -19,22 +19,26 @@ import {
 import { useAuth } from "@/hooks/useAuth.ts";
 
 const actions = [
-  { label: "Administrer løp", icon: CalendarIcon, path: "/admin/races" },
+  { label: "Administrer løp", icon: CalendarIcon, path: "/admin/løp" },
   {
     label: "Registrer resultater",
     icon: ClipboardListIcon,
-    path: "/admin/results",
+    path: "/admin/resultater",
   },
   {
     label: "Registrer resultat fra fil",
     icon: FileUpIcon,
-    path: "/admin/results/import",
+    path: "/admin/resultater/import",
   },
-  { label: "Legg til bilder", icon: ImageIcon, path: "/admin/images" },
-  { label: "Legg til løper", icon: UserPlusIcon, path: "/admin/runners" },
-  { label: "Legg til organisator", icon: UsersIcon, path: "/admin/organizers" },
-  { label: "Legg til nyhet", icon: NewspaperIcon, path: "/admin/newsfeeds" },
-  { label: "Administrer tagger", icon: NewspaperIcon, path: "/admin/tags" },
+  { label: "Legg til bilder", icon: ImageIcon, path: "/admin/bilder" },
+  { label: "Legg til løper", icon: UserPlusIcon, path: "/admin/løpere" },
+  {
+    label: "Legg til organisator",
+    icon: UsersIcon,
+    path: "/admin/organisatorer",
+  },
+  { label: "Legg til nyhet", icon: NewspaperIcon, path: "/admin/nyheter" },
+  { label: "Administrer tagger", icon: NewspaperIcon, path: "/admin/tagger" },
 ] as const;
 
 export function Admin() {

@@ -69,7 +69,7 @@ export const router = createBrowserRouter([
         Component: News,
       },
       {
-        path: "nyheter/tag/:tag",
+        path: "nyheter/tagg/:tag",
         Component: NewsTag,
       },
       {
@@ -88,39 +88,39 @@ export const router = createBrowserRouter([
             Component: Admin,
           },
           {
-            path: "admin/races",
+            path: "admin/løp",
             Component: CRUDRaces,
           },
           {
-            path: "admin/results",
+            path: "admin/resultater",
             Component: RegisterResults,
           },
           {
-            path: "admin/results/import",
+            path: "admin/resultater/import",
             Component: ImportResultsFromFile,
           },
           {
-            path: "admin/results/:uuid",
+            path: "admin/resultater/:uuid",
             Component: RegisterResultsWizard,
           },
           {
-            path: "admin/images",
+            path: "admin/bilder",
             Component: ImagesPage,
           },
           {
-            path: "admin/runners",
+            path: "admin/løpere",
             Component: CRUDRunners,
           },
           {
-            path: "admin/organizers",
+            path: "admin/organisatorer",
             Component: CRUDOrganizers,
           },
           {
-            path: "admin/newsfeeds",
+            path: "admin/nyheter",
             Component: CRUDNewsfeeds,
           },
           {
-            path: "admin/tags",
+            path: "admin/tagger",
             Component: NewsfeedTagManager,
           },
         ],

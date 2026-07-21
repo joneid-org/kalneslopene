@@ -19,7 +19,7 @@ export function PinInfoPanel({ pin }: Props) {
   const onReplacePhoto = isAuthenticated ? handleReplacePhoto : undefined;
 
   return (
-    <div className="flex-col overflow-hidden rounded-2xl border bg-card shadow-sm md:flex">
+    <div className="flex h-full flex-col overflow-hidden rounded-2xl border bg-card shadow-sm">
       <div className="relative h-[170px] shrink-0 overflow-hidden bg-muted">
         <button
           type="button"

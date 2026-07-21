@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router";
 import { NewsfeedTagManager } from "@/components/admin/NewsfeedTagManager.tsx";
 import { ImagesPage } from "@/pages/admin/Images.tsx";
 import { RaceCalendar } from "@/pages/RaceCalendar.tsx";
+import { RouteError } from "@/pages/RouteError.tsx";
 import { AuthGuard } from "./components/admin/AuthGuard.tsx";
 import { Layout } from "./Layout.tsx";
 import { Admin } from "./pages/Admin.tsx";
@@ -27,6 +28,7 @@ export const router = createBrowserRouter([
   {
     path: "/",
     Component: Layout,
+    ErrorBoundary: RouteError,
     children: [
       {
         index: true,

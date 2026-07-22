@@ -60,7 +60,7 @@ export function RacePickerDrawer({
             <DrawerClose key={race.uuid} asChild>
               <Link
                 to={`${basePath}/${race.uuid}`}
-                className="rounded-xl border bg-card px-2 py-3 text-center text-sm font-semibold text-foreground/80 transition-colors hover:bg-accent"
+                className="rounded-xl border bg-card px-1 py-3 text-center text-sm font-semibold whitespace-no text-foreground/80 transition-colors hover:bg-accent"
               >
                 {formatDDMonth(race.raceDate)}
               </Link>

@@ -92,6 +92,12 @@ const tabs: Tab[] = [
     Icon: PicturesIcon,
     isActive: (p) => p.startsWith("/Bilder"),
   },
+  {
+    path: "/Statistikk",
+    label: "Statistikk",
+    Icon: StatsIcon,
+    isActive: (p) => p.startsWith("/Statistikk"),
+  },
 ];
 
 const racePickerPaths = new Set(["/Resultater", "/Bilder"]);
@@ -101,7 +107,6 @@ const moreItems: {
   label: string;
   Icon: ComponentType<SVGProps<SVGSVGElement>>;
 }[] = [
-  { path: "/Statistikk", label: "Statistikk", Icon: StatsIcon },
   { path: "/Løypekart", label: "Løypekart", Icon: MapIcon },
   { path: "/Historie", label: "Historie", Icon: History },
 ];

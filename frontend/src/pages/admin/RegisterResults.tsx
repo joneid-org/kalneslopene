@@ -8,9 +8,9 @@ import { CompletedRacesCard } from "@/components/admin/CompletedRacesCard.tsx";
 import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog.tsx";
 import { MissingRunnersCard } from "@/components/admin/MissingRunnersCard.tsx";
 import { UnpublishedResultsCard } from "@/components/admin/UnpublishedResultsCard.tsx";
-import { SegmentedControl } from "@/components/SegmentedControl.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Dialog } from "@/components/ui/dialog.tsx";
+import { YearSelector } from "@/components/YearSelector.tsx";
 import {
   extractYear,
   formatDDMonth,
@@ -89,13 +89,10 @@ export function RegisterResults() {
           Registrer resultater
         </h1>
         {availableYears.length > 0 && (
-          <SegmentedControl
-            options={availableYears.map((y) => ({
-              label: String(y),
-              value: y,
-            }))}
+          <YearSelector
+            years={availableYears}
             value={effectiveYear}
-            onChange={setSelectedYear}
+            onChange={(v) => setSelectedYear(v === "all" ? undefined : v)}
           />
         )}
       </div>

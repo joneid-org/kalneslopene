@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SegmentedControl } from "@/components/SegmentedControl.tsx";
+import { YearSelector } from "@/components/YearSelector.tsx";
 import {
   extractYear,
   formatDDMonth,
@@ -21,18 +21,11 @@ export default function RunnerRaceResults({
   raceHistory,
   availableYears,
 }: Props) {
-  const [range, setRange] = useState<string>(
-    availableYears.length > 0 ? String(availableYears[0]) : "all",
+  const [selectedYear, setSelectedYear] = useState<number>(
+    availableYears[0] ?? 0,
   );
 
   if (availableYears.length === 0) return null;
-
-  const options = availableYears.map((y) => ({
-    label: String(y),
-    value: String(y),
-  }));
-
-  const selectedYear = Number.parseInt(range, 10);
 
   const results = raceHistory
     .filter((rr) => extractYear(rr.raceInfo.raceDate) === selectedYear)
@@ -46,11 +39,11 @@ export default function RunnerRaceResults({
     <div className="rounded-2xl border bg-card p-5">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
         <span className="text-sm font-bold">Alle resultater</span>
-        <SegmentedControl
+        <YearSelector
           tone="primary"
-          options={options}
-          value={range}
-          onChange={setRange}
+          years={availableYears}
+          value={selectedYear}
+          onChange={(v) => v !== "all" && setSelectedYear(v)}
         />
       </div>
 

@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { formatDayMonthShort, formatDDMonth } from "@/lib/timeUtils.ts";
 import { cn } from "@/lib/utils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
@@ -16,6 +17,25 @@ function niceStep(value: number): number {
 }
 
 export function AttendanceChart({ races }: Props) {
+  const [activeUuid, setActiveUuid] = useState<string | null>(null);
+  const barsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (activeUuid === null) return;
+
+    const close = () => setActiveUuid(null);
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!barsRef.current?.contains(event.target as Node)) close();
+    };
+
+    const timer = window.setTimeout(close, 10000);
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => {
+      window.clearTimeout(timer);
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, [activeUuid]);
+
   if (races.length === 0) return null;
 
   const rawMax = Math.max(...races.map((r) => r.runnerCount), 1);
@@ -60,12 +80,22 @@ export function AttendanceChart({ races }: Props) {
                 style={{ bottom: `${(t / axisMax) * 100}%` }}
               />
             ))}
-            <div className="absolute inset-0 flex items-end gap-1">
+            <div
+              ref={barsRef}
+              className="absolute inset-0 flex items-end gap-1"
+            >
               {races.map((race) => {
                 const isMax = race.runnerCount === rawMax;
+                const isActive = activeUuid === race.uuid;
                 return (
-                  <div
+                  <button
+                    type="button"
                     key={race.uuid}
+                    onClick={() =>
+                      setActiveUuid((prev) =>
+                        prev === race.uuid ? null : race.uuid,
+                      )
+                    }
                     className={cn(
                       "group relative flex-1 rounded-t-md transition-colors",
                       isMax ? "bg-brand" : "bg-primary/25",
@@ -74,7 +104,12 @@ export function AttendanceChart({ races }: Props) {
                       height: `${Math.max((race.runnerCount / axisMax) * 100, 5)}%`,
                     }}
                   >
-                    <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1.5 hidden min-w-32 -translate-x-1/2 flex-col gap-1.5 whitespace-nowrap rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl group-hover:flex">
+                    <div
+                      className={cn(
+                        "pointer-events-none absolute bottom-full left-1/2 z-10 mb-1.5 min-w-32 -translate-x-1/2 flex-col gap-1.5 whitespace-nowrap rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl group-hover:flex",
+                        isActive ? "flex" : "hidden",
+                      )}
+                    >
                       <div className="font-medium">
                         {formatDDMonth(race.raceDate)}
                       </div>
@@ -82,7 +117,7 @@ export function AttendanceChart({ races }: Props) {
                         {race.runnerCount} deltakere
                       </div>
                     </div>
-                  </div>
+                  </button>
                 );
               })}
             </div>

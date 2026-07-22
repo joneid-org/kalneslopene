@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
-import { SegmentedControl } from "@/components/SegmentedControl.tsx";
 import {
   type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart.tsx";
+import { YearSelector, type YearValue } from "@/components/YearSelector.tsx";
 import {
   extractYear,
   formatDDMMYYYY,
@@ -43,18 +43,10 @@ export default function RunnerTimeChart({
   raceHistory,
   availableYears,
 }: Props) {
-  const [range, setRange] = useState<string>(
-    availableYears.length > 0 ? String(availableYears[0]) : "all",
-  );
+  const [range, setRange] = useState<YearValue>(availableYears[0] ?? "all");
 
-  const selectedYears =
-    range === "all" ? availableYears : [Number.parseInt(range, 10)];
+  const selectedYears = range === "all" ? availableYears : [range];
   const selectedYearsSet = new Set(selectedYears);
-
-  const options = [
-    { label: "Alle", value: "all" },
-    ...availableYears.map((y) => ({ label: String(y), value: String(y) })),
-  ];
 
   const filtered = raceHistory.filter(
     (rr) =>
@@ -89,9 +81,10 @@ export default function RunnerTimeChart({
     <div className="rounded-2xl border bg-card p-5">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
         <span className="text-sm font-bold">Utvikling over tid</span>
-        <SegmentedControl
+        <YearSelector
           tone="primary"
-          options={options}
+          includeAll
+          years={availableYears}
           value={range}
           onChange={setRange}
         />

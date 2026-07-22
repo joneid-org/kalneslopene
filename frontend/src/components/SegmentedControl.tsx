@@ -26,7 +26,8 @@ export function SegmentedControl<T extends string | number>({
     <div
       className={cn(
         "inline-flex rounded-full p-1",
-        fullWidth && "sm:flex sm:w-full",
+        fullWidth &&
+          "flex w-full overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
         tone === "primary" ? "bg-background" : "bg-muted",
         className,
       )}
@@ -39,8 +40,8 @@ export function SegmentedControl<T extends string | number>({
             type="button"
             onClick={() => onChange(option.value)}
             className={cn(
-              "rounded-full px-3 py-1.5 text-[13px] font-semibold transition-colors",
-              fullWidth && "sm:flex-1",
+              "whitespace-nowrap rounded-full px-3 py-1.5 text-[13px] font-semibold transition-colors",
+              fullWidth && "flex-1",
               active
                 ? tone === "primary"
                   ? "bg-primary text-primary-foreground shadow-sm"

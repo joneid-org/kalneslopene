@@ -2,9 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import { Trophy } from "lucide-react";
 import { useMemo, useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
-import { SegmentedControl } from "@/components/SegmentedControl.tsx";
 import { AttendanceChart } from "@/components/Statistics/AttendanceChart.tsx";
 import { StatTile } from "@/components/StatTile.tsx";
+import { YearSelector } from "@/components/YearSelector.tsx";
 import {
   extractYear,
   formatSecondsToTime,
@@ -90,15 +90,11 @@ export default function RaceStatistics() {
       )}
 
       {availableYears.length > 0 && (
-        <div className="-mx-1 overflow-x-auto px-1 py-0.5">
-          <SegmentedControl
-            fullWidth
-            options={availableYears.map((y) => ({
-              label: String(y),
-              value: y,
-            }))}
+        <div className="py-0.5">
+          <YearSelector
+            years={availableYears}
             value={effectiveYear}
-            onChange={setSelectedYear}
+            onChange={(v) => setSelectedYear(v === "all" ? undefined : v)}
           />
         </div>
       )}

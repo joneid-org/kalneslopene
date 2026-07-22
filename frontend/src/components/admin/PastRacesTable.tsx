@@ -45,10 +45,12 @@ export function PastRacesTable({
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Dato</TableHead>
-          <TableHead>Tid</TableHead>
-          <TableHead>Vær</TableHead>
-          {expandable && <TableHead className="text-right">Løpere</TableHead>}
+          <TableHead className="w-1/4">Dato</TableHead>
+          <TableHead className="w-1/4">Tid</TableHead>
+          <TableHead className="w-1/4">Vær</TableHead>
+          {expandable && (
+            <TableHead className="w-1/4 text-right">Antall løpere</TableHead>
+          )}
           <TableHead className="w-20" />
         </TableRow>
       </TableHeader>
@@ -79,7 +81,7 @@ export function PastRacesTable({
                     <WeatherLine
                       weather={race.weather}
                       courseCondition={race.courseCondition}
-                      className="text-xs"
+                      className="flex-nowrap text-xs"
                     />
                   ) : (
                     <span className="italic text-xs">Ikke registrert</span>

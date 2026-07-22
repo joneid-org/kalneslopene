@@ -1,9 +1,4 @@
-import {
-  ChevronRight,
-  History,
-  Image as ImageIcon,
-  Map as MapIcon,
-} from "lucide-react";
+import { ChevronRight, History, Map as MapIcon } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 import { Link, useLocation } from "react-router";
 import {
@@ -15,6 +10,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer.tsx";
 import { cn } from "@/lib/utils.ts";
+import { RacePickerDrawer } from "./RacePickerDrawer.tsx";
 
 type IconProps = { className?: string };
 
@@ -55,6 +51,16 @@ function StatsIcon({ className }: IconProps) {
   );
 }
 
+function PicturesIcon({ className }: IconProps) {
+  return (
+    <svg className={className} aria-hidden="true" {...strokeProps}>
+      <rect x="3" y="4" width="18" height="16" rx="2" />
+      <circle cx="8.5" cy="9.5" r="1.5" />
+      <path d="M4 16.5 9 11l4 4 3-3 4 4" />
+    </svg>
+  );
+}
+
 function MoreIcon({ className }: IconProps) {
   return (
     <svg className={className} aria-hidden="true" {...strokeProps}>
@@ -81,6 +87,12 @@ const tabs: Tab[] = [
     isActive: (p) => p.startsWith("/Resultater"),
   },
   {
+    path: "/Bilder",
+    label: "Bilder",
+    Icon: PicturesIcon,
+    isActive: (p) => p.startsWith("/Bilder"),
+  },
+  {
     path: "/Statistikk",
     label: "Statistikk",
     Icon: StatsIcon,
@@ -88,12 +100,13 @@ const tabs: Tab[] = [
   },
 ];
 
+const racePickerPaths = new Set(["/Resultater", "/Bilder"]);
+
 const moreItems: {
   path: string;
   label: string;
   Icon: ComponentType<SVGProps<SVGSVGElement>>;
 }[] = [
-  { path: "/Bilder", label: "Bilder", Icon: ImageIcon },
   { path: "/Løypekart", label: "Løypekart", Icon: MapIcon },
   { path: "/Historie", label: "Historie", Icon: History },
 ];
@@ -115,10 +128,24 @@ export function BottomNavBar() {
     <nav className="fixed inset-x-0 bottom-0 z-50 flex justify-around border-t border-border bg-card/90 px-2 pt-[9px] pb-[calc(0.75rem+env(safe-area-inset-bottom))] backdrop-blur-md md:hidden">
       {tabs.map(({ path, label, Icon, isActive }) => {
         const active = isActive(pathname);
-        return (
-          <Link key={path} to={path} className={tabClasses(active)}>
+        const content = (
+          <>
             <Icon className="size-[23px]" />
             <span className={labelClasses(active)}>{label}</span>
+          </>
+        );
+        if (racePickerPaths.has(path)) {
+          return (
+            <RacePickerDrawer key={path} basePath={path}>
+              <button type="button" className={tabClasses(active)}>
+                {content}
+              </button>
+            </RacePickerDrawer>
+          );
+        }
+        return (
+          <Link key={path} to={path} className={tabClasses(active)}>
+            {content}
           </Link>
         );
       })}

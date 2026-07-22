@@ -2,7 +2,6 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { DISTANCE_KM } from "@/lib/constants.ts";
 import {
-  type DatedRaceRunner,
   getBestTimeThisYear,
   getFastestRunner,
 } from "@/lib/statisticsUtils.ts";
@@ -16,6 +15,13 @@ import type { OrganizerDTO, RaceDTO, RaceRunnerDTO } from "@/model/DTO.ts";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
+}
+
+export function genderLabel(gender: string): string {
+  const g = gender.toUpperCase();
+  if (g === "MALE") return "Mann";
+  if (g === "FEMALE") return "Kvinne";
+  return gender;
 }
 
 export function getYears(races: RaceDTO[]): number[] {
@@ -164,7 +170,7 @@ export function getBestRaceFromRunner(raceRunner: RaceRunnerDTO[]): string {
 }
 
 export function getBestRaceThisYearFromRunner(
-  raceRunner: DatedRaceRunner[],
+  raceRunner: RaceRunnerDTO[],
   year: number,
 ): string {
   return getBestTimeThisYear(raceRunner, year);

@@ -33,12 +33,7 @@ export function formToWeather(form: WeatherForm): WeatherDto | undefined {
   return { symbol: form.symbol, temperature, windSpeed, precipitation };
 }
 
-export function genderLabel(gender: string): string {
-  const g = gender.toUpperCase();
-  if (g === "MALE") return "Mann";
-  if (g === "FEMALE") return "Kvinne";
-  return gender;
-}
+export { genderLabel } from "@/lib/utils.ts";
 
 /** Seconds parsed from a RaceRunnerDTO's ISO duration, or null when no time. */
 export function entrySeconds(entry: RaceRunnerDTO): number | null {

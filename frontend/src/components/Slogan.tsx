@@ -9,12 +9,12 @@ export function Slogan() {
         <h2 className="font-display font-extrabold text-lg sm:text-2xl tracking-tight text-foreground sm:text-white mb-2 sm:mb-1.5">
           <span className="sm:hidden">Snør på deg skoene</span>
           <span className="hidden sm:inline">
-            Snør på deg skoene — bli med i torsdagsløpet!
+            Snør på deg skoene — bli med i Torsdagsløpet!
           </span>
         </h2>
         <p className="text-sm text-muted-foreground sm:text-white/80 leading-relaxed sm:max-w-[62ch]">
-          Ingen forhåndspåmelding — skriv deg på deltakerlista før start. Gratis
-          frukt til alle deltakere etter løpet 🍎
+          Ingen forhåndspåmelding — registrer deg før start. Gratis frukt til
+          alle deltakere etter løpet 🍎
         </p>
       </div>
       <Button

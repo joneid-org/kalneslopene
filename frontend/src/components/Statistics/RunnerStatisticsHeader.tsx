@@ -1,3 +1,4 @@
+import { genderLabel } from "@/lib/utils.ts";
 import type { RunnerDTO } from "@/model/DTO.ts";
 
 type Props = {
@@ -24,7 +25,7 @@ export default function RunnerStatisticsHeader({ runner }: Props) {
           {runner.name}
         </div>
         <span className="mt-1 inline-block rounded-full bg-secondary px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-secondary-foreground">
-          {runner.gender}
+          {genderLabel(runner.gender)}
         </span>
       </div>
     </div>

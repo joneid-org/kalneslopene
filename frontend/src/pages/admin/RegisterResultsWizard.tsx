@@ -72,7 +72,7 @@ export function RegisterResultsWizard() {
     hideTime = false,
   ): RaceRunnerDTO => ({
     runner,
-    raceUuid: uuid,
+    raceInfo: { uuid, raceDate: race?.raceDate ?? "" },
     resultTime,
     hideTime,
     totalRaces: 0,

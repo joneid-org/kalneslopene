@@ -52,6 +52,16 @@ export function formatDDMonth(raceDate: unknown): string {
   return `${String(day).padStart(2, "0")}. ${monthName}`;
 }
 
+export function formatDayMonthShort(raceDate: unknown): string {
+  const { day, month } = parseDateParts(raceDate);
+  return `${String(day).padStart(2, "0")}.${String(month ?? 1).padStart(2, "0")}`;
+}
+
+export function formatDDMMYYYY(raceDate: unknown): string {
+  const { day, month, year } = parseDateParts(raceDate);
+  return `${String(day).padStart(2, "0")}.${String(month ?? 1).padStart(2, "0")}.${year}`;
+}
+
 export function formatDate(raceDate: unknown): string | undefined {
   if (!raceDate) return undefined;
   return formatDDMonth(raceDate);
@@ -74,7 +84,7 @@ const NORWEGIAN_WEEKDAYS = [
   "Lørdag",
 ];
 
-// "Torsdag 11. Juni 2026"
+// "Torsdag 11. juni 2026"
 export function formatWeekdayDateFull(raceDate: unknown): string | undefined {
   if (!raceDate) return undefined;
   const { year, month, day } = parseDateParts(raceDate);

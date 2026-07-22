@@ -63,7 +63,7 @@ export function RoutePhotoGallery() {
           <h3 className="font-display text-lg font-extrabold tracking-tight md:mt-1.5 md:text-2xl">
             {routeSection.title}
           </h3>
-          <p className="mt-2 text-sm leading-relaxed text-muted-foreground md:mt-2.5 md:text-[15px]">
+          <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-muted-foreground md:mt-2.5 md:text-[15px]">
             {routeSection.description}
           </p>
 

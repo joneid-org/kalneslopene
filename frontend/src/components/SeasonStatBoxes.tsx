@@ -15,7 +15,7 @@ export function SeasonStatBoxes() {
       shortLabel: "Deltakere",
     },
     {
-      value: yearStatistics?.averageRunnersPerRace.toFixed(2),
+      value: yearStatistics && Math.round(yearStatistics.averageRunnersPerRace),
       label: "Snittdeltakelse",
       shortLabel: "Snittdeltakelse",
     },
@@ -43,15 +43,12 @@ export function SeasonStatBoxes() {
   ];
 
   return (
-    <div className="rounded-2xl bg-brand-ink p-4 sm:p-7">
+    <div className="rounded-2xl border bg-card p-4 sm:p-7">
       <div className="flex items-center justify-between mb-3 sm:mb-5">
-        <span className="hidden sm:block text-[11px] font-bold uppercase tracking-[0.14em] text-brand">
-          Deltakerstatistikk
-        </span>
-        <h2 className="font-display text-base sm:text-2xl text-white font-extrabold tracking-tight">
+        <h2 className="font-display text-base sm:text-xl text-foreground font-bold tracking-tight">
           Årets sesong i tall
         </h2>
-        <span className="sm:hidden text-[10px] font-bold uppercase tracking-wider text-white/55">
+        <span className="sm:hidden text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
           {CURRENT_YEAR}
         </span>
       </div>
@@ -60,21 +57,21 @@ export function SeasonStatBoxes() {
           <div
             key={label}
             className={`rounded-xl p-2.5 sm:p-4 text-center ${
-              accent ? "bg-brand" : "bg-white/[0.07]"
+              accent ? "bg-brand-soft" : "bg-secondary"
             }`}
           >
             <p
-              className={`font-display text-[22px] sm:text-3xl font-extrabold tabular-nums leading-none ${
-                accent ? "text-brand-foreground" : "text-white"
+              className={`font-display text-[22px] sm:text-3xl font-bold tabular-nums leading-none ${
+                accent ? "text-brand-soft-foreground" : "text-primary"
               }`}
             >
               {value ?? "–"}
             </p>
             <p
-              className={`text-[10px] sm:text-[11px] uppercase tracking-wide mt-1.5 sm:mt-2 ${
+              className={`text-[10px] sm:text-[11px] uppercase tracking-wide mt-1.5 sm:mt-2 font-semibold ${
                 accent
-                  ? "text-brand-foreground/80 font-bold"
-                  : "text-white/70 font-semibold"
+                  ? "text-brand-soft-foreground/80"
+                  : "text-muted-foreground"
               }`}
             >
               <span className="sm:hidden">{shortLabel}</span>

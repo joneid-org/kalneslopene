@@ -106,5 +106,18 @@ html {
   .empty-state {
     @apply flex flex-col items-center justify-center py-16 gap-3 text-muted-foreground;
   }
+
+  /* ─── Scroll-edge fade (signals more content below/above, no JS) ── */
+
+  .scroll-fade-edges {
+    background:
+      linear-gradient(var(--popover) 30%, transparent),
+      linear-gradient(transparent, var(--popover) 70%) 0 100%,
+      radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, 0.35), transparent),
+      radial-gradient(farthest-side at 50% 100%, rgba(0, 0, 0, 0.35), transparent) 0 100%;
+    background-repeat: no-repeat;
+    background-size: 100% 24px, 100% 24px, 100% 16px, 100% 16px;
+    background-attachment: local, local, scroll, scroll;
+  }
 }
 

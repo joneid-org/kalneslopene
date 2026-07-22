@@ -6,10 +6,12 @@ import { NewsCard } from "@/components/News/NewsCard.tsx";
 import { NEWS_IMAGES } from "@/lib/newsUtils.ts";
 import type { NewsFeedDTO } from "@/model/DTO.ts";
 
-const COLS = 3;
+const ARTICLE_COUNT = 6;
 
 export default function NewsFeed() {
-  const { data: newsfeeds } = useQuery(QUERIES.newsfeed.getNewsFeed(0, COLS));
+  const { data: newsfeeds } = useQuery(
+    QUERIES.newsfeed.getNewsFeed(0, ARTICLE_COUNT),
+  );
 
   if (!newsfeeds || newsfeeds.totalElements === 0) {
     return (
@@ -20,8 +22,8 @@ export default function NewsFeed() {
     );
   }
 
-  const visible = newsfeeds.content.slice(0, COLS);
-  const hasMore = newsfeeds.totalElements > COLS;
+  const visible = newsfeeds.content.slice(0, ARTICLE_COUNT);
+  const hasMore = newsfeeds.totalElements > ARTICLE_COUNT;
 
   return (
     <div className="flex flex-col gap-4">

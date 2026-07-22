@@ -6,7 +6,7 @@ export function Hero() {
     <>
       {/* Mobile: rounded hero card with the race card tucked underneath */}
       <div className="sm:hidden">
-        <section className="relative h-[280px] mx-3 rounded-t-3xl overflow-hidden">
+        <section className="relative h-[clamp(190px,52vw,230px)] mx-3 rounded-t-3xl overflow-hidden">
           <img
             src={cardImage}
             alt="Torsdagsløpet"
@@ -15,11 +15,11 @@ export function Hero() {
             className="absolute inset-0 w-full h-full object-cover object-[50%_28%]"
           />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,58,40,0)_32%,rgba(15,30,20,0.55)_70%,rgba(15,30,20,0.82)_100%)]" />
-          <div className="absolute inset-x-0 bottom-0 p-4 text-center">
+          <div className="absolute inset-x-0 bottom-0 px-4 pt-4 pb-9 text-center">
             <h1 className="font-display font-black text-white text-4xl leading-none tracking-[-0.03em] drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)]">
               Torsdagsløpet
             </h1>
-            <p className="mt-2 text-[11px] font-bold uppercase tracking-[0.16em] text-white/90 drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)]">
+            <p className="mt-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-white/90 drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)]">
               Lavterskel løpsglede siden 1978
             </p>
           </div>
@@ -28,7 +28,7 @@ export function Hero() {
       </div>
 
       {/* Desktop: full-bleed hero with the race card overlapping its base */}
-      <section className="hidden sm:block relative overflow-hidden w-full h-[480px] max-h-[480px]">
+      <section className="hidden sm:block relative overflow-hidden w-full h-[clamp(260px,30vw,350px)]">
         <img
           src={cardImage}
           alt="Torsdagsløpet"

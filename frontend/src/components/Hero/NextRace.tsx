@@ -59,7 +59,7 @@ function NextRaceEmpty() {
     <div className="flex w-full items-center justify-center gap-2.5 py-1 text-center">
       <CalendarDays className="size-5 shrink-0 text-white/55" />
       <span className="font-display text-base font-extrabold text-white sm:text-lg">
-        Ses neste sesong
+        Sees neste sesong
       </span>
     </div>
   );

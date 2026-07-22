@@ -113,7 +113,7 @@ export const router = createBrowserRouter([
                 Component: CRUDRunners,
               },
               {
-                path: "admin/organisatorer",
+                path: "admin/arrangører",
                 Component: CRUDOrganizers,
               },
               {

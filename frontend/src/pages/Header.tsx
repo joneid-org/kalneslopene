@@ -46,9 +46,9 @@ export function Header({ ref }: { ref?: Ref<HTMLElement> }) {
           />
           <DynamicDropDownMenu
             label="Bilder"
-            basePath="/Bilder"
+            basePath="/bilder"
             races={races ?? []}
-            active={pathname.startsWith("/Bilder")}
+            active={pathname.startsWith("/bilder")}
           />
           {navLinks.map(({ path, label }) => {
             const active = pathname.startsWith(path);

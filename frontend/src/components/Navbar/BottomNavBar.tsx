@@ -90,7 +90,7 @@ const tabs: Tab[] = [
     path: "/bilder",
     label: "Bilder",
     Icon: PicturesIcon,
-    isActive: (p) => p.startsWith("/Bilder"),
+    isActive: (p) => p.startsWith("/bilder"),
   },
   {
     path: "/statistikk",
@@ -100,7 +100,7 @@ const tabs: Tab[] = [
   },
 ];
 
-const racePickerPaths = new Set(["/Resultater", "/Bilder"]);
+const racePickerPaths = new Set(["/resultater", "/bilder"]);
 
 const moreItems: {
   path: string;

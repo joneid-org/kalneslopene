@@ -1,19 +1,20 @@
 import { useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
-import { SegmentedControl } from "@/components/SegmentedControl.tsx";
 import {
   type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart.tsx";
-import type { DatedRaceRunner } from "@/lib/statisticsUtils.ts";
+import { YearSelector, type YearValue } from "@/components/YearSelector.tsx";
 import {
   extractYear,
+  formatDDMMYYYY,
   formatDDMonth,
   formatSecondsToTime,
   mapResultTimeToNumber,
 } from "@/lib/timeUtils.ts";
+import type { RaceRunnerDTO } from "@/model/DTO.ts";
 
 const YEAR_COLORS: Record<number, string> = {
   2026: "oklch(0.50 0.18 255)",
@@ -36,33 +37,27 @@ type ChartPoint = {
   [year: string]: number | string;
 };
 
-type Props = { raceHistory: DatedRaceRunner[]; availableYears: number[] };
+type Props = { raceHistory: RaceRunnerDTO[]; availableYears: number[] };
 
 export default function RunnerTimeChart({
   raceHistory,
   availableYears,
 }: Props) {
-  const [range, setRange] = useState<string>("all");
+  const [range, setRange] = useState<YearValue>(availableYears[0] ?? "all");
 
-  const selectedYears =
-    range === "all" ? availableYears : [Number.parseInt(range, 10)];
+  const selectedYears = range === "all" ? availableYears : [range];
   const selectedYearsSet = new Set(selectedYears);
-
-  const options = [
-    { label: "Alle", value: "all" },
-    ...availableYears.map((y) => ({ label: String(y), value: String(y) })),
-  ];
 
   const filtered = raceHistory.filter(
     (rr) =>
       !rr.hideTime &&
       rr.resultTime &&
-      selectedYearsSet.has(extractYear(rr.raceDate)),
+      selectedYearsSet.has(extractYear(rr.raceInfo.raceDate)),
   );
 
   const byDate = new Map<string, ChartPoint>();
   for (const rr of filtered) {
-    const { raceDate } = rr;
+    const { raceDate } = rr.raceInfo;
     const key = raceDate;
     const label = formatDDMonth(raceDate);
     const year = extractYear(raceDate);
@@ -86,9 +81,10 @@ export default function RunnerTimeChart({
     <div className="rounded-2xl border bg-card p-5">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
         <span className="text-sm font-bold">Utvikling over tid</span>
-        <SegmentedControl
+        <YearSelector
           tone="primary"
-          options={options}
+          includeAll
+          years={availableYears}
           value={range}
           onChange={setRange}
         />
@@ -121,10 +117,15 @@ export default function RunnerTimeChart({
             <ChartTooltip
               content={
                 <ChartTooltipContent
-                  formatter={(value, name) => [
-                    formatSecondsToTime(Number(value)),
-                    chartConfig[String(name)]?.label ?? String(name),
-                  ]}
+                  labelFormatter={(_label, payload) => {
+                    const sortKey = payload?.[0]?.payload?.sortKey;
+                    return sortKey ? formatDDMMYYYY(sortKey) : "";
+                  }}
+                  formatter={(value) => (
+                    <span className="font-mono font-medium tabular-nums">
+                      {formatSecondsToTime(Number(value))}
+                    </span>
+                  )}
                 />
               }
             />

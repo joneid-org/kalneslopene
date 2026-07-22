@@ -52,7 +52,7 @@ export function ImportResultsFromFile() {
           : [
               {
                 runner: r.resolvedRunner,
-                raceUuid: race.uuid,
+                raceInfo: { uuid: race.uuid, raceDate: race.raceDate },
                 resultTime: secondsToDuration(r.timeSeconds),
                 hideTime: r.timeSeconds === 0,
                 totalRaces: 0,

@@ -1,9 +1,9 @@
-import type { DatedRaceRunner } from "@/lib/statisticsUtils.ts";
 import { cn, getBestRaceThisYearFromRunner } from "@/lib/utils.ts";
+import type { RaceRunnerDTO } from "@/model/DTO.ts";
 
 type Props = {
   availableYears: number[];
-  raceHistory: DatedRaceRunner[];
+  raceHistory: RaceRunnerDTO[];
 };
 
 export default function RunnerStatisticsSeasonBest({

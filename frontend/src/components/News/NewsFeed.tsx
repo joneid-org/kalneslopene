@@ -8,10 +8,12 @@ import { NEWS_IMAGES, tagColor, useTags } from "@/lib/newsUtils.ts";
 import { formatDateFull } from "@/lib/timeUtils.ts";
 import type { NewsFeedDTO } from "@/model/DTO.ts";
 
-const COLS = 3;
+const ARTICLE_COUNT = 6;
 
 export default function NewsFeed() {
-  const { data: newsfeeds } = useQuery(QUERIES.newsfeed.getNewsFeed(0, COLS));
+  const { data: newsfeeds } = useQuery(
+    QUERIES.newsfeed.getNewsFeed(0, ARTICLE_COUNT),
+  );
   const tags = useTags();
 
   if (!newsfeeds || newsfeeds.totalElements === 0) {
@@ -23,8 +25,8 @@ export default function NewsFeed() {
     );
   }
 
-  const visible = newsfeeds.content.slice(0, COLS);
-  const hasMore = newsfeeds.totalElements > COLS;
+  const visible = newsfeeds.content.slice(0, ARTICLE_COUNT);
+  const hasMore = newsfeeds.totalElements > ARTICLE_COUNT;
 
   return (
     <div className="flex flex-col gap-4">

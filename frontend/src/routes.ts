@@ -46,10 +46,6 @@ export const router = createBrowserRouter([
             Component: Results,
           },
           {
-            path: "bilder",
-            Component: Pictures,
-          },
-          {
             path: "bilder/:uuid",
             Component: Pictures,
           },

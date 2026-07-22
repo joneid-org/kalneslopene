@@ -9,6 +9,7 @@ import {
 import { colorIcon } from "@/components/CourseMap/mapUtils.ts";
 import { blaaRoute } from "@/data/coordinater.ts";
 import { MAP_CENTER, MAP_ZOOM, mapLegend, pins } from "@/data/loypekartData.ts";
+import { cn } from "@/lib/utils.ts";
 import { PinInfoPanel } from "./PinInfoPanel";
 
 const ROUTE_COLOR = "#1f7a4d";
@@ -16,11 +17,10 @@ const ACTIVE_PIN_COLOR = "#f2a33c";
 
 export function CourseMapPins() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const currentPin = pins[currentIndex];
   return (
     <div className="grid gap-4 md:grid-cols-[1.55fr_1fr] md:items-stretch">
       <div
-        className="relative h-[320px] overflow-hidden rounded-2xl border shadow-sm md:h-[420px]"
+        className="relative h-80 overflow-hidden rounded-2xl border shadow-sm md:h-auto"
         style={{ zIndex: 0 }}
       >
         <MapContainer
@@ -54,7 +54,7 @@ export function CourseMapPins() {
             );
           })}
         </MapContainer>
-        <div className="pointer-events-none absolute bottom-3 left-3 z-[1000] flex items-center gap-2 rounded-full bg-background/90 px-3 py-1.5 text-xs font-semibold shadow-sm backdrop-blur">
+        <div className="pointer-events-none absolute bottom-3 left-3 z-1000 flex items-center gap-2 rounded-full bg-background/90 px-3 py-1.5 text-xs font-semibold shadow-sm backdrop-blur">
           {mapLegend.map(({ color, label }) => (
             <span key={label} className="flex items-center gap-2">
               <span
@@ -67,7 +67,17 @@ export function CourseMapPins() {
         </div>
       </div>
 
-      <PinInfoPanel pin={currentPin} />
+      <div className="grid">
+        {pins.map((pin, i) => (
+          <div
+            key={pin.id}
+            aria-hidden={i !== currentIndex}
+            className={cn("[grid-area:1/1]", i !== currentIndex && "invisible")}
+          >
+            <PinInfoPanel pin={pin} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

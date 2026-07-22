@@ -17,7 +17,7 @@ export function Header({ ref }: { ref?: Ref<HTMLElement> }) {
 
   return (
     <header ref={ref} className="sticky top-0 z-50 bg-card/90 backdrop-blur-md">
-      <div className="mx-auto flex h-14 w-full max-w-[var(--page-max-width)] items-center gap-3 px-4 md:h-[70px]">
+      <div className="mx-auto flex h-14 w-full max-w-(--page-max-width) items-center gap-3 px-4 md:h-17.5">
         <Link to="/" className="group flex min-w-0 items-center gap-2.5">
           <svg
             viewBox="0 0 100 100"
@@ -46,6 +46,12 @@ export function Header({ ref }: { ref?: Ref<HTMLElement> }) {
             basePath="/resultater"
             races={(races ?? []).filter((r) => r.isPublished)}
             active={pathname.startsWith("/resultater")}
+          />
+          <DynamicDropDownMenu
+            label="Bilder"
+            basePath="/Bilder"
+            races={races ?? []}
+            active={pathname.startsWith("/Bilder")}
           />
           {navLinks.map(({ path, label }) => {
             const active = pathname.startsWith(path);

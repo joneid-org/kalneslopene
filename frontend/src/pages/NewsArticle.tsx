@@ -23,18 +23,20 @@ import { formatDateFull } from "@/lib/timeUtils.ts";
 export function NewsArticle() {
   const { uuid } = useParams<{ uuid: string }>();
   const [open, setOpen] = useState(false);
-  const { data: post } = useQuery(
-    QUERIES.newsfeed.getNewsFeedByUuid(uuid ?? ""),
-  );
+  const postQuery = useQuery(QUERIES.newsfeed.getNewsFeedByUuid(uuid ?? ""));
+  const post = postQuery.data;
   const { data: races } = useQuery(QUERIES.race.getAllRaces());
   const tags = useTags();
 
   if (!post) {
-    return (
-      <div className="flex items-center justify-center py-24">
-        <p className="text-sm text-gray-400">Laster artikkel...</p>
-      </div>
-    );
+    if (postQuery.isPending) {
+      return (
+        <div className="flex items-center justify-center py-24">
+          <p className="text-sm text-gray-400">Laster artikkel...</p>
+        </div>
+      );
+    }
+    throw new Response("Fant ikke artikkelen", { status: 404 });
   }
 
   const imgIndex = [...post.uuid].reduce((sum, c) => sum + c.charCodeAt(0), 0);
@@ -89,8 +91,8 @@ export function NewsArticle() {
 
         <Separator className="mb-3" />
 
-        <p
-          className="text-sm leading-relaxed mb-6 prose prose-sm max-w-none [&_img]:max-w-full [&_img]:rounded-lg [&_img]:my-2"
+        <div
+          className="text-sm leading-relaxed mb-6 prose prose-sm max-w-none [&_img]:max-w-full [&_img]:rounded-lg [&_img]:my-2 [&_a]:text-blue-600 [&_a]:underline"
           // biome-ignore lint/security/noDangerouslySetInnerHtml: rich text HTML from admin editor, sanitized with DOMPurify below
           dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
         />

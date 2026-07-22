@@ -13,14 +13,27 @@ import {
   Highlighter,
   ImagePlus,
   Italic,
+  Link as LinkIcon,
   List,
   ListOrdered,
+  Loader2,
   Palette,
   Strikethrough,
+  Unlink,
 } from "lucide-react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { requestNewsfeedContentUpload } from "@/api/queries.ts";
+import { uploadToS3 } from "@/api/s3.ts";
 import { Button } from "@/components/ui/button.tsx";
-import { readFileAsDataURL } from "@/lib/utils.ts";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog.tsx";
+import { Input } from "@/components/ui/input.tsx";
+import { Label } from "@/components/ui/label.tsx";
 
 const COLORS = [
   "#000000",
@@ -50,10 +63,23 @@ interface RichTextEditorProps {
 
 export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
   const imageInputRef = useRef<HTMLInputElement>(null);
+  const [linkDialogOpen, setLinkDialogOpen] = useState(false);
+  const [linkUrl, setLinkUrl] = useState("");
+  const [linkText, setLinkText] = useState("");
+  const [uploading, setUploading] = useState(false);
 
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        link: {
+          openOnClick: false,
+          HTMLAttributes: {
+            target: "_blank",
+            rel: "noopener noreferrer",
+            class: "text-blue-600 underline",
+          },
+        },
+      }),
       TextStyle,
       Color,
       Highlight.configure({ multicolor: true }),
@@ -70,11 +96,44 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const dataUrl = await readFileAsDataURL(file);
-      editor.chain().focus().setImage({ src: dataUrl }).run();
-      e.target.value = "";
+    e.target.value = "";
+    if (!file) return;
+    setUploading(true);
+    try {
+      const { uploadUrl, s3File } = await requestNewsfeedContentUpload(
+        file.name,
+      );
+      await uploadToS3(file, uploadUrl);
+      editor.chain().focus().setImage({ src: s3File.url }).run();
+    } finally {
+      setUploading(false);
     }
+  };
+
+  const openLinkDialog = () => {
+    const { from, to } = editor.state.selection;
+    setLinkText(editor.state.doc.textBetween(from, to));
+    setLinkUrl(editor.getAttributes("link").href ?? "");
+    setLinkDialogOpen(true);
+  };
+
+  const applyLink = () => {
+    const url = linkUrl.trim();
+    if (url === "") {
+      editor.chain().focus().extendMarkRange("link").unsetLink().run();
+      setLinkDialogOpen(false);
+      return;
+    }
+    const label = linkText.trim() === "" ? url : linkText;
+    const { from, to } = editor.state.selection;
+    editor
+      .chain()
+      .focus()
+      .insertContentAt({ from, to }, label)
+      .setTextSelection({ from, to: from + label.length })
+      .setLink({ href: url })
+      .run();
+    setLinkDialogOpen(false);
   };
 
   return (
@@ -101,6 +160,22 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
           title="Gjennomstrek"
         >
           <Strikethrough className="size-3.5" />
+        </ToolbarButton>
+
+        <Divider />
+
+        <ToolbarButton
+          active={editor.isActive("link")}
+          onClick={openLinkDialog}
+          title="Sett inn lenke"
+        >
+          <LinkIcon className="size-3.5" />
+        </ToolbarButton>
+        <ToolbarButton
+          onClick={() => editor.chain().focus().unsetLink().run()}
+          title="Fjern lenke"
+        >
+          <Unlink className="size-3.5" />
         </ToolbarButton>
 
         <Divider />
@@ -225,17 +300,76 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
         />
         <ToolbarButton
           onClick={() => imageInputRef.current?.click()}
+          disabled={uploading}
           title="Sett inn bilde"
         >
-          <ImagePlus className="size-3.5" />
+          {uploading ? (
+            <Loader2 className="size-3.5 animate-spin" />
+          ) : (
+            <ImagePlus className="size-3.5" />
+          )}
         </ToolbarButton>
       </div>
 
       {/* Editor area */}
       <EditorContent
         editor={editor}
-        className="min-h-40 prose prose-sm max-w-none p-3 focus-within:outline-none text-sm [&_.ProseMirror]:outline-none [&_.ProseMirror]:min-h-35 [&_.ProseMirror_img]:max-w-full [&_.ProseMirror_img]:rounded-md [&_.ProseMirror_img]:my-2"
+        className="min-h-40 prose prose-sm max-w-none p-3 focus-within:outline-none text-sm [&_.ProseMirror]:outline-none [&_.ProseMirror]:min-h-35 [&_.ProseMirror_img]:max-w-full [&_.ProseMirror_img]:rounded-md [&_.ProseMirror_img]:my-2 [&_a]:text-blue-600 [&_a]:underline"
       />
+
+      <Dialog open={linkDialogOpen} onOpenChange={setLinkDialogOpen}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Sett inn lenke</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-3">
+            <div className="grid gap-2">
+              <Label htmlFor="link-text">Tekst</Label>
+              <Input
+                id="link-text"
+                placeholder="Ordet som vises"
+                value={linkText}
+                onChange={(e) => setLinkText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    applyLink();
+                  }
+                }}
+                autoFocus
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="link-url">URL</Label>
+              <Input
+                id="link-url"
+                type="url"
+                placeholder="https://eksempel.no"
+                value={linkUrl}
+                onChange={(e) => setLinkUrl(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    applyLink();
+                  }
+                }}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setLinkDialogOpen(false)}
+            >
+              Avbryt
+            </Button>
+            <Button type="button" onClick={applyLink}>
+              Lagre
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
@@ -245,11 +379,13 @@ function ToolbarButton({
   active,
   onClick,
   title,
+  disabled,
 }: {
   children: React.ReactNode;
   active?: boolean;
   onClick: () => void;
   title?: string;
+  disabled?: boolean;
 }) {
   return (
     <Button
@@ -259,6 +395,7 @@ function ToolbarButton({
       className="h-7 w-7 p-0"
       onClick={onClick}
       title={title}
+      disabled={disabled}
     >
       {children}
     </Button>

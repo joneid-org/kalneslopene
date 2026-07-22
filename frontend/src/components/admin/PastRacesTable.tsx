@@ -1,5 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { CheckCircle2Icon, Loader2Icon, PencilIcon } from "lucide-react";
+import {
+  CheckCircle2Icon,
+  CircleDashedIcon,
+  Loader2Icon,
+  PencilIcon,
+} from "lucide-react";
 import { Fragment, type ReactNode } from "react";
 import { QUERIES } from "@/api/queries.ts";
 import { DeleteButton } from "@/components/admin/DeleteButton.tsx";
@@ -12,6 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table.tsx";
+import { WeatherLine } from "@/components/Weather/WeatherLine.tsx";
 import {
   formatDDMonth,
   formatSecondsToTime,
@@ -56,7 +62,11 @@ export function PastRacesTable({
                 onClick={expandable ? () => onToggleExpand(race) : undefined}
               >
                 <TableCell className="flex items-center gap-2">
-                  <CheckCircle2Icon className="size-3.5 text-green-600 shrink-0" />
+                  {race.isPublished ? (
+                    <CheckCircle2Icon className="size-3.5 shrink-0 text-green-600" />
+                  ) : (
+                    <CircleDashedIcon className="size-3.5 shrink-0 text-red-600" />
+                  )}
                   <span className="font-medium">
                     {formatDDMonth(race.raceDate)}
                   </span>
@@ -65,7 +75,13 @@ export function PastRacesTable({
                   {formatTimeStamp(race.raceDate)}
                 </TableCell>
                 <TableCell className="text-muted-foreground">
-                  {race.weather ?? (
+                  {race.weather || race.courseCondition ? (
+                    <WeatherLine
+                      weather={race.weather}
+                      courseCondition={race.courseCondition}
+                      className="text-xs"
+                    />
+                  ) : (
                     <span className="italic text-xs">Ikke registrert</span>
                   )}
                 </TableCell>

@@ -1,9 +1,11 @@
-import kiwiLogo from "@/data/kiwi.png";
-import xxlLogo from "@/data/xxl.svg";
+import kiwiLogo from "../images/kiwi.png";
+import sa from "../images/sa.svg";
+import xxlLogo from "../images/xxl.svg";
 
 const sponsors = [
   { name: "Kiwi", url: "https://kiwi.no/", logo: kiwiLogo },
   { name: "XXL", url: "https://www.xxl.no/", logo: xxlLogo },
+  { name: "Sa", url: "https://www.sa.no/", logo: sa },
 ];
 
 export default function SponsorsBlock() {
@@ -20,7 +22,7 @@ export default function SponsorsBlock() {
             target="_blank"
             rel="noopener noreferrer"
             title={name}
-            className="flex items-center justify-center opacity-70 hover:opacity-100 transition-opacity"
+            className="flex items-center justify-center hover:opacity-70 transition-opacity"
           >
             <img src={logo} alt={name} className="h-8 sm:h-10 object-contain" />
           </a>

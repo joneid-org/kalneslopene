@@ -4,7 +4,7 @@ import java.time.Duration
 
 data class RaceResultDTO(
     val runner: RunnerDTO,
-    val resultTime: Duration,
+    val resultTime: Duration?,
     val hideTime: Boolean,
     val totalRaces: Int,
     val personalBest: Duration?,

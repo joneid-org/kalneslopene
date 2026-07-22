@@ -19,7 +19,8 @@ import {
 export function Results() {
   const { uuid = "" } = useParams<{ uuid: string }>();
 
-  const { data: races } = useQuery(QUERIES.race.getAllRaces());
+  const racesQuery = useQuery(QUERIES.race.getAllRaces());
+  const races = racesQuery.data;
   const { data: raceRunners } = useQuery(
     QUERIES.race.getAllRunnersInRace(uuid),
   );
@@ -27,7 +28,7 @@ export function Results() {
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  const allRaces = races ?? [];
+  const allRaces = (races ?? []).filter((r) => r.isPublished);
   const race = allRaces.find((r) => r.uuid === uuid);
   const previous = getPreviousRace(allRaces, uuid);
   const next = getNextRace(allRaces, uuid);
@@ -40,7 +41,10 @@ export function Results() {
     if (!uuid && latest) {
       return <Navigate to={`/Resultater/${latest.uuid}`} replace />;
     }
-    return null;
+    if (racesQuery.isPending) {
+      return null;
+    }
+    throw new Response("Fant ikke løpet", { status: 404 });
   }
 
   return (

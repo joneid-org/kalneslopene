@@ -9,10 +9,15 @@ spring:
   liquibase:
     drop-first: true
     enabled: true
-    change-log: classpath:db/changelog/changelog-local.yaml
+    change-log: classpath:db/changelog/changelog-master.yaml
   jpa:
     hibernate:
       ddl-auto: none
+
+baseline-data:
+  enabled: false # True to test with baselinedata
+mockdata:
+  enabled: true # True to test with mockdata
 
 minio:
   endpoint: http://localhost:9000

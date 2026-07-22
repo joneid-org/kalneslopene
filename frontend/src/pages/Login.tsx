@@ -1,6 +1,7 @@
 import { LogInIcon, UserPlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { MUTATIONS } from "@/api/mutations.ts";
 import { QUERIES } from "@/api/queries.ts";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -35,7 +36,7 @@ export function Login() {
     setError(null);
     setLoading(true);
     try {
-      const result = await QUERIES.auth.login({ username, password }).queryFn();
+      const result = await MUTATIONS.auth.login({ username, password });
       login(username, password, result.roles);
       navigate("/admin");
     } catch {
@@ -50,7 +51,7 @@ export function Login() {
     setError(null);
     setLoading(true);
     try {
-      const result = await QUERIES.auth.setup({ username, password }).queryFn();
+      const result = await MUTATIONS.auth.setup({ username, password });
       login(username, password, result.roles);
       navigate("/admin");
     } catch {

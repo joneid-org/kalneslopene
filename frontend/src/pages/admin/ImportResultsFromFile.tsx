@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { ChevronLeftIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { MUTATIONS } from "@/api/mutations.ts";
 import { QUERIES } from "@/api/queries.ts";
 import { queryClient } from "@/api/queryClient.ts";
 import { CsvRaceSelector } from "@/components/admin/CsvRaceSelector.tsx";
@@ -55,10 +56,11 @@ export function ImportResultsFromFile() {
                 resultTime: secondsToDuration(r.timeSeconds),
                 hideTime: r.timeSeconds === 0,
                 totalRaces: 0,
+                seasonRaces: 0,
               },
             ],
       );
-      await QUERIES.race.addRunnersToRace(raceUuid, raceRunners).queryFn();
+      await MUTATIONS.race.addRunnersToRace(raceUuid, raceRunners);
     },
     onSuccess: (_, race) => {
       queryClient.invalidateQueries({

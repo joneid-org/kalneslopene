@@ -82,7 +82,7 @@ html {
   /* ─── Tag pills ────────────────────────────────────────── */
 
   .tag-pill {
-    @apply text-xs font-medium uppercase px-1.5 py-0.5 hover:opacity-80 transition-opacity cursor-pointer;
+    @apply inline-flex items-center rounded-full bg-gray-50 text-xs font-medium uppercase tracking-wide px-2.5 py-1 hover:opacity-80 transition-opacity cursor-pointer;
   }
 
   /* ─── Muted / secondary text ───────────────────────────── */

@@ -8,14 +8,27 @@ export interface ConfigDTO {
   s3BaseUrl: string;
 }
 
+export type WeatherDto = {
+  symbol: string;
+  temperature: number;
+  windSpeed: number;
+  precipitation: number;
+};
+
 export type RaceDTO = {
   uuid: string;
   raceDate: string;
-  weather?: string;
+  weather?: WeatherDto;
+  courseCondition?: string;
+  weatherManuallyEdited: boolean;
   runnerCount: number;
+  isPublished: boolean;
   photos: S3FileDto[];
 };
-export type RaceInput = Omit<RaceDTO, "uuid" | "runnerCount" | "photos">;
+export type RaceInput = Omit<
+  RaceDTO,
+  "uuid" | "runnerCount" | "isPublished" | "photos" | "weatherManuallyEdited"
+>;
 
 export type NewsFeedDTO = {
   uuid: string;
@@ -62,18 +75,22 @@ export type RunnerDTO = {
   uuid: string;
   name: string;
   gender: string;
+  isVerified: boolean;
   pr?: string;
 };
-export type RunnerInput = Omit<RunnerDTO, "uuid">;
+export type RunnerInput = Omit<RunnerDTO, "uuid" | "isVerified"> & {
+  isVerified?: boolean;
+};
 
 export type RaceRunnerDTO = {
   runner: RunnerDTO;
   raceUuid: string;
-  resultTime: string;
+  resultTime: string | null;
   hideTime: boolean;
   previousSeasonBest?: string;
   previousPersonalRecord?: string;
   totalRaces: number;
+  seasonRaces: number;
 };
 
 export type RaceResultSummaryDTO = {
@@ -116,29 +133,4 @@ export type LoginRequest = {
 export type LoginResponse = {
   username: string;
   roles: string[];
-};
-
-export type YrTimeseries = {
-  time: string;
-  data: {
-    instant: {
-      details: {
-        air_temperature: number;
-        wind_speed: number;
-        cloud_area_fraction: number;
-      };
-    };
-    next_1_hours?: {
-      summary: { symbol_code: string };
-      details: { precipitation_amount: number };
-    };
-    next_6_hours?: {
-      summary: { symbol_code: string };
-      details: { precipitation_amount: number };
-    };
-  };
-};
-
-export type YrForecast = {
-  properties: { timeseries: YrTimeseries[] };
 };

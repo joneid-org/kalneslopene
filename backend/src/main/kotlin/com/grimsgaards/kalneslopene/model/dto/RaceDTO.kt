@@ -6,7 +6,10 @@ import java.util.UUID
 data class RaceDTO(
     val uuid: UUID,
     val raceDate: LocalDateTime,
-    val weather: String?,
+    val weather: WeatherDto?,
+    val courseCondition: String?,
+    val weatherManuallyEdited: Boolean,
     val runnerCount: Int,
+    val isPublished: Boolean,
     val photos: List<FileDto>,
 )

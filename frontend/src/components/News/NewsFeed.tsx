@@ -72,7 +72,7 @@ export default function NewsFeed() {
                     onClick={(e) => e.stopPropagation()}
                   >
                     <span
-                      className="tag-pill rounded-full bg-secondary px-2.5 py-1"
+                      className="tag-pill"
                       style={{ color: tagColor(tag, tags) }}
                     >
                       {tag}

@@ -2,38 +2,16 @@ import { useQuery } from "@tanstack/react-query";
 import type { LucideIcon } from "lucide-react";
 import {
   CalendarDays,
-  Cloud,
-  CloudDrizzle,
-  CloudLightning,
-  CloudRain,
-  CloudSnow,
   Droplets,
-  Eye,
-  Sun,
-  SunDim,
+  Footprints,
   Thermometer,
   Wind,
 } from "lucide-react";
 import { QUERIES } from "@/api/queries.ts";
 import { formatDDMonth, formatRaceDateTime } from "@/lib/timeUtils.ts";
-import { useYrWeather, type YrWeatherResult } from "@/lib/useYrWeather.ts";
 import { cn, getUpcomingRaces } from "@/lib/utils.ts";
-import type { RaceDTO } from "@/model/DTO.ts";
-
-function weatherIcon(symbol: string): LucideIcon {
-  const s = symbol.replace(/_day|_night/, "");
-  if (s === "clearsky") return Sun;
-  if (s === "fair") return SunDim;
-  if (s === "partlycloudy") return SunDim;
-  if (s === "cloudy") return Cloud;
-  if (s === "fog") return Eye;
-  if (s.includes("thunder")) return CloudLightning;
-  if (s.includes("snow")) return CloudSnow;
-  if (s.includes("sleet")) return CloudDrizzle;
-  if (s.includes("heavyrain")) return CloudRain;
-  if (s.includes("rain")) return CloudRain;
-  return Cloud;
-}
+import { weatherIcon, weatherLabel } from "@/lib/weatherDisplay.ts";
+import type { RaceDTO, WeatherDto } from "@/model/DTO.ts";
 
 function WeatherItem({
   icon: Icon,
@@ -59,7 +37,7 @@ function WeatherItem({
 
 function DateBadge({ day, month }: { day: string; month: string }) {
   return (
-    <div className="shrink-0 text-center bg-brand rounded-xl w-[58px] sm:w-[62px] py-2 sm:py-[9px]">
+    <div className="shrink-0 text-center bg-brand rounded-xl w-14.5 sm:w-15.5 py-2 sm:py-2.25">
       <div className="font-display font-black text-2xl sm:text-[26px] leading-none tabular-nums text-brand-foreground">
         {day}.
       </div>
@@ -72,7 +50,7 @@ function DateBadge({ day, month }: { day: string; month: string }) {
 
 function DateBadgeSkeleton() {
   return (
-    <div className="shrink-0 h-[50px] sm:h-[54px] w-[58px] sm:w-[62px] rounded-xl bg-white/10 animate-pulse" />
+    <div className="shrink-0 h-12.5 sm:h-13.5 w-14.5 sm:w-15.5 rounded-xl bg-white/10 animate-pulse" />
   );
 }
 
@@ -103,8 +81,8 @@ function OverlaySkeleton() {
   return (
     <>
       <DateBadgeSkeleton />
-      <div className="min-w-0 flex-1 flex items-center gap-[22px]">
-        <div className="min-w-0 flex-1 border-r border-white/15 pr-[22px] space-y-2.5">
+      <div className="min-w-0 flex-1 flex items-center gap-5.5">
+        <div className="min-w-0 flex-1 border-r border-white/15 pr-5.5 space-y-2.5">
           <div className="h-3 w-24 rounded bg-white/10 animate-pulse" />
           <div className="h-5 w-52 rounded bg-white/10 animate-pulse" />
         </div>
@@ -120,7 +98,7 @@ function OverlaySkeleton() {
 type NextRaceVariantProps = {
   isPending: boolean;
   race: RaceDTO | undefined;
-  weather: YrWeatherResult | undefined;
+  weather: WeatherDto | undefined;
 };
 
 // Mobile: full-rounded card tucked under the hero, weather-forward
@@ -130,7 +108,7 @@ function NextRaceStacked({ isPending, race, weather }: NextRaceVariantProps) {
     : ["", ""];
 
   return (
-    <div className="relative -mt-[30px] mx-3 flex items-center gap-3.5 rounded-2xl bg-brand-ink px-4 py-3.5 shadow-[0_16px_30px_-16px_rgba(18,58,40,0.6)]">
+    <div className="relative -mt-7.5 mx-3 flex items-center justify-center gap-3.5 rounded-2xl bg-brand-ink px-4 py-3.5 shadow-[0_16px_30px_-16px_rgba(18,58,40,0.6)]">
       {isPending ? (
         <StackedSkeleton />
       ) : !race ? (
@@ -138,14 +116,17 @@ function NextRaceStacked({ isPending, race, weather }: NextRaceVariantProps) {
       ) : (
         <>
           <DateBadge day={day} month={month} />
-          <div className="min-w-0 flex-1">
+          <div className="min-w-0">
             <div className="text-[11px] font-bold uppercase tracking-wider text-white/65">
               Kommende løp
             </div>
-            {weather ? (
-              <div className="mt-1 space-y-1">
+            <div className="mt-0.5 truncate font-display text-base font-extrabold text-white">
+              {formatRaceDateTime(race.raceDate)}
+            </div>
+            {weather && (
+              <div className="mt-1.5 space-y-1">
                 <WeatherItem icon={weatherIcon(weather.symbol)}>
-                  {weather.label}
+                  {weatherLabel(weather.symbol)}
                 </WeatherItem>
                 <div className="flex flex-wrap gap-x-4 gap-y-1">
                   <WeatherItem
@@ -170,10 +151,6 @@ function NextRaceStacked({ isPending, race, weather }: NextRaceVariantProps) {
                   )}
                 </div>
               </div>
-            ) : (
-              <div className="mt-0.5 truncate font-display text-base font-extrabold text-white">
-                {formatRaceDateTime(race.raceDate)}
-              </div>
             )}
           </div>
         </>
@@ -189,7 +166,7 @@ function NextRaceOverlay({ isPending, race, weather }: NextRaceVariantProps) {
     : ["", ""];
 
   return (
-    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[min(640px,calc(100%-72px))] flex items-center gap-[22px] rounded-t-2xl bg-brand-ink px-6 py-[18px] shadow-[0_-10px_30px_-16px_rgba(18,58,40,0.5)]">
+    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[min(640px,calc(100%-72px))] flex items-center gap-5.5 rounded-t-2xl bg-brand-ink px-6 py-4.5 shadow-[0_-10px_30px_-16px_rgba(18,58,40,0.5)]">
       {isPending ? (
         <OverlaySkeleton />
       ) : !race ? (
@@ -197,8 +174,8 @@ function NextRaceOverlay({ isPending, race, weather }: NextRaceVariantProps) {
       ) : (
         <>
           <DateBadge day={day} month={month} />
-          <div className="min-w-0 flex-1 flex items-center gap-[22px]">
-            <div className="min-w-0 flex-1 border-r border-white/15 pr-[22px]">
+          <div className="min-w-0 flex-1 flex items-center gap-5.5">
+            <div className="min-w-0 flex-1 border-r border-white/15 pr-5.5">
               <div className="text-[11px] font-bold uppercase tracking-wider text-white/60">
                 Kommende løp
               </div>
@@ -210,7 +187,7 @@ function NextRaceOverlay({ isPending, race, weather }: NextRaceVariantProps) {
               {weather ? (
                 <>
                   <WeatherItem icon={weatherIcon(weather.symbol)}>
-                    {weather.label}
+                    {weatherLabel(weather.symbol)}
                   </WeatherItem>
                   <WeatherItem icon={Wind}>{weather.windSpeed} m/s</WeatherItem>
                   <WeatherItem icon={Thermometer}>
@@ -223,8 +200,10 @@ function NextRaceOverlay({ isPending, race, weather }: NextRaceVariantProps) {
                   )}
                 </>
               ) : (
-                race.weather && (
-                  <WeatherItem icon={Cloud}>{race.weather}</WeatherItem>
+                race.courseCondition && (
+                  <WeatherItem icon={Footprints}>
+                    {race.courseCondition}
+                  </WeatherItem>
                 )
               )}
             </div>
@@ -246,7 +225,7 @@ export function NextRace({
     isError,
   } = useQuery(QUERIES.race.getAllRaces());
   const race = getUpcomingRaces(races ?? [])[0];
-  const weather = useYrWeather(race?.raceDate);
+  const weather = race?.weather;
 
   if (isError && !races) return null;
 

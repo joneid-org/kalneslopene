@@ -10,7 +10,7 @@ variable "location" {
 }
 
 variable "os_type" {
-  default = "ubuntu-24.04"
+  default = "ubuntu-26.04"
 }
 
 variable "ssh_public_keys" {

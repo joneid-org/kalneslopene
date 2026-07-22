@@ -1,3 +1,4 @@
+import { WeatherLine } from "@/components/Weather/WeatherLine.tsx";
 import type { RaceDTO } from "@/model/DTO.ts";
 
 type ResultsHeaderProps = {
@@ -21,9 +22,11 @@ export default function ResultsHeader({ race, title }: ResultsHeaderProps) {
         <div className="font-display text-3xl font-black leading-none tracking-tight">
           {title}
         </div>
-        {race.weather && (
-          <div className="mt-1.5 text-sm text-white/85">{race.weather}</div>
-        )}
+        <WeatherLine
+          weather={race.weather}
+          courseCondition={race.courseCondition}
+          className="mt-1.5 text-white/85"
+        />
       </div>
     </div>
   );

@@ -45,10 +45,7 @@ export function SeasonStatBoxes() {
   return (
     <div className="rounded-2xl bg-brand-ink p-4 sm:p-7">
       <div className="flex items-center justify-between mb-3 sm:mb-5">
-        <span className="hidden sm:block text-[11px] font-bold uppercase tracking-[0.14em] text-brand">
-          Deltakerstatistikk
-        </span>
-        <h2 className="font-display text-base sm:text-2xl text-white font-extrabold tracking-tight">
+        <h2 className="font-display text-base sm:text-xl text-white font-extrabold tracking-tight">
           Årets sesong i tall
         </h2>
         <span className="sm:hidden text-[10px] font-bold uppercase tracking-wider text-white/55">

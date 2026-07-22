@@ -101,7 +101,7 @@ function PastRaceRow({ race, date }: { race: RaceDTO; date: Date }) {
 
   if (!race.uuid) return content;
   return (
-    <Link to={`/Resultater/${race.uuid}`} className="group block">
+    <Link to={`/resultater/${race.uuid}`} className="group block">
       {content}
     </Link>
   );

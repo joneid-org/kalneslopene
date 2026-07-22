@@ -45,7 +45,7 @@ export function RacePhotoGrid({
 }: RacePhotoGridProps) {
   if (photos.length === 0) return null;
 
-  const galleryPath = `/Bilder/${uuid}`;
+  const galleryPath = `/bilder/${uuid}`;
   const hasOverflow = photos.length > FULL_CELLS + 1;
   const fullPhotos = hasOverflow ? photos.slice(0, FULL_CELLS) : photos;
   const overflowPhoto = hasOverflow ? photos[FULL_CELLS] : undefined;

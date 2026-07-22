@@ -81,34 +81,34 @@ type Tab = {
 const tabs: Tab[] = [
   { path: "/", label: "Hjem", Icon: HomeIcon, isActive: (p) => p === "/" },
   {
-    path: "/Resultater",
+    path: "/resultater",
     label: "Resultater",
     Icon: ResultsIcon,
-    isActive: (p) => p.startsWith("/Resultater"),
+    isActive: (p) => p.startsWith("/resultater"),
   },
   {
-    path: "/Bilder",
+    path: "/bilder",
     label: "Bilder",
     Icon: PicturesIcon,
-    isActive: (p) => p.startsWith("/Bilder"),
+    isActive: (p) => p.startsWith("/bilder"),
   },
   {
-    path: "/Statistikk",
+    path: "/statistikk",
     label: "Statistikk",
     Icon: StatsIcon,
-    isActive: (p) => p.startsWith("/Statistikk"),
+    isActive: (p) => p.startsWith("/statistikk"),
   },
 ];
 
-const racePickerPaths = new Set(["/Resultater", "/Bilder"]);
+const racePickerPaths = new Set(["/resultater", "/bilder"]);
 
 const moreItems: {
   path: string;
   label: string;
   Icon: ComponentType<SVGProps<SVGSVGElement>>;
 }[] = [
-  { path: "/Løypekart", label: "Løypekart", Icon: MapIcon },
-  { path: "/Historie", label: "Historie", Icon: History },
+  { path: "/løypekart", label: "Løypekart", Icon: MapIcon },
+  { path: "/historie", label: "Historie", Icon: History },
 ];
 
 const tabClasses = (active: boolean) =>

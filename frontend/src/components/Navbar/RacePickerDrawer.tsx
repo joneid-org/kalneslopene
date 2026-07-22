@@ -20,7 +20,7 @@ type RacePickerDrawerProps = {
 
 export function RacePickerDrawer({
   children,
-  basePath = "/Resultater",
+  basePath = "/resultater",
 }: RacePickerDrawerProps) {
   const { data: races } = useQuery(QUERIES.race.getAllRaces());
   const years = getYears(races ?? []);

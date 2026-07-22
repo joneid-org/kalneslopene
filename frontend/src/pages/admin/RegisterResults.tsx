@@ -62,7 +62,7 @@ export function RegisterResults() {
     );
 
   const openEditing = (race: RaceDTO) => {
-    if (race.uuid) navigate(`/admin/results/${race.uuid}`);
+    if (race.uuid) navigate(`/admin/resultater/${race.uuid}`);
   };
 
   const deleteMutation = useMutation({

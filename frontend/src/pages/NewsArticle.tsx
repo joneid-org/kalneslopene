@@ -60,7 +60,7 @@ export function NewsArticle() {
         <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
           <div className="flex flex-wrap gap-1.5 text-xs">
             {post.tags.map((tag) => (
-              <Link key={tag} to={`/nyheter/tag/${tag.toLowerCase()}`}>
+              <Link key={tag} to={`/nyheter/tagg/${tag.toLowerCase()}`}>
                 <span
                   className="tag-pill"
                   style={{ color: tagColor(tag, tags) }}
@@ -71,7 +71,7 @@ export function NewsArticle() {
             ))}
           </div>
           {matchedRace?.uuid && (
-            <Link to={`/Resultater/${matchedRace.uuid}`}>
+            <Link to={`/resultater/${matchedRace.uuid}`}>
               <Button
                 size="sm"
                 variant="outline"

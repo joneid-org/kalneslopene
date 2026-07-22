@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { SegmentedControl } from "@/components/SegmentedControl.tsx";
-import type { DatedRaceRunner } from "@/lib/statisticsUtils.ts";
 import {
   extractYear,
   formatDDMonth,
@@ -8,10 +7,11 @@ import {
   mapResultTimeToNumber,
   raceDateToSortKey,
 } from "@/lib/timeUtils.ts";
+import type { RaceRunnerDTO } from "@/model/DTO.ts";
 
-type Props = { raceHistory: DatedRaceRunner[]; availableYears: number[] };
+type Props = { raceHistory: RaceRunnerDTO[]; availableYears: number[] };
 
-function resultLabel(rr: DatedRaceRunner): string {
+function resultLabel(rr: RaceRunnerDTO): string {
   if (rr.hideTime) return "Deltatt";
   if (!rr.resultTime) return "–";
   return formatSecondsToTime(mapResultTimeToNumber(rr.resultTime));
@@ -35,10 +35,10 @@ export default function RunnerRaceResults({
   const selectedYear = Number.parseInt(range, 10);
 
   const results = raceHistory
-    .filter((rr) => extractYear(rr.raceDate) === selectedYear)
+    .filter((rr) => extractYear(rr.raceInfo.raceDate) === selectedYear)
     .toSorted((a, b) =>
-      raceDateToSortKey(b.raceDate).localeCompare(
-        raceDateToSortKey(a.raceDate),
+      raceDateToSortKey(b.raceInfo.raceDate).localeCompare(
+        raceDateToSortKey(a.raceInfo.raceDate),
       ),
     );
 
@@ -62,11 +62,11 @@ export default function RunnerRaceResults({
         <ul className="divide-y divide-border">
           {results.map((rr) => (
             <li
-              key={rr.raceUuid}
+              key={rr.raceInfo.uuid}
               className="flex items-center justify-between py-3"
             >
               <span className="text-sm tabular-nums text-foreground">
-                {formatDDMonth(rr.raceDate)}
+                {formatDDMonth(rr.raceInfo.raceDate)}
               </span>
               <span className="font-display text-[15px] font-bold tabular-nums">
                 {resultLabel(rr)}

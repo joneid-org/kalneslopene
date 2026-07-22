@@ -2,7 +2,6 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { DISTANCE_KM } from "@/lib/constants.ts";
 import {
-  type DatedRaceRunner,
   getBestTimeThisYear,
   getFastestRunner,
 } from "@/lib/statisticsUtils.ts";
@@ -171,7 +170,7 @@ export function getBestRaceFromRunner(raceRunner: RaceRunnerDTO[]): string {
 }
 
 export function getBestRaceThisYearFromRunner(
-  raceRunner: DatedRaceRunner[],
+  raceRunner: RaceRunnerDTO[],
   year: number,
 ): string {
   return getBestTimeThisYear(raceRunner, year);

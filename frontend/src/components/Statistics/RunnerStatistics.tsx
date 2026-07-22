@@ -6,44 +6,36 @@ import RunnerStatisticsHeader from "@/components/Statistics/RunnerStatisticsHead
 import RunnerStatisticsSeasonBest from "@/components/Statistics/RunnerStatisticsSeasonBest.tsx";
 import SearchBox from "@/components/Statistics/SearchBox.tsx";
 import { StatTile } from "@/components/StatTile.tsx";
-import { withRaceDates } from "@/lib/statisticsUtils.ts";
 import { extractYear } from "@/lib/timeUtils.ts";
 import { getBestRaceFromRunner } from "@/lib/utils.ts";
-import type { RunnerDTO } from "@/model/DTO.ts";
+import type { RaceRunnerDTO, RunnerDTO } from "@/model/DTO.ts";
 
 const RunnerTimeChart = lazy(
   () => import("@/components/Statistics/RunnerTimeChart.tsx"),
 );
 
+const EMPTY_RACE_HISTORY: RaceRunnerDTO[] = [];
+
 export default function RunnerStatistics() {
   const [selectedRunner, setSelectedRunner] = useState<RunnerDTO | null>(null);
 
-  const { data: allRaces } = useQuery(QUERIES.race.getAllRaces());
-  const races = useMemo(
-    () => (allRaces ?? []).filter((r) => r.isPublished),
-    [allRaces],
-  );
-  const { data: raceHistory } = useQuery({
+  const { data } = useQuery({
     ...QUERIES.runner.getAllRacesByRunner(selectedRunner?.uuid ?? ""),
     enabled: !!selectedRunner?.uuid,
   });
+  const raceHistory = data ?? EMPTY_RACE_HISTORY;
 
-  const datedHistory = useMemo(
-    () => withRaceDates(raceHistory ?? [], races ?? []),
-    [raceHistory, races],
-  );
+  const totalRaces = raceHistory.length;
 
-  const totalRaces = raceHistory?.length ?? 0;
-
-  const pr = useMemo(() => getBestRaceFromRunner(datedHistory), [datedHistory]);
+  const pr = useMemo(() => getBestRaceFromRunner(raceHistory), [raceHistory]);
 
   const availableYears = useMemo(() => {
     const years = new Set<number>();
-    for (const rr of datedHistory) {
-      years.add(extractYear(rr.raceDate));
+    for (const rr of raceHistory) {
+      years.add(extractYear(rr.raceInfo.raceDate));
     }
     return Array.from(years).toSorted((a, b) => b - a);
-  }, [datedHistory]);
+  }, [raceHistory]);
 
   return (
     <section className="flex flex-col gap-3">
@@ -65,20 +57,20 @@ export default function RunnerStatistics() {
           <Suspense fallback={null}>
             <RunnerTimeChart
               key={availableYears.join(",")}
-              raceHistory={datedHistory}
+              raceHistory={raceHistory}
               availableYears={availableYears}
             />
           </Suspense>
 
           <RunnerStatisticsSeasonBest
             availableYears={availableYears}
-            raceHistory={datedHistory}
+            raceHistory={raceHistory}
           />
 
           <RunnerRaceResults
             key={availableYears.join(",")}
             availableYears={availableYears}
-            raceHistory={datedHistory}
+            raceHistory={raceHistory}
           />
         </div>
       )}

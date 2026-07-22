@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
 import { Link, useParams } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
-import { TagNewsFeed } from "@/components/News/TagNewsFeed.tsx";
+import { NewsCard } from "@/components/News/NewsCard.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { NEWS_IMAGES, tagColor, useTags } from "@/lib/newsUtils.ts";
@@ -44,9 +44,9 @@ export function NewsTag() {
           Ingen nyheter med denne taggen.
         </p>
       ) : (
-        <div className="flex flex-col gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4">
           {newsFeed.map((post, idx) => (
-            <TagNewsFeed
+            <NewsCard
               key={post.uuid}
               post={post}
               img={NEWS_IMAGES[idx % NEWS_IMAGES.length] ?? ""}

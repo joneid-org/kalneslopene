@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
 import { queryClient } from "@/api/queryClient.ts";
-import { uploadToS3 } from "@/api/s3.ts";
+import { IMMUTABLE_CACHE_CONTROL, uploadToS3 } from "@/api/s3.ts";
 import { AdminPhotoGrid } from "@/components/admin/AdminPhotoGrid.tsx";
 import { UploadDropzone } from "@/components/Pictures/UploadDropzone.tsx";
 import {
@@ -13,13 +13,13 @@ import {
 } from "@/components/ui/accordion.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
 import {
-  confirmUploadedFile,
+  confirmUploadedFiles,
   deleteS3Files,
   requestPresignedUrls,
 } from "@/lib/fileUploadUtils.ts";
 import { convertImageToWebp } from "@/lib/photoUtils.ts";
 import { extractYear, formatDDMonth } from "@/lib/timeUtils.ts";
-import type { S3FileDto } from "@/model/DTO.ts";
+import type { RaceDTO, S3FileDto } from "@/model/DTO.ts";
 
 export interface UploadItem {
   id: string;
@@ -31,6 +31,7 @@ export interface UploadItem {
 }
 
 const NOW = new Date();
+const RACE_LIST_KEY = QUERIES.race.getAllRaces({ to: NOW }).queryKey;
 
 export function ImagesPage() {
   const { data, isLoading } = useQuery(QUERIES.race.getAllRaces({ to: NOW }));
@@ -63,12 +64,22 @@ export function ImagesPage() {
     });
   };
 
+  const addPhotoToCache = (raceUuid: string, photo: S3FileDto) => {
+    queryClient.setQueryData<RaceDTO[]>(RACE_LIST_KEY, (races) =>
+      races?.map((race) =>
+        race.uuid === raceUuid
+          ? { ...race, photos: [...race.photos, photo] }
+          : race,
+      ),
+    );
+  };
+
   const startUpload = async (
     raceUuid: string,
     file: File,
     uploadUrl: string,
     s3FileDto: S3FileDto,
-  ) => {
+  ): Promise<string | null> => {
     const id = crypto.randomUUID();
     const previewUrl = URL.createObjectURL(file);
 
@@ -87,18 +98,23 @@ export function ImagesPage() {
     }));
 
     try {
-      await uploadToS3(file, uploadUrl, (progress) => {
-        updateUpload(raceUuid, id, { progress });
-      });
-
-      await confirmUploadedFile(s3FileDto.uuid);
-      await queryClient.invalidateQueries({ queryKey: ["race", "getAll"] });
+      await uploadToS3(
+        file,
+        uploadUrl,
+        (progress) => {
+          updateUpload(raceUuid, id, { progress });
+        },
+        IMMUTABLE_CACHE_CONTROL,
+      );
+      addPhotoToCache(raceUuid, s3FileDto);
       removeUpload(raceUuid, id);
+      return s3FileDto.uuid;
     } catch (error) {
       updateUpload(raceUuid, id, {
         status: "error",
         error: error instanceof Error ? error.message : "Upload failed",
       });
+      return null;
     }
   };
 
@@ -110,10 +126,18 @@ export function ImagesPage() {
       raceUuid,
       files.map((file) => file.name),
     );
-    files.forEach((file) => {
-      const { uploadUrl, s3File } = urlMap[file.name];
-      void startUpload(raceUuid, file, uploadUrl, s3File);
-    });
+    const results = await Promise.all(
+      files.map((file) => {
+        const { uploadUrl, s3File } = urlMap[file.name];
+        return startUpload(raceUuid, file, uploadUrl, s3File);
+      }),
+    );
+
+    const uploadedUuids = results.filter((uuid) => uuid !== null);
+    if (uploadedUuids.length === 0) return;
+
+    await confirmUploadedFiles(uploadedUuids);
+    await queryClient.invalidateQueries({ queryKey: ["race", "getAll"] });
   };
 
   return (

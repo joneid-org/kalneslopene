@@ -1,16 +1,20 @@
 package com.grimsgaards.kalneslopene.service
 
+import com.grimsgaards.kalneslopene.model.dto.FileDto
 import com.grimsgaards.kalneslopene.model.dto.Gender
 import com.grimsgaards.kalneslopene.model.dto.RaceDTO
 import com.grimsgaards.kalneslopene.model.dto.RaceResultSummaryDto
 import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
 import com.grimsgaards.kalneslopene.model.entities.RaceEntity
+import com.grimsgaards.kalneslopene.model.entities.RacePhotoEntity
 import com.grimsgaards.kalneslopene.model.entities.RaceRunnerEntity
 import com.grimsgaards.kalneslopene.model.entities.RaceRunnerKey
 import com.grimsgaards.kalneslopene.model.entities.UserRole
 import com.grimsgaards.kalneslopene.model.input.PhotoUploadInfo
 import com.grimsgaards.kalneslopene.model.input.RaceFilter
 import com.grimsgaards.kalneslopene.model.input.RaceInput
+import com.grimsgaards.kalneslopene.model.input.ReorderPhotoInput
+import com.grimsgaards.kalneslopene.repository.RacePhotoRepository
 import com.grimsgaards.kalneslopene.repository.RaceRepository
 import com.grimsgaards.kalneslopene.repository.RaceRunnerRepository
 import com.grimsgaards.kalneslopene.repository.RunnerRepository
@@ -26,6 +30,7 @@ class RaceService(
     val raceRepository: RaceRepository,
     val runnerRepository: RunnerRepository,
     val raceRunnerRepository: RaceRunnerRepository,
+    val racePhotoRepository: RacePhotoRepository,
     val s3Service: S3Service,
 ) {
     private fun isAdmin(): Boolean =
@@ -147,14 +152,47 @@ class RaceService(
         photoNames: List<String>,
     ): Map<String, PhotoUploadInfo> {
         val race = raceRepository.findById(raceUuid).orElseThrow { NoSuchElementException("Race $raceUuid not found") }
-        val s3FileEntitiesMap = photoNames.associateWith { s3Service.createFileEntity("race-photos/$raceUuid/$it") }
-        race.photos.addAll(s3FileEntitiesMap.values)
+        val s3FileEntitiesMap = s3Service.createFileEntities(photoNames.map { "race-photos/$raceUuid/$it" })
+        var nextOrderIndex = (race.racePhotos.maxOfOrNull { it.orderIndex } ?: 0.0) + 1
+        s3FileEntitiesMap.values.forEach { file ->
+            race.racePhotos.add(RacePhotoEntity(race = race, file = file, orderIndex = nextOrderIndex++))
+        }
         return photoNames.associateWith {
             PhotoUploadInfo(
                 uploadUrl = s3Service.getPresignedUrl("race-photos/$raceUuid/$it", immutable = true),
-                s3File = s3FileEntitiesMap[it]!!.toDtoDangerously(),
+                s3File = s3FileEntitiesMap["race-photos/$raceUuid/$it"]!!.toDtoDangerously(),
             )
         }
+    }
+
+    @Transactional
+    fun reorderPhotoInRace(
+        raceUuid: UUID,
+        input: ReorderPhotoInput,
+    ): List<FileDto> {
+        val photos = racePhotoRepository.findAllByRaceUuidOrderByOrderIndexAsc(raceUuid)
+        val moved =
+            photos.find { it.file.uuid == input.fileUuid }
+                ?: throw NoSuchElementException("Photo ${input.fileUuid} not found in race $raceUuid")
+        val others = photos.filter { it.file.uuid != input.fileUuid }
+
+        val anchorUuid = input.beforeFileUuid ?: input.afterFileUuid!!
+        val anchorIndex = others.indexOfFirst { it.file.uuid == anchorUuid }
+        require(anchorIndex >= 0) { "Photo $anchorUuid not found in race $raceUuid" }
+
+        moved.orderIndex =
+            if (input.beforeFileUuid != null) {
+                val prev = others.getOrNull(anchorIndex - 1)
+                val next = others[anchorIndex]
+                if (prev != null) (prev.orderIndex + next.orderIndex) / 2 else next.orderIndex - 1
+            } else {
+                val prev = others[anchorIndex]
+                val next = others.getOrNull(anchorIndex + 1)
+                if (next != null) (prev.orderIndex + next.orderIndex) / 2 else prev.orderIndex + 1
+            }
+        racePhotoRepository.save(moved)
+
+        return (others + moved).sortedBy { it.orderIndex }.mapNotNull { it.file.toDto() }
     }
 
     fun updateRunnerInRace(

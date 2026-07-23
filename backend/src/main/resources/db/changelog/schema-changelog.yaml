@@ -168,4 +168,11 @@ databaseChangeLog:
         - sqlFile:
             path: db/changelog/sql/migrate/migrate_race_weather_structured.sql
             relativeToChangelogFile: false
+  - changeSet:
+      id: migrate_race_photo_add_order_index
+      author: ejoneid
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_race_photo_add_order_index.sql
+            relativeToChangelogFile: false
 

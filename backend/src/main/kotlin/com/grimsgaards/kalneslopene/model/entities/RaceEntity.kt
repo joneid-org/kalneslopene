@@ -7,9 +7,6 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.JoinTable
-import jakarta.persistence.ManyToMany
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import java.time.Instant
@@ -35,13 +32,8 @@ class RaceEntity(
     var weatherUpdatedAt: Instant? = null
     var weatherManuallyEdited: Boolean = false
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.PERSIST])
-    @JoinTable(
-        name = "race_photo",
-        joinColumns = [JoinColumn(name = "race_uuid")],
-        inverseJoinColumns = [JoinColumn(name = "file_uuid")],
-    )
-    val photos: MutableSet<FileEntity> = mutableSetOf()
+    @OneToMany(mappedBy = "race", fetch = FetchType.EAGER, cascade = [CascadeType.ALL], orphanRemoval = true)
+    val racePhotos: MutableList<RacePhotoEntity> = mutableListOf()
 
     fun applyWeatherOverride(weather: WeatherDto?) {
         val unchanged =
@@ -70,7 +62,7 @@ class RaceEntity(
             weatherManuallyEdited = weatherManuallyEdited,
             runnerCount = runners.size,
             isPublished = isPublished,
-            photos = photos.mapNotNull { it.toDto() },
+            photos = racePhotos.sortedBy { it.orderIndex }.mapNotNull { it.file.toDto() },
         )
 
     private fun weatherToDto(): WeatherDto? {

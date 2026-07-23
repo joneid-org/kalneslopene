@@ -1,4 +1,4 @@
-import { Camera, ListOrdered } from "lucide-react";
+import { Camera, Check, ListOrdered, Pencil } from "lucide-react";
 import { Link } from "react-router";
 import { Button } from "@/components/ui/button.tsx";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card.tsx";
@@ -8,6 +8,9 @@ type PhotoHeaderProps = {
   photoCount: number;
   photographers: string[];
   resultsPath?: string;
+  isAdmin?: boolean;
+  isEditing?: boolean;
+  onToggleEditing?: () => void;
 };
 
 export default function PhotoHeader({
@@ -15,6 +18,9 @@ export default function PhotoHeader({
   photoCount,
   photographers,
   resultsPath,
+  isAdmin,
+  isEditing,
+  onToggleEditing,
 }: PhotoHeaderProps) {
   return (
     <Card>
@@ -34,19 +40,36 @@ export default function PhotoHeader({
               )}
             </div>
           </div>
-          {resultsPath && (
-            <Button
-              asChild
-              variant="outline"
-              size="sm"
-              className="shrink-0 text-xs gap-1.5"
-            >
-              <Link to={resultsPath}>
-                <ListOrdered className="size-3.5" />
-                Se resultater
-              </Link>
-            </Button>
-          )}
+          <div className="flex shrink-0 gap-2">
+            {isAdmin && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-xs gap-1.5"
+                onClick={onToggleEditing}
+              >
+                {isEditing ? (
+                  <Check className="size-3.5" />
+                ) : (
+                  <Pencil className="size-3.5" />
+                )}
+                {isEditing ? "Ferdig" : "Rediger"}
+              </Button>
+            )}
+            {resultsPath && (
+              <Button
+                asChild
+                variant="outline"
+                size="sm"
+                className="text-xs gap-1.5"
+              >
+                <Link to={resultsPath}>
+                  <ListOrdered className="size-3.5" />
+                  Se resultater
+                </Link>
+              </Button>
+            )}
+          </div>
         </div>
       </CardHeader>
     </Card>

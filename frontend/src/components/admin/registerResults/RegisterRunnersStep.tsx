@@ -47,7 +47,7 @@ export function RegisterRunnersStep({
           </p>
         ) : (
           <div className="divide-y overflow-hidden rounded-md border">
-            {entries.map((entry) => (
+            {[...entries].reverse().map((entry) => (
               <div
                 key={entry.runner.uuid}
                 className="flex items-center justify-between gap-2 px-3 py-2 text-sm"

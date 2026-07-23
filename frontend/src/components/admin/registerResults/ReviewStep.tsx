@@ -74,7 +74,7 @@ export function ReviewStep({
     null,
   );
 
-  const sortedEntries = [...entries].sort((a, b) => {
+  const sortedEntries = entries.toSorted((a, b) => {
     const secondsA = entrySeconds(a);
     const secondsB = entrySeconds(b);
     if (secondsA != null && secondsB != null) return secondsA - secondsB;

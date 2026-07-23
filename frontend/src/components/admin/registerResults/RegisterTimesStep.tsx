@@ -25,7 +25,7 @@ export function RegisterTimesStep({
   isAdding: boolean;
 }) {
   const existingRunnerUuids = new Set(entries.map((e) => e.runner.uuid));
-  const sortedEntries = [...entries].sort((a, b) =>
+  const sortedEntries = entries.toSorted((a, b) =>
     a.runner.name.localeCompare(b.runner.name, "nb"),
   );
 

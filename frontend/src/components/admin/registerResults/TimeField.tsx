@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import { useState } from "react";
 import { Input } from "@/components/ui/input.tsx";
 import { formatSecondsToTime, parseFlexibleTime } from "@/lib/timeUtils.ts";
@@ -26,7 +27,10 @@ export function TimeField({
       value={text}
       disabled={disabled}
       aria-invalid={invalid}
-      className={`${className ?? ""} ${invalid ? "border-destructive focus-visible:ring-destructive" : ""}`}
+      className={clsx(
+        className,
+        invalid && "border-destructive focus-visible:ring-destructive",
+      )}
       onChange={(e) => {
         const value = e.target.value;
         setText(value);

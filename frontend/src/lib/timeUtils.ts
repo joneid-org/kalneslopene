@@ -133,11 +133,26 @@ export function mapResultTimeToNumber(
   return hours * 3600 + minutes * 60 + seconds;
 }
 
-/** Convert a "mm:ss" or "hh:mm:ss" string to total seconds */
+/**
+ * Parse a flexible race-time input into total seconds.
+ * Digits are read right-to-left as hmmss regardless of separator, so
+ * "25:25", "25.25", "25,25", "25;25", "25 25" and "2525" all mean 25m 25s,
+ * and "1:25:25" / "12525" both mean 1h 25m 25s.
+ * Returns null for non-numeric input or when minutes/seconds exceed 59.
+ */
+export function parseFlexibleTime(input: string): number | null {
+  const digits = input.replace(/[\s.,:;]/g, "");
+  if (digits.length === 0 || !/^\d+$/.test(digits)) return null;
+  const seconds = Number(digits.slice(-2));
+  const minutes = Number(digits.slice(-4, -2) || "0");
+  const hours = Number(digits.slice(0, -4) || "0");
+  if (seconds > 59 || minutes > 59) return null;
+  return hours * 3600 + minutes * 60 + seconds;
+}
+
+/** Convert a flexible time string to total seconds (0 when unparseable). */
 export function timeToSeconds(time: string): number {
-  const parts = time.split(":").map(Number);
-  if (parts.length === 2) return (parts[0] ?? 0) * 60 + (parts[1] ?? 0);
-  return (parts[0] ?? 0) * 3600 + (parts[1] ?? 0) * 60 + (parts[2] ?? 0);
+  return parseFlexibleTime(time) ?? 0;
 }
 
 /** Generate ISO datetime strings "YYYY-MM-DDTHH:mm:ss" spaced every `intervalDays` days */

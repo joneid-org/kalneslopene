@@ -38,6 +38,23 @@ const columnWidths: Record<string, string> = {
   races: "w-[12%]",
 };
 
+function GenderDot({ gender }: { gender: string }) {
+  const g = gender.toUpperCase();
+  const isFemale = g === "FEMALE" || g === "KVINNE";
+  const isMale = g === "MALE" || g === "MANN";
+  if (!isFemale && !isMale) return null;
+  return (
+    <span
+      role="img"
+      aria-label={isFemale ? "Kvinne" : "Mann"}
+      className={cn(
+        "inline-block size-2 shrink-0 rounded-full",
+        isFemale ? "bg-red-500" : "bg-blue-500",
+      )}
+    />
+  );
+}
+
 function PrBadge() {
   return (
     <span className="inline-flex shrink-0 items-center rounded-full bg-brand px-1.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-brand-foreground">
@@ -74,8 +91,12 @@ function ResultCard({
 
   return (
     <div className="flex items-center gap-3 rounded-[14px] border bg-card px-3 py-2.5">
+      <span className="w-6 shrink-0 text-center font-display text-sm font-bold tabular-nums text-muted-foreground">
+        {row.position}
+      </span>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5">
+          <GenderDot gender={row.gender} />
           <span className="min-w-0 truncate text-[15px] font-bold leading-tight">
             {row.runnerName}
           </span>
@@ -144,6 +165,7 @@ export default function ResultsTable({ tableData }: ResultsTableProps) {
         enableHiding: false,
         cell: ({ getValue, row }) => (
           <span className="inline-flex items-center gap-2">
+            <GenderDot gender={row.original.gender} />
             <span className="font-semibold">{getValue<string>()}</span>
             {row.original.isPR && <PrBadge />}
           </span>

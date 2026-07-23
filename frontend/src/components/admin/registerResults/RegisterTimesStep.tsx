@@ -25,6 +25,9 @@ export function RegisterTimesStep({
   isAdding: boolean;
 }) {
   const existingRunnerUuids = new Set(entries.map((e) => e.runner.uuid));
+  const sortedEntries = entries.toSorted((a, b) =>
+    a.runner.name.localeCompare(b.runner.name, "nb"),
+  );
 
   return (
     <div className="space-y-5">
@@ -49,7 +52,7 @@ export function RegisterTimesStep({
         </p>
       ) : (
         <div className="divide-y overflow-hidden rounded-md border">
-          {entries.map((entry) => (
+          {sortedEntries.map((entry) => (
             <div
               key={entry.runner.uuid}
               className="flex items-center gap-2 px-3 py-2 text-sm"

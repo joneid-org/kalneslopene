@@ -74,6 +74,15 @@ export function ReviewStep({
     null,
   );
 
+  const sortedEntries = entries.toSorted((a, b) => {
+    const secondsA = entrySeconds(a);
+    const secondsB = entrySeconds(b);
+    if (secondsA != null && secondsB != null) return secondsA - secondsB;
+    if (secondsA != null) return -1;
+    if (secondsB != null) return 1;
+    return a.runner.name.localeCompare(b.runner.name, "nb");
+  });
+
   return (
     <div className="space-y-5">
       <div className="space-y-1">
@@ -151,7 +160,7 @@ export function ReviewStep({
           </p>
         ) : (
           <div className="space-y-2">
-            {entries.map((entry) => {
+            {sortedEntries.map((entry) => {
               const runnerUuid = entry.runner.uuid;
               const isNew = !entry.runner.isVerified;
               const isChanging = changingRunnerUuid === runnerUuid;

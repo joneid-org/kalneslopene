@@ -18,7 +18,7 @@ class RunnerService(
 
     fun getRunnerById(uuid: UUID): RunnerDTO = runnerRepository.findById(uuid).get().toDto()
 
-    fun getRunnerByName(name: String): List<RunnerDTO> = runnerRepository.findByNameStartsWithIgnoreCase(name).map { it.toDto() }
+    fun getRunnerByName(name: String): List<RunnerDTO> = runnerRepository.findByNameContainsIgnoreCase(name).map { it.toDto() }
 
     fun createMultipleRunners(runners: List<RunnerInput>): List<RunnerDTO> =
         runnerRepository

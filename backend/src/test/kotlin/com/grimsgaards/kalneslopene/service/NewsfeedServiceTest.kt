@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.any
+import org.mockito.Mockito.anyBoolean
 import org.mockito.Mockito.anyInt
 import org.mockito.Mockito.anyString
 import org.mockito.Mockito.inOrder
@@ -278,7 +279,7 @@ class NewsfeedServiceTest {
                 savedKey.set(it.getArgument(0))
                 saved
             }
-            whenever(s3Service.getPresignedUrl(anyString(), anyInt())).thenAnswer {
+            whenever(s3Service.getPresignedUrl(anyString(), anyInt(), anyBoolean())).thenAnswer {
                 presignedKey.set(it.getArgument(0))
                 "https://minio.local/presigned"
             }
@@ -309,7 +310,7 @@ class NewsfeedServiceTest {
                 savedKey.set(it.getArgument(0))
                 saved
             }
-            whenever(s3Service.getPresignedUrl(anyString(), anyInt())).thenAnswer {
+            whenever(s3Service.getPresignedUrl(anyString(), anyInt(), anyBoolean())).thenAnswer {
                 presignedKey.set(it.getArgument(0))
                 "https://minio.local/presigned"
             }

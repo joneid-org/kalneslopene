@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -22,10 +23,21 @@ class S3Controller(
         @RequestParam(defaultValue = "1") expiryHours: Int,
     ): String = s3Service.getPresignedUrl(fileName, expiryHours)
 
+    @PostMapping("/presigned-urls")
+    fun getPresignedUrls(
+        @RequestBody fileNames: List<String>,
+        @RequestParam(defaultValue = "1") expiryHours: Int,
+    ): Map<String, String> = s3Service.getPresignedUrls(fileNames, expiryHours)
+
     @PatchMapping("/files/{uuid}/confirm-upload")
     fun confirmUpload(
         @PathVariable uuid: UUID,
     ) = s3Service.confirmUpload(uuid)
+
+    @PatchMapping("/files/confirm-uploads")
+    fun confirmUploads(
+        @RequestBody fileUuids: List<UUID>,
+    ) = s3Service.confirmUploads(fileUuids)
 
     @DeleteMapping("/files")
     fun deleteFiles(

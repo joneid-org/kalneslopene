@@ -13,6 +13,7 @@ import type {
   RaceRunnerDTO,
   RaceStatisticsDTO,
   RunnerDTO,
+  RunnerOverviewStatsDTO,
   S3FileDto,
 } from "../model/DTO.ts";
 
@@ -79,6 +80,13 @@ export const QUERIES = {
         kyClient
           .get("/api/statistics/races", { searchParams: { year } })
           .json<RaceStatisticsDTO>(),
+    }),
+    runnerOverview: () => ({
+      queryKey: ["statistics", "runnerOverview"],
+      queryFn: () =>
+        kyClient
+          .get("/api/statistics/runners/overview")
+          .json<RunnerOverviewStatsDTO>(),
     }),
   },
   organizer: {

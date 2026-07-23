@@ -10,7 +10,7 @@ export function SeasonStatBoxes() {
 
   const stats = [
     {
-      value: yearStatistics?.uniqueRunners.total,
+      value: yearStatistics?.totalParticipations.total,
       label: "Deltakere totalt",
       shortLabel: "Deltakere",
     },
@@ -20,12 +20,12 @@ export function SeasonStatBoxes() {
       shortLabel: "Snittdeltakelse",
     },
     {
-      value: yearStatistics?.uniqueRunners.female,
+      value: yearStatistics?.totalParticipations.female,
       label: "Damer",
       shortLabel: "Damer",
     },
     {
-      value: yearStatistics?.uniqueRunners.male,
+      value: yearStatistics?.totalParticipations.male,
       label: "Herrer",
       shortLabel: "Herrer",
     },

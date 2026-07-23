@@ -9,10 +9,10 @@ export function requestPresignedUrls(raceUuid: string, fileNames: string[]) {
     .json<{ [key in string]: { uploadUrl: string; s3File: S3FileDto } }>();
 }
 
-export function confirmUploadedFiles(fileUuids: string[]) {
+export function confirmUploadedFile(fileUuid: string) {
   return kyClient
-    .patch("/api/s3/files/confirm-uploads", { json: fileUuids })
-    .json<void>();
+    .patch(`/api/s3/files/${fileUuid}/confirm-upload`)
+    .json<S3FileDto>();
 }
 
 export function deleteS3Files(fileUuids: string[]) {

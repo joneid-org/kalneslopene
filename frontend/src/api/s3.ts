@@ -13,24 +13,15 @@ export function requestStaticPresignedUrl(fileName: string) {
     .text();
 }
 
-/**
- * Cache-Control sent on immutable photo uploads. Must match exactly what the
- * backend signs into the presigned URL (`IMMUTABLE_CACHE_CONTROL`), or MinIO
- * rejects the PUT with a signature mismatch.
- */
-export const IMMUTABLE_CACHE_CONTROL = "public, max-age=31536000, immutable";
-
 /** PUT a file directly to a presigned S3 URL, reporting upload progress. */
 export function uploadToS3(
   file: File,
   url: string,
   onProgress?: (percent: number) => void,
-  cacheControl?: string,
 ) {
   return new Promise<void>((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open("PUT", url);
-    if (cacheControl) xhr.setRequestHeader("Cache-Control", cacheControl);
 
     xhr.upload.onprogress = (event) => {
       if (!event.lengthComputable) return;

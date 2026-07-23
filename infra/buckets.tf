@@ -19,7 +19,7 @@ resource "minio_s3_bucket_cors" "torsdagslopet_bucket_cors" {
   cors_rule {
     allowed_origins = [each.value]
     allowed_methods = ["GET", "PUT", "HEAD"]
-    allowed_headers = ["content-type", "cache-control", "x-amz-*"]
+    allowed_headers = ["content-type", "x-amz-*"]
     expose_headers  = ["ETag"]
     max_age_seconds = 3000
   }

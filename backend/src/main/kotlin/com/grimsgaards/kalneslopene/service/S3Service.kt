@@ -18,9 +18,6 @@ import java.util.concurrent.TimeUnit
 
 private val imgSrcRegex = Regex("""<img[^>]+src="([^"]*)"""")
 
-// Uploaded photos live at a unique, never-overwritten path, so they can be cached forever.
-const val IMMUTABLE_CACHE_CONTROL = "public, max-age=31536000, immutable"
-
 @Service
 @Suppress("TooManyFunctions")
 class S3Service(
@@ -50,7 +47,6 @@ class S3Service(
     fun getPresignedUrl(
         fileName: String,
         expiryHours: Int = 1,
-        immutable: Boolean = false,
     ): String =
         minioClient.getPresignedObjectUrl(
             GetPresignedObjectUrlArgs
@@ -59,32 +55,14 @@ class S3Service(
                 .bucket(minioBucketName)
                 .`object`(fileName)
                 .expiry(expiryHours, TimeUnit.HOURS)
-                .apply {
-                    // Signed into the PUT; the client must send the exact same header value (see uploadToS3).
-                    if (immutable) extraHeaders(mapOf("Cache-Control" to IMMUTABLE_CACHE_CONTROL))
-                }.build(),
+                .build(),
         )
-
-    fun getPresignedUrls(
-        fileNames: List<String>,
-        expiryHours: Int = 1,
-    ): Map<String, String> = fileNames.associateWith { getPresignedUrl(it, expiryHours) }
 
     @Transactional
     fun confirmUpload(fileUuid: UUID): FileEntity {
-        val fileEntity =
-            fileRepository.findById(fileUuid).orElseThrow { NoSuchElementException("File with id $fileUuid not found") }
+        val fileEntity = fileRepository.findById(fileUuid).orElseThrow { NoSuchElementException("File with id $fileUuid not found") }
         fileEntity.uploadConfirmedAt = OffsetDateTime.now()
         return fileRepository.save(fileEntity)
-    }
-
-    @Transactional
-    fun confirmUploads(fileUuids: List<UUID>) {
-        val fileEntities = fileRepository.findAllById(fileUuids).filter { it.uploadConfirmedAt == null }
-        if (fileEntities.isEmpty()) return
-        val now = OffsetDateTime.now()
-        fileEntities.forEach { it.uploadConfirmedAt = now }
-        fileRepository.saveAll(fileEntities)
     }
 
     @Transactional
@@ -123,8 +101,7 @@ class S3Service(
     }
 
     private fun deleteFiles(fileEntities: List<FileEntity>) {
-        val objectsToDelete =
-            fileEntities.map { DeleteRequest.Object(it.url.substringAfter("$baseUrl/$minioBucketName/")) }
+        val objectsToDelete = fileEntities.map { DeleteRequest.Object(it.url.substringAfter("$baseUrl/$minioBucketName/")) }
         minioClient
             .removeObjects(
                 RemoveObjectsArgs
@@ -140,8 +117,7 @@ class S3Service(
     @Transactional
     fun deleteExpiredUnconfirmedUploads() {
         logger.info("Running scheduled task to delete expired unconfirmed uploads")
-        val expiredFiles =
-            fileRepository.findAllByUploadConfirmedAtIsNullAndCreatedAtBefore(OffsetDateTime.now().minusHours(1))
+        val expiredFiles = fileRepository.findAllByUploadConfirmedAtIsNullAndCreatedAtBefore(OffsetDateTime.now().minusHours(1))
         logger.info("Found ${expiredFiles.size} expired unconfirmed uploads to delete")
         if (expiredFiles.isEmpty()) return
         deleteFiles(expiredFiles)

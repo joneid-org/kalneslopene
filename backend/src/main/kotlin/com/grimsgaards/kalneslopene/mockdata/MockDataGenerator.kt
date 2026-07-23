@@ -311,7 +311,7 @@ class MockDataGenerator(
                     "På slutten av 1970-tallet vokste interessen for mosjonsløping raskt i Norge. I Sarpsborg fantes det imidlertid ikke noe fast terrengløp der mosjonister og aktive løpere kunne møtes. Tre engasjerte løpere – Bjørn Paulsrud, Ivar Andersen og Eivind Storbugt – bestemte seg derfor for å gjøre noe med det. \n\n " +
                         "Før idéen kunne bli virkelighet måtte en egnet løype finnes, grunneiere kontaktes og nødvendige tillatelser innhentes. Etter mye arbeid kunne de endelig invitere til det første Torsdagsløpet i Kalnesskogen. \n\n" +
                         "Det som startet som et lokalt initiativ, skulle utvikle seg til et av Østfolds lengstlevende og mest tradisjonsrike mosjonsarrangementer.",
-                extra = "",
+                extra = "Løper ikke for å vinne, men for felleskapet",
                 details = listOf("Grunnleggere:Paulsrud, Andersen, Storbugt", "Arrangør:Bedriftsidretten", "Format:Ukentlig prøveløp"),
             ),
             MilestoneEntity(
@@ -321,7 +321,7 @@ class MockDataGenerator(
                 summary =
                     "Det første løpet viste raskt at behovet var der. Konseptet var enkelt – en løype i naturskjønne omgivelser, en uformell ramme og plass til alle, uansett alder, erfaring eller ambisjoner.\n\n" +
                         "Torsdagsløpet samlet snart løpere uke etter uke i Kalnesskogen. Noen kom for å sette personlig rekord, andre for en god treningsøkt eller det sosiale fellesskapet. Blandingen av bredde og konkurranse har vært en av arrangementets største styrker helt siden starten.\n\n",
-                extra = "",
+                extra = "Koseligste dagen i uka",
                 details = listOf("Løpsdag:Torsdag", "Sted:Kalnesskogen", "Åpen for:Alle aldre og nivåer"),
             ),
             MilestoneEntity(
@@ -332,7 +332,7 @@ class MockDataGenerator(
                     "Interessen vokste jevnt, og Torsdagsløpet utviklet seg fra et lokalt initiativ til et veletablert mosjonsløp med stadig flere deltakere.\n\n" +
                         "Historiske avisutklipp viser stor oppslutning, høy aktivitet og et arrangement som satte spor i lokalmiljøet. Flere løyper ble tatt i bruk, og løpet ble et naturlig samlingspunkt for løpere med ulike mål og forutsetninger.\n\n" +
                         "Det var likevel aldri bare resultatene som gjorde Torsdagsløpet spesielt. Stemningen før start, praten etter målgang og fellesskapet gjorde at mange kom tilbake år etter år.\n\n",
-                extra = "",
+                extra = "Vinteren er kjip uten løp",
                 details =
                     listOf(
                         "Utvikling:Fra lokalt initiativ til etablert mosjonsløp",
@@ -348,7 +348,7 @@ class MockDataGenerator(
                     "Gjennom nær fem tiår har både samfunnet og løpsmiljøet endret seg. Likevel har Torsdagsløpet holdt fast ved den samme grunnidéen.\n\n" +
                         "En moderne nettside gjør det enkelt å holde seg oppdatert med informasjon, forhåndsomtaler, referater og resultater. Samtidig er mye av det opprinnelige bevart. Ved målgang ropes fortsatt løpstiden opp til hver deltaker før den registreres – en enkel og personlig løsning som understreker arrangementets uformelle og inkluderende karakter.\n\n" +
                         "I 2010 ble det innført lørdagsløp gjennom den mørkeste delen av sesongen. Dermed kunne sesongen forlenges, samtidig som tradisjonen med torsdagsløp i den lyse delen av året ble videreført.\n\n",
-                extra = "",
+                extra = "Torsdager er de dagene jeg kommer meg ut",
                 details = listOf("Lørdagsløp innført:2010", "Nyvinning:Moderne nettside", "Bevart:Opprop av løpstid ved målgang"),
             ),
             MilestoneEntity(
@@ -359,7 +359,7 @@ class MockDataGenerator(
                     "Ingen tradisjon varer i nær femti år uten frivillige. Gjennom alle år har de sørget for at Torsdagsløpet kan arrangeres uke etter uke. \n\n" +
                         "Deltakerne skal registreres, tidene tas og resultatene publiseres – i tillegg til andre praktiske oppgaver og vedlikehold av løypa.\n\n" +
                         "Mange har også bidratt med bilder, omtaler og administrasjon. Denne innsatsen har vært avgjørende for at Torsdagsløpet fortsatt står sterkt.\n\n",
-                extra = "",
+                extra = "Fantastiske rammer, kunne ikke vært bedre",
                 details =
                     listOf(
                         "Oppgaver:Registrering, tidtaking og resultater",
@@ -375,7 +375,7 @@ class MockDataGenerator(
                     "Gjennom årene har Torsdagsløpet bydd på sterke prestasjoner og mange gode opplevelser. Løyperekordene står som milepæler og vitner om den sportslige kvaliteten som har preget løpet gjennom flere tiår.\n\n" +
                         "Den største styrken ligger likevel i kontinuiteten. Torsdagsløpet har vært et fast innslag gjennom generasjoner og gitt stadig nye deltakere muligheten til å oppleve mestring, konkurranse, natur og fellesskap.\n\n" +
                         "Det som begynte som en idé mellom tre ildsjeler, lever fortsatt videre i Kalnesskogen. Hver uke samles nye og gamle deltakere på startstreken, og historien skrives videre – ett løp av gangen.\n\n",
-                extra = "",
+                extra = "Strålende samhold",
                 details = listOf("Styrke:Kontinuitet gjennom generasjoner", "Milepæler:Løyperekorder", "Sted:Kalnesskogen"),
             ),
         )

@@ -81,21 +81,26 @@ export function History() {
                   >
                     <MilestoneCard milestone={milestone} />
                   </div>
+                  {milestone.extra && (
+                    <div
+                      className={cn(
+                        "mt-4 pl-12 sm:row-start-1 sm:mt-0 sm:pl-0",
+                        isLeft
+                          ? "sm:col-start-3 sm:pl-3"
+                          : "sm:col-start-1 sm:pr-3",
+                      )}
+                    >
+                      <div className="rounded-2xl bg-brand-ink px-6 py-8 text-center">
+                        <Quote className="mx-auto size-6 fill-brand text-brand" />
+                        <blockquote className="mx-auto mt-3 max-w-[24ch] font-display text-base font-bold italic leading-snug tracking-tight text-white sm:text-lg">
+                          {milestone.extra}
+                        </blockquote>
+                      </div>
+                    </div>
+                  )}
                 </div>
               );
             })}
-          </div>
-        </section>
-
-        <section className="mx-auto w-full max-w-5xl">
-          <div className="rounded-2xl bg-brand-ink px-6 py-10 text-center sm:px-10 sm:py-12">
-            <Quote className="mx-auto size-7 fill-brand text-brand sm:size-8" />
-            <blockquote className="mx-auto mt-4 max-w-[20ch] font-display text-lg font-bold italic leading-snug tracking-tight text-white sm:text-3xl">
-              Vi løper ikke for å vinne — vi løper for å møtes.
-            </blockquote>
-            <p className="mt-3 text-xs text-white/60 sm:text-sm">
-              — En av grunnleggerne av Torsdagsløpet
-            </p>
           </div>
         </section>
       </div>

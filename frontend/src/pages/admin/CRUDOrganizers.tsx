@@ -64,10 +64,10 @@ export function CRUDOrganizers() {
         Tilbake
       </Button>
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold tracking-tight">Organisatorer</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Arrangører</h1>
         <Button className="gap-1.5" onClick={() => setShowAdd(true)}>
           <PlusIcon className="size-4" />
-          Legg til organisator
+          Legg til arrangør
         </Button>
       </div>
 
@@ -81,7 +81,7 @@ export function CRUDOrganizers() {
       <Dialog open={showAdd} onOpenChange={setShowAdd}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Legg til organisator</DialogTitle>
+            <DialogTitle>Legg til arrangør</DialogTitle>
           </DialogHeader>
           <OrganizerForm
             initial={{}}
@@ -100,7 +100,7 @@ export function CRUDOrganizers() {
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Rediger organisator</DialogTitle>
+            <DialogTitle>Rediger arrangør</DialogTitle>
           </DialogHeader>
           {editing && (
             <OrganizerForm
@@ -121,7 +121,7 @@ export function CRUDOrganizers() {
       >
         {deleting && (
           <ConfirmDeleteDialog
-            title="Slett organisator"
+            title="Slett arrangør"
             description={
               <>
                 Er du sikker på at du vil slette{" "}

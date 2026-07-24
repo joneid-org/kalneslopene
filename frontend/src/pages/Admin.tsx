@@ -33,9 +33,9 @@ const actions = [
   { label: "Legg til bilder", icon: ImageIcon, path: "/admin/bilder" },
   { label: "Legg til løper", icon: UserPlusIcon, path: "/admin/løpere" },
   {
-    label: "Legg til organisator",
+    label: "Legg til arrangør",
     icon: UsersIcon,
-    path: "/admin/organisatorer",
+    path: "/admin/arrangører",
   },
   { label: "Legg til nyhet", icon: NewspaperIcon, path: "/admin/nyheter" },
   { label: "Administrer tagger", icon: NewspaperIcon, path: "/admin/tagger" },

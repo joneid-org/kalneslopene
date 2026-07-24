@@ -6,12 +6,12 @@ import { formatSecondsToTime, parseFlexibleTime } from "@/lib/timeUtils.ts";
 export function TimeField({
   seconds,
   disabled,
-  onChange,
+  onBlur,
   className,
 }: {
   seconds: number | null;
   disabled?: boolean;
-  onChange: (seconds: number | null) => void;
+  onBlur: (seconds: number | null) => void;
   className?: string;
 }) {
   const [text, setText] = useState(
@@ -34,8 +34,11 @@ export function TimeField({
       onChange={(e) => {
         const value = e.target.value;
         setText(value);
+      }}
+      onBlur={(e) => {
+        const value = e.target.value;
         const next = value.trim();
-        onChange(next === "" ? null : parseFlexibleTime(next));
+        onBlur(next === "" ? null : parseFlexibleTime(next));
       }}
     />
   );

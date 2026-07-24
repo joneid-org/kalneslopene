@@ -1,2 +1,6 @@
+spring:
+  liquibase:
+    contexts: prod-only
+
 baseline-data:
   enabled: true

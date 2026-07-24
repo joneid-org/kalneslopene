@@ -175,4 +175,12 @@ databaseChangeLog:
         - sqlFile:
             path: db/changelog/sql/migrate/migrate_race_photo_add_order_index.sql
             relativeToChangelogFile: false
+  - changeSet:
+      id: migrate_race_runner_increment_races_after_2026_07_10
+      author: ejoneid
+      context: prod-only
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_race_runner_increment_races_after_2026_07_10.sql
+            relativeToChangelogFile: false
 

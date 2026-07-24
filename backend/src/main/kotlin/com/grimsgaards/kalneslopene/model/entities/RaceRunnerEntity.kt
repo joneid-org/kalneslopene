@@ -32,8 +32,8 @@ class RaceRunnerEntity(
     val previousPersonalRecord: Duration? = runner.personalRecord,
     @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
     val previousSeasonRecord: Duration? = runner.seasonBest,
-    val totalRaces: Int? = runner.totalRaces,
-    val seasonRaces: Int? = runner.seasonRaces,
+    val totalRaces: Int? = runner.totalRaces?.plus(1),
+    val seasonRaces: Int? = runner.seasonRaces?.plus(1),
 ) {
     fun toDto(): RaceRunnerDTO =
         RaceRunnerDTO(

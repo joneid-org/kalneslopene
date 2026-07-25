@@ -8,9 +8,13 @@ export function SeasonStatBoxes() {
     QUERIES.statistics.race(CURRENT_YEAR),
   );
 
+  const totalRunners =
+    (yearStatistics?.totalParticipations?.female ?? 0) +
+    (yearStatistics?.totalParticipations?.male ?? 0);
+
   const stats = [
     {
-      value: yearStatistics?.totalParticipations.total,
+      value: totalRunners,
       label: "Deltakere totalt",
       shortLabel: "Deltakere",
     },

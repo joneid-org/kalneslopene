@@ -130,7 +130,6 @@ export type RaceStatisticsDTO = {
   totalParticipations: {
     male: number;
     female: number;
-    total: number;
   };
   uniqueRunners: {
     male: number;

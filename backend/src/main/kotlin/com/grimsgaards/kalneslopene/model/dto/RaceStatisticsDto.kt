@@ -19,5 +19,4 @@ data class UniqueRunnersStats(
 data class ParticipationStats(
     val male: Int,
     val female: Int,
-    val total: Int,
 )

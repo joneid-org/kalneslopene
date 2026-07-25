@@ -55,7 +55,6 @@ class StatisticsService(
                 ParticipationStats(
                     male = maleParticipation.size,
                     female = femaleParticipation.size,
-                    total = allRunners.size,
                 ),
             uniqueRunners =
                 UniqueRunnersStats(

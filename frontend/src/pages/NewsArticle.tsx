@@ -92,7 +92,7 @@ export function NewsArticle() {
         <Separator className="mb-3" />
 
         <div
-          className="text-sm leading-relaxed mb-6 prose prose-sm max-w-none [&_img]:max-w-full [&_img]:rounded-lg [&_img]:my-2 [&_a]:text-blue-600 [&_a]:underline"
+          className="text-sm leading-relaxed mb-6 prose prose-sm max-w-none break-words [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-lg [&_img]:my-2 [&_a]:text-blue-600 [&_a]:underline"
           // biome-ignore lint/security/noDangerouslySetInnerHtml: rich text HTML from admin editor, sanitized with DOMPurify below
           dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
         />
@@ -102,26 +102,22 @@ export function NewsArticle() {
             <DialogTrigger asChild>
               <button
                 type="button"
-                className="focus:outline-none"
+                className="block w-full focus:outline-none"
                 aria-label="Vis bilde i full størrelse"
               >
                 <img
                   src={headerImage}
                   alt={post.header}
-                  className="w-full h-auto rounded-lg block cursor-zoom-in hover:opacity-90 transition object-contain"
-                  style={{ maxWidth: "var(--page-max-width)", width: "auto" }}
+                  className="max-w-full h-auto mx-auto rounded-lg block cursor-zoom-in hover:opacity-90 transition object-contain"
                 />
               </button>
             </DialogTrigger>
-            <DialogContent
-              className="p-2 sm:p-4 bg-white border-0"
-              style={{ maxWidth: "var(--page-max-width)", width: "95vw" }}
-            >
+            <DialogContent className="w-fit max-w-[calc(100vw-1rem)] sm:max-w-[calc(100vw-2rem)] p-2 sm:p-4 bg-white border-0">
               <DialogTitle className="sr-only">{post.header}</DialogTitle>
               <img
                 src={headerImage}
                 alt={post.header}
-                className="w-full rounded-md object-contain max-h-[88vh]"
+                className="block h-auto w-auto max-w-[calc(100vw-2rem)] rounded-md sm:max-w-[calc(100vw-4rem)]"
               />
             </DialogContent>
           </Dialog>

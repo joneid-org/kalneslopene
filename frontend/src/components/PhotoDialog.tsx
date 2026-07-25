@@ -48,11 +48,11 @@ export default function PhotoDialog({
           Bilde {(index ?? 0) + 1} av {photos.length}
         </DialogTitle>
         {index !== null && (
-          <div className="relative m-auto w-fit rounded-md bg-white p-2 sm:p-4">
+          <div className="relative m-auto w-fit max-w-full rounded-md bg-white p-2 sm:p-4">
             <img
               src={photos[index].url}
               alt={photos[index].description}
-              className="block max-w-none rounded-md"
+              className="block h-auto w-auto max-w-[calc(100vw-3rem)] rounded-md sm:max-w-[calc(100vw-4rem)]"
             />
             {onReplacePhoto && currentFileName && (
               <ReplacePhotoButton

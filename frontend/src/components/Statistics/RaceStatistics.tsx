@@ -5,6 +5,7 @@ import { QUERIES } from "@/api/queries.ts";
 import { AttendanceChart } from "@/components/Statistics/AttendanceChart.tsx";
 import { StatTile } from "@/components/StatTile.tsx";
 import { YearSelector } from "@/components/YearSelector.tsx";
+import { getFastestRunner } from "@/lib/statisticsUtils.ts";
 import {
   extractYear,
   formatSecondsToTime,
@@ -20,12 +21,17 @@ export default function RaceStatistics() {
 
   const { data: races } = useQuery(QUERIES.race.getAllRaces());
   const { data: allTimeStatistics } = useQuery(QUERIES.statistics.race());
-  const { data: yearStatistics } = useQuery(
-    QUERIES.statistics.race(selectedYear),
+  const { data: runnerOverview } = useQuery(
+    QUERIES.statistics.runnerOverview(),
   );
 
   const availableYears = useMemo(() => getYears(races ?? []), [races]);
   const effectiveYear = selectedYear ?? availableYears[0];
+
+  const { data: yearStatistics } = useQuery({
+    ...QUERIES.statistics.race(effectiveYear),
+    enabled: effectiveYear != null,
+  });
 
   const yearRaces = useMemo(
     () =>
@@ -41,6 +47,13 @@ export default function RaceStatistics() {
 
   const recordMale = allTimeStatistics?.courseRecordMale;
   const recordFemale = allTimeStatistics?.courseRecordFemale;
+
+  const yearFastest = getFastestRunner(
+    [
+      yearStatistics?.courseRecordMale,
+      yearStatistics?.courseRecordFemale,
+    ].filter((rr) => rr != null),
+  );
 
   return (
     <section className="flex flex-col gap-3">
@@ -67,7 +80,7 @@ export default function RaceStatistics() {
                   </span>
                   <span className="text-sm">
                     {" "}
-                    — {recordMale.runner.name} - Menn
+                    — {recordMale.runner.name} - menn
                   </span>
                 </div>
               )}
@@ -80,7 +93,7 @@ export default function RaceStatistics() {
                   </span>
                   <span className="text-sm">
                     {" "}
-                    — {recordFemale.runner.name} - Kvinner
+                    — {recordFemale.runner.name} - kvinner
                   </span>
                 </div>
               )}
@@ -88,6 +101,23 @@ export default function RaceStatistics() {
           </div>
         </div>
       )}
+
+      <div className="grid grid-cols-2 gap-2 md:gap-3">
+        <StatTile
+          value={runnerOverview?.totalRunners}
+          label="Unike løpere siden 1978"
+          tone="primary"
+        />
+        <StatTile
+          value={runnerOverview?.runnersInRaces}
+          label={
+            runnerOverview?.firstRaceYear
+              ? `Unike løpere siden ${runnerOverview.firstRaceYear}`
+              : "Unike løpere"
+          }
+          tone="primary"
+        />
+      </div>
 
       {availableYears.length > 0 && (
         <div className="py-0.5">
@@ -99,7 +129,16 @@ export default function RaceStatistics() {
         </div>
       )}
 
-      <div className="grid grid-cols-3 gap-2 md:gap-3">
+      <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-3">
+        <StatTile
+          value={
+            yearStatistics != null
+              ? yearStatistics.totalParticipations.female +
+                yearStatistics.totalParticipations.male
+              : undefined
+          }
+          label="Totale løpere"
+        />
         <StatTile
           value={yearStatistics?.uniqueRunners.total}
           label="Unike løpere"
@@ -114,7 +153,7 @@ export default function RaceStatistics() {
         />
         <StatTile
           value={formatSecondsToTime(
-            mapResultTimeToNumber(yearStatistics?.courseRecord?.resultTime),
+            mapResultTimeToNumber(yearFastest?.resultTime),
           )}
           label="Raskeste tid"
           tone="primary"

@@ -3,9 +3,11 @@ package com.grimsgaards.kalneslopene.service
 import com.grimsgaards.kalneslopene.model.dto.Gender
 import com.grimsgaards.kalneslopene.model.dto.ParticipationStats
 import com.grimsgaards.kalneslopene.model.dto.RaceStatisticsDto
+import com.grimsgaards.kalneslopene.model.dto.RunnerOverviewStatsDto
 import com.grimsgaards.kalneslopene.model.dto.UniqueRunnersStats
 import com.grimsgaards.kalneslopene.model.input.RaceFilter
 import com.grimsgaards.kalneslopene.repository.RaceRepository
+import com.grimsgaards.kalneslopene.repository.RunnerRepository
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -15,7 +17,15 @@ import java.time.Year
 @Service
 class StatisticsService(
     private val raceRepository: RaceRepository,
+    private val runnerRepository: RunnerRepository,
 ) {
+    fun getRunnerOverviewStats(): RunnerOverviewStatsDto =
+        RunnerOverviewStatsDto(
+            totalRunners = runnerRepository.count().toInt(),
+            runnersInRaces = runnerRepository.countRunnersWithAtLeastOneRace().toInt(),
+            firstRaceYear = raceRepository.findEarliestPublishedRaceDate()?.year,
+        )
+
     fun getRaceStatistics(year: Year?): RaceStatisticsDto {
         val now = LocalDateTime.now()
         val seasonFilter =

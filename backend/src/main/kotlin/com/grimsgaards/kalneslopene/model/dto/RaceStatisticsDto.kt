@@ -20,3 +20,9 @@ data class ParticipationStats(
     val male: Int,
     val female: Int,
 )
+
+data class RunnerOverviewStatsDto(
+    val totalRunners: Int,
+    val runnersInRaces: Int,
+    val firstRaceYear: Int?,
+)

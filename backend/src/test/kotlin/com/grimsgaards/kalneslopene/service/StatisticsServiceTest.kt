@@ -6,6 +6,7 @@ import com.grimsgaards.kalneslopene.model.entities.RaceRunnerEntity
 import com.grimsgaards.kalneslopene.model.entities.RunnerEntity
 import com.grimsgaards.kalneslopene.model.input.RaceFilter
 import com.grimsgaards.kalneslopene.repository.RaceRepository
+import com.grimsgaards.kalneslopene.repository.RunnerRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -24,11 +25,14 @@ class StatisticsServiceTest {
     @Mock
     lateinit var raceRepository: RaceRepository
 
+    @Mock
+    lateinit var runnerRepository: RunnerRepository
+
     private lateinit var service: StatisticsService
 
     @BeforeEach
     fun setUp() {
-        service = StatisticsService(raceRepository)
+        service = StatisticsService(raceRepository, runnerRepository)
     }
 
     private val past: LocalDateTime = LocalDateTime.now().minusDays(7)

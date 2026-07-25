@@ -1,6 +1,7 @@
 package com.grimsgaards.kalneslopene.controller
 
 import com.grimsgaards.kalneslopene.model.dto.RaceStatisticsDto
+import com.grimsgaards.kalneslopene.model.dto.RunnerOverviewStatsDto
 import com.grimsgaards.kalneslopene.service.StatisticsService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -14,4 +15,7 @@ class StatisticsController(
 ) {
     @GetMapping("/races")
     fun getRaceStatistics(year: Year?): RaceStatisticsDto = statisticsService.getRaceStatistics(year)
+
+    @GetMapping("/runners/overview")
+    fun getRunnerOverviewStats(): RunnerOverviewStatsDto = statisticsService.getRunnerOverviewStats()
 }

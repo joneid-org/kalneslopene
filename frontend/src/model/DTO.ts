@@ -128,6 +128,10 @@ export type MilestoneInput = Omit<MilestoneDTO, "uuid">;
 export type RaceStatisticsDTO = {
   completedRaces: number;
   upcomingRaces: number;
+  totalParticipations: {
+    male: number;
+    female: number;
+  };
   uniqueRunners: {
     male: number;
     female: number;

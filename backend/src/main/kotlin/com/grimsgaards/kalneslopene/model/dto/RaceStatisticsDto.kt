@@ -3,6 +3,7 @@ package com.grimsgaards.kalneslopene.model.dto
 data class RaceStatisticsDto(
     val completedRaces: Int,
     val upcomingRaces: Int,
+    val totalParticipations: ParticipationStats,
     val uniqueRunners: UniqueRunnersStats,
     val averageRunnersPerRace: Double,
     val courseRecordMale: RaceRunnerDTO?,
@@ -13,4 +14,9 @@ data class UniqueRunnersStats(
     val male: Int,
     val female: Int,
     val total: Int,
+)
+
+data class ParticipationStats(
+    val male: Int,
+    val female: Int,
 )

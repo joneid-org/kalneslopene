@@ -89,6 +89,7 @@ class MockDataGenerator(
         race.weatherSymbol = weather.symbol
         race.weatherTemperature = weather.temperature
         race.weatherWindSpeed = weather.windSpeed
+        race.weatherWindDirection = weather.windDirection
         race.weatherPrecipitation = weather.precipitation
         race.weatherUpdatedAt = race.raceDate.atZone(OSLO_ZONE).toInstant()
         if (random.nextDouble() < COURSE_CONDITION_CHANCE) race.courseCondition = MOCK_COURSE_CONDITIONS.random(random)

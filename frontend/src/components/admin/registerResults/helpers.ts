@@ -7,6 +7,7 @@ export type WeatherForm = {
   temperature: string;
   windSpeed: string;
   precipitation: string;
+  windDirection: number | null;
 };
 
 export function weatherToForm(weather?: WeatherDto): WeatherForm {
@@ -15,6 +16,7 @@ export function weatherToForm(weather?: WeatherDto): WeatherForm {
     temperature: weather?.temperature?.toString() ?? "",
     windSpeed: weather?.windSpeed?.toString() ?? "",
     precipitation: weather?.precipitation?.toString() ?? "",
+    windDirection: weather?.windDirection ?? null,
   };
 }
 
@@ -30,7 +32,13 @@ export function formToWeather(form: WeatherForm): WeatherDto | undefined {
     Number.isNaN(precipitation)
   )
     return undefined;
-  return { symbol: form.symbol, temperature, windSpeed, precipitation };
+  return {
+    symbol: form.symbol,
+    temperature,
+    windSpeed,
+    precipitation,
+    windDirection: form.windDirection,
+  };
 }
 
 export { genderLabel } from "@/lib/utils.ts";

@@ -24,12 +24,12 @@ export function SeasonStatBoxes() {
       shortLabel: "Snittdeltakelse",
     },
     {
-      value: yearStatistics?.totalParticipations.female,
+      value: yearStatistics?.totalParticipations?.female,
       label: "Damer",
       shortLabel: "Damer",
     },
     {
-      value: yearStatistics?.totalParticipations.male,
+      value: yearStatistics?.totalParticipations?.male,
       label: "Herrer",
       shortLabel: "Herrer",
     },

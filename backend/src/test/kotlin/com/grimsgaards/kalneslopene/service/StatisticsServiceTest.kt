@@ -71,12 +71,12 @@ class StatisticsServiceTest {
         }
 
         @Test
-        fun `counts unpublished completed races toward completedRaces`() {
+        fun `excludes unpublished completed races from completedRaces`() {
             stubRaces(race(past, published = true), race(past, published = false))
 
             val stats = service.getRaceStatistics(null)
 
-            assertThat(stats.completedRaces).isEqualTo(2)
+            assertThat(stats.completedRaces).isEqualTo(1)
         }
     }
 
@@ -148,7 +148,9 @@ class StatisticsServiceTest {
             addRunner(raceA, runner(Gender.MALE))
             val raceB = race(past)
             addRunner(raceB, runner(Gender.FEMALE))
-            stubRaces(raceA, raceB)
+            val unpublished = race(past, published = false)
+            repeat(10) { addRunner(unpublished, runner(Gender.MALE)) }
+            stubRaces(raceA, raceB, unpublished)
 
             val stats = service.getRaceStatistics(null)
 

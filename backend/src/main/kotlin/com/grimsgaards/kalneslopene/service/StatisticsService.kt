@@ -49,7 +49,7 @@ class StatisticsService(
                 ?.toDto()
 
         return RaceStatisticsDto(
-            completedRaces = completedRaces.size,
+            completedRaces = publishedRaces.size,
             upcomingRaces = upcomingRaces.size,
             totalParticipations =
                 ParticipationStats(

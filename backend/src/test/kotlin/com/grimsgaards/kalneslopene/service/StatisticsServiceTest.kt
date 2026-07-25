@@ -52,8 +52,10 @@ class StatisticsServiceTest {
         )
     }
 
+    private fun anyFilter(): RaceFilter = any(RaceFilter::class.java) ?: RaceFilter()
+
     private fun stubRaces(vararg races: RaceEntity) {
-        Mockito.`when`(raceRepository.findAllByFilter(any(RaceFilter::class.java))).thenReturn(races.toList())
+        Mockito.`when`(raceRepository.findAllByFilter(anyFilter())).thenReturn(races.toList())
     }
 
     @Nested
@@ -217,9 +219,13 @@ class StatisticsServiceTest {
 
             service.getRaceStatistics(Year.of(2025))
 
-            Mockito.verify(raceRepository).findAllByFilter(captor.capture())
+            Mockito.verify(raceRepository).findAllByFilter(captor.capture() ?: RaceFilter())
             assertThat(captor.value.from).isEqualTo(LocalDateTime.parse("2025-01-01T00:00:00"))
-            assertThat(captor.value.to?.toLocalDate().toString()).isEqualTo("2025-12-31")
+            assertThat(
+                captor.value.to
+                    ?.toLocalDate()
+                    .toString(),
+            ).isEqualTo("2025-12-31")
         }
 
         @Test
@@ -229,7 +235,7 @@ class StatisticsServiceTest {
 
             service.getRaceStatistics(null)
 
-            Mockito.verify(raceRepository).findAllByFilter(captor.capture())
+            Mockito.verify(raceRepository).findAllByFilter(captor.capture() ?: RaceFilter())
             assertThat(captor.value.from).isNull()
             assertThat(captor.value.to).isNull()
         }

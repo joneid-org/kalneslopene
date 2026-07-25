@@ -1,11 +1,13 @@
 package com.grimsgaards.kalneslopene.controller
 
+import com.grimsgaards.kalneslopene.model.dto.FileDto
 import com.grimsgaards.kalneslopene.model.dto.RaceDTO
 import com.grimsgaards.kalneslopene.model.dto.RaceResultSummaryDto
 import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
 import com.grimsgaards.kalneslopene.model.input.PhotoUploadInfo
 import com.grimsgaards.kalneslopene.model.input.RaceFilter
 import com.grimsgaards.kalneslopene.model.input.RaceInput
+import com.grimsgaards.kalneslopene.model.input.ReorderPhotoInput
 import com.grimsgaards.kalneslopene.service.RaceService
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -73,6 +75,12 @@ class RaceController(
         @PathVariable uuid: UUID,
         @RequestBody photos: List<String>,
     ): Map<String, PhotoUploadInfo> = raceService.addPhotosToRace(uuid, photos)
+
+    @PatchMapping("/{uuid}/photos/order")
+    fun reorderPhoto(
+        @PathVariable uuid: UUID,
+        @RequestBody input: ReorderPhotoInput,
+    ): List<FileDto> = raceService.reorderPhotoInRace(uuid, input)
 
     @PatchMapping("/{uuid}/runners/{runnerUuid}")
     fun updateRunnerInRace(

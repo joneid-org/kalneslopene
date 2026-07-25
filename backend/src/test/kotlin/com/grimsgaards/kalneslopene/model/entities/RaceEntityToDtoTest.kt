@@ -36,8 +36,12 @@ class RaceEntityToDtoTest {
     @Test
     fun `exposes only confirmed photos and never nulls`() {
         val race = race()
-        race.photos.add(confirmedFile("https://minio.local/bucket/confirmed.jpg"))
-        race.photos.add(FileEntity(url = "https://minio.local/bucket/pending.jpg"))
+        race.racePhotos.add(
+            RacePhotoEntity(race = race, file = confirmedFile("https://minio.local/bucket/confirmed.jpg"), orderIndex = 1.0),
+        )
+        race.racePhotos.add(
+            RacePhotoEntity(race = race, file = FileEntity(url = "https://minio.local/bucket/pending.jpg"), orderIndex = 2.0),
+        )
 
         val dto = race.toDto()
 
@@ -49,11 +53,31 @@ class RaceEntityToDtoTest {
     @Test
     fun `returns no photos when none are confirmed`() {
         val race = race()
-        race.photos.add(FileEntity(url = "https://minio.local/bucket/pending-a.jpg"))
-        race.photos.add(FileEntity(url = "https://minio.local/bucket/pending-b.jpg"))
+        race.racePhotos.add(
+            RacePhotoEntity(race = race, file = FileEntity(url = "https://minio.local/bucket/pending-a.jpg"), orderIndex = 1.0),
+        )
+        race.racePhotos.add(
+            RacePhotoEntity(race = race, file = FileEntity(url = "https://minio.local/bucket/pending-b.jpg"), orderIndex = 2.0),
+        )
 
         val dto = race.toDto()
 
         assertThat(dto.photos).isEmpty()
+    }
+
+    @Test
+    fun `orders photos by order index regardless of insertion order`() {
+        val race = race()
+        val second = confirmedFile("https://minio.local/bucket/second.jpg")
+        val first = confirmedFile("https://minio.local/bucket/first.jpg")
+        race.racePhotos.add(RacePhotoEntity(race = race, file = second, orderIndex = 2.0))
+        race.racePhotos.add(RacePhotoEntity(race = race, file = first, orderIndex = 1.0))
+
+        val dto = race.toDto()
+
+        assertThat(dto.photos.map { it.url }).containsExactly(
+            "https://minio.local/bucket/first.jpg",
+            "https://minio.local/bucket/second.jpg",
+        )
     }
 }

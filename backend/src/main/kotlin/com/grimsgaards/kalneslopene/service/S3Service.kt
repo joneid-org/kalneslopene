@@ -148,12 +148,16 @@ class S3Service(
         logger.info("Deleted ${expiredFiles.size} expired unconfirmed uploads")
     }
 
-    fun createFileEntities(fileNames: List<String>): List<FileEntity> =
-        fileNames.map {
-            FileEntity(url = "$baseUrl/$minioBucketName/$it")
-        }
+    fun createFileEntities(fileNames: List<String>): Map<String, FileEntity> {
+        val fileMap =
+            fileNames.associate {
+                it to FileEntity(url = "$baseUrl/$minioBucketName/$it")
+            }
+        fileRepository.saveAll(fileMap.values)
+        return fileMap
+    }
 
-    fun createFileEntity(fileName: String): FileEntity = createFileEntities(listOf(fileName)).first()
+    fun createFileEntity(fileName: String): FileEntity = createFileEntities(listOf(fileName)).values.first()
 
     fun createAndSaveFileEntity(fileName: String): FileEntity = fileRepository.save(createFileEntity(fileName))
 }

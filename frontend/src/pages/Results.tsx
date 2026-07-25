@@ -8,7 +8,6 @@ import { RaceSwitcher } from "@/components/Results/RaceSwitcher.tsx";
 import ResultsHeader from "@/components/Results/ResultsHeader.tsx";
 import ResultsTable from "@/components/Results/ResultsTable.tsx";
 import { StatTile } from "@/components/StatTile.tsx";
-import { formatDateFull } from "@/lib/timeUtils.ts";
 import {
   buildTableRows,
   getMostRecentRace,
@@ -32,7 +31,6 @@ export function Results() {
   const race = allRaces.find((r) => r.uuid === uuid);
   const previous = getPreviousRace(allRaces, uuid);
   const next = getNextRace(allRaces, uuid);
-  const title = formatDateFull(race?.raceDate);
   const tableData = buildTableRows(raceRunners ?? []);
   const racePhotos = race?.photos ?? [];
 
@@ -56,7 +54,7 @@ export function Results() {
         path="/resultater/"
       />
 
-      <ResultsHeader race={race} title={title} />
+      <ResultsHeader race={race} />
 
       <div className="grid grid-cols-3 gap-2 md:grid-cols-6 md:gap-3">
         <StatTile value={summary?.participants} label="Deltakere" />

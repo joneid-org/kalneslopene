@@ -14,8 +14,10 @@ import type {
   RaceDTO,
   RaceInput,
   RaceRunnerDTO,
+  ReorderPhotoInput,
   RunnerDTO,
   RunnerInput,
+  S3FileDto,
 } from "../model/DTO.ts";
 
 export const MUTATIONS = {
@@ -44,6 +46,10 @@ export const MUTATIONS = {
         .json<void>(),
     publishResults: (raceUuid: string) =>
       kyClient.post(`/api/races/${raceUuid}/publish`).json<RaceDTO>(),
+    reorderPhoto: (raceUuid: string, input: ReorderPhotoInput) =>
+      kyClient
+        .patch(`/api/races/${raceUuid}/photos/order`, { json: input })
+        .json<S3FileDto[]>(),
   },
   organizer: {
     createOrganizer: (organizer: OrganizerInput) =>

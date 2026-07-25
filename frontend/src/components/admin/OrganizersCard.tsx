@@ -42,7 +42,7 @@ export function OrganizersCard({
       <CardHeader className="pb-2">
         <CardTitle className="text-base flex items-center gap-2">
           <UsersIcon className="size-4 text-primary" />
-          Alle organisatorer
+          Alle arrangører
         </CardTitle>
         <p className="text-xs text-muted-foreground mt-0.5">
           Dra i <GripVertical className="inline size-3" />
@@ -52,7 +52,7 @@ export function OrganizersCard({
       <CardContent className="p-0">
         {organizers.length === 0 ? (
           <p className="text-sm text-muted-foreground px-4 py-6 text-center">
-            Ingen organisatorer registrert.
+            Ingen arrangører registrert.
           </p>
         ) : (
           <ul className="divide-y">

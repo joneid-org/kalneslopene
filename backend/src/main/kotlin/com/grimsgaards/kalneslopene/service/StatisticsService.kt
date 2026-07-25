@@ -37,22 +37,24 @@ class StatisticsService(
     }
 
     fun getRaceStatistics(year: Year?): RaceStatisticsDto {
-        val filter =
+        val now = LocalDateTime.now()
+        val seasonFilter =
             RaceFilter(
                 from = year?.atDay(1)?.atStartOfDay(),
                 to = year?.atMonthDay(MonthDay.of(12, 31))?.atTime(LocalTime.MAX),
-                isPublished = true,
             )
-        val races = raceRepository.findAllByFilter(filter)
-        val allRunners = races.flatMap { it.runners }
 
-        val (completedRaces, upcomingRaces) = races.partition { it.raceDate.isBefore(LocalDateTime.now()) }
+        val seasonRaces = raceRepository.findAllByFilter(seasonFilter)
+        val (completedRaces, upcomingRaces) = seasonRaces.partition { it.raceDate.isBefore(now) }
+        val publishedRaces = completedRaces.filter { it.isPublished }
+
+        val allRunners = publishedRaces.flatMap { it.runners }
         val uniqueRunners = allRunners.map { it.runner }.toSet()
         val (maleRunners, femaleRunners) = uniqueRunners.partition { it.gender == Gender.MALE }
-        val (maleParticipations, femaleParticipations) =
-            allRunners.partition { it.runner.gender == Gender.MALE }
+
+        val (maleParticipation, femaleParticipation) = allRunners.partition { it.runner.gender == Gender.MALE }
         val averageRunnersPerRace =
-            if (completedRaces.isEmpty()) 0.0 else allRunners.size.toDouble() / completedRaces.size
+            if (publishedRaces.isEmpty()) 0.0 else allRunners.size.toDouble() / publishedRaces.size
 
         val eligibleRunners = allRunners.filter { !it.hideTime && it.resultTime != null }
         val (maleEligibleRunners, femaleEligibleRunners) =
@@ -71,13 +73,12 @@ class StatisticsService(
                 ?.toDto()
 
         return RaceStatisticsDto(
-            completedRaces = completedRaces.size,
+            completedRaces = publishedRaces.size,
             upcomingRaces = upcomingRaces.size,
             totalParticipations =
                 ParticipationStats(
-                    male = maleParticipations.size,
-                    female = femaleParticipations.size,
-                    total = allRunners.size,
+                    male = maleParticipation.size,
+                    female = femaleParticipation.size,
                 ),
             uniqueRunners =
                 UniqueRunnersStats(

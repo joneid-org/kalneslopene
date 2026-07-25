@@ -30,6 +30,12 @@ export type RaceInput = Omit<
   "uuid" | "runnerCount" | "isPublished" | "photos" | "weatherManuallyEdited"
 >;
 
+export type ReorderPhotoInput = {
+  fileUuid: string;
+  beforeFileUuid?: string;
+  afterFileUuid?: string;
+};
+
 export type NewsFeedDTO = {
   uuid: string;
   tags: string[];
@@ -124,7 +130,6 @@ export type RaceStatisticsDTO = {
   totalParticipations: {
     male: number;
     female: number;
-    total: number;
   };
   uniqueRunners: {
     male: number;

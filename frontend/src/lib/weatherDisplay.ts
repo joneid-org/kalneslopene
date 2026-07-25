@@ -40,6 +40,33 @@ export function weatherLabel(symbol: string): string {
 export const WEATHER_SYMBOL_OPTIONS: { value: string; label: string }[] =
   Object.entries(SYMBOL_LABELS).map(([value, label]) => ({ value, label }));
 
+/** 8-point Norwegian compass labels, indexed by 45° sector starting at N. */
+const WIND_DIRECTIONS = ["N", "NØ", "Ø", "SØ", "S", "SV", "V", "NV"];
+
+const WIND_SECTOR_DEGREES = 45;
+
+/** Snaps a wind bearing in degrees to the nearest 8-point sector index (0–7). */
+function windDirectionSectorIndex(degrees: number): number {
+  return Math.round(degrees / WIND_SECTOR_DEGREES) % WIND_DIRECTIONS.length;
+}
+
+/** Converts a wind bearing in degrees (0–360) to an 8-point Norwegian compass label. */
+export function windDirectionLabel(degrees: number): string {
+  return WIND_DIRECTIONS[windDirectionSectorIndex(degrees)];
+}
+
+/** Snaps a wind bearing to the canonical degrees of its nearest 8-point sector. */
+export function windDirectionSector(degrees: number): number {
+  return windDirectionSectorIndex(degrees) * WIND_SECTOR_DEGREES;
+}
+
+/** Selectable wind directions for manual admin entry (canonical degrees ↔ label). */
+export const WIND_DIRECTION_OPTIONS: { value: number; label: string }[] =
+  WIND_DIRECTIONS.map((label, i) => ({
+    value: i * WIND_SECTOR_DEGREES,
+    label,
+  }));
+
 export function weatherIcon(symbol: string): LucideIcon {
   const s = baseSymbol(symbol);
   if (s === "clearsky") return Sun;

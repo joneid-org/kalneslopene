@@ -31,6 +31,7 @@ class WeatherServiceMock(
         nextRace.weatherSymbol = weather.symbol
         nextRace.weatherTemperature = weather.temperature
         nextRace.weatherWindSpeed = weather.windSpeed
+        nextRace.weatherWindDirection = weather.windDirection
         nextRace.weatherPrecipitation = weather.precipitation
         nextRace.weatherUpdatedAt = Instant.now()
         raceRepository.save(nextRace)
@@ -46,6 +47,7 @@ class WeatherServiceMock(
         private const val MAX_TEMP = 35
         private const val MAX_WIND_DECI = 90
         private const val WIND_DECI = 10.0
+        private const val MAX_WIND_DIRECTION = 360
         private const val MAX_PRECIP_DECI = 40
         private const val PRECIP_DECI = 10.0
         private const val PRECIP_CHANCE = 0.4
@@ -61,6 +63,7 @@ class WeatherServiceMock(
                 windSpeed = random.nextInt(MAX_WIND_DECI).toDouble() / WIND_DECI,
                 precipitation =
                     if (random.nextDouble() < PRECIP_CHANCE) random.nextInt(MAX_PRECIP_DECI).toDouble() / PRECIP_DECI else NO_PRECIP,
+                windDirection = random.nextInt(MAX_WIND_DIRECTION).toDouble(),
             )
     }
 }

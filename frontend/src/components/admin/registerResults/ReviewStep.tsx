@@ -18,7 +18,11 @@ import {
   SelectValue,
 } from "@/components/ui/select.tsx";
 import { secondsToDuration } from "@/lib/timeUtils.ts";
-import { WEATHER_SYMBOL_OPTIONS } from "@/lib/weatherDisplay.ts";
+import {
+  WEATHER_SYMBOL_OPTIONS,
+  WIND_DIRECTION_OPTIONS,
+  windDirectionSector,
+} from "@/lib/weatherDisplay.ts";
 import type { RaceRunnerDTO, RunnerDTO } from "@/model/DTO.ts";
 import { ChangeRunnerField } from "./ChangeRunnerField.tsx";
 import { entrySeconds, genderLabel, type WeatherForm } from "./helpers.ts";
@@ -118,7 +122,7 @@ export function ReviewStep({
             ))}
           </SelectContent>
         </Select>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-4 gap-2">
           {WEATHER_NUMBER_FIELDS.map(({ key, label }) => (
             <div key={key} className="space-y-1">
               <Label className="text-xs font-normal text-muted-foreground">
@@ -136,6 +140,34 @@ export function ReviewStep({
               />
             </div>
           ))}
+          <div className="space-y-1">
+            <Label className="text-xs font-normal text-muted-foreground">
+              Retning
+            </Label>
+            <Select
+              value={
+                weather.windDirection != null
+                  ? windDirectionSector(weather.windDirection).toString()
+                  : ""
+              }
+              onValueChange={(value) => {
+                const next = { ...weather, windDirection: Number(value) };
+                onWeatherChange(next);
+                onWeatherPersist(next);
+              }}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="—" />
+              </SelectTrigger>
+              <SelectContent>
+                {WIND_DIRECTION_OPTIONS.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value.toString()}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
 

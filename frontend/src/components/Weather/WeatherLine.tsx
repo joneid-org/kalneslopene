@@ -1,7 +1,11 @@
 import type { LucideIcon } from "lucide-react";
-import { Droplets, Footprints, Thermometer, Wind } from "lucide-react";
+import { Compass, Droplets, Footprints, Thermometer, Wind } from "lucide-react";
 import { cn } from "@/lib/utils.ts";
-import { weatherIcon, weatherLabel } from "@/lib/weatherDisplay.ts";
+import {
+  weatherIcon,
+  weatherLabel,
+  windDirectionLabel,
+} from "@/lib/weatherDisplay.ts";
 import type { WeatherDto } from "@/model/DTO.ts";
 
 function Item({
@@ -48,6 +52,11 @@ export function WeatherLine({
           </Item>
           <Item icon={Thermometer}>{weather.temperature}°C</Item>
           <Item icon={Wind}>{weather.windSpeed} m/s</Item>
+          {weather.windDirection != null && (
+            <Item icon={Compass}>
+              {windDirectionLabel(weather.windDirection)}
+            </Item>
+          )}
           {weather.precipitation > 0 && (
             <Item icon={Droplets}>{weather.precipitation} mm</Item>
           )}

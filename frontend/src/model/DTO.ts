@@ -138,7 +138,6 @@ export type RaceStatisticsDTO = {
     total: number;
   };
   averageRunnersPerRace: number;
-  courseRecord?: RaceRunnerDTO;
   courseRecordMale?: RaceRunnerDTO;
   courseRecordFemale?: RaceRunnerDTO;
 };

@@ -5,6 +5,7 @@ import { QUERIES } from "@/api/queries.ts";
 import { AttendanceChart } from "@/components/Statistics/AttendanceChart.tsx";
 import { StatTile } from "@/components/StatTile.tsx";
 import { YearSelector } from "@/components/YearSelector.tsx";
+import { getFastestRunner } from "@/lib/statisticsUtils.ts";
 import {
   extractYear,
   formatSecondsToTime,
@@ -46,6 +47,13 @@ export default function RaceStatistics() {
 
   const recordMale = allTimeStatistics?.courseRecordMale;
   const recordFemale = allTimeStatistics?.courseRecordFemale;
+
+  const yearFastest = getFastestRunner(
+    [
+      yearStatistics?.courseRecordMale,
+      yearStatistics?.courseRecordFemale,
+    ].filter((rr) => rr != null),
+  );
 
   return (
     <section className="flex flex-col gap-3">
@@ -145,7 +153,7 @@ export default function RaceStatistics() {
         />
         <StatTile
           value={formatSecondsToTime(
-            mapResultTimeToNumber(yearStatistics?.courseRecord?.resultTime),
+            mapResultTimeToNumber(yearFastest?.resultTime),
           )}
           label="Raskeste tid"
           tone="primary"

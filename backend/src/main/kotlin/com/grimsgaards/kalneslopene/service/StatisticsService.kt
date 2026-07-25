@@ -59,10 +59,6 @@ class StatisticsService(
         val eligibleRunners = allRunners.filter { !it.hideTime && it.resultTime != null }
         val (maleEligibleRunners, femaleEligibleRunners) =
             eligibleRunners.partition { it.runner.gender == Gender.MALE }
-        val courseRecord =
-            eligibleRunners
-                .minByOrNull { it.resultTime!! }
-                ?.toDto()
         val courseRecordMale =
             maleEligibleRunners
                 .minByOrNull { it.resultTime!! }
@@ -87,7 +83,6 @@ class StatisticsService(
                     total = uniqueRunners.size,
                 ),
             averageRunnersPerRace = averageRunnersPerRace,
-            courseRecord = courseRecord,
             courseRecordMale = courseRecordMale,
             courseRecordFemale = courseRecordFemale,
         )

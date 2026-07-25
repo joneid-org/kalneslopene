@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { LucideIcon } from "lucide-react";
 import {
   CalendarDays,
+  Compass,
   Droplets,
   Footprints,
   Thermometer,
@@ -11,7 +12,10 @@ import { QUERIES } from "@/api/queries.ts";
 import { formatDDMonth, formatRaceDateTime } from "@/lib/timeUtils.ts";
 import { cn, getUpcomingRaces } from "@/lib/utils.ts";
 import { weatherIcon, weatherLabel } from "@/lib/weatherDisplay.ts";
-import type { RaceDTO, WeatherDto } from "@/model/DTO.ts";
+import type { RaceDTO, WeatherDto } from "@/model/DTO.ts"; // TODO: replace with real wind direction from the weather API
+
+// TODO: replace with real wind direction from the weather API
+const MOCK_WIND_DIRECTION = "NV";
 
 function WeatherItem({
   icon: Icon,
@@ -124,22 +128,10 @@ function NextRaceStacked({ isPending, race, weather }: NextRaceVariantProps) {
               {formatRaceDateTime(race.raceDate)}
             </div>
             {weather && (
-              <div className="mt-1.5 space-y-1">
-                <WeatherItem icon={weatherIcon(weather.symbol)}>
-                  {weatherLabel(weather.symbol)}
-                </WeatherItem>
-                <div className="flex flex-wrap gap-x-4 gap-y-1">
-                  <WeatherItem
-                    icon={Wind}
-                    className="text-[13px] font-medium text-white/85"
-                  >
-                    {weather.windSpeed} m/s
-                  </WeatherItem>
-                  <WeatherItem
-                    icon={Thermometer}
-                    className="text-[13px] font-medium text-white/85"
-                  >
-                    {weather.temperature}°C
+              <div className="mt-1.5 flex flex-col gap-1">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+                  <WeatherItem icon={weatherIcon(weather.symbol)}>
+                    {weatherLabel(weather.symbol)}
                   </WeatherItem>
                   {weather.precipitation > 0 && (
                     <WeatherItem
@@ -149,6 +141,26 @@ function NextRaceStacked({ isPending, race, weather }: NextRaceVariantProps) {
                       {weather.precipitation} mm
                     </WeatherItem>
                   )}
+                  <WeatherItem
+                    icon={Thermometer}
+                    className="text-[13px] font-medium text-white/85"
+                  >
+                    {weather.temperature}°C
+                  </WeatherItem>
+                </div>
+                <div className="flex flex-wrap gap-x-4 gap-y-1">
+                  <WeatherItem
+                    icon={Wind}
+                    className="text-[13px] font-medium text-white/85"
+                  >
+                    {weather.windSpeed} m/s
+                  </WeatherItem>
+                  <WeatherItem
+                    icon={Compass}
+                    className="text-[13px] font-medium text-white/85"
+                  >
+                    {MOCK_WIND_DIRECTION}
+                  </WeatherItem>
                 </div>
               </div>
             )}
@@ -183,22 +195,31 @@ function NextRaceOverlay({ isPending, race, weather }: NextRaceVariantProps) {
                 {formatRaceDateTime(race.raceDate)}
               </div>
             </div>
-            <div className="flex shrink-0 gap-5">
+            <div className="shrink-0">
               {weather ? (
-                <>
-                  <WeatherItem icon={weatherIcon(weather.symbol)}>
-                    {weatherLabel(weather.symbol)}
-                  </WeatherItem>
-                  <WeatherItem icon={Wind}>{weather.windSpeed} m/s</WeatherItem>
-                  <WeatherItem icon={Thermometer}>
-                    {weather.temperature}°C
-                  </WeatherItem>
-                  {weather.precipitation > 0 && (
-                    <WeatherItem icon={Droplets}>
-                      {weather.precipitation} mm
+                <div className="flex flex-col gap-y-2">
+                  <div className="flex gap-x-5">
+                    <WeatherItem icon={weatherIcon(weather.symbol)}>
+                      {weatherLabel(weather.symbol)}
                     </WeatherItem>
-                  )}
-                </>
+                    {weather.precipitation > 0 && (
+                      <WeatherItem icon={Droplets}>
+                        {weather.precipitation} mm
+                      </WeatherItem>
+                    )}
+                    <WeatherItem icon={Thermometer}>
+                      {weather.temperature}°C
+                    </WeatherItem>
+                  </div>
+                  <div className="flex gap-x-5">
+                    <WeatherItem icon={Wind}>
+                      {weather.windSpeed} m/s
+                    </WeatherItem>
+                    <WeatherItem icon={Compass}>
+                      {MOCK_WIND_DIRECTION}
+                    </WeatherItem>
+                  </div>
+                </div>
               ) : (
                 race.courseCondition && (
                   <WeatherItem icon={Footprints}>

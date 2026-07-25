@@ -123,7 +123,12 @@ export default function RaceStatistics() {
 
       <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-3">
         <StatTile
-          value={yearStatistics?.totalParticipations.total}
+          value={
+            yearStatistics != null
+              ? yearStatistics.totalParticipations.female +
+                yearStatistics.totalParticipations.male
+              : undefined
+          }
           label="Totale løpere"
         />
         <StatTile

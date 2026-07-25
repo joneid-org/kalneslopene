@@ -72,7 +72,7 @@ export default function RaceStatistics() {
                   </span>
                   <span className="text-sm">
                     {" "}
-                    — {recordMale.runner.name} - Menn
+                    — {recordMale.runner.name} - menn
                   </span>
                 </div>
               )}
@@ -85,7 +85,7 @@ export default function RaceStatistics() {
                   </span>
                   <span className="text-sm">
                     {" "}
-                    — {recordFemale.runner.name} - Kvinner
+                    — {recordFemale.runner.name} - kvinner
                   </span>
                 </div>
               )}

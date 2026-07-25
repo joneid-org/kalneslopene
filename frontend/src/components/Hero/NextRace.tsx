@@ -11,11 +11,12 @@ import {
 import { QUERIES } from "@/api/queries.ts";
 import { formatDDMonth, formatRaceDateTime } from "@/lib/timeUtils.ts";
 import { cn, getUpcomingRaces } from "@/lib/utils.ts";
-import { weatherIcon, weatherLabel } from "@/lib/weatherDisplay.ts";
-import type { RaceDTO, WeatherDto } from "@/model/DTO.ts"; // TODO: replace with real wind direction from the weather API
-
-// TODO: replace with real wind direction from the weather API
-const MOCK_WIND_DIRECTION = "NV";
+import {
+  weatherIcon,
+  weatherLabel,
+  windDirectionLabel,
+} from "@/lib/weatherDisplay.ts";
+import type { RaceDTO, WeatherDto } from "@/model/DTO.ts";
 
 function WeatherItem({
   icon: Icon,
@@ -155,12 +156,14 @@ function NextRaceStacked({ isPending, race, weather }: NextRaceVariantProps) {
                   >
                     {weather.windSpeed} m/s
                   </WeatherItem>
-                  <WeatherItem
-                    icon={Compass}
-                    className="text-[13px] font-medium text-white/85"
-                  >
-                    {MOCK_WIND_DIRECTION}
-                  </WeatherItem>
+                  {weather.windDirection != null && (
+                    <WeatherItem
+                      icon={Compass}
+                      className="text-[13px] font-medium text-white/85"
+                    >
+                      {windDirectionLabel(weather.windDirection)}
+                    </WeatherItem>
+                  )}
                 </div>
               </div>
             )}
@@ -215,9 +218,11 @@ function NextRaceOverlay({ isPending, race, weather }: NextRaceVariantProps) {
                     <WeatherItem icon={Wind}>
                       {weather.windSpeed} m/s
                     </WeatherItem>
-                    <WeatherItem icon={Compass}>
-                      {MOCK_WIND_DIRECTION}
-                    </WeatherItem>
+                    {weather.windDirection != null && (
+                      <WeatherItem icon={Compass}>
+                        {windDirectionLabel(weather.windDirection)}
+                      </WeatherItem>
+                    )}
                   </div>
                 </div>
               ) : (

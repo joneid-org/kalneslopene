@@ -13,6 +13,7 @@ export type WeatherDto = {
   temperature: number;
   windSpeed: number;
   precipitation: number;
+  windDirection: number | null;
 };
 
 export type RaceDTO = {

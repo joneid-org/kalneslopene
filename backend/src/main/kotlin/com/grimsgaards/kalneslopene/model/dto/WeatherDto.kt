@@ -5,4 +5,5 @@ data class WeatherDto(
     val temperature: Double,
     val windSpeed: Double,
     val precipitation: Double,
+    val windDirection: Double? = null,
 )

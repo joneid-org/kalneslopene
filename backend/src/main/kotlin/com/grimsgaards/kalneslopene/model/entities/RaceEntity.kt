@@ -28,6 +28,7 @@ class RaceEntity(
     var weatherSymbol: String? = null
     var weatherTemperature: Double? = null
     var weatherWindSpeed: Double? = null
+    var weatherWindDirection: Double? = null
     var weatherPrecipitation: Double? = null
     var weatherUpdatedAt: Instant? = null
     var weatherManuallyEdited: Boolean = false
@@ -41,12 +42,14 @@ class RaceEntity(
                 weather.symbol == weatherSymbol &&
                 weather.temperature == weatherTemperature &&
                 weather.windSpeed == weatherWindSpeed &&
+                weather.windDirection == weatherWindDirection &&
                 weather.precipitation == weatherPrecipitation
         if (weather == null || unchanged) return
 
         weatherSymbol = weather.symbol
         weatherTemperature = weather.temperature
         weatherWindSpeed = weather.windSpeed
+        weatherWindDirection = weather.windDirection
         weatherPrecipitation = weather.precipitation
         weatherManuallyEdited = true
     }
@@ -75,6 +78,7 @@ class RaceEntity(
             temperature = temperature,
             windSpeed = windSpeed,
             precipitation = weatherPrecipitation ?: NO_PRECIPITATION,
+            windDirection = weatherWindDirection,
         )
     }
 

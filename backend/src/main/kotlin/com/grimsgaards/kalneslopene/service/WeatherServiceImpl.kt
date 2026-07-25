@@ -135,6 +135,7 @@ class WeatherServiceImpl(
         race.weatherSymbol = symbol
         race.weatherTemperature = round(entry.data.instant.details.airTemperature)
         race.weatherWindSpeed = round(entry.data.instant.details.windSpeed * WIND_ROUNDING) / WIND_ROUNDING
+        race.weatherWindDirection = round(entry.data.instant.details.windDirection)
         race.weatherPrecipitation = precipitation
         race.weatherUpdatedAt = Instant.now()
     }
@@ -204,6 +205,7 @@ private data class YrInstant(
 private data class YrInstantDetails(
     @JsonProperty("air_temperature") val airTemperature: Double,
     @JsonProperty("wind_speed") val windSpeed: Double,
+    @JsonProperty("wind_from_direction") val windDirection: Double,
 )
 
 private data class YrPeriod(

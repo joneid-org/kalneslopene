@@ -29,6 +29,7 @@ const EMPTY_WEATHER: WeatherForm = {
   temperature: "",
   windSpeed: "",
   precipitation: "",
+  windDirection: null,
 };
 
 const BASE_STEPS = [

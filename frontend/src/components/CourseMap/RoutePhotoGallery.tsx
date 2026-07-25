@@ -3,10 +3,12 @@ import { useState } from "react";
 import PhotoDialog from "@/components/PhotoDialog.tsx";
 import { ReplacePhotoButton } from "@/components/ReplacePhotoButton.tsx";
 import { routeDetails } from "@/data/200m200mData.ts";
+import { useAuth } from "@/hooks/useAuth.ts";
 import { useStaticPhotos } from "@/hooks/useStaticPhotos.tsx";
 import { cn } from "@/lib/utils.ts";
 
 export function RoutePhotoGallery() {
+  const { isAuthenticated } = useAuth();
   const { resolvePhotoUrl, handleReplacePhoto } = useStaticPhotos();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -14,15 +16,14 @@ export function RoutePhotoGallery() {
   const total = routeDetails.length;
   const photo = routeSection.photo;
   const photoUrl = resolvePhotoUrl(photo.fileName, photo.fallback);
+  const onReplacePhoto = isAuthenticated ? handleReplacePhoto : undefined;
   const goPrev = () => setCurrentIndex((i) => (i - 1 + total) % total);
   const goNext = () => setCurrentIndex((i) => (i + 1) % total);
 
   return (
     <section>
       <div className="flex items-baseline justify-between gap-3">
-        <h2 className="font-display text-lg font-extrabold tracking-tight sm:text-[22px]">
-          Løypa 200 for 200
-        </h2>
+        <h2 className="page-title mt-2">Løypa 200m for 200m</h2>
         <span className="shrink-0 text-xs font-bold tabular-nums text-muted-foreground sm:text-sm">
           {currentIndex + 1} / {total}
         </span>
@@ -50,10 +51,10 @@ export function RoutePhotoGallery() {
               </span>
             </div>
           </button>
-          {handleReplacePhoto && photo.fileName && (
+          {onReplacePhoto && photo.fileName && (
             <ReplacePhotoButton
               fileName={photo.fileName}
-              onReplace={handleReplacePhoto}
+              onReplace={onReplacePhoto}
               className="absolute right-2.5 top-2.5 z-10"
             />
           )}
@@ -116,7 +117,7 @@ export function RoutePhotoGallery() {
         ]}
         index={lightboxIndex}
         onIndexChange={setLightboxIndex}
-        onReplacePhoto={handleReplacePhoto}
+        onReplacePhoto={onReplacePhoto}
       />
     </section>
   );

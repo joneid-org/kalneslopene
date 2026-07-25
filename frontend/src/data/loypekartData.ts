@@ -47,7 +47,7 @@ export const pins: Pin[] = [
   {
     id: "sletnersletta",
     label: "Sletnersletta",
-    position: [59.30125, 11.03849],
+    position: [59.30177, 11.03819],
     color: "#2563eb",
     category: "poi",
     distance: "1 - 1,4 km",
@@ -62,7 +62,7 @@ export const pins: Pin[] = [
   {
     id: "baustadkollen",
     label: "Baustadkollen",
-    position: [59.30566, 11.03313],
+    position: [59.30575, 11.03292],
     color: "#2563eb",
     category: "poi",
     distance: "ca. 1,55 km",
@@ -77,7 +77,7 @@ export const pins: Pin[] = [
   {
     id: "bergerudpassasjen",
     label: "Bergerudpassasjen",
-    position: [59.3063, 11.03169],
+    position: [59.30596, 11.0326],
     color: "#2563eb",
     category: "poi",
     distance: "1,6 - 1,7 km",
@@ -92,7 +92,7 @@ export const pins: Pin[] = [
   {
     id: "paulsrudholtet",
     label: "Paulsrudholtet",
-    position: [59.30764, 11.02931],
+    position: [59.3068, 11.03053],
     color: "#2563eb",
     category: "poi",
     distance: "1,72 - 1,92 km",
@@ -152,7 +152,7 @@ export const pins: Pin[] = [
   {
     id: "hundebakken",
     label: "Hundebakken",
-    position: [59.29985, 11.0225],
+    position: [59.29968, 11.02221],
     color: "#2563eb",
     category: "poi",
     distance: "ca. 3,4 km",
@@ -168,7 +168,7 @@ export const pins: Pin[] = [
   {
     id: "helgekneika",
     label: "Helgekneika",
-    position: [59.29805, 11.02632],
+    position: [59.29823, 11.02568],
     color: "#2563eb",
     category: "poi",
     distance: "4,27 - 4,44 km",

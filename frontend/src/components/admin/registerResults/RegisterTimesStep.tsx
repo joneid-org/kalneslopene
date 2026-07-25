@@ -70,7 +70,7 @@ export function RegisterTimesStep({
               <TimeField
                 seconds={entrySeconds(entry)}
                 disabled={entry.hideTime}
-                onChange={(seconds) =>
+                onBlur={(seconds) =>
                   onUpdateResult(entry.runner.uuid, {
                     resultTime: secondsToDuration(seconds ?? 0),
                   })

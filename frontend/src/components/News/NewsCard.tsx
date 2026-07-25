@@ -23,7 +23,7 @@ export function NewsCard({ post, img }: { post: NewsFeedDTO; img: string }) {
           {post.tags.map((tag) => (
             <Link
               key={tag}
-              to={`/nyheter/tag/${tag.toLowerCase()}`}
+              to={`/nyheter/tagg/${tag.toLowerCase()}`}
               onClick={(e) => e.stopPropagation()}
             >
               <span className="tag-pill" style={{ color: tagColor(tag, tags) }}>

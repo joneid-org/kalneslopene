@@ -230,7 +230,7 @@ export function ReviewStep({
                     <TimeField
                       seconds={entrySeconds(entry)}
                       disabled={entry.hideTime}
-                      onChange={(seconds) =>
+                      onBlur={(seconds) =>
                         onUpdateResult(runnerUuid, {
                           resultTime: secondsToDuration(seconds ?? 0),
                         })

@@ -7,7 +7,6 @@ export type WeatherForm = {
   temperature: string;
   windSpeed: string;
   precipitation: string;
-  // Not user-editable; carried through so manual edits preserve the auto-fetched value.
   windDirection: number | null;
 };
 

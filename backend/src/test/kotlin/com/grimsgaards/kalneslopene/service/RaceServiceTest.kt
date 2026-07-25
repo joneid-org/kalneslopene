@@ -4,6 +4,8 @@ import com.grimsgaards.kalneslopene.model.dto.WeatherDto
 import com.grimsgaards.kalneslopene.model.entities.FileEntity
 import com.grimsgaards.kalneslopene.model.entities.RaceEntity
 import com.grimsgaards.kalneslopene.model.entities.RacePhotoEntity
+import com.grimsgaards.kalneslopene.model.entities.UserRole
+import com.grimsgaards.kalneslopene.model.input.RaceFilter
 import com.grimsgaards.kalneslopene.model.input.RaceInput
 import com.grimsgaards.kalneslopene.model.input.ReorderPhotoInput
 import com.grimsgaards.kalneslopene.repository.RacePhotoRepository
@@ -12,6 +14,7 @@ import com.grimsgaards.kalneslopene.repository.RaceRunnerRepository
 import com.grimsgaards.kalneslopene.repository.RunnerRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -20,6 +23,9 @@ import org.mockito.Mockito
 import org.mockito.Mockito.any
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.quality.Strictness
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.context.SecurityContextHolder
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.util.Optional
@@ -175,6 +181,51 @@ class RaceServiceTest {
             assertThatThrownBy {
                 service.reorderPhotoInRace(uuid, ReorderPhotoInput(fileUuid = UUID.randomUUID()))
             }.isInstanceOf(IllegalArgumentException::class.java)
+        }
+    }
+
+    @Nested
+    inner class GetAll {
+        @AfterEach
+        fun clearAuth() {
+            SecurityContextHolder.clearContext()
+        }
+
+        private fun anyFilter(): RaceFilter = any(RaceFilter::class.java) ?: RaceFilter()
+
+        private fun anyDateTime(): LocalDateTime = any(LocalDateTime::class.java) ?: LocalDateTime.now()
+
+        private fun authenticateAsAdmin() {
+            val auth =
+                UsernamePasswordAuthenticationToken(
+                    "admin",
+                    "pw",
+                    listOf(SimpleGrantedAuthority(UserRole.ADMIN.toString())),
+                )
+            SecurityContextHolder.getContext().authentication = auth
+        }
+
+        @Test
+        fun `non-admin sees published and upcoming races via public filter`() {
+            Mockito
+                .`when`(raceRepository.findAllPublicByFilter(anyFilter(), anyDateTime()))
+                .thenReturn(listOf(existingRace()))
+
+            service.getAll(RaceFilter())
+
+            Mockito.verify(raceRepository).findAllPublicByFilter(anyFilter(), anyDateTime())
+            Mockito.verify(raceRepository, Mockito.never()).findAllByFilter(anyFilter())
+        }
+
+        @Test
+        fun `admin sees all races via unfiltered query`() {
+            authenticateAsAdmin()
+            Mockito.`when`(raceRepository.findAllByFilter(anyFilter())).thenReturn(listOf(existingRace()))
+
+            service.getAll(RaceFilter())
+
+            Mockito.verify(raceRepository).findAllByFilter(anyFilter())
+            Mockito.verify(raceRepository, Mockito.never()).findAllPublicByFilter(anyFilter(), anyDateTime())
         }
     }
 }

@@ -22,6 +22,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 import java.util.UUID
 
 @Suppress("TooManyFunctions")
@@ -41,8 +42,13 @@ class RaceService(
             ?.any { it.authority == UserRole.ADMIN.toString() } == true
 
     fun getAll(filter: RaceFilter): List<RaceDTO> {
-        val effectiveFilter = if (isAdmin()) filter else filter.copy(isPublished = true)
-        return raceRepository.findAllByFilter(effectiveFilter).map { it.toDto() }
+        val races =
+            if (isAdmin()) {
+                raceRepository.findAllByFilter(filter)
+            } else {
+                raceRepository.findAllPublicByFilter(filter, LocalDateTime.now())
+            }
+        return races.map { it.toDto() }
     }
 
     fun findByUuid(uuid: UUID): RaceDTO {

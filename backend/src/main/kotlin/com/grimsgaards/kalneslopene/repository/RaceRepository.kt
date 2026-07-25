@@ -21,5 +21,19 @@ interface RaceRepository : JpaRepository<RaceEntity, UUID> {
     )
     fun findAllByFilter(filter: RaceFilter): List<RaceEntity>
 
+    @Query(
+        """
+        SELECT n FROM RaceEntity n
+        WHERE n.raceDate >= COALESCE(:#{#filter.from}, n.raceDate)
+          AND n.raceDate <= COALESCE(:#{#filter.to}, n.raceDate)
+          AND (n.isPublished = true OR n.raceDate >= :now)
+        ORDER BY n.raceDate DESC
+    """,
+    )
+    fun findAllPublicByFilter(
+        filter: RaceFilter,
+        now: LocalDateTime,
+    ): List<RaceEntity>
+
     fun findFirstByRaceDateGreaterThanEqualOrderByRaceDateAsc(dateTime: LocalDateTime): RaceEntity?
 }

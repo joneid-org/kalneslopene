@@ -19,22 +19,12 @@ class StatisticsService(
     private val raceRepository: RaceRepository,
     private val runnerRepository: RunnerRepository,
 ) {
-    fun getRunnerOverviewStats(): RunnerOverviewStatsDto {
-        val races = raceRepository.findAllByFilter(RaceFilter(isPublished = true))
-        val runnersInRaces =
-            races
-                .flatMap { it.runners }
-                .map { it.runner }
-                .toSet()
-                .size
-        val firstRaceYear = races.minByOrNull { it.raceDate }?.raceDate?.year
-
-        return RunnerOverviewStatsDto(
+    fun getRunnerOverviewStats(): RunnerOverviewStatsDto =
+        RunnerOverviewStatsDto(
             totalRunners = runnerRepository.count().toInt(),
-            runnersInRaces = runnersInRaces,
-            firstRaceYear = firstRaceYear,
+            runnersInRaces = runnerRepository.countRunnersWithAtLeastOneRace().toInt(),
+            firstRaceYear = raceRepository.findEarliestPublishedRaceDate()?.year,
         )
-    }
 
     fun getRaceStatistics(year: Year?): RaceStatisticsDto {
         val now = LocalDateTime.now()

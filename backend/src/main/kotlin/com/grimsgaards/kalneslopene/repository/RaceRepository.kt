@@ -22,4 +22,7 @@ interface RaceRepository : JpaRepository<RaceEntity, UUID> {
     fun findAllByFilter(filter: RaceFilter): List<RaceEntity>
 
     fun findFirstByRaceDateGreaterThanEqualOrderByRaceDateAsc(dateTime: LocalDateTime): RaceEntity?
+
+    @Query("SELECT MIN(n.raceDate) FROM RaceEntity n WHERE n.isPublished = true")
+    fun findEarliestPublishedRaceDate(): LocalDateTime?
 }

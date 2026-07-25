@@ -14,11 +14,21 @@ import java.util.UUID
 class RunnerService(
     val runnerRepository: RunnerRepository,
 ) {
-    fun getAllRunners(): List<RunnerDTO> = runnerRepository.findAll().map { it.toDto() }
+    fun getRunners(
+        name: String?,
+        isVerified: Boolean?,
+    ): List<RunnerDTO> {
+        val runners =
+            when {
+                name != null && isVerified != null -> runnerRepository.findByNameContainsIgnoreCaseAndIsVerified(name, isVerified)
+                name != null -> runnerRepository.findByNameContainsIgnoreCase(name)
+                isVerified != null -> runnerRepository.findByIsVerified(isVerified)
+                else -> runnerRepository.findAll()
+            }
+        return runners.map { it.toDto() }
+    }
 
     fun getRunnerById(uuid: UUID): RunnerDTO = runnerRepository.findById(uuid).get().toDto()
-
-    fun getRunnerByName(name: String): List<RunnerDTO> = runnerRepository.findByNameContainsIgnoreCase(name).map { it.toDto() }
 
     fun createMultipleRunners(runners: List<RunnerInput>): List<RunnerDTO> =
         runnerRepository

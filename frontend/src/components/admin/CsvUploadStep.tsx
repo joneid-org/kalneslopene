@@ -53,7 +53,7 @@ export function CsvUploadStep({
   const [error, setError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
 
-  const { data: allRunners } = useQuery(QUERIES.runner.getAllRunners());
+  const { data: allRunners } = useQuery(QUERIES.runner.getRunners());
 
   function processFile(file: File) {
     if (!file.name.endsWith(".csv") && file.type !== "text/csv") {

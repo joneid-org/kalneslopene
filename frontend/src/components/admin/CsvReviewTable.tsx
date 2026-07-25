@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   CheckIcon,
   PencilIcon,
@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { MUTATIONS } from "@/api/mutations.ts";
-import { QUERIES } from "@/api/queries.ts";
+import RunnerSearchBox from "@/components/RunnerSearchBox.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Input } from "@/components/ui/input.tsx";
@@ -51,15 +51,6 @@ function RowEditor({
 
   // Time editing
   const [time, setTime] = useState(() => formatSecondsToTime(row.timeSeconds));
-
-  // Runner linking
-  const [searchQuery, setSearchQuery] = useState("");
-  const { data: searchResults } = useQuery({
-    ...QUERIES.runner.getAllRunners(searchQuery),
-    enabled: searchQuery.length > 1,
-    staleTime: 0,
-    gcTime: 0,
-  });
 
   // Runner creation
   const [newName, setNewName] = useState(row.csvName);
@@ -112,46 +103,23 @@ function RowEditor({
 
   if (mode === "link") {
     return (
-      <div className="space-y-2 py-1">
-        <div className="flex items-center gap-2">
-          <SearchIcon className="size-3.5 text-muted-foreground shrink-0" />
-          <Input
-            className="h-7 text-xs px-2"
-            placeholder="Søk løper…"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <Button
-            size="sm"
-            variant="ghost"
-            className={actionBtnClass}
-            onClick={() => setMode(null)}
-          >
-            <XIcon className="size-3.5" />
-          </Button>
-        </div>
-        {searchResults && searchResults.length > 0 && (
-          <div className="border rounded-md divide-y max-h-32 overflow-y-auto">
-            {searchResults.map((r) => (
-              <button
-                key={r.uuid}
-                type="button"
-                className="w-full text-left px-3 py-1.5 text-xs hover:bg-muted flex items-center justify-between"
-                onClick={() => {
-                  onUpdate({ resolvedRunner: r });
-                  setMode(null);
-                }}
-              >
-                <span>{r.name}</span>
-                <span className="text-muted-foreground">{r.gender}</span>
-              </button>
-            ))}
-          </div>
-        )}
-        {searchQuery.length > 1 &&
-          (!searchResults || searchResults.length === 0) && (
-            <p className="text-xs text-muted-foreground px-1">Ingen treff.</p>
-          )}
+      <div className="flex items-start gap-2 py-1">
+        <RunnerSearchBox
+          onSelect={(r) => {
+            onUpdate({ resolvedRunner: r });
+            setMode(null);
+          }}
+          placeholder="Søk løper…"
+          className="flex-1 rounded-md **:data-[slot=command-input-wrapper]:h-7 **:data-[slot=command-input-wrapper]:text-xs"
+        />
+        <Button
+          size="sm"
+          variant="ghost"
+          className={actionBtnClass}
+          onClick={() => setMode(null)}
+        >
+          <XIcon className="size-3.5" />
+        </Button>
       </div>
     );
   }

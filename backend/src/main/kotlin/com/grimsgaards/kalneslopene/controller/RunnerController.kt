@@ -21,14 +21,10 @@ class RunnerController(
     val runnerService: RunnerService,
 ) {
     @GetMapping
-    fun getRunnerByName(
+    fun getRunners(
         @RequestParam name: String?,
-    ): List<RunnerDTO> =
-        if (name != null) {
-            runnerService.getRunnerByName(name)
-        } else {
-            runnerService.getAllRunners()
-        }
+        @RequestParam isVerified: Boolean?,
+    ): List<RunnerDTO> = runnerService.getRunners(name, isVerified)
 
     @GetMapping("/{uuid}")
     fun getRunnerByUuid(

@@ -22,7 +22,7 @@ export function CRUDRunners() {
 
   const [search, setSearch] = useState("");
   const { data: runners } = useQuery(
-    QUERIES.runner.getAllRunners(search || undefined),
+    QUERIES.runner.getRunners(search || undefined),
   );
 
   const [showAdd, setShowAdd] = useState(false);

@@ -1,6 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { QUERIES } from "@/api/queries.ts";
 import {
   Command,
   CommandEmpty,
@@ -9,25 +7,33 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command.tsx";
+import { useRunnerSearch } from "@/hooks/useRunnerSearch.ts";
+import { cn } from "@/lib/utils.ts";
 import type { RunnerDTO } from "@/model/DTO.ts";
 
 type Props = {
   onSelect: (runner: RunnerDTO) => void;
+  isVerifiedOnly?: boolean;
+  excludeUuids?: Set<string>;
+  placeholder?: string;
+  className?: string;
 };
 
-export default function SearchBox({ onSelect }: Props) {
+export default function RunnerSearchBox({
+  onSelect,
+  isVerifiedOnly,
+  excludeUuids,
+  placeholder = "Søk etter løper...",
+  className,
+}: Props) {
   const [query, setQuery] = useState("");
   const [selectedName, setSelectedName] = useState<string | null>(null);
 
-  const { data, isFetching } = useQuery({
-    ...QUERIES.runner.getAllRunners(query),
-    enabled: query.length > 0,
-    staleTime: 0,
-    gcTime: 0,
+  const { runners, isLoading } = useRunnerSearch(query, {
+    isVerifiedOnly,
+    excludeUuids,
   });
-
-  const runners = (data ?? []).filter((r) => r.isVerified);
-  const showResults = query.length > 0 && !isFetching;
+  const showResults = query.length > 0 && !isLoading;
 
   const handleSelect = (runner: RunnerDTO) => {
     onSelect(runner);
@@ -38,10 +44,13 @@ export default function SearchBox({ onSelect }: Props) {
   return (
     <Command
       shouldFilter={false}
-      className="rounded-[14px] border bg-card **:data-[slot=command-input-wrapper]:h-12 **:data-[slot=command-input-wrapper]:border-0 **:data-[slot=command-input-wrapper]:px-4"
+      className={cn(
+        "rounded-[14px] border bg-card **:data-[slot=command-input-wrapper]:h-12 **:data-[slot=command-input-wrapper]:border-0 **:data-[slot=command-input-wrapper]:px-4",
+        className,
+      )}
     >
       <CommandInput
-        placeholder={selectedName ?? "Søk etter løper..."}
+        placeholder={selectedName ?? placeholder}
         value={query}
         onValueChange={setQuery}
       />

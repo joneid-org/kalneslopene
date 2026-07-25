@@ -101,10 +101,12 @@ export const QUERIES = {
     }),
   },
   runner: {
-    getAllRunners: (name?: string) => ({
-      queryKey: ["runner", "getAll", name],
+    getRunners: (name?: string, isVerified?: boolean) => ({
+      queryKey: ["runner", "getAll", name, isVerified],
       queryFn: () => {
-        const searchParams = name ? { name } : undefined;
+        const searchParams: Record<string, string | boolean> = {};
+        if (name) searchParams.name = name;
+        if (isVerified !== undefined) searchParams.isVerified = isVerified;
         return kyClient
           .get("/api/runners", { searchParams })
           .json<RunnerDTO[]>();

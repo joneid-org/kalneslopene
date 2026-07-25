@@ -1,10 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
 import { Loader2Icon, PlusIcon, UserPlusIcon } from "lucide-react";
 import { useState } from "react";
-import { QUERIES } from "@/api/queries.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
+import { useRunnerSearch } from "@/hooks/useRunnerSearch.ts";
 import type { RunnerDTO } from "@/model/DTO.ts";
 import { genderLabel } from "./helpers.ts";
 
@@ -23,16 +22,9 @@ export function AddRunnerForm({
   const [creatingNew, setCreatingNew] = useState(false);
   const [newGender, setNewGender] = useState<"MALE" | "FEMALE">("MALE");
 
-  const { data: searchResults } = useQuery({
-    ...QUERIES.runner.getAllRunners(query),
-    enabled: query.length > 0,
-    staleTime: 0,
-    gcTime: 0,
+  const { runners: suggestions } = useRunnerSearch(query, {
+    excludeUuids: existingRunnerUuids,
   });
-
-  const suggestions = (searchResults ?? []).filter(
-    (r) => !existingRunnerUuids.has(r.uuid),
-  );
 
   const reset = () => {
     setQuery("");

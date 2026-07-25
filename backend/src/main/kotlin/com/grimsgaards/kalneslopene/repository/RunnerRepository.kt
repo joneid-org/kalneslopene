@@ -10,6 +10,13 @@ import java.util.UUID
 interface RunnerRepository : JpaRepository<RunnerEntity, UUID> {
     fun findByNameContainsIgnoreCase(name: String): List<RunnerEntity>
 
+    fun findByIsVerified(isVerified: Boolean): List<RunnerEntity>
+
+    fun findByNameContainsIgnoreCaseAndIsVerified(
+        name: String,
+        isVerified: Boolean,
+    ): List<RunnerEntity>
+
     @Query(
         """
         SELECT COUNT(DISTINCT rr.id.runnerUuid) FROM RaceRunnerEntity rr

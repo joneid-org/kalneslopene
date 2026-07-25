@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { lazy, Suspense, useMemo, useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
+import RunnerSearchBox from "@/components/RunnerSearchBox.tsx";
 import RunnerRaceResults from "@/components/Statistics/RunnerRaceResults.tsx";
 import RunnerStatisticsHeader from "@/components/Statistics/RunnerStatisticsHeader.tsx";
 import RunnerStatisticsSeasonBest from "@/components/Statistics/RunnerStatisticsSeasonBest.tsx";
-import SearchBox from "@/components/Statistics/SearchBox.tsx";
 import { StatTile } from "@/components/StatTile.tsx";
 import { extractYear } from "@/lib/timeUtils.ts";
 import { getBestRaceFromRunner } from "@/lib/utils.ts";
@@ -43,7 +43,7 @@ export default function RunnerStatistics() {
         Løperstatistikk
       </h2>
 
-      <SearchBox onSelect={setSelectedRunner} />
+      <RunnerSearchBox onSelect={setSelectedRunner} />
 
       {selectedRunner && (
         <div className="flex flex-col gap-3">

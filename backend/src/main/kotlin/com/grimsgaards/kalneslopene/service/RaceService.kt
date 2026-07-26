@@ -87,7 +87,7 @@ class RaceService(
                 ?: throw NoSuchElementException("Race $uuid not found")
         race.runners.forEach { raceRunner ->
             require(
-                (raceRunner.hideTime && raceRunner.resultTime == null) ||
+                raceRunner.hideTime ||
                     (raceRunner.resultTime != null && !raceRunner.resultTime!!.isZero),
             ) {
                 "Løper ${raceRunner.runner.name} mangler tid"
@@ -139,7 +139,7 @@ class RaceService(
                     id = RaceRunnerKey(runnerUuid = runnerEntity.uuid, raceUuid = raceUuid),
                     runner = runnerEntity,
                     race = race,
-                    resultTime = dto.resultTime,
+                    resultTime = if (dto.hideTime) null else dto.resultTime,
                     hideTime = dto.hideTime,
                 )
             }
@@ -206,7 +206,7 @@ class RaceService(
                 .findById(key)
                 .orElseThrow { NoSuchElementException("Runner $runnerUuid not found in race $raceUuid") }
         entity.apply {
-            resultTime = runnerDto.resultTime
+            resultTime = if (runnerDto.hideTime) null else runnerDto.resultTime
             hideTime = runnerDto.hideTime
         }
         return raceRunnerRepository.save(entity).toDto()

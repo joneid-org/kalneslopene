@@ -1,9 +1,13 @@
 package com.grimsgaards.kalneslopene.service
 
+import com.grimsgaards.kalneslopene.model.dto.Gender
 import com.grimsgaards.kalneslopene.model.dto.WeatherDto
 import com.grimsgaards.kalneslopene.model.entities.FileEntity
 import com.grimsgaards.kalneslopene.model.entities.RaceEntity
 import com.grimsgaards.kalneslopene.model.entities.RacePhotoEntity
+import com.grimsgaards.kalneslopene.model.entities.RaceRunnerEntity
+import com.grimsgaards.kalneslopene.model.entities.RaceRunnerKey
+import com.grimsgaards.kalneslopene.model.entities.RunnerEntity
 import com.grimsgaards.kalneslopene.model.input.RaceInput
 import com.grimsgaards.kalneslopene.model.input.ReorderPhotoInput
 import com.grimsgaards.kalneslopene.repository.RacePhotoRepository
@@ -18,8 +22,10 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.any
+import org.mockito.Mockito.anyList
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.quality.Strictness
+import java.time.Duration
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.util.Optional
@@ -108,6 +114,91 @@ class RaceServiceTest {
             assertThat(dto.weatherManuallyEdited).isFalse()
             assertThat(dto.courseCondition).isEqualTo("Vått")
             assertThat(dto.weather?.symbol).isEqualTo("cloudy")
+        }
+    }
+
+    @Nested
+    inner class PublishRace {
+        private fun raceWithRunner(
+            resultTime: Duration?,
+            hideTime: Boolean,
+        ) = existingRace().apply {
+            runners.add(
+                RaceRunnerEntity(
+                    runner = RunnerEntity(name = "Maren Paulsrud Andersen", gender = Gender.FEMALE),
+                    race = this,
+                    resultTime = resultTime,
+                    hideTime = hideTime,
+                ),
+            )
+        }
+
+        @Test
+        fun `publishes a race where a runner only participated`() {
+            stubExisting(raceWithRunner(resultTime = null, hideTime = true))
+
+            assertThat(service.publishRace(uuid).isPublished).isTrue()
+        }
+
+        @Test
+        fun `publishes a participated runner whose stored time is zero`() {
+            stubExisting(raceWithRunner(resultTime = Duration.ZERO, hideTime = true))
+
+            assertThat(service.publishRace(uuid).isPublished).isTrue()
+        }
+
+        @Test
+        fun `rejects a runner without a time`() {
+            stubExisting(raceWithRunner(resultTime = Duration.ZERO, hideTime = false))
+
+            assertThatThrownBy { service.publishRace(uuid) }
+                .isInstanceOf(IllegalArgumentException::class.java)
+                .hasMessageContaining("Maren Paulsrud Andersen")
+        }
+    }
+
+    @Nested
+    inner class AddRunnersToRace {
+        @Test
+        fun `stores no time for a runner who only participated`() {
+            val race = existingRace()
+            val runner = RunnerEntity(name = "Maren Paulsrud Andersen", gender = Gender.FEMALE)
+            Mockito.`when`(raceRepository.findById(uuid)).thenReturn(Optional.of(race))
+            Mockito.`when`(runnerRepository.findAllById(listOf(runner.uuid))).thenReturn(listOf(runner))
+            Mockito
+                .`when`(raceRunnerRepository.saveAll(anyList<RaceRunnerEntity>()))
+                .thenAnswer { it.getArgument<List<RaceRunnerEntity>>(0) }
+
+            val template = RaceRunnerEntity(runner = runner, race = race, resultTime = Duration.ZERO, hideTime = true)
+            val saved = service.addRunnersToRace(uuid, listOf(template.toDto()))
+
+            assertThat(saved.single().resultTime).isNull()
+            assertThat(saved.single().hideTime).isTrue()
+        }
+    }
+
+    @Nested
+    inner class UpdateRunnerInRace {
+        @Test
+        fun `clears the stored time when the runner only participated`() {
+            val race = existingRace()
+            val runner = RunnerEntity(name = "Maren Paulsrud Andersen", gender = Gender.FEMALE)
+            val entity = RaceRunnerEntity(runner = runner, race = race, resultTime = Duration.ofMinutes(20))
+            val key = RaceRunnerKey(runnerUuid = runner.uuid, raceUuid = uuid)
+            Mockito.`when`(raceRunnerRepository.findById(key)).thenReturn(Optional.of(entity))
+            Mockito
+                .`when`(raceRunnerRepository.save(any(RaceRunnerEntity::class.java)))
+                .thenAnswer { it.getArgument<RaceRunnerEntity>(0) }
+
+            val dto =
+                service.updateRunnerInRace(
+                    uuid,
+                    runner.uuid,
+                    entity.toDto().copy(resultTime = Duration.ZERO, hideTime = true),
+                )
+
+            assertThat(dto.resultTime).isNull()
+            assertThat(dto.hideTime).isTrue()
         }
     }
 

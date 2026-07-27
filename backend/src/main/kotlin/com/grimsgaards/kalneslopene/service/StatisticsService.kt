@@ -1,10 +1,13 @@
 package com.grimsgaards.kalneslopene.service
 
+import com.grimsgaards.kalneslopene.model.dto.CourseRecordDto
 import com.grimsgaards.kalneslopene.model.dto.Gender
 import com.grimsgaards.kalneslopene.model.dto.ParticipationStats
+import com.grimsgaards.kalneslopene.model.dto.RaceInfoDto
 import com.grimsgaards.kalneslopene.model.dto.RaceStatisticsDto
 import com.grimsgaards.kalneslopene.model.dto.RunnerOverviewStatsDto
 import com.grimsgaards.kalneslopene.model.dto.UniqueRunnersStats
+import com.grimsgaards.kalneslopene.model.entities.RaceRunnerEntity
 import com.grimsgaards.kalneslopene.model.input.RaceFilter
 import com.grimsgaards.kalneslopene.repository.RaceRepository
 import com.grimsgaards.kalneslopene.repository.RunnerRepository
@@ -47,17 +50,7 @@ class StatisticsService(
         val averageRunnersPerRace =
             if (publishedRaces.isEmpty()) 0.0 else allRunners.size.toDouble() / publishedRaces.size
 
-        val eligibleRunners = allRunners.filter { !it.hideTime && it.resultTime != null }
-        val (maleEligibleRunners, femaleEligibleRunners) =
-            eligibleRunners.partition { it.runner.gender == Gender.MALE }
-        val courseRecordMale =
-            maleEligibleRunners
-                .minByOrNull { it.resultTime!! }
-                ?.toDto()
-        val courseRecordFemale =
-            femaleEligibleRunners
-                .minByOrNull { it.resultTime!! }
-                ?.toDto()
+        val includeHistoricRecords = year == null
 
         return RaceStatisticsDto(
             completedRaces = publishedRaces.size,
@@ -74,8 +67,44 @@ class StatisticsService(
                     total = uniqueRunners.size,
                 ),
             averageRunnersPerRace = averageRunnersPerRace,
-            courseRecordMale = courseRecordMale,
-            courseRecordFemale = courseRecordFemale,
+            courseRecordMale = courseRecord(allRunners, Gender.MALE, includeHistoricRecords),
+            courseRecordFemale = courseRecord(allRunners, Gender.FEMALE, includeHistoricRecords),
         )
     }
+
+    private fun courseRecord(
+        raceRunners: List<RaceRunnerEntity>,
+        gender: Gender,
+        includeHistoricRecords: Boolean,
+    ): CourseRecordDto? =
+        listOfNotNull(
+            fastestRaceResult(raceRunners, gender),
+            if (includeHistoricRecords) fastestHistoricRecord(gender) else null,
+        ).minByOrNull { it.resultTime }
+
+    private fun fastestRaceResult(
+        raceRunners: List<RaceRunnerEntity>,
+        gender: Gender,
+    ): CourseRecordDto? =
+        raceRunners
+            .asSequence()
+            .filter { it.runner.gender == gender && !it.hideTime }
+            .mapNotNull { raceRunner -> raceRunner.resultTime?.let { raceRunner to it } }
+            .minByOrNull { (_, resultTime) -> resultTime }
+            ?.let { (raceRunner, resultTime) ->
+                CourseRecordDto(
+                    runner = raceRunner.runner.toDto(),
+                    resultTime = resultTime,
+                    raceInfo = RaceInfoDto(uuid = raceRunner.race.uuid, raceDate = raceRunner.race.raceDate),
+                )
+            }
+
+    private fun fastestHistoricRecord(gender: Gender): CourseRecordDto? =
+        runnerRepository
+            .findFirstByGenderAndHistoricPersonalRecordIsNotNullOrderByHistoricPersonalRecordAsc(gender)
+            ?.let { runner ->
+                runner.historicPersonalRecord?.let {
+                    CourseRecordDto(runner = runner.toDto(), resultTime = it, raceInfo = null)
+                }
+            }
 }

@@ -170,9 +170,9 @@ class BaselineDataGenerator(
 
     companion object {
         private const val RACE_HOUR = 18
-        private const val PERSER_FILE = "Resultater/Perser2018.csv"
+        private const val PERSER_FILE = "Resultater/v2/Perser_2018.csv"
         private val RESULT_FILES =
-            (2019..2026).map { "Resultater/Resultater$it.csv" }
+            (2019..2026).map { "Resultater/v2/Resultater_$it.csv" }
         private val TIME_REGEX = Regex("""(\d+):(\d{2})""")
         private val DATE_FORMAT: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yy")
     }

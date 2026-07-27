@@ -1,14 +1,18 @@
 package com.grimsgaards.kalneslopene.controller
 
 import com.grimsgaards.kalneslopene.model.dto.FileDto
+import com.grimsgaards.kalneslopene.model.dto.PagedResponse
 import com.grimsgaards.kalneslopene.model.dto.RaceDTO
+import com.grimsgaards.kalneslopene.model.dto.RaceInfoDto
 import com.grimsgaards.kalneslopene.model.dto.RaceResultSummaryDto
 import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
+import com.grimsgaards.kalneslopene.model.dto.toPagedResponse
 import com.grimsgaards.kalneslopene.model.input.PhotoUploadInfo
 import com.grimsgaards.kalneslopene.model.input.RaceFilter
 import com.grimsgaards.kalneslopene.model.input.RaceInput
 import com.grimsgaards.kalneslopene.model.input.ReorderPhotoInput
 import com.grimsgaards.kalneslopene.service.RaceService
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
@@ -26,7 +31,21 @@ class RaceController(
     val raceService: RaceService,
 ) {
     @GetMapping
-    fun getAllRaces(filter: RaceFilter): List<RaceDTO> = raceService.getAll(filter)
+    fun getRaces(
+        filter: RaceFilter,
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(required = false) pageSize: Int?,
+    ): PagedResponse<RaceDTO> = raceService.getAll(filter, page, pageSize).toPagedResponse()
+
+    @GetMapping("/info")
+    fun getAllRacesInfo(
+        @RequestParam(required = false) isPublished: Boolean?,
+    ): List<RaceInfoDto> = raceService.getAllInfo(isPublished)
+
+    @GetMapping("/next")
+    fun getNextRace(): ResponseEntity<RaceDTO> =
+        raceService.findNextRace()?.let { ResponseEntity.ok(it) }
+            ?: ResponseEntity.noContent().build()
 
     @GetMapping("/{uuid}")
     fun getRaceById(

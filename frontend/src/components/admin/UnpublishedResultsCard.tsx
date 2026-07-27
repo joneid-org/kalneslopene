@@ -1,4 +1,5 @@
 import { CircleDashedIcon } from "lucide-react";
+import { useMemo } from "react";
 import { PastRacesTable } from "@/components/admin/PastRacesTable.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
 import {
@@ -10,7 +11,7 @@ import {
 import type { RaceDTO } from "@/model/DTO.ts";
 
 export function UnpublishedResultsCard({
-  races,
+  races: allRaces,
   expandedRaceUuid,
   onToggleExpand,
   onEdit,
@@ -22,6 +23,11 @@ export function UnpublishedResultsCard({
   onEdit: (race: RaceDTO) => void;
   onDelete: (race: RaceDTO) => void;
 }) {
+  const races = useMemo(
+    () => allRaces.filter((race) => !race.isPublished),
+    [allRaces],
+  );
+
   if (races.length === 0) return null;
 
   return (

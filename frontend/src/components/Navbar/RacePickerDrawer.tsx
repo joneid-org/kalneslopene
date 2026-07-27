@@ -22,7 +22,7 @@ export function RacePickerDrawer({
   children,
   basePath = "/resultater",
 }: RacePickerDrawerProps) {
-  const { data: races } = useQuery(QUERIES.race.getAllRaces());
+  const { data: races } = useQuery(QUERIES.race.getAllRaceInfos());
   const years = getYears(races ?? []);
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const activeYear = selectedYear ?? years[0];

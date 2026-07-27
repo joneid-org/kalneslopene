@@ -16,6 +16,8 @@ import org.mockito.Mockito
 import org.mockito.Mockito.any
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.quality.Strictness
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.Year
@@ -58,8 +60,12 @@ class StatisticsServiceTest {
 
     private fun anyFilter(): RaceFilter = any(RaceFilter::class.java) ?: RaceFilter()
 
+    private fun anyPageable(): Pageable = any(Pageable::class.java) ?: Pageable.unpaged()
+
     private fun stubRaces(vararg races: RaceEntity) {
-        Mockito.`when`(raceRepository.findAllByFilter(anyFilter())).thenReturn(races.toList())
+        Mockito
+            .`when`(raceRepository.findAllByFilter(anyFilter(), anyPageable()))
+            .thenReturn(PageImpl(races.toList()))
     }
 
     @Nested
@@ -225,7 +231,7 @@ class StatisticsServiceTest {
 
             service.getRaceStatistics(Year.of(2025))
 
-            Mockito.verify(raceRepository).findAllByFilter(captor.capture() ?: RaceFilter())
+            Mockito.verify(raceRepository).findAllByFilter(captor.capture() ?: RaceFilter(), anyPageable())
             assertThat(captor.value.from).isEqualTo(LocalDateTime.parse("2025-01-01T00:00:00"))
             assertThat(
                 captor.value.to
@@ -241,7 +247,7 @@ class StatisticsServiceTest {
 
             service.getRaceStatistics(null)
 
-            Mockito.verify(raceRepository).findAllByFilter(captor.capture() ?: RaceFilter())
+            Mockito.verify(raceRepository).findAllByFilter(captor.capture() ?: RaceFilter(), anyPageable())
             assertThat(captor.value.from).isNull()
             assertThat(captor.value.to).isNull()
         }

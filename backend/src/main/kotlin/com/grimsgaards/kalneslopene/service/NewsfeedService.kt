@@ -2,10 +2,12 @@ package com.grimsgaards.kalneslopene.service
 
 import com.grimsgaards.kalneslopene.model.dto.NewsfeedDTO
 import com.grimsgaards.kalneslopene.model.dto.PagedResponse
+import com.grimsgaards.kalneslopene.model.dto.RaceDTO
 import com.grimsgaards.kalneslopene.model.entities.NewsfeedEntity
 import com.grimsgaards.kalneslopene.model.input.NewsfeedInput
 import com.grimsgaards.kalneslopene.model.input.PhotoUploadInfo
 import com.grimsgaards.kalneslopene.repository.NewsfeedRepository
+import com.grimsgaards.kalneslopene.repository.RaceRepository
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
@@ -15,6 +17,7 @@ import java.util.UUID
 class NewsfeedService(
     val newsfeedRepository: NewsfeedRepository,
     val s3Service: S3Service,
+    val raceRepository: RaceRepository,
 ) {
     fun getNewsfeedPage(
         page: Int,
@@ -37,7 +40,16 @@ class NewsfeedService(
         )
     }
 
-    fun findByUuid(uuid: UUID): NewsfeedDTO = newsfeedRepository.findById(uuid).get().toDto()
+    fun findByUuid(uuid: UUID): NewsfeedDTO {
+        val newsfeed = newsfeedRepository.findById(uuid).get().toDto()
+        return newsfeed.copy(connectedRace = findConnectedRace(newsfeed))
+    }
+
+    private fun findConnectedRace(newsfeed: NewsfeedDTO): RaceDTO? {
+        val hasResultTag = newsfeed.tags.any { it.lowercase() in RESULT_TAGS }
+        if (!hasResultTag) return null
+        return raceRepository.findAllByRaceDate(newsfeed.date.toLocalDate()).firstOrNull()?.toDto()
+    }
 
     fun createHeaderImageUpload(fileName: String): PhotoUploadInfo {
         val key = "newsfeed-photos/${UUID.randomUUID()}/$fileName"
@@ -124,5 +136,9 @@ class NewsfeedService(
             s3Service.deleteFilesByUuid(listOf(headerImageUuid))
         }
         s3Service.deleteFilesByUrl(contentImageUrls)
+    }
+
+    companion object {
+        private val RESULT_TAGS = setOf("resultat", "resultater")
     }
 }

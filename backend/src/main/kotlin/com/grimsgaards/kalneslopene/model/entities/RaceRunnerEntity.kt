@@ -1,6 +1,5 @@
 package com.grimsgaards.kalneslopene.model.entities
 
-import com.grimsgaards.kalneslopene.model.dto.RaceInfoDto
 import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
 import jakarta.persistence.EmbeddedId
 import jakarta.persistence.Entity
@@ -38,7 +37,7 @@ class RaceRunnerEntity(
     fun toDto(): RaceRunnerDTO =
         RaceRunnerDTO(
             runner = runner.toDto(),
-            raceInfo = RaceInfoDto(uuid = race.uuid, raceDate = race.raceDate),
+            raceInfo = race.toInfoDto(),
             resultTime = resultTime,
             hideTime = hideTime,
             previousPersonalRecord = previousPersonalRecord,

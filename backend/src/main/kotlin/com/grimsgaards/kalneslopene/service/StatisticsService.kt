@@ -8,6 +8,7 @@ import com.grimsgaards.kalneslopene.model.dto.UniqueRunnersStats
 import com.grimsgaards.kalneslopene.model.input.RaceFilter
 import com.grimsgaards.kalneslopene.repository.RaceRepository
 import com.grimsgaards.kalneslopene.repository.RunnerRepository
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -34,7 +35,7 @@ class StatisticsService(
                 to = year?.atMonthDay(MonthDay.of(12, 31))?.atTime(LocalTime.MAX),
             )
 
-        val seasonRaces = raceRepository.findAllByFilter(seasonFilter)
+        val seasonRaces = raceRepository.findAllByFilter(seasonFilter, Pageable.unpaged()).content
         val (completedRaces, upcomingRaces) = seasonRaces.partition { it.raceDate.isBefore(now) }
         val publishedRaces = completedRaces.filter { it.isPublished }
 

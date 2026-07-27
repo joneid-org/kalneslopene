@@ -1,15 +1,30 @@
 package com.grimsgaards.kalneslopene.repository
 
+import com.grimsgaards.kalneslopene.model.dto.RaceInfoDto
 import com.grimsgaards.kalneslopene.model.entities.RaceEntity
 import com.grimsgaards.kalneslopene.model.input.RaceFilter
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.UUID
 
 @Repository
 interface RaceRepository : JpaRepository<RaceEntity, UUID> {
+    @Query(
+        """
+        SELECT new com.grimsgaards.kalneslopene.model.dto.RaceInfoDto(n.uuid, n.raceDate) FROM RaceEntity n
+        WHERE n.raceDate >= COALESCE(:#{#filter.from}, n.raceDate)
+          AND n.raceDate <= COALESCE(:#{#filter.to}, n.raceDate)
+          AND n.isPublished = COALESCE(:#{#filter.isPublished}, n.isPublished)
+        ORDER BY n.raceDate DESC
+    """,
+    )
+    fun findAllInfoByFilter(filter: RaceFilter): List<RaceInfoDto>
+
     @Query(
         """
         SELECT n FROM RaceEntity n
@@ -19,9 +34,15 @@ interface RaceRepository : JpaRepository<RaceEntity, UUID> {
         ORDER BY n.raceDate DESC
     """,
     )
-    fun findAllByFilter(filter: RaceFilter): List<RaceEntity>
+    fun findAllByFilter(
+        filter: RaceFilter,
+        pageable: Pageable,
+    ): Page<RaceEntity>
 
     fun findFirstByRaceDateGreaterThanEqualOrderByRaceDateAsc(dateTime: LocalDateTime): RaceEntity?
+
+    @Query("SELECT r FROM RaceEntity r WHERE CAST(r.raceDate AS date) = :date")
+    fun findAllByRaceDate(date: LocalDate): List<RaceEntity>
 
     @Query("SELECT MIN(n.raceDate) FROM RaceEntity n WHERE n.isPublished = true")
     fun findEarliestPublishedRaceDate(): LocalDateTime?

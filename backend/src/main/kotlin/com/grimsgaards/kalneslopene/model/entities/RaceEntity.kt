@@ -1,6 +1,7 @@
 package com.grimsgaards.kalneslopene.model.entities
 
 import com.grimsgaards.kalneslopene.model.dto.RaceDTO
+import com.grimsgaards.kalneslopene.model.dto.RaceInfoDto
 import com.grimsgaards.kalneslopene.model.dto.WeatherDto
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
@@ -33,7 +34,7 @@ class RaceEntity(
     var weatherUpdatedAt: Instant? = null
     var weatherManuallyEdited: Boolean = false
 
-    @OneToMany(mappedBy = "race", fetch = FetchType.EAGER, cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "race", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     val racePhotos: MutableList<RacePhotoEntity> = mutableListOf()
 
     fun applyWeatherOverride(weather: WeatherDto?) {
@@ -67,6 +68,8 @@ class RaceEntity(
             isPublished = isPublished,
             photos = racePhotos.sortedBy { it.orderIndex }.mapNotNull { it.file.toDto() },
         )
+
+    fun toInfoDto(): RaceInfoDto = RaceInfoDto(uuid = uuid, raceDate = raceDate)
 
     private fun weatherToDto(): WeatherDto? {
         val symbol = weatherSymbol

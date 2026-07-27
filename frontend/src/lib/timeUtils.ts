@@ -1,19 +1,36 @@
 import { NORWEGIAN_MONTH_NAMES } from "@/lib/constants.ts";
 
+/**
+ * Format a Date as "YYYY-MM-DDTHH:MM:SS" from its local components.
+ * Unlike toISOString() this never shifts the calendar date into another
+ * timezone, which matters because the backend reads it as a LocalDateTime.
+ */
+export function toLocalDateTimeString(date: Date): string {
+  const y = date.getFullYear();
+  const mo = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  const h = String(date.getHours()).padStart(2, "0");
+  const mi = String(date.getMinutes()).padStart(2, "0");
+  const s = String(date.getSeconds()).padStart(2, "0");
+  return `${y}-${mo}-${d}T${h}:${mi}:${s}`;
+}
+
+export function startOfYearString(
+  year: number | undefined,
+): string | undefined {
+  return year == null ? undefined : `${year}-01-01T00:00:00`;
+}
+
+export function endOfYearString(year: number | undefined): string | undefined {
+  return year == null ? undefined : `${year}-12-31T23:59:59`;
+}
+
 // Normalize whatever the backend sends into "YYYY-MM-DDTHH:MM:SS"
 function normalizeRaceDate(raceDate: unknown): string {
   // Already a proper ISO string
   if (typeof raceDate === "string") return raceDate;
   // Date object (e.g. if someone constructs one)
-  if (raceDate instanceof Date) {
-    const y = raceDate.getFullYear();
-    const mo = String(raceDate.getMonth() + 1).padStart(2, "0");
-    const d = String(raceDate.getDate()).padStart(2, "0");
-    const h = String(raceDate.getHours()).padStart(2, "0");
-    const mi = String(raceDate.getMinutes()).padStart(2, "0");
-    const s = String(raceDate.getSeconds()).padStart(2, "0");
-    return `${y}-${mo}-${d}T${h}:${mi}:${s}`;
-  }
+  if (raceDate instanceof Date) return toLocalDateTimeString(raceDate);
   // Java LocalDateTime serialized as array [2026, 4, 16, 18, 0] or [2026, 4, 16, 18, 0, 0]
   if (Array.isArray(raceDate) && raceDate.length >= 3) {
     const [y, mo, d, h = 0, mi = 0, s = 0] = raceDate as number[];

@@ -12,12 +12,12 @@ import {
 } from "@/components/ui/menubar.tsx";
 import { formatDDMonth } from "@/lib/timeUtils.ts";
 import { cn, getRacesDTOByYear, getYears } from "@/lib/utils.ts";
-import type { RaceDTO } from "@/model/DTO.ts";
+import type { RaceInfoDTO } from "@/model/DTO.ts";
 
 type MenuBarDropDownButtonProps = {
   label: string;
   basePath: string;
-  races: RaceDTO[];
+  races: RaceInfoDTO[];
   active?: boolean;
 };
 

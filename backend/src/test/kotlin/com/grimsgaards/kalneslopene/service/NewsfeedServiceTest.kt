@@ -2,8 +2,10 @@ package com.grimsgaards.kalneslopene.service
 
 import com.grimsgaards.kalneslopene.model.entities.FileEntity
 import com.grimsgaards.kalneslopene.model.entities.NewsfeedEntity
+import com.grimsgaards.kalneslopene.model.entities.RaceEntity
 import com.grimsgaards.kalneslopene.model.input.NewsfeedInput
 import com.grimsgaards.kalneslopene.repository.NewsfeedRepository
+import com.grimsgaards.kalneslopene.repository.RaceRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
@@ -26,6 +28,8 @@ import org.mockito.stubbing.OngoingStubbing
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.util.Optional
 import java.util.UUID
@@ -39,6 +43,9 @@ class NewsfeedServiceTest {
     @Mock
     lateinit var s3Service: S3Service
 
+    @Mock
+    lateinit var raceRepository: RaceRepository
+
     private lateinit var service: NewsfeedService
 
     @BeforeEach
@@ -47,8 +54,9 @@ class NewsfeedServiceTest {
         // existing settings row keeps construction from trying to persist a default.
 
         whenever(newsfeedRepository.save(any())).thenAnswer { it.getArgument(0) }
+        whenever(raceRepository.findAllByRaceDate(any())).thenReturn(emptyList())
 
-        service = NewsfeedService(newsfeedRepository, s3Service)
+        service = NewsfeedService(newsfeedRepository, s3Service, raceRepository)
     }
 
     @Nested
@@ -89,6 +97,43 @@ class NewsfeedServiceTest {
 
             verify(newsfeedRepository).findAll(pageable)
             verifyNoMoreInteractions(newsfeedRepository)
+        }
+    }
+
+    @Nested
+    inner class FindByUuid {
+        @Test
+        fun `connects the race the repository finds for that day when tagged as a result`() {
+            val existing = newsfeed(headerImage = null, tags = listOf("resultater"))
+            val race = RaceEntity(raceDate = LocalDateTime.parse("2026-06-14T09:00:00"))
+            whenever(newsfeedRepository.findById(existing.uuid)).thenReturn(Optional.of(existing))
+            whenever(raceRepository.findAllByRaceDate(LocalDate.parse("2026-06-14"))).thenReturn(listOf(race))
+
+            val result = service.findByUuid(existing.uuid)
+
+            assertThat(result.connectedRace?.uuid).isEqualTo(race.uuid)
+        }
+
+        @Test
+        fun `leaves connectedRace null without a result tag`() {
+            val existing = newsfeed(headerImage = null, tags = listOf("nyhet"))
+            whenever(newsfeedRepository.findById(existing.uuid)).thenReturn(Optional.of(existing))
+
+            val result = service.findByUuid(existing.uuid)
+
+            assertThat(result.connectedRace).isNull()
+            verifyNoInteractions(raceRepository)
+        }
+
+        @Test
+        fun `leaves connectedRace null when the repository finds no race for that day`() {
+            val existing = newsfeed(headerImage = null, tags = listOf("resultat"))
+            whenever(newsfeedRepository.findById(existing.uuid)).thenReturn(Optional.of(existing))
+            whenever(raceRepository.findAllByRaceDate(LocalDate.parse("2026-06-14"))).thenReturn(emptyList())
+
+            val result = service.findByUuid(existing.uuid)
+
+            assertThat(result.connectedRace).isNull()
         }
     }
 
@@ -333,8 +378,9 @@ class NewsfeedServiceTest {
     private fun newsfeed(
         headerImage: FileEntity?,
         content: String = "Innhold",
+        tags: List<String> = listOf("nyhet"),
     ) = NewsfeedEntity(
-        tags = listOf("nyhet"),
+        tags = tags,
         header = "Tittel",
         content = content,
         date = OffsetDateTime.parse("2026-06-14T10:00:00Z"),

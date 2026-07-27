@@ -18,8 +18,12 @@ import {
 export function Results() {
   const { uuid = "" } = useParams<{ uuid: string }>();
 
-  const racesQuery = useQuery(QUERIES.race.getAllRaces());
-  const races = racesQuery.data;
+  const { data: allRaces = [] } = useQuery(
+    QUERIES.race.getAllRaceInfos({ isPublished: true }),
+  );
+  const { data: race, isPending: raceQueryPending } = useQuery(
+    QUERIES.race.getRaceByUuid(uuid),
+  );
   const { data: raceRunners } = useQuery(
     QUERIES.race.getAllRunnersInRace(uuid),
   );
@@ -27,8 +31,6 @@ export function Results() {
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  const allRaces = (races ?? []).filter((r) => r.isPublished);
-  const race = allRaces.find((r) => r.uuid === uuid);
   const previous = getPreviousRace(allRaces, uuid);
   const next = getNextRace(allRaces, uuid);
   const tableData = buildTableRows(raceRunners ?? []);
@@ -39,7 +41,7 @@ export function Results() {
     if (!uuid && latest) {
       return <Navigate to={`/resultater/${latest.uuid}`} replace />;
     }
-    if (racesQuery.isPending) {
+    if (raceQueryPending) {
       return null;
     }
     throw new Response("Fant ikke løpet", { status: 404 });

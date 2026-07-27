@@ -3,16 +3,16 @@ import { AdminCard } from "@/components/admin/AdminCard.tsx";
 import { RowActions } from "@/components/admin/RowActions.tsx";
 import { TableCell } from "@/components/ui/table.tsx";
 import { formatDDMonth, formatTimeStamp } from "@/lib/timeUtils.ts";
-import type { RaceDTO } from "@/model/DTO.ts";
+import type { RaceInfoDTO } from "@/model/DTO.ts";
 
 export function UpcomingRacesCard({
   races,
   onEdit,
   onDelete,
 }: {
-  races: RaceDTO[];
-  onEdit: (race: RaceDTO) => void;
-  onDelete: (race: RaceDTO) => void;
+  races: RaceInfoDTO[];
+  onEdit: (race: RaceInfoDTO) => void;
+  onDelete: (race: RaceInfoDTO) => void;
 }) {
   return (
     <AdminCard

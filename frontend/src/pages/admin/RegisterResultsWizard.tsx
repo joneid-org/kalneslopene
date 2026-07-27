@@ -123,7 +123,7 @@ export function RegisterResultsWizard() {
 
   const updateResult = (
     runnerUuid: string,
-    patch: { resultTime?: string; hideTime?: boolean },
+    patch: { resultTime?: string | null; hideTime?: boolean },
   ) => {
     const current = entries.find((e) => e.runner.uuid === runnerUuid);
     if (!current) return;

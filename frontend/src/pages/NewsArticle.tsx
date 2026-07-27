@@ -117,7 +117,7 @@ export function NewsArticle() {
               <img
                 src={headerImage}
                 alt={post.header}
-                className="block h-auto w-auto max-w-[calc(100vw-2rem)] rounded-md sm:max-w-[calc(100vw-4rem)]"
+                className="block h-auto w-auto max-h-[calc(100dvh-3rem)] max-w-[calc(100vw-2rem)] rounded-md object-contain sm:max-h-[calc(100dvh-5rem)] sm:max-w-[calc(100vw-4rem)]"
               />
             </DialogContent>
           </Dialog>

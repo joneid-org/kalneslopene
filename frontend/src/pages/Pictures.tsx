@@ -47,7 +47,7 @@ export function Pictures() {
       );
     },
     onError: () => {
-      qc.invalidateQueries({ queryKey: ["race", "getAll"] });
+      qc.invalidateQueries({ queryKey: ["race"] });
     },
   });
 

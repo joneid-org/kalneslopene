@@ -41,7 +41,7 @@ export function CRUDRaces() {
   const addMutation = useMutation({
     mutationFn: (raceDate: string) => createRaces([{ raceDate } as RaceDTO]),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["race", "getAll"] });
+      qc.invalidateQueries({ queryKey: ["race"] });
       setShowAdd(false);
     },
   });
@@ -53,7 +53,7 @@ export function CRUDRaces() {
         raceDate: update.raceDate,
       }),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["race", "getAll"] });
+      qc.invalidateQueries({ queryKey: ["race"] });
       setEditing(null);
     },
   });
@@ -61,7 +61,7 @@ export function CRUDRaces() {
   const deleteMutation = useMutation({
     mutationFn: (uuid: string) => MUTATIONS.race.deleteRace(uuid),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["race", "getAll"] });
+      qc.invalidateQueries({ queryKey: ["race"] });
       setDeleting(null);
     },
   });

@@ -60,7 +60,7 @@ export function RegisterResults() {
   const deleteMutation = useMutation({
     mutationFn: (uuid: string) => MUTATIONS.race.deleteRace(uuid),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["race", "getAll"] });
+      qc.invalidateQueries({ queryKey: ["race"] });
       setDeleting(null);
     },
   });

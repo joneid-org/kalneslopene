@@ -46,8 +46,8 @@ class NewsfeedService(
     }
 
     private fun findConnectedRace(newsfeed: NewsfeedDTO): RaceDTO? {
-        val hasResultTag = newsfeed.tags.any { it.lowercase() in RESULT_TAGS }
-        if (!hasResultTag) return null
+        val hasRaceConnectionTags = newsfeed.tags.any { it.lowercase() in RACE_CONNECTION_TAGS }
+        if (!hasRaceConnectionTags) return null
         return raceService
             .getAll(
                 RaceFilter(
@@ -153,6 +153,6 @@ class NewsfeedService(
     }
 
     companion object {
-        private val RESULT_TAGS = setOf("resultat", "resultater")
+        private val RACE_CONNECTION_TAGS = setOf("bilder", "resultater")
     }
 }

@@ -137,7 +137,7 @@ export default function RaceStatistics() {
                 yearStatistics.totalParticipations.male
               : undefined
           }
-          label="Totale løpere"
+          label="Løpsdeltakelser"
         />
         <StatTile
           value={yearStatistics?.uniqueRunners.total}
@@ -149,7 +149,7 @@ export default function RaceStatistics() {
               ? Math.round(yearStatistics.averageRunnersPerRace)
               : undefined
           }
-          label="Snitt frammøte"
+          label="Snitt deltakere"
         />
         <StatTile
           value={formatSecondsToTime(

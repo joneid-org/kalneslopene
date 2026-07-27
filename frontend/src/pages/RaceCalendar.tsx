@@ -113,7 +113,7 @@ function NextRaceRow({ race, date }: { race: RaceDTO; date: Date }) {
       <DateBadge date={date} status="next" />
       <div className="min-w-0 flex-1">
         <div className="text-[11px] font-bold uppercase tracking-wider text-brand-soft-foreground">
-          Neste løp
+          Kommende løp
         </div>
         <div className="mt-0.5 truncate font-display font-extrabold text-white">
           {formatWeekdayDateFull(race.raceDate)}

@@ -27,7 +27,7 @@ class RaceEntity(
     @Id
     val uuid: UUID = UUID.randomUUID()
 
-    @Formula("(SELECT COUNT(*) FROM race_runner rr WHERE rr.race_uuid = uuid)")
+    @Formula("(SELECT COUNT(*) FROM race_runner rr WHERE rr.race_uuid = {alias}.uuid)")
     val runnerCount: Int = 0
     var courseCondition: String? = null
     var weatherSymbol: String? = null

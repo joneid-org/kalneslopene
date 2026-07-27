@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button.tsx";
 import { Dialog } from "@/components/ui/dialog.tsx";
 import { YearSelector } from "@/components/YearSelector.tsx";
 import {
+  endOfYearString,
   formatDDMonth,
   startOfYearString,
   toLocalDateTimeString,
@@ -37,7 +38,10 @@ export function RegisterResults() {
     ...QUERIES.race.getRaces({
       filter: {
         from: startOfYearString(effectiveYear),
-        to: toLocalDateTimeString(NOW),
+        to:
+          effectiveYear === NOW.getFullYear()
+            ? toLocalDateTimeString(NOW)
+            : endOfYearString(effectiveYear),
       },
       pageSize: null,
     }),

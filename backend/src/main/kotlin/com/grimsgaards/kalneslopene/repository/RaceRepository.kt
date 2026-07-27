@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -40,9 +39,6 @@ interface RaceRepository : JpaRepository<RaceEntity, UUID> {
     ): Page<RaceEntity>
 
     fun findFirstByRaceDateGreaterThanEqualOrderByRaceDateAsc(dateTime: LocalDateTime): RaceEntity?
-
-    @Query("SELECT r FROM RaceEntity r WHERE CAST(r.raceDate AS date) = :date")
-    fun findAllByRaceDate(date: LocalDate): List<RaceEntity>
 
     @Query("SELECT MIN(n.raceDate) FROM RaceEntity n WHERE n.isPublished = true")
     fun findEarliestPublishedRaceDate(): LocalDateTime?

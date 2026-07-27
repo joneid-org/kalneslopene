@@ -230,9 +230,7 @@ export function RaceCalendar() {
 
       <section className="space-y-3">
         <div className="space-y-1">
-          <h1 className="page-title">
-            Løpskalender {currentYearDate.getFullYear()}
-          </h1>
+          <h1 className="page-title">Løpskalender {currentYear}</h1>
           <p className="text-muted-foreground text-sm">
             Torsdagsløpene denne sesongen. Trykk på et gjennomført løp for
             resultater.

@@ -11,12 +11,14 @@ import { Button } from "@/components/ui/button.tsx";
 import { Dialog } from "@/components/ui/dialog.tsx";
 import { YearSelector } from "@/components/YearSelector.tsx";
 import {
-  endOfYearString,
   formatDDMonth,
   startOfYearString,
+  toLocalDateTimeString,
 } from "@/lib/timeUtils.ts";
 import { getYears } from "@/lib/utils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
+
+const NOW = new Date();
 
 export function RegisterResults() {
   const qc = useQueryClient();
@@ -35,7 +37,7 @@ export function RegisterResults() {
     ...QUERIES.race.getRaces({
       filter: {
         from: startOfYearString(effectiveYear),
-        to: endOfYearString(effectiveYear),
+        to: toLocalDateTimeString(NOW),
       },
       pageSize: null,
     }),

@@ -6,8 +6,8 @@ import com.grimsgaards.kalneslopene.model.dto.RaceDTO
 import com.grimsgaards.kalneslopene.model.entities.NewsfeedEntity
 import com.grimsgaards.kalneslopene.model.input.NewsfeedInput
 import com.grimsgaards.kalneslopene.model.input.PhotoUploadInfo
+import com.grimsgaards.kalneslopene.model.input.RaceFilter
 import com.grimsgaards.kalneslopene.repository.NewsfeedRepository
-import com.grimsgaards.kalneslopene.repository.RaceRepository
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
@@ -17,7 +17,7 @@ import java.util.UUID
 class NewsfeedService(
     val newsfeedRepository: NewsfeedRepository,
     val s3Service: S3Service,
-    val raceRepository: RaceRepository,
+    private val raceService: RaceService,
 ) {
     fun getNewsfeedPage(
         page: Int,
@@ -48,7 +48,21 @@ class NewsfeedService(
     private fun findConnectedRace(newsfeed: NewsfeedDTO): RaceDTO? {
         val hasResultTag = newsfeed.tags.any { it.lowercase() in RESULT_TAGS }
         if (!hasResultTag) return null
-        return raceRepository.findAllByRaceDate(newsfeed.date.toLocalDate()).firstOrNull()?.toDto()
+        return raceService
+            .getAll(
+                RaceFilter(
+                    from = newsfeed.date.toLocalDate().atStartOfDay(),
+                    to =
+                        newsfeed.date
+                            .plusDays(1)
+                            .toLocalDate()
+                            .atStartOfDay(),
+                    isPublished = true,
+                ),
+                0,
+                1,
+            ).content
+            .firstOrNull()
     }
 
     fun createHeaderImageUpload(fileName: String): PhotoUploadInfo {

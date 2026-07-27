@@ -54,9 +54,10 @@ class NewsfeedServiceTest {
         // existing settings row keeps construction from trying to persist a default.
 
         whenever(newsfeedRepository.save(any())).thenAnswer { it.getArgument(0) }
-        whenever(raceRepository.findAllByRaceDate(any())).thenReturn(emptyList())
+        whenever(raceRepository.findAllByRaceDate(any(LocalDate::class.java) ?: LocalDate.EPOCH))
+            .thenReturn(emptyList())
 
-        service = NewsfeedService(newsfeedRepository, s3Service, raceRepository)
+        service = NewsfeedService(newsfeedRepository, s3Service, raceRepository, raceService)
     }
 
     @Nested

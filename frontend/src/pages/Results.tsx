@@ -21,13 +21,18 @@ export function Results() {
   const { data: allRaces = [] } = useQuery(
     QUERIES.race.getAllRaceInfos({ isPublished: true }),
   );
-  const { data: race, isPending: raceQueryPending } = useQuery(
-    QUERIES.race.getRaceByUuid(uuid),
-  );
-  const { data: raceRunners } = useQuery(
-    QUERIES.race.getAllRunnersInRace(uuid),
-  );
-  const { data: summary } = useQuery(QUERIES.race.getResultSummary(uuid));
+  const { data: race, isPending: raceQueryPending } = useQuery({
+    ...QUERIES.race.getRaceByUuid(uuid),
+    enabled: !!uuid,
+  });
+  const { data: raceRunners } = useQuery({
+    ...QUERIES.race.getAllRunnersInRace(uuid),
+    enabled: !!uuid,
+  });
+  const { data: summary } = useQuery({
+    ...QUERIES.race.getResultSummary(uuid),
+    enabled: !!uuid,
+  });
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 

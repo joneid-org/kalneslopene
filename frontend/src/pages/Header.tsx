@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { Ref } from "react";
 import { Link, useLocation } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
+import { AdminMenu } from "@/components/Navbar/AdminMenu.tsx";
 import { DynamicDropDownMenu } from "@/components/Navbar/DynamicDropDownMenu.tsx";
 import { cn } from "@/lib/utils.ts";
 
@@ -70,6 +71,8 @@ export function Header({ ref }: { ref?: Ref<HTMLElement> }) {
             );
           })}
         </nav>
+
+        <AdminMenu />
       </div>
     </header>
   );

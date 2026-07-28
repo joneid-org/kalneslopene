@@ -154,11 +154,6 @@ export function ImportResultsFromFile() {
                 : `Lagre ${rows.length} resultater`}
             </Button>
           </div>
-          {saveMutation.isError && (
-            <p className="text-sm text-destructive">
-              Noe gikk galt. Prøv igjen.
-            </p>
-          )}
         </div>
       )}
     </div>

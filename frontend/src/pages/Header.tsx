@@ -1,10 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { ShieldCheckIcon } from "lucide-react";
 import type { Ref } from "react";
 import { Link, useLocation } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
+import { AdminMenu } from "@/components/Navbar/AdminMenu.tsx";
 import { DynamicDropDownMenu } from "@/components/Navbar/DynamicDropDownMenu.tsx";
-import { useAuth } from "@/hooks/useAuth.ts";
 import { cn } from "@/lib/utils.ts";
 
 const navLinks = [
@@ -16,7 +15,6 @@ const navLinks = [
 export function Header({ ref }: { ref?: Ref<HTMLElement> }) {
   const { data: races } = useQuery(QUERIES.race.getAllRaces());
   const pathname = decodeURIComponent(useLocation().pathname);
-  const { isAuthenticated, user } = useAuth();
 
   return (
     <header ref={ref} className="sticky top-0 z-50 bg-card/90 backdrop-blur-md">
@@ -72,16 +70,7 @@ export function Header({ ref }: { ref?: Ref<HTMLElement> }) {
           })}
         </nav>
 
-        {isAuthenticated && (
-          <Link
-            to="/admin"
-            title={user ? `Innlogget som ${user.username}` : undefined}
-            className="ml-auto flex shrink-0 items-center gap-1.5 rounded-full bg-brand-soft px-2.5 py-1.5 text-[13px] font-bold text-brand-soft-foreground transition-colors hover:bg-brand hover:text-brand-foreground md:ml-0 md:px-3"
-          >
-            <ShieldCheckIcon className="size-4" />
-            Adminmodus
-          </Link>
-        )}
+        <AdminMenu />
       </div>
     </header>
   );

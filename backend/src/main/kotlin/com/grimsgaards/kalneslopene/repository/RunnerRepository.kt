@@ -2,6 +2,8 @@ package com.grimsgaards.kalneslopene.repository
 
 import com.grimsgaards.kalneslopene.model.entities.RunnerEntity
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
+import org.springframework.data.jpa.repository.NativeQuery
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
 import java.util.UUID
@@ -24,4 +26,8 @@ interface RunnerRepository : JpaRepository<RunnerEntity, UUID> {
     """,
     )
     fun countRunnersWithAtLeastOneRace(): Long
+
+    @Modifying
+    @NativeQuery("delete from runner r where r.uuid = :uuid")
+    fun deleteByUuid(uuid: UUID)
 }

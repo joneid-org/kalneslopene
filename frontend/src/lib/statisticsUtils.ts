@@ -5,11 +5,15 @@ import {
 } from "@/lib/timeUtils.ts";
 import type { RaceRunnerDTO } from "@/model/DTO.ts";
 
-// Raskeste løper (returnerer full RaceRunnerDTO)
-export function getFastestRunner(
-  raceRunners: RaceRunnerDTO[],
-): RaceRunnerDTO | null {
-  let best: RaceRunnerDTO | null = null;
+type TimedResult = {
+  resultTime: string | null;
+  hideTime?: boolean;
+};
+
+export function getFastestRunner<T extends TimedResult>(
+  raceRunners: T[],
+): T | null {
+  let best: T | null = null;
   let bestSeconds = Number.POSITIVE_INFINITY;
   for (const rr of raceRunners) {
     if (rr.hideTime || !rr.resultTime) continue;
@@ -22,7 +26,6 @@ export function getFastestRunner(
   return best;
 }
 
-// Årets beste tid
 export function getBestTimeThisYear(
   raceRunners: RaceRunnerDTO[],
   year: number,

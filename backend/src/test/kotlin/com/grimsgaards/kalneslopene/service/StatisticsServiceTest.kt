@@ -68,6 +68,16 @@ class StatisticsServiceTest {
             .thenReturn(PageImpl(races.toList()))
     }
 
+    private fun stubHistoricRecord(
+        gender: Gender,
+        record: Duration,
+        name: String = "Historic",
+    ) {
+        Mockito
+            .`when`(runnerRepository.findFastestHistoricRunner(gender))
+            .thenReturn(RunnerEntity(name = name, gender = gender, historicPersonalRecord = record))
+    }
+
     @Nested
     inner class RaceCounts {
         @Test
@@ -219,6 +229,70 @@ class StatisticsServiceTest {
 
             assertThat(stats.courseRecordMale).isNotNull()
             assertThat(stats.courseRecordFemale).isNull()
+        }
+
+        @Test
+        fun `includes the race the record was set in`() {
+            val race = race(past)
+            addRunner(race, runner(Gender.MALE), resultTime = Duration.ofMinutes(20))
+            stubRaces(race)
+
+            val stats = service.getRaceStatistics(null)
+
+            assertThat(stats.courseRecordMale?.raceInfo?.uuid).isEqualTo(race.uuid)
+        }
+    }
+
+    @Nested
+    inner class HistoricCourseRecords {
+        @Test
+        fun `a historic personal record beats a slower recorded result`() {
+            val race = race(past)
+            addRunner(race, runner(Gender.MALE), resultTime = Duration.ofMinutes(20))
+            stubRaces(race)
+            stubHistoricRecord(Gender.MALE, Duration.ofMinutes(17), name = "Gammel Rekordholder")
+
+            val stats = service.getRaceStatistics(null)
+
+            assertThat(stats.courseRecordMale?.resultTime).isEqualTo(Duration.ofMinutes(17))
+            assertThat(stats.courseRecordMale?.runner?.name).isEqualTo("Gammel Rekordholder")
+            assertThat(stats.courseRecordMale?.raceInfo).isNull()
+        }
+
+        @Test
+        fun `a faster recorded result beats the historic personal record`() {
+            val race = race(past)
+            addRunner(race, runner(Gender.FEMALE), resultTime = Duration.ofMinutes(18))
+            stubRaces(race)
+            stubHistoricRecord(Gender.FEMALE, Duration.ofMinutes(21))
+
+            val stats = service.getRaceStatistics(null)
+
+            assertThat(stats.courseRecordFemale?.resultTime).isEqualTo(Duration.ofMinutes(18))
+            assertThat(stats.courseRecordFemale?.raceInfo).isNotNull()
+        }
+
+        @Test
+        fun `is used when no races have eligible results`() {
+            stubRaces(race(past))
+            stubHistoricRecord(Gender.FEMALE, Duration.ofMinutes(23))
+
+            val stats = service.getRaceStatistics(null)
+
+            assertThat(stats.courseRecordFemale?.resultTime).isEqualTo(Duration.ofMinutes(23))
+            assertThat(stats.courseRecordMale).isNull()
+        }
+
+        @Test
+        fun `are excluded when statistics are scoped to a single year`() {
+            val race = race(past)
+            addRunner(race, runner(Gender.MALE), resultTime = Duration.ofMinutes(20))
+            stubRaces(race)
+            stubHistoricRecord(Gender.MALE, Duration.ofMinutes(17))
+
+            val stats = service.getRaceStatistics(Year.of(past.year))
+
+            assertThat(stats.courseRecordMale?.resultTime).isEqualTo(Duration.ofMinutes(20))
         }
     }
 

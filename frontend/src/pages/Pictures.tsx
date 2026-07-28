@@ -26,10 +26,10 @@ export function Pictures() {
   const qc = useQueryClient();
 
   const racesQueryOptions = QUERIES.race.getAllRaceInfos({ isPublished: true });
-  const racesQuery = useQuery(racesQueryOptions);
-  const races = racesQuery.data;
-
-  const { data: race } = useQuery(QUERIES.race.getRaceByUuid(uuid));
+  const { data: races } = useQuery(racesQueryOptions);
+  const { data: race, isPending: raceIsPending } = useQuery(
+    QUERIES.race.getRaceByUuid(uuid),
+  );
 
   const reorderMutation = useMutation({
     mutationFn: (input: ReorderVariables) =>
@@ -58,7 +58,7 @@ export function Pictures() {
 
   const racePhotos = race?.photos ?? [];
 
-  if (uuid && !race && !racesQuery.isPending) {
+  if (uuid && !race && !raceIsPending) {
     throw new Response("Fant ikke løpet", { status: 404 });
   }
 

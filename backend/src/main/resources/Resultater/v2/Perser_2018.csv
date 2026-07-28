@@ -1,4 +1,4 @@
-Gender;Name;Personal record
+Gender;Name;PersonalRecord
 D;Elise Stordal Aalerud;25:31
 H;Jørgen Aalerud;26:13
 D;Sissel Aamodt;33:30
@@ -142,7 +142,7 @@ H;Alexander Baustad;23:47
 H;Øystein Beck;24:06
 H;Henrik W. Becker;24:09
 H;Rolf Henrik Bekkstrand;19:45
-D;Anne Maren Utne Belsby;21:04
+D;Anne Maren Belsby;21:04
 D;Maria Karine Belsby;26:02
 H;Aksel S. Berg;30:04
 D;Emilie Berg;24:47
@@ -308,11 +308,10 @@ H;Tage Eidissen;23:37
 H;Rune Einan;19:39
 H;Petter Ekrann;26:21
 H;Reidar Eliassen;23:18
-H;Ole-Martin Elingsen;23:44
 D;Kjersti Ellefsen;35:51
 D;Isabella Ellingsen;30:42
 D;Nina Ellingsen;31:29
-H;Ole Martin Ellingsen;23:44
+H;Ole-Martin Ellingsen;23:44
 H;Per Morten Ellingsen;18:33
 H;William Ellingsen;24:10
 D;Marwa Elounoussi;28:09
@@ -336,12 +335,11 @@ H;Joachim Eriksen;23:24
 H;Kent Eriksen;28:46
 D;Kirsti Eriksen;25:49
 H;Knut Eriksen;25:01
-H;Lars Andreas Eriksen;23:30
+H;Lars-Andreas Eriksen;23:30
 H;Magnus Eriksen;27:09
 H;Mats Eriksen;31:08
 H;Ole Eriksen;20:00
 H;Ole Martin Glende Eriksen;21:59
-H;Patrich Eriksen;21:55
 H;Patrick Eriksen;21:22
 H;Rino Eriksen;25:08
 H;Rune Eriksen;20:37
@@ -395,7 +393,6 @@ H;Knut Magne Furuheim;21:28
 H;Ole Fredrik Hasselgård Gabrielsen;24:48
 H;Sverre Galby;21:59
 H;Lennart Gammelsrud;23:34
-H;Steffen Gangestad;21:50
 H;Stephen Gangestad;20:03
 H;Iver Garsrud;25:34
 H;Preben Gautun;20:29
@@ -426,7 +423,7 @@ D;Nina Gressløs;18:52
 H;Svein Gressløs;16:27
 H;Stian Gressum;29:27
 H;Åge Gressum;38:06
-D;Natalie Gretland;25:47
+D;Natalie Bjerkenes-Gretland;25:47
 H;Lars Grette;22:41
 H;Marian Grgic;33:57
 H;Magnus Grigson;31:37
@@ -461,7 +458,7 @@ H;Erik Günther;26:22
 H;Niclas Gällentoft;21:40
 H;Harald Gøthesen;28:12
 D;Hilde Gøthesen;31:18
-H;Theodor Gøthesen;28:12
+H;Theodor Myren Gøthesen;28:12
 H;Ronny Hagberg;24:50
 H;Fabian Hagen;40:41
 H;Mats Hagen;22:40
@@ -546,7 +543,7 @@ H;Espen Henriksen;25:37
 H;Kai Henriksen;20:14
 D;Marit Henriksen;32:48
 H;Roar Henriksen;23:15
-H;Rune Henriksen;24:11
+H;Rune Henriksen Bones;24:11
 H;Stian Henriksen;23:53
 D;Vibeke Dahl Henriksen;34:37
 H;David Hetlelid;28:12
@@ -594,7 +591,7 @@ H;Jon Henning Iversen;23:24
 H;Jørgen Iversen;23:03
 D;Elin Jacobsen;25:41
 H;Jacob Jacobsen;25:28
-H;Kim Jacobsen;22:09
+H;Kim Jakobsen;22:09
 H;Marius Jacobsen;28:05
 H;Nils Petter Jacobsen;26:36
 H;Philip Jacobsen;22:19
@@ -602,11 +599,10 @@ H;Pål Espen Jacobsen;25:17
 H;Steinar Jacobsen;24:31
 H;Hans-Petter Jakobsen;24:46
 D;Kaia Jakobsen;32:48
-H;Kim Jakobsen;22:09
 D;Mina Jakobsen;24:48
 H;Pål Jakobsen;26:29
 H;Terje Jakobsen;23:58
-H;Morten Jamissen;21:19
+H;Leif Morten Jamissen;21:19
 H;Henrik Jannestad;20:07
 H;Erik Jarem;22:39
 H;Benjamin Jensen;25:44
@@ -626,8 +622,7 @@ H;Øystein Jensen;23:53
 H;Jon-Vidar Jessesen;29:18
 H;Remi Ek Joachimiak;20:27
 H;John Johannesen;20:06
-H;Stian Johannesen;22:50
-H;Stian Støa Johannesen;21:24
+H;Stian Johannesen;21:24
 H;Bernt Johannessen;23:52
 H;Bjørn Johannessen;18:55
 H;Carl-Martin Johannessen;24:33
@@ -724,7 +719,6 @@ H;Adrian Katalinic;24:34
 D;Line Kavli;24:53
 H;Stig Kavli;23:56
 H;Christer Kemi;30:45
-H;Christian Kemi;30:45
 D;Annika Kieding;24:48
 H;Lars Thomas Kihle;24:38
 D;Erica Kingsrød;33:27
@@ -743,7 +737,7 @@ H;Ole Robin Kåsa Kjellmann;21:48
 D;Madelen Kjerre;32:20
 H;Marcus Kjølberg;25:35
 D;Pia Kjølberg;33:53
-D;Emma Sofie Klausen;36:38
+D;Emma Klausen;36:38
 H;Henning Klausen;22:54
 H;Per Klausen;26:42
 D;Kristine Klauset;29:15
@@ -782,7 +776,6 @@ H;Lasse Kristiansen;34:57
 H;Arild Kristiansen;33:12
 H;Fredrik R. Kristiansen;34:53
 D;Gina Kristiansen;27:13
-H;Jørn Erik Kristiansen;22:46
 H;Stian Kristiansen;21:25
 H;Isak André Kristianslund;24:20
 H;Per Arne Kristoffersen;20:13
@@ -811,10 +804,10 @@ H;Rune Langnes;20:53
 H;Ole Marcus Langsholt;23:31
 H;Fred Morgan Larsen;20:12
 H;Glenn Ronny Larsen;19:59
-D;Hege Weimand Larsen;26:14
+D;Hege Weimand;26:14
 D;Julie Larsen;19:13
 H;Kenneth Larsen;20:20
-H;Knut-Andre Larsen;19:58
+H;Knut André Larsen;19:58
 H;Lars Kristian Larsen;21:42
 D;Linda C. Larsen;31:56
 D;Lone Iren Larsen;25:12
@@ -868,7 +861,7 @@ D;Stine N. Lunde;28:56
 H;Svein Erik Lunde;25:15
 H;Tom Vidar Lunde;24:10
 H;Øivind Lunde;24:54
-D;Ida Lundestad-Kemi;22:53
+D;Ida Lundestad;22:53
 D;Malin Lundgren;33:24
 H;Torgeir Lyngstad;22:52
 D;Mathea Lystad;47:00
@@ -890,7 +883,7 @@ H;Martin Madsen;23:37
 H;Espen André Magnussen;23:55
 H;Heine Magnussen;21:28
 H;Jørn Magnussen;24:27
-H;Aztar Majothi;24:08
+H;Azfar Majothi;24:08
 D;Therese Mandji;29:11
 H;Adrian Maristad;27:22
 H;Michael Marjaca;23:07
@@ -969,7 +962,7 @@ H;Jonas Nergård;18:19
 H;Bjørge Nesengen;20:03
 D;Hilde Nesengen;25:42
 D;Oline Nesengen;44:35
-H;Andreas Ness;22:52
+H;Andreas Niss;22:52
 H;Andreas Nilsen;29:55
 D;Cathrine Nilsen;29:37
 D;Emilie Nilsen;25:10
@@ -992,7 +985,6 @@ H;Rune Nilsen;19:53
 D;Sara Nilsen;29:48
 H;Pål-Helge Nilssen;23:27
 H;Christian Nilsson;17:29
-H;Andreas Niss;22:52
 H;Lars-Erik Nordby;18:06
 D;Elisabeth Nordbø;27:31
 H;Frank Nordbø;32:42
@@ -1038,7 +1030,6 @@ H;Kjell Olsen;28:39
 H;Leander Olsen;26:56
 H;Mathias Olsen;23:37
 H;Mathias Roppestad Olsen;33:04
-H;Mattias Olsen;23:37
 D;Monica Aronsen Olsen;32:10
 H;Ole Gunnar Olsen;18:29
 D;Silje Skarning Olsen;29:14
@@ -1078,9 +1069,8 @@ H;Martin Pejby;24:57
 H;Dennis Petersen;30:15
 D;Susanne Petersen;32:17
 H;Andreas Stene Pettersen;22:07
-H;Bjørge Pettersen;20:43
+H;Kai Bjørge Pettersen;20:43
 H;Jon Martin Pettersen;23:25
-H;Kai Bjørge Pettersen;20:48
 H;Kåre Pettersen;18:26
 H;Kåre Ingar Pettersen;20:16
 D;Malin Pettersen;25:00
@@ -1200,18 +1190,16 @@ D;Karoline Skauen;18:19
 D;Lise Lotte Skauen;25:10
 H;Tormod Skauge;20:35
 H;Ola Skeid;20:10
-H;Olav Skeid;20:58
 H;Mads Skipanes;20:26
 H;Kenneth Skistad;21:32
 D;Marte Skjønhaug;30:00
-D;Nova-Kristine Skjønhaug;32:15
+D;Nova-Kristine Skjønhaug Novoa;32:15
 D;Oda Thormodsen Skjøren;31:54
 H;Lars O. Skofteby;28:20
 D;Ingvild Skorpen;21:58
 H;Arnfinn Skåland;24:46
 H;Håvard Skånlund;20:37
 H;Hans-Olav Skår;22:13
-D;Sarka Slamova;27:55
 H;Dag Sletner;23:50
 H;Dag-Olav Sletner;25:08
 D;Heidi Løkke Sletner;33:19
@@ -1260,7 +1248,6 @@ H;Daniel Stokkan;23:39
 H;Michael Stokkan;25:37
 H;Ørjan Storaker;23:10
 H;André Stordal;22:46
-D;Elise Stordal;25:31
 H;Hans Stordal;29:40
 H;Aksel D. Storflor;24:44
 H;Jim Storvoll;25:21
@@ -1270,7 +1257,7 @@ H;Sindre Dybvik Strand;22:22
 D;Turid Strand;34:30
 H;Walther Strand;21:50
 H;Martin Strandvik;21:29
-H;Bjørn Strangel;21:20
+H;Bjørn Erik Strangel;21:20
 H;Leif Strøm;20:33
 D;Åshild Strøm;33:43
 H;Jacob Sture;20:02

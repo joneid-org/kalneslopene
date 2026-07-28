@@ -7,7 +7,7 @@ export function CourseMap() {
       <div>
         <h1 className="page-title">Løypekart</h1>
         <p className="page-subtitle mt-1">
-          Klikk på en pin i kartet for å se informasjon om stedet langs ruten.
+          Klikk på en pin i kartet for å se navngitte steder i løypa.
         </p>
       </div>
 

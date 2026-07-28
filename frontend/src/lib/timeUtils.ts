@@ -118,7 +118,7 @@ export function formatRaceDateTime(raceDate: unknown): string {
     NORWEGIAN_WEEKDAYS[new Date(year, (month ?? 1) - 1, day).getDay()];
 
   const time = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
-  return `${weekday} Kl. ${time}`;
+  return `${weekday} kl. ${time}`;
 }
 
 export function formatTimeStamp(raceDate: unknown): string {

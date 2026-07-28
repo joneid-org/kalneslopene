@@ -101,7 +101,7 @@ class StatisticsService(
 
     private fun fastestHistoricRecord(gender: Gender): CourseRecordDto? =
         runnerRepository
-            .findFirstByGenderAndHistoricPersonalRecordIsNotNullOrderByHistoricPersonalRecordAsc(gender)
+            .findFastestHistoricRunner(gender)
             ?.let { runner ->
                 runner.historicPersonalRecord?.let {
                     CourseRecordDto(runner = runner.toDto(), resultTime = it, raceInfo = null)

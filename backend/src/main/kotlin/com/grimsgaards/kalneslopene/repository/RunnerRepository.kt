@@ -28,7 +28,15 @@ interface RunnerRepository : JpaRepository<RunnerEntity, UUID> {
     )
     fun countRunnersWithAtLeastOneRace(): Long
 
-    fun findFirstByGenderAndHistoricPersonalRecordIsNotNullOrderByHistoricPersonalRecordAsc(gender: Gender): RunnerEntity?
+    @Query(
+        """
+        SELECT r FROM RunnerEntity r
+        WHERE r.gender = :gender AND r.historicPersonalRecord IS NOT NULL
+        ORDER BY r.historicPersonalRecord ASC
+        LIMIT 1
+    """,
+    )
+    fun findFastestHistoricRunner(gender: Gender): RunnerEntity?
 
     @Modifying
     @NativeQuery("delete from runner r where r.uuid = :uuid")

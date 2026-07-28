@@ -10,7 +10,6 @@ type TimedResult = {
   hideTime?: boolean;
 };
 
-// Raskeste løper (returnerer hele resultatet)
 export function getFastestRunner<T extends TimedResult>(
   raceRunners: T[],
 ): T | null {
@@ -27,7 +26,6 @@ export function getFastestRunner<T extends TimedResult>(
   return best;
 }
 
-// Årets beste tid
 export function getBestTimeThisYear(
   raceRunners: RaceRunnerDTO[],
   year: number,

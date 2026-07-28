@@ -74,9 +74,8 @@ class StatisticsServiceTest {
         name: String = "Historic",
     ) {
         Mockito
-            .`when`(
-                runnerRepository.findFirstByGenderAndHistoricPersonalRecordIsNotNullOrderByHistoricPersonalRecordAsc(gender),
-            ).thenReturn(RunnerEntity(name = name, gender = gender, historicPersonalRecord = record))
+            .`when`(runnerRepository.findFastestHistoricRunner(gender))
+            .thenReturn(RunnerEntity(name = name, gender = gender, historicPersonalRecord = record))
     }
 
     @Nested

@@ -143,7 +143,6 @@ export type RaceStatisticsDTO = {
   courseRecordFemale?: CourseRecordDTO;
 };
 
-// raceInfo mangler når rekorden er satt før det første løpet vi har resultater for
 export type CourseRecordDTO = {
   runner: RunnerDTO;
   resultTime: string;

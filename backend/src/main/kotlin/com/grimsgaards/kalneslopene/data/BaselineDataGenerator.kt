@@ -10,6 +10,7 @@ import com.grimsgaards.kalneslopene.repository.RaceRunnerRepository
 import com.grimsgaards.kalneslopene.repository.RunnerRepository
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.core.annotation.Order
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
@@ -18,7 +19,12 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 
+/**
+ * Seeds an empty database from the csv files. Ordered ahead of [CsvResultsRepair] so that on a boot
+ * with both enabled the data exists before the repair rebuilds it.
+ */
 @Component
+@Order(100)
 @ConditionalOnProperty(prefix = "baseline-data", name = ["enabled"], havingValue = "true")
 class BaselineDataGenerator(
     private val runnerRepository: RunnerRepository,
@@ -170,9 +176,9 @@ class BaselineDataGenerator(
 
     companion object {
         private const val RACE_HOUR = 18
-        private const val PERSER_FILE = "Resultater/v2/Perser_2018.csv"
+        private const val PERSER_FILE = "Resultater/original_files/Perser_2018.csv"
         private val RESULT_FILES =
-            (2019..2026).map { "Resultater/v2/Resultater_$it.csv" }
+            (2019..2026).map { "Resultater/original_files/Resultater_$it.csv" }
         private val TIME_REGEX = Regex("""(\d+):(\d{2})""")
         private val DATE_FORMAT: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yy")
     }

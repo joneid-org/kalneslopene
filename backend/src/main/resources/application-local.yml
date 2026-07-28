@@ -15,14 +15,14 @@ spring:
       ddl-auto: none
 
 baseline-data:
-  enabled: false # True to test with baselinedata
+  enabled: true # True to test with baselinedata
 mockdata:
-  enabled: true # True to test with mockdata
+  enabled: false # True to test with mockdata
 
 # One-off repair of runner/race_runner from the Resultater/v2 csv files. See scripts/results-repair.md.
 # Turn enabled on for a single boot, then off again. dry-run logs the full report and rolls back.
 results-repair:
-  enabled: false
+  enabled: true
   dry-run: true
 
 minio:

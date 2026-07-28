@@ -1,1914 +1,877 @@
-Gender,Name,Time,Date
-H,Even Storeheier,00:17:02,2026-07-09
-H,Marius Klavestad Hansen,00:18:38,2026-07-09
-H,Theodor Holter,00:18:43,2026-07-09
-H,Daniel Skjelhaugen,00:18:44,2026-07-09
-H,Kristoffer Rostad,00:19:08,2026-07-09
-H,Elias Røyneberg,00:19:16,2026-07-09
-H,Simon Pinaas,00:19:20,2026-07-09
-H,Ole Herman Weel,00:21:08,2026-07-09
-H,Ola Fosse Mathisen,00:21:30,2026-07-09
-H,Jon Pedersen,00:21:51,2026-07-09
-H,Ulf Roger Olsen,00:22:00,2026-07-09
-H,Vidar Syverstad,00:22:12,2026-07-09
-H,Tommy Heggenes,00:22:44,2026-07-09
-H,Øistein Fosse Mathisen,00:22:45,2026-07-09
-H,Aksel Berg Svendsen,00:22:50,2026-07-09
-H,Roger Nilsen,00:22:54,2026-07-09
-H,Gustav Bø Gurandsrud,00:23:43,2026-07-09
-H,Magnus Fosse Mathisen,00:23:45,2026-07-09
-H,Odin Wolleberg,00:24:15,2026-07-09
-H,Raymond Handelsby,00:24:36,2026-07-09
-H,Olav Røyneberg,00:24:37,2026-07-09
-H,Arnt Andersrød,00:24:45,2026-07-09
-H,Roar Henriksen,00:24:49,2026-07-09
-H,Sanel Mecan,00:25:09,2026-07-09
-D,Birthe Lundestad Høier,00:25:12,2026-07-09
-H,Jan Tore Skaug,00:25:44,2026-07-09
-H,Knut Willy Steen,00:25:44,2026-07-09
-H,Frode Andersen,00:26:33,2026-07-09
-H,Kenneth Ørseng,00:27:18,2026-07-09
-H,Vegard Knutsen,00:27:19,2026-07-09
-H,Henrik Evensen,00:27:31,2026-07-09
-H,Ulf Minge,00:27:43,2026-07-09
-H,Eirik Gurandsrud,00:28:03,2026-07-09
-H,Lars Bø Gurandsrud,00:28:03,2026-07-09
-H,Hans Olaf Kirkeng,00:28:09,2026-07-09
-H,Eirik Minge,00:28:26,2026-07-09
-D,Annika Pinaas,00:28:30,2026-07-09
-H,Bjørn Åstorp,00:28:35,2026-07-09
-H,Ole Johnny Aasen,00:29:05,2026-07-09
-H,Lars Markus Ramsjø,00:29:14,2026-07-09
-H,Lars Ramsjø,00:29:15,2026-07-09
-D,Helene Ileby,00:29:29,2026-07-09
-H,Kjetil Johansen,00:29:40,2026-07-09
-D,Martine Strand Thøgersen,00:29:40,2026-07-09
-H,Oddbjørn Granli,00:29:40,2026-07-09
-H,Jim Andersen,00:30:04,2026-07-09
-H,Svein Bergerud,00:31:23,2026-07-09
-H,Henrik Weel,00:22:15,2026-07-09
-H,Morgan Lind,00:31:56,2026-07-09
-H,Tom Wahlgren,00:34:22,2026-07-09
-H,Arild Kraft,00:35:28,2026-07-09
-H,Ole Petter Glückstad,00:35:28,2026-07-09
-D,Sissel Aamodt,00:37:53,2026-07-09
-H,Theodor Holter,00:19:27,2026-07-02
-H,Kristoffer Rostad,00:19:58,2026-07-02
-H,Marius Klavestad Hansen,00:21:44,2026-07-02
-H,Simon Pinaas,00:22:04,2026-07-02
-H,Henrik Weel,00:22:14,2026-07-02
-H,Freddy Amundsen,00:22:23,2026-07-02
-H,Vidar Syverstad,00:22:37,2026-07-02
-H,Glenn Olufsen,00:22:41,2026-07-02
-H,Roger Nilsen,00:22:53,2026-07-02
-H,John Yngve Hisken,00:24:19,2026-07-02
-H,Raymond Westberg,00:24:24,2026-07-02
-H,Roar Henriksen,00:24:29,2026-07-02
-H,Ulf Minge,00:25:10,2026-07-02
-D,Kjersti Væge,00:25:15,2026-07-02
-H,Olav Røyneberg,00:25:20,2026-07-02
-H,Sverre Berggren,00:25:39,2026-07-02
-H,Sanel Mecan,00:25:43,2026-07-02
-H,Henrik Hvidsten,00:25:45,2026-07-02
-H,Jan Tore Skaug,00:26:20,2026-07-02
-H,Odin Borgen,00:26:32,2026-07-02
-H,Sivert Sloreby,00:26:35,2026-07-02
-H,Trond Bjerk,00:26:52,2026-07-02
-H,Tom Kristoffersen,00:27:08,2026-07-02
-H,Kenneth Ørseng,00:27:17,2026-07-02
-H,Henrik Evensen,00:27:27,2026-07-02
-D,Lisa Liamo Hisken,00:27:44,2026-07-02
-H,Hans Olaf Kirkeng,00:27:47,2026-07-02
-D,Gøril Holmvassdal,00:27:58,2026-07-02
-H,Arild Kraft,00:28:02,2026-07-02
-H,Alf-Martin Nygård,00:28:33,2026-07-02
-D,Annika Pinaas,00:28:48,2026-07-02
-D,Marianne Syverstad,00:28:51,2026-07-02
-H,Leif Arne Skaar,00:29:00,2026-07-02
-D,Tuva Skaar,00:29:00,2026-07-02
-D,Mette Andersen,00:30:10,2026-07-02
-H,Sven Rino Andersen,00:30:10,2026-07-02
-H,Bjørn Åstorp,00:30:28,2026-07-02
-D,Maren Liane Jakobsen,00:30:43,2026-07-02
-H,Svein Bergerud,00:32:10,2026-07-02
-H,Morten Olsen,00:33:23,2026-07-02
-D,Sissel Aamodt,00:39:36,2026-07-02
-H,Marius Klavestad Hansen,00:17:44,2026-06-25
-H,Sindre Fredriksen,00:17:44,2026-06-25
-H,Sverre Lande Johansen,00:17:46,2026-06-25
-H,Martinius Sigvartsen,00:17:53,2026-06-25
-H,Daniel Skjelhaugen,00:19:01,2026-06-25
-H,Simon Pinaas,00:19:43,2026-06-25
-H,Mathias Pedersen Holmskau,00:19:56,2026-06-25
-D,Ida Lundestad,00:21:10,2026-06-25
-H,Anders Johansen,00:21:13,2026-06-25
-H,Dennis Amundsen,00:21:34,2026-06-25
-H,Frithjof Dalen,00:21:49,2026-06-25
-H,Vidar Syverstad,00:22:06,2026-06-25
-H,Glenn Olufsen,00:22:46,2026-06-25
-H,Lars Noreng,00:22:46,2026-06-25
-H,Roger Nilsen,00:22:48,2026-06-25
-D,Anne Maren Belsby,00:23:09,2026-06-25
-H,Ulf Roger Olsen,00:23:14,2026-06-25
-H,Ole Antonsen,00:23:20,2026-06-25
-H,Theodor Holter,00:23:24,2026-06-25
-H,Peter Magnus Prestesæter,00:24:29,2026-06-25
-H,Raymond Handelsby,00:24:36,2026-06-25
-H,Roar Henriksen,00:24:53,2026-06-25
-H,Olav Røyneberg,00:24:57,2026-06-25
-H,Sverre Berggren,00:25:14,2026-06-25
-H,Sanel Mecan,00:25:15,2026-06-25
-D,Ingrid Pedersen Holmskau,00:25:46,2026-06-25
-H,Oddbjørn Granli,00:26:28,2026-06-25
-H,Aleksander Vangen,00:26:36,2026-06-25
-H,Henrik Evensen,00:26:37,2026-06-25
-H,Leif Arne Skaar,00:27:00,2026-06-25
-H,Hans Olaf Kirkeng,00:27:13,2026-06-25
-H,Kai Berg,00:27:33,2026-06-25
-H,Jan Olav Rive,00:27:34,2026-06-25
-D,Eunika Smolynska,00:27:46,2026-06-25
-H,Rafal Potycicki,00:27:46,2026-06-25
-H,Ole Johnny Aasen,00:28:00,2026-06-25
-D,Annika Pinaas,00:28:01,2026-06-25
-H,Alf-Martin Nygård,00:28:40,2026-06-25
-H,Carsten Hartig,00:28:45,2026-06-25
-H,Tom Kristoffersen,00:29:05,2026-06-25
-H,Morten Willy Johansen,00:29:27,2026-06-25
-H,Arild Kraft,00:29:30,2026-06-25
-H,Svein Bergerud,00:30:49,2026-06-25
-H,Tom Sognlien,00:31:17,2026-06-25
-H,Dag Sletner,00:32:44,2026-06-25
-D,Therese Mandji,00:34:30,2026-06-25
-D,Sissel Aamodt,00:39:02,2026-06-25
-H,Even Storeheier,00:16:42,2026-06-18
-H,Marius Klavestad Hansen,00:18:19,2026-06-18
-H,Simon Pinaas,00:20:20,2026-06-18
-H,Eirik Berget,00:20:52,2026-06-18
-H,Theodor Holter,00:21:51,2026-06-18
-H,Abdi Usman,00:21:52,2026-06-18
-H,Dag Eivind Syverstad,00:22:07,2026-06-18
-H,Thomas Andresen,00:22:07,2026-06-18
-H,Vidar Syverstad,00:22:21,2026-06-18
-H,Glenn Olufsen,00:22:31,2026-06-18
-H,Roger Nilsen,00:22:43,2026-06-18
-H,Lars Noreng,00:22:46,2026-06-18
-H,Sturla Korsæth,00:22:54,2026-06-18
-H,Ulf Roger Olsen,00:23:19,2026-06-18
-H,Ole Antonsen,00:23:21,2026-06-18
-H,Johannes Øvstegård,00:24:06,2026-06-18
-H,Roar Henriksen,00:24:08,2026-06-18
-H,Sverre Berggren,00:24:32,2026-06-18
-H,Aland Bazaz,00:24:35,2026-06-18
-H,Aksel Günther,00:24:36,2026-06-18
-H,Arnt Andersrød,00:24:59,2026-06-18
-H,Odin Wolleberg,00:25:12,2026-06-18
-D,Birthe Lundestad Høier,00:25:21,2026-06-18
-H,Ulf Minge,00:25:23,2026-06-18
-H,Henrik Løvfold,00:25:43,2026-06-18
-H,Jan Tore Skaug,00:25:43,2026-06-18
-H,Sivert Sloreby,00:25:43,2026-06-18
-H,Oddbjørn Granli,00:25:51,2026-06-18
-H,Terje Nyøygard,00:25:56,2026-06-18
-H,Atle Rakvåg,00:26:04,2026-06-18
-H,Leif Arne Skaar,00:26:06,2026-06-18
-H,Vegard Knutsen,00:26:31,2026-06-18
-H,Odin Borgen,00:26:36,2026-06-18
-D,Inthiwa Sangphet Hansen,00:26:39,2026-06-18
-H,Henrik Evensen,00:27:27,2026-06-18
-H,Shaho Kanany,00:27:28,2026-06-18
-H,Christian Pettersen,00:27:47,2026-06-18
-D,Sarah Goplen,00:27:51,2026-06-18
-H,Carsten Hartig,00:27:52,2026-06-18
-H,Kenneth Ørseng,00:28:10,2026-06-18
-H,David Buhinja,00:28:20,2026-06-18
-D,Duangrudee Emrat,00:28:24,2026-06-18
-H,Anders Farholm,00:28:34,2026-06-18
-D,Nora Bråthe Farholm,00:28:34,2026-06-18
-H,Hans Olaf Kirkeng,00:28:43,2026-06-18
-D,Marianne Syverstad,00:28:53,2026-06-18
-H,Sakaria Mohamed,00:29:59,2026-06-18
-D,Helene Eriksen,00:30:21,2026-06-18
-H,Kjetil Johansen,00:30:21,2026-06-18
-D,Maria Veiby,00:30:45,2026-06-18
-H,Svein Bergerud,00:31:24,2026-06-18
-H,Mats Stene,00:31:58,2026-06-18
-H,Tom Sognlien,00:32:05,2026-06-18
-H,Dag Sletner,00:32:43,2026-06-18
-D,Solveig Strømberg,00:32:55,2026-06-18
-H,Ketil Gjølstad,00:35:56,2026-06-18
-D,Anne-Lene Frølandshagen,00:37:15,2026-06-18
-D,Sissel Aamodt,00:38:56,2026-06-18
-H,Steinar Sævdal,00:41:05,2026-06-18
-D,Camilla Petronella Jensen,00:42:08,2026-06-18
-H,Sindre Fredriksen,00:17:46,2026-06-11
-H,Martin Gundersen,00:18:08,2026-06-11
-H,Kristoffer Rostad,00:19:06,2026-06-11
-H,Rune Johnsen,00:20:38,2026-06-11
-H,Tommy Heggenes,00:22:02,2026-06-11
-H,Vidar Syverstad,00:22:32,2026-06-12
-H,Pål Vikesland,00:22:35,2026-06-13
-H,Simon Pinaas,00:22:35,2026-06-14
-H,Leif Morten Jamissen,00:22:37,2026-06-15
-H,Ulf Roger Olsen,00:22:37,2026-06-16
-H,Roger Nilsen,00:22:39,2026-06-17
-H,Glenn Klausen,00:22:47,2026-06-18
-H,Rune Langnes,00:22:47,2026-06-11
-H,Jørgen Minge,00:22:51,2026-06-11
-H,Lars Noreng,00:22:51,2026-06-11
-H,Daniel Stokkan,00:22:52,2026-06-11
-H,Ole Antonsen,00:23:20,2026-06-11
-H,Kai Berg,00:23:29,2026-06-11
-H,Roar Henriksen,00:23:50,2026-06-11
-H,Thomas Martinsen,00:24:10,2026-06-11
-H,Odin Wolleberg,00:24:15,2026-06-11
-H,Stein Johansen,00:24:19,2026-06-11
-H,Olav Røyneberg,00:24:40,2026-06-11
-H,Sanel Mecan,00:25:20,2026-06-11
-H,Jan Tore Skaug,00:25:22,2026-06-11
-H,Henning Klausen,00:25:27,2026-06-11
-H,Ivar Sjømæling Andresen,00:25:30,2026-06-11
-D,Kjersti Væge,00:25:30,2026-06-11
-D,Inthiwa Sangphet Hansen,00:25:38,2026-06-11
-H,Atle Rakvåg,00:25:40,2026-06-11
-H,Ulf Minge,00:25:44,2026-06-11
-H,Jan Olav Rive,00:25:56,2026-06-11
-H,Sivert Sloreby,00:26:08,2026-06-11
-H,Leif Arne Skaar,00:26:14,2026-06-11
-H,Eirik Minge,00:26:20,2026-06-11
-H,Odin Borgen,00:26:22,2026-06-11
-H,Alf-Martin Nygård,00:26:41,2026-06-11
-H,Kenneth Ørseng,00:26:52,2026-06-11
-H,Henrik Evensen,00:27:09,2026-06-11
-D,Nicola Dahle,00:27:19,2026-06-11
-H,Tom Kristoffersen,00:26:35,2026-06-11
-H,Rune Syversen,00:27:39,2026-06-11
-H,Hans Olaf Kirkeng,00:27:42,2026-06-11
-D,Duangrudee Emrat,00:27:48,2026-06-11
-H,Carsten Hartig,00:28:10,2026-06-11
-H,Arild Kraft,00:29:01,2026-06-11
-H,Knut Willy Steen,00:29:03,2026-06-11
-D,Tracy Nguyen,00:29:19,2026-06-11
-D,Annika Pinaas,00:29:45,2026-06-11
-D,Ingvild Wolleberg,00:30:02,2026-06-11
-D,Maria Veiby,00:30:35,2026-06-11
-D,Hilde Rive,00:30:55,2026-06-11
-H,Jim Andersen,00:30:56,2026-06-11
-D,Liv Marit Mjelve,00:31:19,2026-06-11
-D,Felippa Gustavsen,00:31:24,2026-06-11
-H,Johannes Øvstegård,00:31:24,2026-06-11
-D,Line Aanes,00:31:39,2026-06-11
-H,Derek Bateman,00:31:44,2026-06-11
-H,Tom Sognlien,00:31:51,2026-06-11
-H,Svein Bergerud,00:32:37,2026-06-11
-H,Stig Andresen,00:33:55,2026-06-11
-H,Tom Wahlgren,00:33:55,2026-06-11
-H,Ketil Gjølstad,00:35:04,2026-06-11
-D,Sissel Aamodt,00:37:29,2026-06-11
-H,Steinar Sævdal,00:38:57,2026-06-11
-D,Marianne Syverstad,01:40:00,2026-06-11
-H,Simon Pinaas,00:19:49,2026-06-04
-H,Anton Roaas,00:19:52,2026-06-04
-H,Jon Pedersen,00:21:01,2026-06-04
-H,Robin Bårdli,00:21:19,2026-06-04
-H,Vidar Syverstad,00:21:51,2026-06-04
-H,Tommy Heggenes,00:22:16,2026-06-04
-H,Bjørn Arild Smaaberg,00:22:55,2026-06-04
-H,Elias Pinaas,00:23:16,2026-06-04
-H,Roger Nilsen,00:23:23,2026-06-04
-H,Lars Noreng,00:23:31,2026-06-04
-H,Roar Henriksen,00:23:35,2026-06-04
-H,Morten Bruheim,00:23:42,2026-06-04
-D,Kjersti Væge,00:24:18,2026-06-04
-H,Henning Klausen,00:24:29,2026-06-04
-H,Terje Nyøygard,00:24:44,2026-06-04
-H,Hans Petter Moen,00:24:46,2026-06-04
-H,Jørn Erik Christiansen,00:24:51,2026-06-04
-H,Tommy Nilsen-Scherffenberg,00:25:28,2026-06-04
-H,Sverre Berggren,00:25:37,2026-06-04
-D,Ida Lundestad,00:25:43,2026-06-04
-H,Lucas Lundestad-Kemi,00:25:43,2026-06-04
-H,Oddbjørn Granli,00:25:59,2026-06-04
-H,Kay Diedrichsen,00:26:17,2026-06-04
-H,Jan Tore Skaug,00:26:20,2026-06-04
-H,Ulf Minge,00:26:23,2026-06-04
-H,Odin Borgen,00:26:38,2026-06-04
-H,Sivert Sloreby,00:26:48,2026-06-04
-H,Kenneth Ørseng,00:26:50,2026-06-04
-H,Leif Arne Skaar,00:26:50,2026-06-04
-H,Anders Johansen,00:27:19,2026-06-04
-H,Henrik Evensen,00:27:19,2026-06-04
-H,Vegard Knutsen,00:27:25,2026-06-04
-H,Kjetil Søberg,00:27:44,2026-06-04
-H,Hans Olaf Kirkeng,00:28:09,2026-06-04
-H,Aksel Torkelsen,00:28:31,2026-06-04
-D,Marianne Syverstad,00:28:38,2026-06-04
-H,Ole Johnny Aasen,00:29:00,2026-06-04
-H,Andrew Søgaard,00:29:21,2026-06-04
-H,Carsten Hartig,00:29:25,2026-06-04
-H,Arild Kraft,00:29:38,2026-06-04
-H,Kjetil Johansen,00:29:38,2026-06-04
-D,Annika Pinaas,00:30:16,2026-06-04
-H,Vegar Pinaas,00:30:16,2026-06-04
-H,Trond Vidar Torkelsen,00:30:18,2026-06-04
-H,Atle Gravdal,00:30:44,2026-06-04
-H,Jim Andersen,00:30:45,2026-06-04
-D,Maria Veiby,00:31:26,2026-06-04
-H,Svein Bergerud,00:31:26,2026-06-04
-H,Vidar Bergerud,00:31:44,2026-06-04
-D,Martine Strand Thøgersen,00:32:12,2026-06-04
-H,Tom Sognlien,00:32:51,2026-06-04
-H,Mads Nilsen-Scherffenberg,00:34:29,2026-06-04
-H,Ole Magnus Bukholm,00:34:32,2026-06-04
-D,Wivian Johansen,00:36:01,2026-06-04
-H,Stig Andresen,00:36:11,2026-06-04
-H,Daniel Mohamad,00:41:04,2026-06-04
-D,Mona Bråthen,01:40:00,2026-06-04
-H,Ulrik Lolland,00:16:51,2026-05-28
-H,Marius Klavestad Hansen,00:18:39,2026-05-28
-H,Theodor Holter,00:19:49,2026-05-28
-H,Abdi Usman,00:19:55,2026-05-28
-H,Alexander Jensen,00:20:46,2026-05-28
-H,Glenn Olufsen,00:21:32,2026-05-28
-H,Vidar Syverstad,00:21:42,2026-05-28
-H,Anders Strand,00:21:45,2026-05-28
-H,Bård Kolås,00:21:50,2026-05-28
-H,Tommy Heggenes,00:22:12,2026-05-28
-H,Andreas Risan Thøgersen,00:22:20,2026-05-28
-H,Roger Nilsen,00:22:30,2026-05-28
-H,Sveinung Eide Hansen,00:22:50,2026-05-28
-H,Espen Grindahl,00:22:57,2026-05-28
-H,David Buhinja,00:23:32,2026-05-28
-D,Maj Engelstad,00:23:35,2026-05-28
-H,Simon Pinaas,00:23:44,2026-05-28
-H,Jacob Ali,00:23:48,2026-05-28
-D,Birthe Lundestad Høier,00:23:59,2026-05-28
-H,Faisal Al-Enezi,00:24:12,2026-05-28
-H,Kay Diedrichsen,00:24:32,2026-05-28
-H,Sverre Berggren,00:24:34,2026-05-28
-H,Odin Wolleberg,00:24:40,2026-05-28
-H,Jørn Erik Christiansen,00:24:42,2026-05-28
-H,Jan Olav Rive,00:24:52,2026-05-28
-H,Raymond Westberg,00:25:05,2026-05-28
-H,Glenn Klausen,00:25:46,2026-05-28
-D,Emma Klausen,00:25:49,2026-05-28
-H,Henrik Evensen,00:26:16,2026-05-28
-D,Kjersti Væge,00:26:16,2026-05-28
-H,Ivar Sjømæling Andresen,00:26:17,2026-05-28
-H,Sanel Mecan,00:26:34,2026-05-28
-H,Kenneth Ørseng,00:26:51,2026-05-28
-H,Sakaria Mohamed,00:26:55,2026-05-28
-H,Ulrik Langvik,00:27:23,2026-05-28
-H,Arild Kraft,00:27:33,2026-05-28
-H,Yurii Bielov,00:27:33,2026-05-28
-H,Hans Olaf Kirkeng,00:27:36,2026-05-28
-H,Ulf Minge,00:28:11,2026-05-28
-H,Ketil Arntsen,00:28:14,2026-05-28
-H,Roar Henriksen,00:28:18,2026-05-28
-D,Annika Pinaas,00:28:28,2026-05-28
-D,Nicola Dahle,00:28:28,2026-05-28
-D,Eva Agustsdottir,00:28:36,2026-05-28
-H,Jan Tore Skaug,00:28:40,2026-05-28
-H,Carsten Hartig,00:28:47,2026-05-28
-H,Markus Weberg,00:29:10,2026-05-28
-D,Maria Veiby,00:29:14,2026-05-28
-H,Alf-Martin Nygård,00:29:37,2026-05-28
-D,Marianne Syverstad,00:29:39,2026-05-28
-H,Dag Sletner,00:30:23,2026-05-28
-H,Soheil Azimi,00:30:35,2026-05-28
-D,Kajsa Høiland,00:31:38,2026-05-28
-D,Liv Marit Mjelve,00:31:38,2026-05-28
-D,Felippa Gustavsen,00:32:09,2026-05-28
-H,Johannes Øvstegård,00:32:11,2026-05-28
-H,Tom Sognlien,00:32:19,2026-05-28
-D,Tina Klausen,00:32:49,2026-05-28
-D,Ragnhild Borgebund,00:34:13,2026-05-28
-D,Marie Oven,00:34:20,2026-05-28
-D,Wivian Johansen,00:34:36,2026-05-28
-D,Sissel Aamodt,00:36:59,2026-05-28
-H,Svein Bergerud,00:37:23,2026-05-28
-H,Marius Klavestad Hansen,00:18:26,2026-05-21
-H,Simon Pinaas,00:20:10,2026-05-21
-H,Stian Fredriksen,00:20:34,2026-05-21
-H,Abdi Usman,00:20:43,2026-05-21
-H,Andreas Johansen Heier,00:21:26,2026-05-21
-H,Magnus Skauge Oliversen,00:21:49,2026-05-21
-H,Tommy Heggenes,00:21:53,2026-05-21
-H,Andreas Risan Thøgersen,00:21:59,2026-05-21
-H,Glenn Olufsen,00:22:02,2026-05-21
-H,Ulf Roger Olsen,00:22:29,2026-05-21
-H,Roger Nilsen,00:22:37,2026-05-21
-H,Vidar Syverstad,00:22:41,2026-05-21
-H,Pål Vikesland,00:22:44,2026-05-21
-H,Kai Berg,00:22:48,2026-05-21
-H,Sverre Lande Johansen,00:22:48,2026-05-21
-H,Koshin Musse,00:22:56,2026-05-21
-H,Sveinung Eide Hansen,00:22:56,2026-05-21
-H,Rune Langnes,00:22:59,2026-05-21
-D,Vilde Fredriksen,00:23:11,2026-05-21
-H,Frithjof Dalen,00:23:19,2026-05-21
-H,Elias Pinaas,00:23:42,2026-05-21
-H,David Buhinja,00:23:53,2026-05-21
-H,Roar Henriksen,00:23:55,2026-05-21
-H,Lasse Skalle,00:23:58,2026-05-21
-H,Ole Antonsen,00:24:05,2026-05-21
-H,Jacob Ali,00:24:07,2026-05-21
-H,Stein Johansen,00:24:10,2026-05-21
-H,Theodor Holter,00:24:10,2026-05-21
-H,Sverre Berggren,00:24:29,2026-05-21
-H,Odin Wolleberg,00:24:35,2026-05-21
-H,Olav Røyneberg,00:24:40,2026-05-21
-D,Birthe Lundestad Høier,00:24:57,2026-05-21
-H,Sanel Mecan,00:24:59,2026-05-21
-H,Faisal Al-Enezi,00:25:06,2026-05-21
-H,Oddbjørn Granli,00:25:24,2026-05-21
-H,Johannes Øvstegård,00:25:31,2026-05-21
-H,Terje Nyøygard,00:25:51,2026-05-21
-H,Jens-Otto Løkkevik,00:25:52,2026-05-21
-H,Ketil Arntsen,00:25:59,2026-05-21
-H,Abdikarim Aweys,00:26:04,2026-05-21
-H,Jørn Erik Christiansen,00:26:15,2026-05-21
-H,Ulf Minge,00:26:28,2026-05-21
-H,Tom Cato Gundersen,00:26:40,2026-05-21
-D,Inthiwa Sangphet Hansen,00:26:41,2026-05-21
-H,Eirik Minge,00:26:45,2026-05-21
-H,Henrik Evensen,00:26:48,2026-05-21
-H,Trond Bjerk,00:26:52,2026-05-21
-H,Kjetil Søberg,00:27:12,2026-05-21
-H,Alf-Martin Nygård,00:27:20,2026-05-21
-H,Tom Kristoffersen,00:27:20,2026-05-21
-D,Duangrudee Emrat,00:27:37,2026-05-21
-H,Hans Olaf Kirkeng,00:27:57,2026-05-21
-D,Marianne Syverstad,00:28:51,2026-05-21
-H,Bikal Tivari,00:28:57,2026-05-21
-H,Arild Kraft,00:29:13,2026-05-21
-H,Carsten Hartig,00:29:13,2026-05-21
-H,Shaho Kanany,00:29:18,2026-05-21
-H,Bjørn Åstorp,00:29:24,2026-05-21
-H,Morten Willy Johansen,00:29:26,2026-05-21
-H,Bjørn Gundersen,00:29:29,2026-05-21
-D,Annika Pinaas,00:29:34,2026-05-21
-D,Maria Veiby,00:29:53,2026-05-21
-H,Kjetil Johansen,00:30:12,2026-05-21
-H,Svein Bergerud,00:30:39,2026-05-21
-H,Dag Sletner,00:32:29,2026-05-21
-H,Tom Sognlien,00:32:29,2026-05-21
-H,Christian Bakke,00:32:35,2026-05-21
-D,Inger-Elisabeth Knold,00:32:35,2026-05-21
-D,Tina Klausen,00:33:42,2026-05-21
-H,Mohamed Ali,00:34:21,2026-05-21
-D,Wivian Johansen,00:34:51,2026-05-21
-D,Beate Rydland,00:35:47,2026-05-21
-H,Reber Ismail,00:35:59,2026-05-21
-D,Sissel Aamodt,00:36:24,2026-05-21
-D,Heidi Børstad,00:41:18,2026-05-21
-H,Lars-Christian Frøiland ,00:42:23,2026-05-21
-H,Lucas Lundestad-Kemi,00:18:21,2026-05-14
-H,Martinius Sigvartsen,00:18:29,2026-05-14
-H,Marius Klavestad Hansen,00:18:41,2026-05-14
-H,Theodor Holter,00:18:51,2026-05-14
-H,René Nilsen,00:19:19,2026-05-14
-H,Alexander Hammer-Dybvad,00:19:36,2026-05-14
-H,Ole Henry Bjørnstad Bjor,00:21:08,2026-05-14
-H,Robin Bårdli,00:21:33,2026-05-14
-D,Ida Lundestad,00:21:34,2026-05-14
-H,Daniel Oliversen,00:21:40,2026-05-14
-H,Anders Strand,00:21:43,2026-05-14
-H,Vidar Syverstad,00:21:49,2026-05-14
-H,Tommy Heggenes,00:22:28,2026-05-14
-H,Christoffer Storm Mørseth,00:22:35,2026-05-14
-H,Leif Morten Jamissen,00:22:42,2026-05-14
-H,Lars Noreng,00:22:46,2026-05-14
-H,David Buhinja,00:23:38,2026-05-14
-H,Ole Antonsen,00:23:39,2026-05-14
-H,Roger Nilsen,00:23:41,2026-05-14
-H,Solan Oliversen,00:23:48,2026-05-14
-H,Stian Fredriksen,00:23:53,2026-05-14
-D,Vilde Fredriksen,00:23:53,2026-05-14
-H,Kim Jakobsen,00:24:11,2026-05-14
-H,Sveinung Eide Hansen,00:24:11,2026-05-14
-H,Christian Bakke,00:24:34,2026-05-14
-H,Benjamin Olavesen,00:24:39,2026-05-14
-H,Sverre Berggren,00:24:44,2026-05-14
-H,Olav Røyneberg,00:24:57,2026-05-14
-H,Pål Magnus Stensholt,00:25:25,2026-05-14
-H,Terje Nyøygard,00:25:44,2026-05-14
-H,Sanel Mecan,00:25:55,2026-05-14
-H,Christian Pettersen,00:26:20,2026-05-14
-H,Odin Borgen,00:26:21,2026-05-14
-H,Jørn Erik Christiansen,00:26:32,2026-05-14
-H,Johannes Øvstegård,00:26:49,2026-05-14
-H,Kenneth Ørseng,00:26:55,2026-05-14
-H,Roar Henriksen,00:27:13,2026-05-14
-H,Tom Kristoffersen,00:27:13,2026-05-14
-H,Ole Johnny Aasen,00:27:46,2026-05-14
-H,Hans Olaf Kirkeng,00:28:01,2026-05-14
-H,Sivert Sloreby,00:28:04,2026-05-14
-H,Henrik Evensen,00:28:29,2026-05-14
-H,Anders Farholm,00:28:42,2026-05-14
-D,Nora Bråthe Farholm,00:28:42,2026-05-14
-H,Morten Willy Johansen,00:29:28,2026-05-14
-H,Bjørn Åstorp,00:29:45,2026-05-14
-H,Markus Weberg,00:29:59,2026-05-14
-H,Frithjof Dalen,00:31:01,2026-05-14
-H,Arild Kraft,00:33:15,2026-05-14
-H,Dag Sletner,00:33:15,2026-05-14
-H,Derek Bateman,00:33:20,2026-05-14
-H,Mats Stene,00:33:33,2026-05-14
-H,Svein Bergerud,00:33:47,2026-05-14
-D,Liv Marit Mjelve,00:33:58,2026-05-14
-D,Inger-Elisabeth Knold,00:34:01,2026-05-14
-H,Stig Andresen,00:35:31,2026-05-14
-H,Vidar Bergerud,00:35:31,2026-05-14
-D,Sissel Aamodt,00:36:54,2026-05-14
-D,Frida Kampenes,00:40:39,2026-05-14
-D,Iselin Kampenes,00:40:39,2026-05-14
-D,Mathea Stensrud,00:40:39,2026-05-14
-D,Martine Strand Thøgersen,00:42:31,2026-05-14
-D,Lilly Herfjord,00:53:19,2026-05-14
-D,Maria Bergsten,00:53:19,2026-05-14
-H,Henning Herfjord,00:53:28,2026-05-14
-D,Marianne Syverstad,01:40:00,2026-05-14
-H,Ole Magnus Bukholm,01:40:00,2026-05-14
-H,Marius Klavestad Hansen,00:18:11,2026-05-07
-H,Daniel Skjelhaugen,00:18:22,2026-05-07
-H,Theodor Holter,00:18:42,2026-05-07
-H,Simon Pinaas,00:19:45,2026-05-07
-H,Jon Pedersen,00:20:55,2026-05-07
-H,Jon Sigurd Brenne,00:21:45,2026-05-07
-H,Vidar Syverstad,00:21:49,2026-05-07
-H,Ulf Roger Olsen,00:22:12,2026-05-07
-H,Tommy Heggenes,00:22:16,2026-05-07
-H,Christian Bakke,00:22:43,2026-05-07
-H,Roger Nilsen,00:22:44,2026-05-07
-H,Lars Noreng,00:22:54,2026-05-07
-H,Morten Bruheim,00:23:27,2026-05-07
-H,Martin Wichstrøm Nilsen,00:23:55,2026-05-07
-H,Ole Antonsen,00:23:59,2026-05-07
-H,Elias Pinaas,00:24:03,2026-05-07
-H,Sverre Berggren,00:24:13,2026-05-07
-H,Raymond Westberg,00:24:14,2026-05-07
-H,Kim Jakobsen,00:24:16,2026-05-07
-H,Pål Magnus Stensholt,00:24:19,2026-05-07
-H,Roar Henriksen,00:24:20,2026-05-07
-H,Arnt Andersrød,00:24:39,2026-05-07
-H,Kay Diedrichsen,00:25:06,2026-05-07
-H,Tom Kristoffersen,00:25:16,2026-05-07
-H,Christian Pettersen,00:25:25,2026-05-07
-H,Aksel Hotvedt,00:25:31,2026-05-07
-H,Aksel Søgaard,00:25:31,2026-05-07
-H,Terje Nyøygard,00:25:36,2026-05-07
-H,Sanel Mecan,00:25:37,2026-05-07
-H,Jan Tore Skaug,00:25:48,2026-05-07
-D,Inthiwa Sangphet Hansen,00:25:50,2026-05-07
-H,Jens-Otto Løkkevik,00:25:58,2026-05-07
-H,Kenneth Ørseng,00:26:02,2026-05-07
-H,Øyvind Hofosseter,00:26:08,2026-05-07
-H,Frode Andersen,00:26:22,2026-05-07
-H,Johannes Øvstegård,00:26:56,2026-05-07
-H,Jørn Erik Christiansen,00:27:07,2026-05-07
-H,Kjetil Søberg,00:27:09,2026-05-07
-H,Sivert Sloreby,00:27:12,2026-05-07
-H,Jacob Ali,00:27:19,2026-05-07
-H,Henrik Evensen,00:27:34,2026-05-07
-D,Marianne Syverstad,00:27:51,2026-05-07
-H,Hans Olaf Kirkeng,00:28:05,2026-05-07
-H,Andrew Søgaard,00:28:21,2026-05-07
-H,Knut Willy Steen,00:28:21,2026-05-07
-D,Annika Pinaas,00:28:22,2026-05-07
-H,Bjørn Åstorp,00:28:26,2026-05-07
-D,Tracy Nguyen,00:28:27,2026-05-07
-H,Carsten Hartig,00:28:31,2026-05-07
-D,Martine Strand Thøgersen,00:28:35,2026-05-07
-H,Steinar Jacobsen,00:28:53,2026-05-07
-H,Arild Kraft,00:29:00,2026-05-07
-H,Jim Andersen,00:29:24,2026-05-07
-H,Ulf Minge,00:29:26,2026-05-07
-H,Fredrik Texmo Grønn,00:30:52,2026-05-07
-H,Atle Gravdal,00:31:46,2026-05-07
-H,Svein Bergerud,00:32:58,2026-05-07
-D,Inger-Elisabeth Knold,00:33:21,2026-05-07
-D,Wivian Johansen,00:33:57,2026-05-07
-D,Maria Veiby,00:34:14,2026-05-07
-H,Tom Wahlgren,00:34:15,2026-05-07
-H,Ali Rihda,00:35:57,2026-05-07
-H,Kurdos Zarei,00:35:57,2026-05-07
-H,Stig Andresen,00:36:33,2026-05-07
-D,Marie Oven,00:36:41,2026-05-07
-D,Ragnhild Borgebund,00:36:41,2026-05-07
-D,Cathrine Olavessen,00:36:42,2026-05-07
-D,Sissel Aamodt,00:37:19,2026-05-07
-H,Daniel Mohamad,00:40:36,2026-05-07
-D,Katrine Hotvedt,00:40:36,2026-05-07
-H,Henrik Sørensen,00:41:16,2026-05-07
-H,Jo-André Midtfjeld,00:42:47,2026-05-07
-H,Even Storeheier,00:16:36,2026-04-30
-H,Magnus Erstad,00:16:45,2026-04-30
-H,Fredrik Bruland,00:19:03,2026-04-30
-H,Simon Pinaas,00:20:32,2026-04-30
-H,Theodor Holter,00:20:48,2026-04-30
-H,Andreas Henriksen,00:21:31,2026-04-30
-H,Anders Johansen,00:21:42,2026-04-30
-H,Aksel Berg Svendsen,00:21:46,2026-04-30
-H,Vidar Syverstad,00:21:52,2026-04-30
-H,Amund Stenersen,00:21:58,2026-04-30
-H,Tommy Heggenes,00:22:32,2026-04-30
-H,Storm Justin Strand Akre,00:22:40,2026-04-30
-H,Lars Noreng,00:22:35,2026-04-30
-H,Roger Nilsen,00:22:54,2026-04-30
-H,Lars Ramsjø,00:23:30,2026-04-30
-H,Stian Fredriksen,00:23:54,2026-04-30
-H,Pål Magnus Stensholt,00:24:11,2026-04-30
-H,Stein Johansen,00:24:21,2026-04-30
-H,Roar Henriksen,00:24:41,2026-04-30
-H,Odin Wolleberg,00:24:42,2026-04-30
-H,Raymond Westberg,00:24:44,2026-04-30
-H,Knut Willy Steen,00:24:57,2026-04-30
-H,Lars Bjerknes,00:24:59,2026-04-30
-D,My Linnea Ramsjø,00:25:01,2026-04-30
-H,Jan Tore Skaug,00:25:14,2026-04-30
-H,Terje Nyøygard,00:25:18,2026-04-30
-H,Tom Kristoffersen,00:25:23,2026-04-30
-H,Oddbjørn Granli,00:25:27,2026-04-30
-H,Eirik Minge,00:25:42,2026-04-30
-H,Frode Andersen,00:25:46,2026-04-30
-H,Sanel Mecan,00:25:48,2026-04-30
-H,Kim Jakobsen,00:25:52,2026-04-30
-D,Inthiwa Sangphet Hansen,00:25:55,2026-04-30
-H,Jens-Otto Løkkevik,00:26:11,2026-04-30
-H,Ismail Alasow,00:26:41,2026-04-30
-H,Bjørn Erik Bratli,00:26:45,2026-04-30
-H,Ulf Minge,00:27:02,2026-04-30
-H,Kay Diedrichsen,00:27:08,2026-04-30
-H,Vegard Knutsen,00:27:38,2026-04-30
-H,Kenneth Ørseng,00:27:42,2026-04-30
-H,Henrik Evensen,00:27:43,2026-04-30
-D,Marianne Syverstad,00:28:07,2026-04-30
-H,Hans Olaf Kirkeng,00:28:10,2026-04-30
-H,Alf-Martin Nygård,00:28:17,2026-04-30
-D,Duangrudee Emrat,00:28:20,2026-04-30
-D,Annika Pinaas,00:28:28,2026-04-30
-H,Trond Bjerk,00:28:28,2026-04-30
-H,Fredrik Texmo Grønn,00:28:32,2026-04-30
-H,Andrew Søgaard,00:28:48,2026-04-30
-H,Arild Kraft,00:29:22,2026-04-30
-D,Martine Strand Thøgersen,00:29:26,2026-04-30
-D,Tracy Nguyen,00:30:15,2026-04-30
-H,Svein Bergerud,00:31:00,2026-04-30
-H,Tom Sognlien,00:33:07,2026-04-30
-D,Wivian Johansen,00:33:27,2026-04-30
-D,Sissel Aamodt,00:35:38,2026-04-30
-H,Glenn Olufsen,01:40:00,2026-04-30
-H,Magnus Erstad,00:17:59,2026-04-23
-H,Theodor Holter,00:18:22,2026-04-23
-H,René Nilsen,00:19:04,2026-04-23
-H,Kristoffer Rostad,00:19:06,2026-04-23
-H,Lucas Lundestad-Kemi,00:19:09,2026-04-23
-H,Simon Pinaas,00:20:11,2026-04-23
-H,Sindre Fredriksen,00:20:36,2026-04-23
-H,Stian Fredriksen,00:20:36,2026-04-23
-H,Robin Bårdli,00:21:11,2026-04-23
-H,Bjørge Nesengen,00:21:18,2026-04-23
-D,Ida Lundestad,00:21:20,2026-04-23
-H,Vidar Syverstad,00:21:24,2026-04-23
-H,Aksel Berg Svendsen,00:22:41,2026-04-23
-H,Leif Morten Jamissen,00:22:45,2026-04-23
-H,Lars Noreng,00:22:51,2026-04-23
-H,André Stordal,00:23:29,2026-04-23
-H,Stian Aasberg Johansen,00:23:31,2026-04-23
-H,Kristian Tran,00:23:34,2026-04-23
-H,Elias Pinaas,00:23:38,2026-04-23
-H,Stein Johansen,00:23:40,2026-04-23
-H,Rune Langnes,00:23:41,2026-04-23
-H,Martin Lund,00:23:44,2026-04-23
-H,Roger Nilsen,00:23:44,2026-04-23
-H,Henning Klausen,00:24:13,2026-04-23
-H,Henrik Løvfold,00:24:22,2026-04-23
-H,Roar Henriksen,00:24:22,2026-04-23
-H,Ole Antonsen,00:24:27,2026-04-23
-H,Frithjof Dalen,00:24:49,2026-04-23
-H,Sverre Berggren,00:25:08,2026-04-23
-H,Odin Wolleberg,00:25:19,2026-04-23
-H,Jens-Otto Løkkevik,00:25:24,2026-04-23
-H,Frode Andersen,00:25:25,2026-04-23
-H,Morten Pedersen,00:25:32,2026-04-23
-H,Terje Nyøygard,00:25:32,2026-04-23
-H,Sanel Mecan,00:25:50,2026-04-23
-D,Inthiwa Sangphet Hansen,00:25:55,2026-04-23
-H,Ole Johnny Aasen,00:26:18,2026-04-23
-H,Oddbjørn Granli,00:26:28,2026-04-23
-H,Odin Borgen,00:26:30,2026-04-23
-H,Kjetil Søberg,00:26:57,2026-04-23
-H,Knut Willy Steen,00:26:59,2026-04-23
-H,Jan Olav Rive,00:27:14,2026-04-23
-D,Sandra Broen,00:27:18,2026-04-23
-H,Tom Kristoffersen,00:27:22,2026-04-23
-H,Kay Diedrichsen,00:27:24,2026-04-23
-H,Paal Stähli,00:27:24,2026-04-23
-H,Kenneth Ørseng,00:27:29,2026-04-23
-H,Henrik Evensen,00:27:43,2026-04-23
-H,Ola Rasmussen,00:27:58,2026-04-23
-D,Ingrid Sikkeland Lunde,00:28:03,2026-04-23
-D,Marianne Syverstad,00:28:06,2026-04-23
-H,Alf-Martin Nygård,00:28:08,2026-04-23
-D,Helene Ileby,00:28:19,2026-04-23
-H,Sivert Sloreby,00:28:20,2026-04-23
-H,Jarle Fredriksen,00:28:26,2026-04-23
-D,Duangrudee Emrat,00:28:49,2026-04-23
-D,Mai Britt Solberg Grandahl,00:28:56,2026-04-23
-H,Carsten Hartig,00:29:16,2026-04-23
-H,Arild Kraft,00:29:20,2026-04-23
-H,Kjetil Johansen,00:29:20,2026-04-23
-H,Fredrik Texmo Grønn,00:29:29,2026-04-23
-H,Ulf Minge,00:29:34,2026-04-23
-D,Eline Botilsrud Andersen,00:29:38,2026-04-23
-D,Martine Strand Thøgersen,00:29:43,2026-04-23
-D,Marit Mjønes,00:29:59,2026-04-23
-H,Dag Sletner,00:30:00,2026-04-23
-H,Jonas Arntsen,00:31:40,2026-04-23
-H,Svein Bergerud,00:31:45,2026-04-23
-D,Annika Pinaas,00:32:43,2026-04-23
-H,Tom Sognlien,00:32:59,2026-04-23
-D,Wivian Johansen,00:33:35,2026-04-23
-H,Tom Wahlgren,00:35:49,2026-04-23
-H,Sebastian Kruse,00:36:50,2026-04-23
-D,Maria Veiby,00:37:40,2026-04-23
-D,Sissel Aamodt,00:37:46,2026-04-23
-H,Even Storeheier,00:17:11,2026-04-16
-H,Magnus Erstad,00:17:33,2026-04-16
-H,Daniel Skjelhaugen,00:18:30,2026-04-16
-H,Marius Klavestad Hansen,00:18:57,2026-04-16
-H,Elias Røyneberg,00:19:14,2026-04-16
-H,Ozzy Gurung,00:19:20,2026-04-16
-H,Fredrik Bruland,00:19:25,2026-04-16
-H,Isach Stevik,00:20:49,2026-04-16
-H,Frederik Bjørnstad,00:21:12,2026-04-16
-H,Mahesh Munikar,00:21:21,2026-04-16
-H,Bjørge Nesengen,00:21:23,2026-04-16
-H,Runar Sande,00:21:45,2026-04-16
-H,Vidar Syverstad,00:21:49,2026-04-16
-H,Jørgen Skalle,00:21:51,2026-04-16
-H,Kristian Tran,00:22:36,2026-04-16
-H,Martin S. Torp,00:22:43,2026-04-16
-H,Simon Pinaas,00:22:43,2026-04-16
-H,Theodor Holter,00:22:43,2026-04-16
-H,Lars Noreng,00:22:48,2026-04-16
-H,Tommy Heggenes,00:22:54,2026-04-16
-H,Lars Skalle,00:22:58,2026-04-16
-H,Kai Berg,00:23:02,2026-04-16
-H,Roger Nilsen,00:23:23,2026-04-16
-H,Hans Erik Davidsen,00:24:04,2026-04-16
-H,Robin Johannessen,00:24:04,2026-04-16
-H,Ole Nedrebø,00:24:17,2026-04-16
-H,Stein Johansen,00:24:22,2026-04-16
-H,Sivert Danielsen,00:24:34,2026-04-16
-H,Olav Røyneberg,00:24:39,2026-04-16
-H,Sverre Berggren,00:24:49,2026-04-16
-H,Roar Henriksen,00:24:55,2026-04-16
-H,Jens-Otto Løkkevik,00:24:59,2026-04-16
-H,Henning Klausen,00:25:16,2026-04-16
-H,Terje Nyøygard,00:25:24,2026-04-16
-H,Frode Andersen,00:25:25,2026-04-16
-H,Magnus Thorsen,00:25:39,2026-04-16
-H,Jan Tore Skaug,00:25:42,2026-04-16
-H,Eirik Minge,00:25:43,2026-04-16
-H,Ole-Henrik Andersen,00:25:56,2026-04-16
-H,Odin Borgen,00:26:07,2026-04-16
-H,Sanel Mecan,00:26:11,2026-04-16
-H,Jan Olav Rive,00:26:22,2026-04-16
-H,Tom Kristoffersen,00:26:27,2026-04-16
-H,Sivert Sloreby,00:26:30,2026-04-16
-D,Sandra Broen,00:26:33,2026-04-16
-H,Trond Bjerk,00:26:37,2026-04-16
-H,Leif Arne Skaar,00:26:38,2026-04-16
-D,Inthiwa Sangphet Hansen,00:26:48,2026-04-16
-H,Bjørn Erik Bratli,00:27:03,2026-04-16
-H,Kenneth Ørseng,00:27:12,2026-04-16
-H,Kjetil Søberg,00:27:18,2026-04-16
-H,Jarle Fredriksen,00:27:26,2026-04-16
-H,Ole Johnny Aasen,00:27:27,2026-04-16
-H,Henrik Evensen,00:27:28,2026-04-16
-H,Christian Pettersen,00:28:05,2026-04-16
-H,Vegard Knutsen,00:28:07,2026-04-16
-D,Marianne Syverstad,00:28:25,2026-04-16
-D,Duangrudee Emrat,00:28:41,2026-04-16
-H,Ulf Minge,00:28:44,2026-04-16
-H,Alf-Martin Nygård,00:28:57,2026-04-16
-H,Bjørn Åstorp,00:29:06,2026-04-16
-H,Steinar Jacobsen,00:29:38,2026-04-16
-H,Arild Kraft,00:30:05,2026-04-16
-H,Dag Sletner,00:30:56,2026-04-16
-H,Tom Sognlien,00:33:10,2026-04-16
-D,Wivian Johansen,00:33:32,2026-04-16
-H,Svein Bergerud,00:33:47,2026-04-16
-D,Maria Veiby,00:33:50,2026-04-16
-H,Ole Petter Glückstad,00:34:17,2026-04-16
-D,Ragnhild Borgebund,00:34:39,2026-04-16
-D,Annika Pinaas,00:35:03,2026-04-16
-H,Sebastian Kruse,00:35:03,2026-04-16
-D,Sissel Aamodt,00:36:55,2026-04-16
-H,Knut Erik Kristiansen,01:40:00,2026-04-16
-H,Marius Klavestad Hansen,00:18:18,2026-04-09
-H,Daniel Skjelhaugen,00:18:36,2026-04-09
-H,Simon Pinaas,00:20:05,2026-04-09
-H,Robin Bårdli,00:21:19,2026-04-09
-H,Amund Stenersen,00:21:28,2026-04-09
-H,Aksel Berg Svendsen,00:21:53,2026-04-09
-H,Vidar Syverstad,00:22:06,2026-04-09
-H,Knut Willy Steen,00:22:44,2026-04-09
-H,Lars Noreng,00:22:52,2026-04-09
-H,Jon Pedersen,00:23:06,2026-04-09
-H,Glenn Olufsen,00:23:32,2026-04-09
-H,Nicklas Jørgensen,00:23:41,2026-04-09
-H,Rune Langnes,00:23:43,2026-04-09
-H,Roger Nilsen,00:23:49,2026-04-09
-H,Kai Berg,00:23:58,2026-04-09
-H,Jørgen Minge,00:24:18,2026-04-09
-H,Raymond Handelsby,00:24:19,2026-04-09
-H,Jarle Jørgensen,00:24:27,2026-04-09
-D,Elin Lien,00:24:30,2026-04-09
-H,Andreas Thunem,00:24:43,2026-04-09
-H,Christian Pettersen,00:25:01,2026-04-09
-H,Roar Henriksen,00:25:02,2026-04-09
-H,Mads Pedersen,00:25:15,2026-04-09
-H,Magnus Thorsen,00:25:31,2026-04-09
-H,Henning Klausen,00:25:39,2026-04-09
-H,Sverre Berggren,00:25:40,2026-04-09
-H,Jens-Otto Løkkevik,00:25:43,2026-04-09
-H,Anders Johansen,00:25:51,2026-04-09
-D,Ida Lundestad,00:25:51,2026-04-09
-D,Luna Lundestad-Kemi,00:25:51,2026-04-09
-H,Eirik Minge,00:26:13,2026-04-09
-H,Terje Nyøygard,00:26:26,2026-04-09
-H,Henrik Lunde,00:26:27,2026-04-09
-H,Frode Andersen,00:26:28,2026-04-09
-H,Trond Bjerk,00:26:31,2026-04-09
-H,Jan Tore Skaug,00:26:47,2026-04-09
-H,Kenneth Ørseng,00:26:49,2026-04-09
-H,Sanel Mecan,00:26:56,2026-04-09
-D,Birthe Lundestad Høier,00:27:12,2026-04-09
-H,Bjørn Erik Bratli,00:27:12,2026-04-09
-H,Tom Kristoffersen,00:27:25,2026-04-09
-D,Inthiwa Sangphet Hansen,00:27:32,2026-04-09
-H,Ola Rasmussen,00:27:45,2026-04-09
-H,Jarle Fredriksen,00:27:48,2026-04-09
-H,Ole Johnny Aasen,00:27:50,2026-04-09
-H,Kjetil Søberg,00:28:02,2026-04-09
-H,Henrik Evensen,00:28:11,2026-04-09
-H,Sivert Sloreby,00:28:13,2026-04-09
-H,Hans Olaf Kirkeng,00:28:23,2026-04-09
-D,Duangrudee Emrat,00:28:27,2026-04-09
-D,Ingrid Sikkeland Lunde,00:28:41,2026-04-09
-H,Ulf Minge,00:29:36,2026-04-09
-H,Vegard Knutsen,00:29:53,2026-04-09
-H,Arild Kraft,00:30:31,2026-04-09
-D,Annika Pinaas,00:31:00,2026-04-09
-D,Ronja Aalberg,00:32:01,2026-04-09
-D,Sandra Broen,00:32:01,2026-04-09
-H,Steinar Jacobsen,00:32:42,2026-04-09
-H,Tom Sognlien,00:33:31,2026-04-09
-D,Wivian Johansen,00:34:43,2026-04-09
-H,Svein Bergerud,00:34:53,2026-04-09
-D,Maria Veiby,00:37:04,2026-04-09
-H,Stig Andresen,00:37:24,2026-04-09
-D,Sissel Aamodt,00:37:40,2026-04-09
-H,Rasmus Buflod-Halstensen,00:40:35,2026-04-09
-D,Hilde Buflod,00:40:44,2026-04-09
-H,Rolf Erik Halvorsen,01:40:00,2026-04-09
-H,Torgeir Sloreby,01:40:00,2026-04-09
-H,Tom Sognlien,00:33:45,2025-07-24
-H,Snorre Bekkhus,00:34:07,2025-07-24
-D,Wivian Johansen,00:34:14,2025-07-24
-H,Vidar Gulbrandsen,00:34:33,2025-07-24
-H,Ketil Gjølstad,00:36:28,2025-07-24
-D,Monica Pedersen,00:40:25,2025-07-24
-D,Annie Smith,00:40:25,2025-07-24
-H,Adrian Monkvik,00:16:45,2025-07-17
-H,Sindre Fredriksen,00:17:05,2025-07-17
-H,Simon Pinaas,00:19:12,2025-07-17
-H,Marius Klavestad Hansen,00:19:24,2025-07-17
-H,Stian Fredriksen,00:21:13,2025-07-17
-H,Elias Pinaas,00:21:14,2025-07-17
-H,Aksel Berg Svendsen,00:21:52,2025-07-17
-H,Ulf Roger Olsen,00:22:08,2025-07-17
-H,Richard Grigson,00:22:15,2025-07-17
-H,Martin Gulbrandsen,00:22:32,2025-07-17
-H,Jostein Øby,00:23:32,2025-07-17
-H,Jan Olav Rive,00:23:49,2025-07-17
-H,Lars Ramsjø,00:24:00,2025-07-17
-D,My Linnea Ramsjø,00:24:00,2025-07-17
-H,Glenn Olufsen,00:25:12,2025-07-17
-H,Roger Nilsen,00:25:26,2025-07-17
-D,Elin Lien,00:25:40,2025-07-17
-H,Roar Henriksen,00:25:53,2025-07-17
-H,Eirik Minge,00:26:11,2025-07-17
-H,Anders Farholm,00:26:14,2025-07-17
-H,Tom Kristoffersen,00:26:36,2025-07-17
-H,Ulf Minge,00:26:53,2025-07-17
-H,Viggo Dahl,00:27:00,2025-07-17
-D,Annika Pinaas,00:27:18,2025-07-17
-H,Kai Øby,00:27:51,2025-07-17
-H,Hans Olaf Kirkeng,00:28:35,2025-07-17
-H,Bjørn Åstorp,00:29:08,2025-07-17
-H,Henrik Evensen,00:29:16,2025-07-17
-H,Svein Bergerud,00:29:25,2025-07-17
-D,Marie Helene Hansen,00:29:42,2025-07-17
-D,Linda Pinaas,00:29:56,2025-07-17
-D,Nathalie Johansen,00:30:31,2025-07-17
-H,Sivert Sloreby,00:30:32,2025-07-17
-H,Arild Kraft,00:30:59,2025-07-17
-H,Dag Sletner,00:30:59,2025-07-17
-H,Kai Ingar Øby,00:31:39,2025-07-17
-D,Katrine Dilling,00:32:52,2025-07-17
-D,Wivian Johansen,00:33:44,2025-07-17
-H,Espen Løchen,00:33:49,2025-07-17
-D,Hege Weimand,00:33:49,2025-07-17
-H,Vidar Gulbrandsen,00:34:27,2025-07-17
-H,Noah Pinaas,00:35:21,2025-07-17
-H,Glenn Borge,00:35:31,2025-07-17
-H,Pål Jakobsen,00:35:54,2025-07-17
-D,Ina Kvien,00:38:46,2025-07-17
-D,Eirin Elise Øby,00:38:52,2025-07-17
-D,Sissel Aamodt,00:39:07,2025-07-17
-H,Sindre Fredriksen,00:17:13,2025-07-10
-H,Ola Daniel Johannessen,00:17:23,2025-07-10
-H,Halvor Andersen,00:19:32,2025-07-10
-H,Marius Klavestad Hansen,00:19:36,2025-07-10
-H,Stian Fredriksen,00:19:43,2025-07-10
-H,Espen Skaar,00:19:47,2025-07-10
-H,Jan Olav Solli,00:19:52,2025-07-10
-H,Simon Pinaas,00:20:14,2025-07-10
-D,Ida Lundestad,00:21:04,2025-07-10
-H,Bjørn Arild Smaaberg,00:21:04,2025-07-10
-H,Ulf Roger Olsen,00:21:36,2025-07-10
-H,Robin Bårdli,00:22:20,2025-07-10
-H,Christian Bakke,00:22:27,2025-07-10
-H,Rune Langnes,00:22:31,2025-07-10
-H,Stian Aasberg Johansen,00:23:00,2025-07-10
-D,Anne Maren Belsby,00:23:02,2025-07-10
-H,Noah Rodin,00:23:35,2025-07-10
-H,Vidar Syverstad,00:23:44,2025-07-10
-H,Ole Antonsen,00:23:45,2025-07-10
-H,Magne Svandal,00:23:50,2025-07-10
-H,Rune Tharaldsen,00:24:18,2025-07-10
-H,Erik Jarem,00:24:35,2025-07-10
-H,Frode Andersen,00:24:42,2025-07-10
-H,Tor Davidsen,00:24:51,2025-07-10
-H,Oddbjørn Granli,00:24:55,2025-07-10
-H,Henrik Lund Raagaard,00:25:03,2025-07-10
-D,Birthe Lundestad Høier,00:25:12,2025-07-10
-H,Olav Røyneberg,00:25:21,2025-07-10
-H,Kjell Graasten,00:25:32,2025-07-10
-H,Roar Henriksen,00:25:53,2025-07-10
-H,Tom Kristoffersen,00:26:02,2025-07-10
-D,Annika Pinaas,00:26:02,2025-07-10
-H,Andreas Fagernæs,00:26:14,2025-07-10
-H,Rolf Erik Halvorsen,00:27:10,2025-07-10
-H,Alf Slydahl,00:27:17,2025-07-10
-H,Ulf Minge,00:27:31,2025-07-10
-H,Hans Olaf Kirkeng,00:27:43,2025-07-10
-H,Isak Skaar,00:28:34,2025-07-10
-H,Tomas Mathiesen,00:28:39,2025-07-10
-H,Bjørn Åstorp,00:28:41,2025-07-10
-H,Svein Bergerud,00:29:20,2025-07-10
-D,Marie Helene Hansen,00:29:20,2025-07-10
-H,Arild Kraft,00:29:20,2025-07-10
-D,Karoline Mjønes,00:29:38,2025-07-10
-H,Trond Selsaas,00:29:55,2025-07-10
-D,Benedicte Jarem,00:31:33,2025-07-10
-H,Jonas Arntsen,00:31:43,2025-07-10
-D,Mia Pihl Birkeland,00:32:21,2025-07-10
-H,Snorre Bekkhus,00:32:22,2025-07-10
-H,Johann Birkeland,00:32:22,2025-07-10
-D,Wivian Johansen,00:32:39,2025-07-10
-H,Øystein Skaar,00:35:20,2025-07-10
-D,Marit Mjønes,00:36:16,2025-07-10
-D,Sissel Aamodt,00:37:29,2025-07-10
-H,Fredrik Lium,00:18:22,2025-06-26
-H,Eirik Berget,00:18:41,2025-06-26
-H,Finn Markus Johansen,00:18:58,2025-06-26
-H,Simon Pinaas,00:19:06,2025-06-26
-H,Øyvind Skalle,00:19:15,2025-06-26
-H,Marius Klavestad Hansen,00:19:25,2025-06-26
-H,Emil Helgesen Berg,00:19:27,2025-06-26
-H,Stian Paulsen,00:19:27,2025-06-26
-H,Stian Fredriksen,00:19:45,2025-06-26
-H,Alexander Hammer-Dybvad,00:20:05,2025-06-26
-H,Jørgen Skalle,00:20:20,2025-06-26
-H,Lars Nagelstad Dalland,00:20:35,2025-06-26
-H,William Børsand,00:20:51,2025-06-26
-H,Jon Sigurd Brenne,00:21:02,2025-06-26
-D,Ida Lundestad,00:21:09,2025-06-26
-H,Anders Skaar,00:21:16,2025-06-26
-H,Henrik Lippert,00:21:33,2025-06-26
-H,Christian Bakke,00:21:36,2025-06-26
-H,Ulf Roger Olsen,00:21:53,2025-06-26
-H,Lars Skalle,00:21:58,2025-06-26
-H,Magnus Bau,00:22:05,2025-06-26
-H,Robin Bårdli,00:22:09,2025-06-26
-H,Lars Ramsjø,00:22:17,2025-06-26
-H,Freddy Amundsen,00:22:24,2025-06-26
-H,Vidar Syverstad,00:22:24,2025-06-26
-H,Roy Bangor,00:22:29,2025-06-26
-H,Rune Langnes,00:22:34,2025-06-26
-H,Frank Syversen,00:22:37,2025-06-26
-H,Noah Rodin,00:22:38,2025-06-26
-H,Ole Antonsen,00:23:04,2025-06-26
-H,Lasse Skalle,00:23:07,2025-06-26
-D,Vilde Fredriksen,00:23:09,2025-06-26
-H,Jostein Øby,00:23:12,2025-06-26
-H,Henning Klausen,00:23:20,2025-06-26
-H,Magne Svandal,00:23:21,2025-06-26
-H,Sturla Korsæth,00:23:29,2025-06-26
-H,Glenn Olufsen,00:23:53,2025-06-26
-H,Morten Bruheim,00:23:59,2025-06-26
-H,Kai Berg,00:24:11,2025-06-26
-D,Birthe Lundestad Høier,00:24:12,2025-06-26
-H,Anders Johansen,00:24:12,2025-06-26
-H,Richard Berli,00:24:31,2025-06-26
-H,Ellef Stenersen,00:24:37,2025-06-26
-H,Raymond Handelsby,00:24:39,2025-06-26
-H,Oddbjørn Granli,00:24:41,2025-06-26
-H,Petter Magnus Vestberg,00:24:41,2025-06-26
-H,Henrik Lund Raagaard,00:25:05,2025-06-26
-H,Frode Andersen,00:25:13,2025-06-26
-H,Roar Henriksen,00:25:13,2025-06-26
-H,Viggo Dahl,00:25:28,2025-06-26
-H,Kenneth Ørseng,00:25:41,2025-06-26
-H,Vidar Lerdahl,00:25:53,2025-06-26
-H,Tom Kristoffersen,00:25:56,2025-06-26
-H,Carsten Hartig,00:25:57,2025-06-26
-H,Eirik Minge,00:25:57,2025-06-26
-H,Olav Røyneberg,00:25:57,2025-06-26
-H,Trond Bjerk,00:26:18,2025-06-26
-H,Jan Tore Skaug,00:26:50,2025-06-26
-H,Ulf Minge,00:27:09,2025-06-26
-D,Linda Pinaas,00:27:13,2025-06-26
-H,Dovre Lundestad Høier,00:27:23,2025-06-26
-H,Alf-Martin Nygård,00:27:23,2025-06-26
-H,Paal Stähli,00:27:48,2025-06-26
-H,Henrik Evensen,00:27:56,2025-06-26
-H,Hans Olaf Kirkeng,00:27:59,2025-06-26
-D,Renate Olavesen,00:28:20,2025-06-26
-D,Helene Ileby,00:28:26,2025-06-26
-H,Bjørn Åstorp,00:28:33,2025-06-26
-H,Kjetil Johansen,00:28:38,2025-06-26
-H,Ola Baustad,00:28:49,2025-06-26
-H,Alexander Baustad,00:28:52,2025-06-26
-H,Knut Willy Steen,00:28:57,2025-06-26
-H,Svein Bergerud,00:28:59,2025-06-26
-H,Arild Kraft,00:28:59,2025-06-26
-H,Tom Sognlien,00:31:09,2025-06-26
-H,Sivert Sloreby,00:31:16,2025-06-26
-H,Jonas Arntsen,00:31:58,2025-06-26
-H,Ole Petter Glückstad,00:32:12,2025-06-26
-D,Monika Olsen,00:32:24,2025-06-26
-H,Tom Wahlgren,00:33:04,2025-06-26
-D,Wivian Johansen,00:33:20,2025-06-26
-D,Katrine Dilling,00:33:35,2025-06-26
-H,Pål Jakobsen,00:34:20,2025-06-26
-H,Snorre Bekkhus,00:35:00,2025-06-26
-H,Espen Skaar,00:35:20,2025-06-26
-H,Stig Andresen,00:44:06,2025-06-26
-D,Ann Kristin Våkråk,Deltatt,2025-06-26
-H,Sindre Fredriksen,00:17:44,2025-06-26
-H,Elias Røyneberg,00:18:46,2025-06-26
-H,Marius Klavestad Hansen,00:19:49,2025-06-26
-H,Martin Bakkenget,00:20:00,2025-06-26
-H,Øystein Spernes,00:20:03,2025-06-26
-H,Stian Fredriksen,00:20:17,2025-06-26
-H,Johannes Lande,00:20:28,2025-06-26
-D,Ida Lundestad,00:21:02,2025-06-26
-H,Bjørn Arild Smaaberg,00:21:02,2025-06-26
-H,Bjørge Nesengen,00:21:05,2025-06-26
-H,Lars Ramsjø,00:22:02,2025-06-26
-H,Magnus Skauge Oliversen,00:22:09,2025-06-26
-H,Frithjof Dalen,00:22:10,2025-06-26
-H,Jonas Kristiansen,00:22:13,2025-06-26
-H,Håvard Crantz Lorentzen,00:22:13,2025-06-26
-H,Ulf Roger Olsen,00:22:30,2025-06-26
-H,Christian Bakke,00:22:36,2025-06-26
-H,Vidar Syverstad,00:22:39,2025-06-26
-H,Roy Bangor,00:22:40,2025-06-26
-H,Magnus Bau,00:22:42,2025-06-26
-H,Nicklas Jørgensen,00:22:42,2025-06-26
-D,Emma Peters,00:22:46,2025-06-26
-H,Frank Syversen,00:22:48,2025-06-26
-H,Ole Antonsen,00:23:08,2025-06-26
-H,Henning Klausen,00:23:24,2025-06-26
-H,Glenn Olufsen,00:23:26,2025-06-26
-H,Glenn Klausen,00:23:27,2025-06-26
-H,Lars Noreng,00:23:27,2025-06-26
-D,My Linnea Ramsjø,00:23:28,2025-06-26
-H,Sturla Korsæth,00:23:48,2025-06-26
-H,Jan Olav Rive,00:23:56,2025-06-26
-H,Ole Gunnar Jakobsen,00:24:03,2025-06-26
-H,Øystein Lande,00:24:19,2025-06-26
-D,Birthe Lundestad Høier,00:24:23,2025-06-26
-H,Anders Johansen,00:24:23,2025-06-26
-H,Christian Fredriksen,00:24:28,2025-06-26
-H,Raymond Handelsby,00:24:42,2025-06-26
-H,Olav Røyneberg,00:24:54,2025-06-26
-H,Viggo Dahl,00:24:57,2025-06-26
-H,Tor Davidsen,00:24:57,2025-06-26
-H,Roar Henriksen,00:24:58,2025-06-26
-H,Henrik Lund Raagaard,00:25:15,2025-06-26
-H,Tom Kristoffersen,00:25:28,2025-06-26
-H,Odin Borgen,00:25:34,2025-06-26
-H,Kenneth Ørseng,00:26:02,2025-06-26
-H,Ole Johnny Aasen,00:26:03,2025-06-26
-D,Annika Pinaas,00:26:09,2025-06-26
-H,Trond Bjerk,00:26:10,2025-06-26
-H,Petter Magnus Vestberg,00:26:16,2025-06-26
-H,Sven Simonsen,00:26:50,2025-06-26
-H,Petter Johan Sandvand Crantz,00:26:53,2025-06-26
-H,Carsten Hartig,00:27:14,2025-06-26
-H,Ulf Minge,00:27:17,2025-06-26
-D,Linda Pinaas,00:27:44,2025-06-26
-D,Marianne Syverstad,00:28:10,2025-06-26
-D,Mai Britt Solberg Grandahl,00:28:17,2025-06-26
-H,Bjørn Åstorp,00:28:18,2025-06-26
-D,Duangrudee Emrat,00:28:22,2025-06-26
-H,Hans Olaf Kirkeng,00:28:26,2025-06-26
-D,Alette Buflod-Halstensen,00:28:53,2025-06-26
-H,Arild Kraft,00:29:08,2025-06-26
-H,Svein Bergerud,00:29:45,2025-06-26
-H,Knut Willy Steen,00:29:45,2025-06-26
-D,Hilde Buflod,00:29:47,2025-06-26
-H,Trond Selsaas,00:30:04,2025-06-26
-D,Maren Hammer,00:30:57,2025-06-26
-D,Mina Alette Johnsen,00:30:57,2025-06-26
-H,Kristoffer Davidsen,00:31:47,2025-06-26
-H,Jørn Arild Jacobsen,00:31:53,2025-06-26
-D,Wivian Johansen,00:32:28,2025-06-26
-H,Ole Petter Glückstad,00:32:44,2025-06-26
-H,Tom Sognlien,00:33:18,2025-06-26
-H,Jon Thorvaldsen,00:33:54,2025-06-26
-H,Stig Andresen,00:34:19,2025-06-26
-H,Pål Jakobsen,00:35:00,2025-06-26
-D,Sissel Aamodt,00:35:03,2025-06-26
-H,Eirik Berget,00:19:20,2025-06-19
-H,Lucas Lundestad-Kemi,00:19:21,2025-06-19
-H,Simon Pinaas,00:19:31,2025-06-19
-H,Henrik Lippert,00:20:02,2025-06-19
-H,Elias Pinaas,00:20:43,2025-06-19
-D,Ida Lundestad,00:21:17,2025-06-19
-H,Jon Sigurd Brenne,00:21:21,2025-06-19
-H,Christian Bakke,00:21:23,2025-06-19
-H,Freddy Amundsen,00:22:32,2025-06-19
-H,Simen Standerholen,00:22:33,2025-06-19
-H,Roy Bangor,00:22:39,2025-06-19
-H,Ulf Roger Olsen,00:22:41,2025-06-19
-H,Henrik Weel,00:22:43,2025-06-19
-H,Jonas Dalheim,00:22:48,2025-06-19
-H,Jørgen Minge,00:23:08,2025-06-19
-H,Frithjof Dalen,00:23:11,2025-06-19
-H,Ole Gunnar Jakobsen,00:23:21,2025-06-19
-H,Nicklas Jørgensen,00:23:31,2025-06-19
-H,Vidar Syverstad,00:23:45,2025-06-19
-H,Lars Noreng,00:23:52,2025-06-19
-H,Marius Skauen,00:23:57,2025-06-19
-H,Kai Berg,00:23:59,2025-06-19
-H,Gunde Myrdrag,00:24:01,2025-06-19
-H,Anders Karlsøen,00:24:16,2025-06-19
-D,Birthe Lundestad Høier,00:24:25,2025-06-19
-H,Anders Johansen,00:24:25,2025-06-19
-H,Glenn Olufsen,00:24:36,2025-06-19
-H,Viggo Dahl,00:25:00,2025-06-19
-H,Leik Simon Aas,00:25:05,2025-06-19
-H,Kim Jakobsen,00:25:11,2025-06-19
-H,Henrik Lund Raagaard,00:25:20,2025-06-19
-H,Roar Henriksen,00:25:27,2025-06-19
-H,Raymond Handelsby,00:25:36,2025-06-19
-H,Tom Kristoffersen,00:25:52,2025-06-19
-D,Sarah Goplen,00:26:00,2025-06-19
-D,Annika Pinaas,00:26:14,2025-06-19
-H,Kenneth Ørseng,00:26:18,2025-06-19
-H,Trond Bjerk,00:26:32,2025-06-19
-H,Jan Tore Skaug,00:26:42,2025-06-19
-H,Aksel Günther,00:26:59,2025-06-19
-H,Espen Mathisen,00:27:21,2025-06-19
-H,Hans Olaf Kirkeng,00:27:41,2025-06-19
-D,Luna Lundestad-Kemi,00:27:58,2025-06-19
-H,Ola Baustad,00:28:21,2025-06-19
-H,Alexander Baustad,00:28:31,2025-06-19
-H,Alf-Martin Nygård,00:28:41,2025-06-19
-H,Carsten Hartig,00:28:55,2025-06-19
-H,Dag Sletner,00:28:55,2025-06-19
-H,Svein Bergerud,00:29:32,2025-06-19
-H,Arild Kraft,00:29:32,2025-06-19
-H,Trond Selsaas,00:30:21,2025-06-19
-H,Tom Sognlien,00:31:28,2025-06-19
-D,Wivian Johansen,00:32:09,2025-06-19
-H,Kristoffer Davidsen,00:32:50,2025-06-19
-H,Ole Petter Glückstad,00:34:33,2025-06-19
-H,Tom Wahlgren,00:34:34,2025-06-19
-H,Stig Andresen,00:36:25,2025-06-19
-D,Sissel Aamodt,00:36:44,2025-06-19
-H,Steinar Sævdal,00:39:06,2025-06-19
-H,Bjørn Åstorp,Deltatt,2025-06-19
-H,Kristoffer Rostad,00:19:08,2025-06-12
-H,Eirik Berget,00:19:11,2025-06-12
-H,Sindre Fredriksen,00:19:32,2025-06-12
-H,Stian Fredriksen,00:19:32,2025-06-12
-H,Marius Klavestad Hansen,00:19:49,2025-06-12
-H,Andreas Johansen Heier,00:20:53,2025-06-12
-H,Bjørge Nesengen,00:21:04,2025-06-12
-H,Christian Bakke,00:21:17,2025-06-12
-H,Simon Pinaas,00:21:34,2025-06-12
-H,Mahesh Munikar,00:21:47,2025-06-12
-H,Frank Syversen,00:22:24,2025-06-12
-H,Simen Standerholen,00:22:48,2025-06-12
-H,Frithjof Dalen,00:22:52,2025-06-12
-H,Roy Bangor,00:23:14,2025-06-12
-H,Ole Gunnar Jakobsen,00:23:07,2025-06-12
-H,Vidar Syverstad,00:23:07,2025-06-12
-H,Jonas Kristiansen,00:23:30,2025-06-12
-H,Lars Noreng,00:23:32,2025-06-12
-H,Ole Antonsen,00:23:46,2025-06-12
-H,Kristoffer Martinsen,00:23:50,2025-06-12
-H,Marius Skauen,00:23:55,2025-06-12
-H,Henning Klausen,00:23:57,2025-06-12
-H,Alexander Baustad,00:24:20,2025-06-12
-D,Birthe Lundestad Høier,00:24:20,2025-06-12
-H,Knut Willy Steen,00:24:20,2025-06-12
-H,Markus Glad Hauge,00:24:35,2025-06-12
-H,Frode Andersen,00:25:03,2025-06-12
-H,Roar Henriksen,00:25:03,2025-06-12
-H,Rune Tharaldsen,00:25:15,2025-06-12
-H,Alf-Martin Nygård,00:25:18,2025-06-12
-H,Viggo Dahl,00:25:23,2025-06-12
-H,Raymond Handelsby,00:25:40,2025-06-12
-H,Tom Kristoffersen,00:25:44,2025-06-12
-H,Terje Rød,00:26:05,2025-06-12
-H,Ole Nedrebø,00:26:09,2025-06-12
-D,Annika Pinaas,00:26:39,2025-06-12
-H,Kenneth Ørseng,00:26:44,2025-06-12
-H,Carsten Hartig,00:27:28,2025-06-12
-H,Jan Tore Skaug,00:27:59,2025-06-12
-H,Espen Mathisen,00:28:03,2025-06-12
-H,Wegard Glad Hauge,00:28:07,2025-06-12
-H,Bjørn Åstorp,00:28:35,2025-06-12
-H,Hans Olaf Kirkeng,00:28:43,2025-06-12
-D,Marianne Syverstad,00:28:54,2025-06-12
-H,Dag Sletner,00:29:20,2025-06-12
-H,Jørn Arild Jacobsen,00:29:24,2025-06-12
-H,Svein Bergerud,00:29:56,2025-06-12
-H,Sturla Graabræk,00:30:41,2025-06-12
-H,Arild Kraft,00:30:43,2025-06-12
-H,Henrik Evensen,00:31:05,2025-06-12
-H,Tom Sognlien,00:31:07,2025-06-12
-H,Kristoffer Davidsen,00:32:40,2025-06-12
-H,Ulf Minge,00:32:47,2025-06-12
-D,Wivian Johansen,00:32:55,2025-06-12
-H,Ole Petter Glückstad,00:33:44,2025-06-12
-D,Sissel Aamodt,00:35:35,2025-06-12
-D,Maren Liane,00:36:28,2025-06-12
-H,Pål Jakobsen,00:36:38,2025-06-12
-H,Steinar Sævdal,00:39:59,2025-06-12
-H,Tom Wahlgren,Deltatt,2025-06-12
-H,Sindre Fredriksen,00:16:59,2025-06-05
-H,Simon Pinaas,00:19:27,2025-06-05
-H,Marius Klavestad Hansen,00:20:13,2025-06-05
-H,Alexander Jensen,00:20:51,2025-06-05
-H,Magnus Skauge Oliversen,00:21:03,2025-06-05
-H,Christian Bakke,00:21:27,2025-06-05
-H,Håvard Crantz Lorentzen,00:21:34,2025-06-05
-H,Elias Pinaas,00:21:54,2025-06-05
-H,Rune Langnes,00:21:57,2025-06-05
-H,Ole Antonsen,00:23:00,2025-06-05
-H,Vidar Syverstad,00:23:01,2025-06-05
-H,Martin Minge,00:23:03,2025-06-05
-H,Nicklas Jørgensen,00:23:14,2025-06-05
-H,Ole Henrik Karlstad,00:23:31,2025-06-05
-H,Lars Noreng,00:23:53,2025-06-05
-H,Morten Bruheim,00:23:58,2025-06-05
-H,Glenn Olufsen,00:23:58,2025-06-05
-H,Roy Bangor,00:24:01,2025-06-05
-H,Kim Jakobsen,00:24:34,2025-06-05
-H,Frode Andersen,00:24:59,2025-06-05
-H,Jørn Erik Christiansen,00:25:00,2025-06-05
-H,Oddbjørn Granli,00:25:03,2025-06-05
-H,Viggo Dahl,00:25:21,2025-06-05
-H,Sverre Berggren,00:25:40,2025-06-05
-H,Kenneth Ørseng,00:25:47,2025-06-05
-H,Ole-Henrik Andersen,00:25:48,2025-06-05
-H,Roar Henriksen,00:26:00,2025-06-05
-H,Tom Kristoffersen,00:26:00,2025-06-05
-H,Raymond Handelsby,00:26:45,2025-06-05
-H,Ole Johnny Aasen,00:26:56,2025-06-05
-H,Eirik Minge,00:27:11,2025-06-05
-H,Kjetil Søberg,00:27:11,2025-06-05
-H,Knut Willy Steen,00:27:18,2025-06-05
-H,Alf-Martin Nygård,00:27:22,2025-06-05
-H,Stig Haglund,00:27:24,2025-06-05
-H,Arild Kraft,00:27:31,2025-06-05
-H,Ulf Minge,00:27:57,2025-06-05
-H,Hans Olaf Kirkeng,00:28:37,2025-06-05
-H,Bjørn Åstorp,00:28:43,2025-06-05
-H,Per Åge Pettersen,00:29:09,2025-06-05
-H,Jørgen Minge,00:29:31,2025-06-05
-H,Jørn Arild Jacobsen,00:29:38,2025-06-05
-H,Svein Bergerud,00:30:15,2025-06-05
-H,Morten Jensen,00:30:24,2025-06-05
-D,Mina Alette Johnsen,00:30:24,2025-06-05
-H,Sturla Graabræk,00:30:30,2025-06-05
-D,Eilen Olsen,00:31:28,2025-06-05
-H,Tom Sognlien,00:32:00,2025-06-05
-H,Tom Wahlgren,00:32:34,2025-06-05
-H,Martin Larsen,00:33:04,2025-06-05
-H,Kristoffer Davidsen,00:34:18,2025-06-05
-D,Sissel Aamodt,00:35:01,2025-06-05
-H,Torsten Blankenburg,00:37:30,2025-06-05
-H,Carsten Hartig,00:37:30,2025-06-05
-H,Steinar Sævdal,00:42:20,2025-06-05
-H,Fredrik Lium,00:18:09,2025-05-29
-H,René Nilsen,00:19:37,2025-05-29
-H,Stian Fredriksen,00:20:04,2025-05-29
-H,Johannes Lande,00:20:24,2025-05-29
-H,Marius Klavestad Hansen,00:20:25,2025-05-29
-H,Christian Bakke,00:21:21,2025-05-29
-H,Anders Johansen,00:21:26,2025-05-29
-D,Ida Lundestad,00:21:27,2025-05-29
-H,Magnus Skauge Oliversen,00:21:31,2025-05-29
-H,Knut Halvard Skinnarland,00:21:56,2025-05-29
-H,Nicklas Jørgensen,00:22:07,2025-05-29
-H,Glenn Klausen,00:22:08,2025-05-29
-D,Kine Pihl,00:22:13,2025-05-29
-H,Freddy Amundsen,00:22:32,2025-05-29
-H,Vidar Syverstad,00:22:43,2025-05-29
-D,Anne Maren Belsby,00:22:44,2025-05-29
-H,Ole Antonsen,00:22:47,2025-05-29
-H,Roy Bangor,00:22:53,2025-05-29
-H,Marius Skauen,00:23:06,2025-05-29
-H,Ole Gunnar Jakobsen,00:23:09,2025-05-29
-H,Glenn Olufsen,00:23:14,2025-05-29
-H,Jonas Kirkerød,00:23:33,2025-05-29
-H,Lars Ramsjø,00:23:51,2025-05-29
-H,Lars Noreng,00:23:57,2025-05-29
-H,Rikard NN,00:24:06,2025-05-29
-H,Olav Røyneberg,00:24:22,2025-05-29
-H,Frithjof Dalen,00:24:42,2025-05-29
-H,Roar Henriksen,00:24:45,2025-05-29
-H,Odin Borgen,00:24:58,2025-05-29
-D,Birthe Lundestad Høier,00:25:08,2025-05-29
-H,Lucas Lundestad-Kemi,00:25:08,2025-05-29
-H,Henrik Lund Raagaard,00:25:16,2025-05-29
-H,Tom Kristoffersen,00:25:18,2025-05-29
-H,Oddbjørn Granli,00:25:24,2025-05-29
-H,Viggo Dahl,00:25:26,2025-05-29
-H,Audun Grandahl,00:25:31,2025-05-29
-H,Terje Nyøygard,00:25:32,2025-05-29
-H,Bastian Botilsrud Andersen,00:26:08,2025-05-29
-H,Alf-Martin Nygård,00:26:23,2025-05-29
-H,Knut Willy Steen,00:26:23,2025-05-29
-H,Kenneth Ørseng,00:26:30,2025-05-29
-H,Eirik Minge,00:26:40,2025-05-29
-H,Kjetil Søberg,00:27:03,2025-05-29
-H,Vidar Lerdahl,00:27:19,2025-05-29
-H,Bjørn Åstorp,00:27:58,2025-05-29
-H,Kjetil Johansen,00:28:04,2025-05-29
-H,Henrik Evensen,00:28:05,2025-05-29
-H,Lasse Fjærestad,00:28:08,2025-05-29
-D,Linda Pinaas,00:28:08,2025-05-29
-H,Filip Solberg Grandahl,00:28:10,2025-05-29
-H,Ulf Minge,00:28:16,2025-05-29
-D,Marianne Syverstad,00:28:19,2025-05-29
-H,Johannes Solberg Grandahl,00:28:30,2025-05-29
-D,Marit Mjønes,00:28:30,2025-05-29
-D,Renate Olavesen,00:28:34,2025-05-29
-H,Hans Olaf Kirkeng,00:28:37,2025-05-29
-D,Mai Britt Solberg Grandahl,00:28:56,2025-05-29
-D,Eline Botilsrud Andersen,00:28:58,2025-05-29
-H,Brage Botilsrud Andersen,00:29:14,2025-05-29
-H,Arild Kraft,00:29:16,2025-05-29
-H,Svein Bergerud,00:29:28,2025-05-29
-H,Tom Sognlien,00:31:31,2025-05-29
-D,Wivian Johansen,00:31:46,2025-05-29
-H,Anders Farholm,00:33:29,2025-05-29
-D,Nora Bråthe Farholm,00:33:29,2025-05-29
-D,Amina Rubasha,00:33:29,2025-05-29
-H,Kristoffer Davidsen,00:33:51,2025-05-29
-H,Svein Gunnar Hansen,00:35:22,2025-05-29
-D,Sissel Aamodt,00:35:35,2025-05-29
-D,May-Britt Jørgensen,00:37:39,2025-05-29
-H,Christopher Thøgersen,00:37:39,2025-05-29
-D,Yaowaluk Wantasaeng,00:38:35,2025-05-29
-H,Emil Helgesen Berg,00:20:26,2025-05-22
-H,Elias Pinaas,00:21:17,2025-05-22
-H,Ola Tombre Olsen,00:21:18,2025-05-22
-H,Simon Pinaas,00:21:21,2025-05-22
-H,Tommy Olsen,00:21:57,2025-05-22
-H,Nils Kro,00:22:04,2025-05-22
-H,Anders Skaar,00:22:11,2025-05-22
-H,Christian Bakke,00:22:13,2025-05-22
-H,Mats Fjærvik,00:22:16,2025-05-22
-H,Rune Langnes,00:22:18,2025-05-22
-H,Vidar Syverstad,00:22:18,2025-05-22
-H,Frank Syversen,00:22:25,2025-05-22
-H,Markus Glad Hauge,00:22:51,2025-05-22
-H,Peter Magnus Prestesæter,00:22:52,2025-05-22
-H,Emil Halvorsen,00:23:01,2025-05-22
-H,Nicklas Jørgensen,00:23:05,2025-05-22
-H,Ole Henrik Karlstad,00:23:07,2025-05-22
-H,Ole Gunnar Jakobsen,00:23:08,2025-05-22
-H,Lars Ramsjø,00:23:14,2025-05-22
-H,Per Richard Pettersen,00:23:18,2025-05-22
-H,Dagfinn Mo,00:23:20,2025-05-22
-H,Roy Bangor,00:23:22,2025-05-22
-H,Gunde Myrdrag,00:23:36,2025-05-22
-H,Glenn Olufsen,00:23:43,2025-05-22
-H,Henning Klausen,00:23:51,2025-05-22
-H,Ole Antonsen,00:23:53,2025-05-22
-H,Lars Noreng,00:24:20,2025-05-22
-H,Olav Røyneberg,00:24:42,2025-05-22
-H,Odin Borgen,00:24:50,2025-05-22
-H,Alexander Baustad,00:25:02,2025-05-22
-H,Knut Willy Steen,00:25:02,2025-05-22
-H,Frode Andersen,00:25:17,2025-05-22
-H,Jørn Erik Christiansen,00:25:33,2025-05-22
-H,Kim Jakobsen,00:25:35,2025-05-22
-H,Kenneth Ørseng,00:25:46,2025-05-22
-H,Sven Simonsen,00:25:51,2025-05-22
-H,Viggo Dahl,00:25:52,2025-05-22
-H,Bjørn Erik Bratli,00:26:01,2025-05-22
-H,Torger Ulstein,00:26:01,2025-05-22
-H,Frithjof Dalen,00:26:25,2025-05-22
-H,Terje Nyøygard,00:26:38,2025-05-22
-H,Rolf Erik Halvorsen,00:26:46,2025-05-22
-H,Vidar Lerdahl,00:26:47,2025-05-22
-H,Anders Farholm,00:26:48,2025-05-22
-D,Inthiwa Sangphet Hansen,00:27:22,2025-05-22
-H,Jonas Kirkerød,00:27:46,2025-05-22
-H,Alf-Martin Nygård,00:27:46,2025-05-22
-D,Linda Pinaas,00:27:48,2025-05-22
-H,Wegard Glad Hauge,00:27:52,2025-05-22
-H,Carsten Hartig,00:27:53,2025-05-22
-H,Tom Kristoffersen,00:28:04,2025-05-22
-H,Eirik Minge,00:28:04,2025-05-22
-D,Duangrudee Emrat,00:28:26,2025-05-22
-H,William Nilsen,00:28:53,2025-05-22
-H,Hans Olaf Kirkeng,00:29:03,2025-05-22
-D,Marianne Syverstad,00:29:14,2025-05-22
-H,Jørn Arild Jacobsen,00:29:30,2025-05-22
-H,Arild Kraft,00:29:33,2025-05-22
-D,Karoline Moen Pedersen,00:29:34,2025-05-22
-H,Svein Bergerud,00:29:52,2025-05-22
-H,Martin Larsen,00:31:27,2025-05-22
-D,Wivian Johansen,00:31:54,2025-05-22
-H,Tom Sognlien,00:32:12,2025-05-22
-H,Tom Wahlgren,00:33:04,2025-05-22
-D,Sissel Aamodt,00:35:01,2025-05-22
-H,Steinar Sævdal,00:38:16,2025-05-22
-H,Håvard Wedege,00:18:20,2025-05-15
-H,Lars Buckholm,00:19:36,2025-05-15
-H,Simon Pinaas,00:20:03,2025-05-15
-H,Ole Martin Johansen,00:20:27,2025-05-15
-H,Ole Herman Weel,00:20:47,2025-05-15
-H,Mahesh Munikar,00:21:34,2025-05-15
-H,Alexander Braseth Halle,00:21:36,2025-05-15
-D,Ida Lundestad,00:21:43,2025-05-15
-H,Vidar Syverstad,00:22:11,2025-05-15
-H,Jon Sigurd Brenne,00:22:22,2025-05-15
-H,Ozzy Gurung,00:22:46,2025-05-15
-H,Per Ove Haugland,00:22:46,2025-05-15
-H,Alexander Baustad,00:23:02,2025-05-15
-H,Knut Willy Steen,00:23:02,2025-05-15
-H,Lars Noreng,00:23:06,2025-05-15
-H,Frank Syversen,00:23:06,2025-05-15
-H,Ole Gunnar Jakobsen,00:23:12,2025-05-15
-H,Rune Langnes,00:23:16,2025-05-15
-H,Lars Ramsjø,00:23:20,2025-05-15
-H,Glenn Olufsen,00:23:32,2025-05-15
-H,Ole Henrik Karlstad,00:23:45,2025-05-15
-H,Ole Antonsen,00:23:48,2025-05-15
-H,Roger Nilsen,00:23:55,2025-05-15
-H,Magnus Thorsen,00:24:21,2025-05-15
-H,Gunde Myrdrag,00:24:30,2025-05-15
-H,Henning Klausen,00:24:39,2025-05-15
-H,Olav Røyneberg,00:24:52,2025-05-15
-H,Frode Andersen,00:25:15,2025-05-15
-H,Henrik Bones,00:25:23,2025-05-15
-D,Mari Bones,00:25:23,2025-05-15
-H,Odin Borgen,00:25:25,2025-05-15
-H,Stein Osen,00:25:28,2025-05-15
-H,Oddbjørn Granli,00:25:29,2025-05-15
-H,Tom Kristoffersen,00:25:47,2025-05-15
-H,Roar Henriksen,00:25:54,2025-05-15
-H,Terje Nyøygard,00:26:00,2025-05-15
-D,Hilde Nesengen,00:26:31,2025-05-15
-H,Bjørge Nesengen,00:26:32,2025-05-15
-H,Stig Haglund,00:26:33,2025-05-15
-H,Viggo Dahl,00:26:40,2025-05-15
-H,Raymond Handelsby,00:26:46,2025-05-15
-H,Kristoffer Martinsen,00:27:01,2025-05-15
-H,Eirik Minge,00:27:05,2025-05-15
-H,Ole-Henrik Andersen,00:27:14,2025-05-15
-H,Kjetil Søberg,00:27:23,2025-05-15
-H,Jan Tore Skaug,00:27:27,2025-05-15
-D,Annika Pinaas,00:27:28,2025-05-15
-H,Kenneth Ørseng,00:27:28,2025-05-15
-D,Anette Bratbakken,00:27:40,2025-05-15
-H,Vidar Lerdahl,00:28:03,2025-05-15
-D,Helene Ileby,00:28:23,2025-05-15
-D,Linda Pinaas,00:28:23,2025-05-15
-H,Hans Olaf Kirkeng,00:28:32,2025-05-15
-D,Marianne Syverstad,00:28:58,2025-05-15
-H,Arild Kraft,00:29:51,2025-05-15
-H,Ulf Minge,00:29:51,2025-05-15
-H,Svein Bergerud,00:29:56,2025-05-15
-H,Henrik Evensen,00:31:09,2025-05-15
-H,Karl Skimten,00:32:08,2025-05-15
-H,Jørn Arild Jacobsen,00:32:14,2025-05-15
-D,Eilen Olsen,00:32:14,2025-05-15
-H,Tom Sognlien,00:32:36,2025-05-15
-D,Wivian Johansen,00:32:41,2025-05-15
-H,Svein Gunnar Hansen,00:33:41,2025-05-15
-H,Tom Wahlgren,00:34:18,2025-05-15
-H,Stig Andresen,00:36:19,2025-05-15
-D,Stine Groufh-Jacobsen,00:36:22,2025-05-15
-D,Emilie Moe,00:36:22,2025-05-15
-D,Sissel Aamodt,00:36:22,2025-05-15
-H,Steinar Sævdal,00:37:58,2025-05-15
-D,Katy Titlestad,00:38:38,2025-05-15
-H,Alexander Jensen,Deltatt,2025-05-15
-H,Jonas Kirkerød,Deltatt,2025-05-15
-H,Lars Martinsen,Deltatt,2025-05-15
-H,Daniel Skjelhaugen,00:19:00,2025-05-08
-H,Simon Pinaas,00:20:20,2025-05-08
-H,Ole Anton Øby,00:20:37,2025-05-08
-H,Alexander Jensen,00:20:44,2025-05-08
-H,Håvard Crantz Lorentzen,00:20:49,2025-05-08
-H,Mahesh Munikar,00:20:54,2025-05-08
-H,Bjørn Arild Smaaberg,00:21:03,2025-05-08
-H,Christian Bakke,00:21:06,2025-05-08
-H,Martin Helgesen,00:21:16,2025-05-08
-D,Ida Lundestad,00:21:52,2025-05-08
-H,Robin Bårdli,00:22:00,2025-05-08
-H,Elias Pinaas,00:22:03,2025-05-08
-H,Rune Langnes,00:22:05,2025-05-08
-H,Vidar Syverstad,00:22:13,2025-05-08
-H,Alexander Baustad,00:22:43,2025-05-08
-H,Knut Willy Steen,00:22:43,2025-05-08
-H,Henrik Alvær,00:22:47,2025-05-08
-H,Lars Noreng,00:22:54,2025-05-08
-H,Frank Syversen,00:22:55,2025-05-08
-H,Ole Gunnar Jakobsen,00:23:15,2025-05-08
-H,Roger Nilsen,00:23:16,2025-05-08
-H,Roy Bangor,00:23:24,2025-05-08
-H,Jørgen Hansen,00:23:30,2025-05-08
-H,Ole Antonsen,00:23:56,2025-05-08
-H,Lars Ramsjø,00:24:02,2025-05-08
-H,Frithjof Dalen,00:24:10,2025-05-08
-H,Ole Henrik Karlstad,00:24:10,2025-05-08
-H,Ketil Arntsen,00:24:14,2025-05-08
-H,Jon-Erik Gretland,00:24:15,2025-05-08
-H,Stein Osen,00:24:29,2025-05-08
-H,Henning Klausen,00:24:46,2025-05-08
-H,Odin Borgen,00:24:55,2025-05-08
-H,Jon Øystein Rolstad,00:24:57,2025-05-08
-H,Kim Jakobsen,00:25:24,2025-05-08
-H,Terje Rød,00:25:30,2025-05-08
-H,Terje Nyøygard,00:25:43,2025-05-08
-H,Jørn Erik Christiansen,00:25:52,2025-05-08
-H,Carsten Hartig,00:25:58,2025-05-08
-H,Roar Henriksen,00:25:58,2025-05-08
-H,Sven Simonsen,00:26:49,2025-05-08
-H,Tom Kristoffersen,00:26:51,2025-05-08
-H,Kjetil Søberg,00:26:57,2025-05-08
-H,Sverre Berggren,00:27:00,2025-05-08
-H,Anders Farholm,00:27:37,2025-05-08
-H,Viggo Dahl,00:27:47,2025-05-08
-H,Henrik Evensen,00:27:50,2025-05-08
-H,Kurt-Ove Wilhelmsen,00:28:04,2025-05-08
-H,Arild Kraft,00:28:09,2025-05-08
-H,Dag Sletner,00:28:16,2025-05-08
-H,Karl Skimten,00:28:26,2025-05-08
-D,Inthiwa Sangphet Hansen,00:28:27,2025-05-08
-D,Anette Bratbakken,00:28:28,2025-05-08
-H,Hans Olaf Kirkeng,00:28:32,2025-05-08
-D,Linda Pinaas,00:28:40,2025-05-08
-D,Duangrudee Emrat,00:28:50,2025-05-08
-H,Kristoffer Kirkerød,00:29:00,2025-05-08
-H,Petter Johan Sandevand Crantz,00:29:14,2025-05-08
-D,Marianne Syverstad,00:29:36,2025-05-08
-H,Bjørn Åstorp,00:30:08,2025-05-08
-H,Trond Selsaas,00:30:21,2025-05-08
-H,Svein Bergerud,00:30:30,2025-05-08
-H,Jesper Søstrand,00:30:39,2025-05-08
-H,Ulf Minge,00:30:45,2025-05-08
-D,Camilla Baustad,00:31:20,2025-05-08
-H,Ole Petter Glückstad,00:31:58,2025-05-08
-H,Martin Larsen,00:32:30,2025-05-08
-D,Emilie Moe,00:32:34,2025-05-08
-H,Kristoffer Moe,00:32:35,2025-05-08
-H,Svein Gunnar Hansen,00:33:16,2025-05-08
-H,Tom Sognlien,00:33:34,2025-05-08
-D,Victoria Ellingsen,00:34:59,2025-05-08
-D,Sissel Aamodt,00:35:25,2025-05-08
-D,Wivian Johansen,00:35:28,2025-05-08
-D,Monica Døviken,00:36:03,2025-05-08
-D,Ingvild Østby,00:36:33,2025-05-08
-D,Susanne Tjerbo,00:36:34,2025-05-08
-H,Pål Jakobsen,00:37:03,2025-05-08
-H,Steinar Sævdal,00:38:53,2025-05-08
-D,Katy Titlestad,00:38:53,2025-05-08
-H,Kristoffer Rostad,00:18:48,2025-05-01
-H,Simon Pinaas,00:20:03,2025-05-01
-H,Ole Anton Øby,00:20:54,2025-05-01
-H,Anders Johansen,00:21:12,2025-05-01
-H,Alexander Baustad,00:21:31,2025-05-01
-H,Christian Bakke,00:21:43,2025-05-01
-H,Daniel Oliversen,00:21:53,2025-05-01
-H,Ola Tombre Olsen,00:22:14,2025-05-01
-H,Vidar Syverstad,00:22:40,2025-05-01
-H,Pål Vikesland,00:22:45,2025-05-01
-H,Stian Aasberg Johansen,00:22:48,2025-05-01
-H,Elias Pinaas,00:22:50,2025-05-01
-H,Lars Noreng,00:22:54,2025-05-01
-H,Roy Bangor,00:23:11,2025-05-01
-H,Henrik Alvær,00:23:23,2025-05-01
-H,Magnus Thorsen,00:23:29,2025-05-01
-H,Frank Syversen,00:23:31,2025-05-01
-H,Ole Gunnar Jakobsen,00:23:37,2025-05-01
-H,Ole Henrik Karlstad,00:23:40,2025-05-01
-H,Ole Antonsen,00:23:42,2025-05-01
-H,Kristian Tran,00:23:43,2025-05-01
-H,Glenn Olufsen,00:23:53,2025-05-01
-H,Lars Ramsjø,00:24:00,2025-05-01
-H,Jørgen Minge,00:24:41,2025-05-01
-H,Roar Henriksen,00:24:44,2025-05-01
-H,Tom Kristoffersen,00:24:47,2025-05-01
-H,Knut Willy Steen,00:24:50,2025-05-01
-H,Stein Osen,00:25:13,2025-05-01
-H,Eirik Minge,00:25:19,2025-05-01
-H,Olav Røyneberg,00:25:31,2025-05-01
-H,Ole Johnny Aasen,00:25:40,2025-05-01
-H,Odin Borgen,00:25:49,2025-05-01
-H,Oddbjørn Granli,00:25:53,2025-05-01
-H,Kim Jakobsen,00:26:36,2025-05-01
-H,Terje Larsen,00:26:46,2025-05-01
-H,Alf-Martin Nygård,00:26:53,2025-05-01
-H,Ole Lystad,00:26:55,2025-05-01
-D,Sarah Goplen,00:26:57,2025-05-01
-H,Bjørn Erik Bratli,00:27:01,2025-05-01
-D,Annika Pinaas,00:27:08,2025-05-01
-H,Olexandr Danylov,00:27:12,2025-05-01
-H,Viggo Dahl,00:27:15,2025-05-01
-H,Kjetil Søberg,00:27:29,2025-05-01
-H,Kjetil Johansen,00:28:04,2025-05-01
-H,Andreas Lervik,00:28:13,2025-05-01
-H,William Nilsen,00:28:13,2025-05-01
-H,Lars Markus Ramsjø,00:28:23,2025-05-01
-H,Vidar Lerdahl,00:28:25,2025-05-01
-H,Jan Tore Skaug,00:28:35,2025-05-01
-D,Linda Pinaas,00:28:36,2025-05-01
-H,Henrik Evensen,00:28:40,2025-05-01
-H,Hans Olaf Kirkeng,00:28:47,2025-05-01
-H,Dag Sletner,00:28:47,2025-05-01
-H,Bjørn Åstorp,00:29:18,2025-05-01
-H,Kristoffer Kirkerød,00:29:31,2025-05-01
-D,Cathrine Tombre Olsen,00:30:19,2025-05-01
-D,Marianne Syverstad,00:30:35,2025-05-01
-H,Lars Martinsen,00:30:44,2025-05-01
-H,Jørn Arild Jacobsen,00:31:09,2025-05-01
-H,Tom Sognlien,00:32:00,2025-05-01
-H,Ole Petter Glückstad,00:32:17,2025-05-01
-H,Arild Kraft,00:32:17,2025-05-01
-D,Wivian Johansen,00:32:32,2025-05-01
-H,Svein Bergerud,00:32:33,2025-05-01
-H,Anders Farholm,00:33:13,2025-05-01
-D,Nora Bråthe Farholm,00:33:13,2025-05-01
-D,Emilie Moe,00:33:18,2025-05-01
-H,Kristoffer Moe,00:33:18,2025-05-01
-H,Karl Skimten,00:33:18,2025-05-01
-H,Svein Gunnar Hansen,00:33:51,2025-05-01
-H,Tom Wahlgren,00:34:34,2025-05-01
-H,Stig Andresen,00:34:41,2025-05-01
-D,Cathrine Nilsen,00:34:54,2025-05-01
-D,Sissel Aamodt,00:35:10,2025-05-01
-D,Victoria Ellingsen,00:35:22,2025-05-01
-H,Tor Davidsen,Deltatt,2025-05-01
-H,Håvard Wedege,00:18:17,2025-04-24
-H,Eirik Berget,00:18:48,2025-04-24
-H,Ole Herman Weel,00:20:16,2025-04-24
-H,Simon Pinaas,00:20:42,2025-04-24
-H,Martin Kulblik,00:20:45,2025-04-24
-H,Bjørn Arild Smaaberg,00:20:48,2025-04-24
-H,Håvard Crantz Lorentzen,00:21:17,2025-04-24
-H,Martin Helgesen,00:21:24,2025-04-24
-H,Anders Johansen,00:21:28,2025-04-24
-H,Daniel Oliversen,00:22:21,2025-04-24
-H,Thomas Andresen,00:22:22,2025-04-24
-H,Glenn Klausen,00:22:28,2025-04-24
-H,Vidar Syverstad,00:22:35,2025-04-24
-H,Dagfinn Mo,00:22:44,2025-04-24
-H,Magnus Thorsen,00:22:47,2025-04-24
-H,Morten Bruheim,00:23:12,2025-04-24
-H,Lars Noreng,00:23:18,2025-04-24
-H,Glenn Olufsen,00:23:25,2025-04-24
-H,Marius Skauen,00:24:12,2025-04-24
-H,Emil Helgesen Berg,00:24:15,2025-04-24
-H,Frank Syversen,00:24:17,2025-04-24
-H,Roy Bangor,00:24:25,2025-04-24
-H,Ole Martin Sukke,00:24:28,2025-04-24
-H,Ketil Arntsen,00:24:32,2025-04-24
-H,Henning Klausen,00:24:47,2025-04-24
-H,Roar Henriksen,00:25:03,2025-04-24
-H,Ole Nedrebø,00:25:03,2025-04-24
-H,Jon Vegard Syversen,00:25:09,2025-04-24
-H,Eirik Minge,00:25:17,2025-04-24
-H,Tom Kristoffersen,00:25:25,2025-04-24
-H,Odin Borgen,00:25:27,2025-04-24
-H,Sverre Berggren,00:25:28,2025-04-24
-H,Theo Helgesen Berg,00:25:33,2025-04-24
-H,Terje Nyøygard,00:25:46,2025-04-24
-H,Raymond Handelsby,00:25:50,2025-04-24
-H,Carsten Hartig,00:25:55,2025-04-24
-H,Alf-Martin Nygård,00:25:56,2025-04-24
-H,Frode Andersen,00:25:57,2025-04-24
-H,Frithjof Dalen,00:26:20,2025-04-24
-D,Helene Ileby,00:26:54,2025-04-24
-H,Rolf Erik Halvorsen,00:27:17,2025-04-24
-H,Bjørn Erik Bratli,00:27:28,2025-04-24
-H,Viggo Dahl,00:27:28,2025-04-24
-H,Andreas Lervik,00:27:38,2025-04-24
-H,Jan Tore Skaug,00:28:02,2025-04-24
-H,Kjetil Johansen,00:28:34,2025-04-24
-D,Hilde Buflod,00:28:46,2025-04-24
-D,Marianne Syverstad,00:28:52,2025-04-24
-H,Hans Olaf Kirkeng,00:28:57,2025-04-24
-H,Bjørn Åstorp,00:29:02,2025-04-24
-H,Dag Sletner,00:29:10,2025-04-24
-D,Ida Aandahl,00:29:21,2025-04-24
-H,William Nilsen,00:29:43,2025-04-24
-D,Linda Pinaas,00:30:07,2025-04-24
-H,Lars Ramsjø,00:30:07,2025-04-24
-H,Kristoffer Kirkerød,00:30:31,2025-04-24
-H,Jesper Søstrand,00:30:34,2025-04-24
-H,Terje Larsen,00:30:39,2025-04-24
-D,Cathrine Sembom,00:30:39,2025-04-24
-H,Svein Bergerud,00:32:14,2025-04-24
-D,Wivian Johansen,00:32:14,2025-04-24
-H,Arild Kraft,00:32:51,2025-04-24
-H,Tom Sognlien,00:33:38,2025-04-24
-D,Emma Åkerberg,00:34:10,2025-04-24
-H,Martin Larsen,00:34:11,2025-04-24
-D,Julie Raknerud,00:34:17,2025-04-24
-H,Svein Gunnar Hansen,00:34:50,2025-04-24
-H,Stig Andresen,00:35:09,2025-04-24
-D,Cathrine Nilsen,00:36:28,2025-04-24
-D,Sissel Aamodt,00:36:36,2025-04-24
-H,Pål Jakobsen,00:38:45,2025-04-24
-H,Steinar Sævdal,00:38:45,2025-04-24
-H,Fredrik Lium,00:18:12,2025-04-17
-H,Elias Røyneberg,00:18:45,2025-04-17
-H,Eirik Berget,00:19:15,2025-04-17
-H,Karl Erik Overn,00:19:27,2025-04-17
-H,Daniel Skjelhaugen,00:19:54,2025-04-17
-H,Daniel Røyneberg,00:20:21,2025-04-17
-H,Rino Slåen,00:20:48,2025-04-17
-H,Alexander Jensen,00:21:08,2025-04-17
-H,Anders Johansen,00:21:36,2025-04-17
-H,Stian Aasberg Johansen,00:21:40,2025-04-17
-D,Malin Nyøygard Dilling,00:22:13,2025-04-17
-H,Cato Rønningen,00:22:42,2025-04-17
-H,Vidar Syverstad,00:22:47,2025-04-17
-H,Morten Bruheim,00:23:03,2025-04-17
-H,Magnus Thorsen,00:23:11,2025-04-17
-H,Lars Noreng,00:23:17,2025-04-17
-H,Magnus Bau,00:23:35,2025-04-17
-D,Sara Røyneberg,00:23:41,2025-04-17
-H,Kai Berg,00:23:47,2025-04-17
-H,Halim Osmani,00:24:05,2025-04-17
-H,Olav Røyneberg,00:24:25,2025-04-17
-H,Lars Ramsjø,00:24:40,2025-04-17
-H,Henrik Lund Raagaard,00:24:46,2025-04-17
-H,Frithjof Dalen,00:24:53,2025-04-17
-H,Jon-Erik Gretland,00:24:56,2025-04-17
-H,Tom Kristoffersen,00:24:57,2025-04-17
-H,Alf-Martin Nygård,00:25:03,2025-04-17
-H,Roar Henriksen,00:25:11,2025-04-17
-H,Roy Bangor,00:25:19,2025-04-17
-H,Jon Øystein Rolstad,00:25:19,2025-04-17
-H,Ronny Borgan,00:25:32,2025-04-17
-H,Ole-Henrik Andersen,00:25:52,2025-04-17
-H,Terje Nyøygard,00:25:57,2025-04-17
-H,Håkon Aleksander Vik,00:26:10,2025-04-17
-H,Kenneth Ørseng,00:26:16,2025-04-17
-H,Stein Olsen,00:26:25,2025-04-17
-H,Ole Johnny Aasen,00:26:27,2025-04-17
-H,Bjørn Erik Bratli,00:27:17,2025-04-17
-H,Kjetil Søberg,00:27:25,2025-04-17
-H,Raymond Handelsby,00:27:39,2025-04-17
-H,Adrian Sagplass,00:27:45,2025-04-17
-H,Viggo Dahl,00:28:08,2025-04-17
-H,Pål Briancourt,00:28:25,2025-04-17
-H,Vidar Lerdahl,00:28:29,2025-04-17
-H,Terje Kildebo,00:28:33,2025-04-17
-H,Knut Willy Steen,00:28:36,2025-04-17
-H,Bjørn Åstorp,00:28:39,2025-04-17
-H,Christer Fensbekk,00:29:08,2025-04-17
-H,William Nilsen,00:29:20,2025-04-17
-D,Duangrudee Emrat,00:29:27,2025-04-17
-H,Natanael Røyneberg,00:29:34,2025-04-17
-H,Jan Tore Skaug,00:29:38,2025-04-17
-D,Anette Bratbakken,00:30:05,2025-04-17
-H,Kristoffer Kirkerød,00:30:21,2025-04-17
-H,Trond Selsaas,00:30:23,2025-04-17
-H,Arild Kraft,00:31:11,2025-04-17
-D,Linda Pinaas,00:31:17,2025-04-17
-D,Anne Kjersti Rønningen,00:31:23,2025-04-17
-H,Ulf Minge,00:31:43,2025-04-17
-D,Hilde Eriksen,00:31:49,2025-04-17
-H,Adam Fensbekk,00:31:52,2025-04-17
-D,Nina Fensbekk,00:32:09,2025-04-17
-H,Ole Petter Glückstad,00:32:09,2025-04-17
-H,Svein Bergerud,00:32:33,2025-04-17
-D,Wivian Johansen,00:32:38,2025-04-17
-H,Tom Wahlgren,00:33:14,2025-04-17
-H,Tom Sognlien,00:33:58,2025-04-17
-H,Anders Farholm,00:40:22,2025-04-17
-D,Nora Bråthe Farholm,00:40:22,2025-04-17
-D,Amina Rubasha,00:40:22,2025-04-17
-H,Evon Munroe,Deltatt,2025-04-17
-D,Isabella Munroe,Deltatt,2025-04-17
-H,Ozzy Gurung,00:18:12,2025-04-10
-H,Finn Markus Johansen,00:19:05,2025-04-10
-H,Simon Pinaas,00:19:11,2025-04-10
-H,Kristoffer Rostad,00:19:28,2025-04-10
-D,Johanne Wiig,00:19:42,2025-04-10
-H,Stian Paulsen,00:20:10,2025-04-10
-H,Andreas Birkeland,00:20:28,2025-04-10
-H,Lucas Lundestad-Kemi,00:20:41,2025-04-10
-H,Martin Kulblik,00:20:48,2025-04-10
-H,Mahesh Munikar,00:20:57,2025-04-10
-H,Anders Johansen,00:21:20,2025-04-10
-H,Bjørn Arild Smaaberg,00:21:26,2025-04-10
-H,Christian Bakke,00:21:40,2025-04-10
-H,Thomas Andresen,00:22:02,2025-04-10
-D,Ida Lundestad,00:22:04,2025-04-10
-D,Julie Solvin Borgmo,00:22:27,2025-04-10
-H,Morten Bruheim,00:22:50,2025-04-10
-D,My Linnea Ramsjø,00:22:54,2025-04-10
-D,Ingvild Skorpen,00:22:54,2025-04-10
-H,Theodor Gøthesen,00:23:12,2025-04-10
-H,Lars Noreng,00:23:18,2025-04-10
-H,Magnus Bau,00:23:22,2025-04-10
-H,Glenn Olufsen,00:23:27,2025-04-10
-H,Lars Ramsjø,00:23:41,2025-04-10
-H,Alexander Baustad,00:23:45,2025-04-10
-H,Roger Nilsen,00:23:46,2025-04-10
-H,Knut Willy Steen,00:23:54,2025-04-10
-H,Kristoffer Moe,00:24:05,2025-04-10
-H,Anders Lundblad,00:24:24,2025-04-10
-H,Stein Osen,00:24:48,2025-04-10
-H,Sverre Berggren,00:24:58,2025-04-10
-H,Ketil Arntsen,00:25:05,2025-04-10
-H,Marius Skauen,00:25:11,2025-04-10
-H,Frank Syversen,00:25:13,2025-04-10
-H,Nicklas Jørgensen,00:25:15,2025-04-10
-H,Ole Nedrebø,00:25:15,2025-04-10
-H,Roar Henriksen,00:25:16,2025-04-10
-H,Tom Kristoffersen,00:25:25,2025-04-10
-H,Tomas Mathiesen,00:25:33,2025-04-10
-H,Odin Borgen,00:25:46,2025-04-10
-H,Alf-Martin Nygård,00:25:54,2025-04-10
-H,Stig Haglund,00:25:57,2025-04-10
-H,Ole Johnny Aasen,00:25:58,2025-04-10
-H,Kim Haglund,00:26:00,2025-04-10
-H,Kai Berg,00:26:12,2025-04-10
-H,Jarle Jørgensen,00:26:12,2025-04-10
-H,Kenneth Ørseng,00:26:20,2025-04-10
-H,Ole-Henrik Andersen,00:26:26,2025-04-10
-H,Terje Rød,00:26:35,2025-04-10
-H,Raymond Handelsby,00:26:52,2025-04-10
-H,Frithjof Dalen,00:26:55,2025-04-10
-H,Terje Nyøygard,00:27:07,2025-04-10
-H,Yurii Bielov,00:27:17,2025-04-10
-H,Kjetil Søberg,00:27:34,2025-04-10
-H,Bjørn Erik Bratli,00:27:48,2025-04-10
-H,Carsten Hartig,00:27:51,2025-04-10
-H,Lars Markus Ramsjø,00:28:47,2025-04-10
-H,Hans Olaf Kirkeng,00:28:56,2025-04-10
-H,Arild Kraft,00:28:56,2025-04-10
-H,Trond Bjerk,00:29:08,2025-04-10
-D,Annika Pinaas,00:29:08,2025-04-10
-D,Duangrudee Emrat,00:29:20,2025-04-10
-D,Marianne Syverstad,00:29:32,2025-04-10
-H,Willam Nilsen,00:29:44,2025-04-10
-H,Dag Sletner,00:29:52,2025-04-10
-D,Eline Rildå Bjørge,00:30:16,2025-04-10
-D,Linda Pinaas,00:30:58,2025-04-10
-H,Kristoffer Kirkerød,00:31:20,2025-04-10
-H,Stein Arild Finstad,00:31:39,2025-04-10
-H,Jesper Søstrand,00:31:42,2025-04-10
-H,Martin Larsen,00:32:20,2025-04-10
-H,Ole Petter Glückstad,00:32:22,2025-04-10
-D,Wivian Johansen,00:32:28,2025-04-10
-H,Svein Bergerud,00:32:42,2025-04-10
-D,Hilde Eriksen,00:33:14,2025-04-10
-H,Tom Sognlien,00:34:04,2025-04-10
-H,Svein Gunnar Hansen,00:34:11,2025-04-10
-D,Mette Finstad,00:35:02,2025-04-10
-H,Tom Wahlgren,00:35:14,2025-04-10
-H,Steinar Sævdal,00:38:30,2025-04-10
+Gender;Name;Time;Date
+H;Even Storeheier;17:02;09/07/26
+H;Marius Klavestad Hansen;18:38;09/07/26
+H;Theodor Holter;18:43;09/07/26
+H;Daniel Skjelhaugen;18:44;09/07/26
+H;Kristoffer Rostad;19:08;09/07/26
+H;Elias Røyneberg;19:16;09/07/26
+H;Simon Pinaas;19:20;09/07/26
+H;Ole Herman Weel;21:08;09/07/26
+H;Ola Fosse Mathisen;21:30;09/07/26
+H;Jon Pedersen;21:51;09/07/26
+H;Ulf Roger Olsen;22:00;09/07/26
+H;Vidar Syverstad;22:12;09/07/26
+H;Tommy Heggenes;22:44;09/07/26
+H;Øistein Fosse Mathisen;22:45;09/07/26
+H;Aksel Berg Svendsen;22:50;09/07/26
+H;Roger Nilsen;22:54;09/07/26
+H;Gustav Bø Gurandsrud;23:43;09/07/26
+H;Magnus Fosse Mathisen;23:45;09/07/26
+H;Odin Wolleberg;24:15;09/07/26
+H;Raymond Handelsby;24:36;09/07/26
+H;Olav Røyneberg;24:37;09/07/26
+H;Arnt Andersrød;24:45;09/07/26
+H;Roar Henriksen;24:49;09/07/26
+H;Sanel Mecan;25:09;09/07/26
+D;Birthe Lundestad Høier;25:12;09/07/26
+H;Jan Tore Skaug;25:44;09/07/26
+H;Knut Willy Steen;25:44;09/07/26
+H;Frode Andersen;26:33;09/07/26
+H;Kenneth Ørseng;27:18;09/07/26
+H;Vegard Knutsen;27:19;09/07/26
+H;Henrik Evensen;27:31;09/07/26
+H;Ulf Minge;27:43;09/07/26
+H;Eirik Gurandsrud;28:03;09/07/26
+H;Lars Bø Gurandsrud;28:03;09/07/26
+H;Hans Olaf Kirkeng;28:09;09/07/26
+H;Eirik Minge;28:26;09/07/26
+D;Annika Pinaas;28:30;09/07/26
+H;Bjørn Åstorp;28:35;09/07/26
+H;Ole Johnny Aasen;29:05;09/07/26
+H;Lars Markus Ramsjø;29:14;09/07/26
+H;Lars Ramsjø;29:15;09/07/26
+D;Helene Ileby;29:29;09/07/26
+H;Kjetil Johansen;29:40;09/07/26
+D;Martine Strand Thøgersen;29:40;09/07/26
+H;Oddbjørn Granli;29:40;09/07/26
+H;Jim Andersen;30:04;09/07/26
+H;Svein Bergerud;31:23;09/07/26
+H;Henrik Weel;22:15;09/07/26
+H;Morgan Lind;31:56;09/07/26
+H;Tom Wahlgren;34:22;09/07/26
+H;Arild Kraft;35:28;09/07/26
+H;Ole Petter Glückstad;35:28;09/07/26
+D;Sissel Aamodt;37:53;09/07/26
+H;Theodor Holter;19:27;02/07/26
+H;Kristoffer Rostad;19:58;02/07/26
+H;Marius Klavestad Hansen;21:44;02/07/26
+H;Simon Pinaas;22:04;02/07/26
+H;Henrik Weel;22:14;02/07/26
+H;Freddy Amundsen;22:23;02/07/26
+H;Vidar Syverstad;22:37;02/07/26
+H;Glenn Olufsen;22:41;02/07/26
+H;Roger Nilsen;22:53;02/07/26
+H;John Yngve Hisken;24:19;02/07/26
+H;Raymond Westberg;24:24;02/07/26
+H;Roar Henriksen;24:29;02/07/26
+H;Ulf Minge;25:10;02/07/26
+D;Kjersti Væge;25:15;02/07/26
+H;Olav Røyneberg;25:20;02/07/26
+H;Sverre Berggren;25:39;02/07/26
+H;Sanel Mecan;25:43;02/07/26
+H;Henrik Hvidsten;25:45;02/07/26
+H;Jan Tore Skaug;26:20;02/07/26
+H;Odin Borgen;26:32;02/07/26
+H;Sivert Sloreby;26:35;02/07/26
+H;Trond Bjerk;26:52;02/07/26
+H;Tom Kristoffersen;27:08;02/07/26
+H;Kenneth Ørseng;27:17;02/07/26
+H;Henrik Evensen;27:27;02/07/26
+D;Lisa Liamo Hisken;27:44;02/07/26
+H;Hans Olaf Kirkeng;27:47;02/07/26
+D;Gøril Holmvassdal;27:58;02/07/26
+H;Arild Kraft;28:02;02/07/26
+H;Alf-Martin Nygård;28:33;02/07/26
+D;Annika Pinaas;28:48;02/07/26
+D;Marianne Syverstad;28:51;02/07/26
+H;Leif Arne Skaar;29:00;02/07/26
+D;Tuva Skaar;29:00;02/07/26
+D;Mette Andersen;30:10;02/07/26
+H;Sven Rino Andersen;30:10;02/07/26
+H;Bjørn Åstorp;30:28;02/07/26
+D;Maren Liane Jakobsen;30:43;02/07/26
+H;Svein Bergerud;32:10;02/07/26
+H;Morten Olsen;33:23;02/07/26
+D;Sissel Aamodt;39:36;02/07/26
+H;Marius Klavestad Hansen;17:44;25/06/26
+H;Sindre Fredriksen;17:44;25/06/26
+H;Sverre Lande Johansen;17:46;25/06/26
+H;Martinius Sigvartsen;17:53;25/06/26
+H;Daniel Skjelhaugen;19:01;25/06/26
+H;Simon Pinaas;19:43;25/06/26
+H;Mathias Pedersen Holmskau;19:56;25/06/26
+D;Ida Lundestad;21:10;25/06/26
+H;Anders Johansen;21:13;25/06/26
+H;Dennis Amundsen;21:34;25/06/26
+H;Frithjof Dalen;21:49;25/06/26
+H;Vidar Syverstad;22:06;25/06/26
+H;Glenn Olufsen;22:46;25/06/26
+H;Lars Noreng;22:46;25/06/26
+H;Roger Nilsen;22:48;25/06/26
+D;Anne Maren Belsby;23:09;25/06/26
+H;Ulf Roger Olsen;23:14;25/06/26
+H;Ole Antonsen;23:20;25/06/26
+H;Theodor Holter;23:24;25/06/26
+H;Peter Magnus Prestesæter;24:29;25/06/26
+H;Raymond Handelsby;24:36;25/06/26
+H;Roar Henriksen;24:53;25/06/26
+H;Olav Røyneberg;24:57;25/06/26
+H;Sverre Berggren;25:14;25/06/26
+H;Sanel Mecan;25:15;25/06/26
+D;Ingrid Pedersen Holmskau;25:46;25/06/26
+H;Oddbjørn Granli;26:28;25/06/26
+H;Aleksander Vangen;26:36;25/06/26
+H;Henrik Evensen;26:37;25/06/26
+H;Leif Arne Skaar;27:00;25/06/26
+H;Hans Olaf Kirkeng;27:13;25/06/26
+H;Kai Berg;27:33;25/06/26
+H;Jan Olav Rive;27:34;25/06/26
+D;Eunika Smolynska;27:46;25/06/26
+H;Rafal Potycicki;27:46;25/06/26
+H;Ole Johnny Aasen;28:00;25/06/26
+D;Annika Pinaas;28:01;25/06/26
+H;Alf-Martin Nygård;28:40;25/06/26
+H;Carsten Hartig;28:45;25/06/26
+H;Tom Kristoffersen;29:05;25/06/26
+H;Morten Willy Johansen;29:27;25/06/26
+H;Arild Kraft;29:30;25/06/26
+H;Svein Bergerud;30:49;25/06/26
+H;Tom Sognlien;31:17;25/06/26
+H;Dag Sletner;32:44;25/06/26
+D;Therese Mandji;34:30;25/06/26
+D;Sissel Aamodt;39:02;25/06/26
+H;Even Storeheier;16:42;18/06/26
+H;Marius Klavestad Hansen;18:19;18/06/26
+H;Simon Pinaas;20:20;18/06/26
+H;Eirik Berget;20:52;18/06/26
+H;Theodor Holter;21:51;18/06/26
+H;Abdi Usman;21:52;18/06/26
+H;Dag Eivind Syverstad;22:07;18/06/26
+H;Thomas Andresen;22:07;18/06/26
+H;Vidar Syverstad;22:21;18/06/26
+H;Glenn Olufsen;22:31;18/06/26
+H;Roger Nilsen;22:43;18/06/26
+H;Lars Noreng;22:46;18/06/26
+H;Sturla Korsæth;22:54;18/06/26
+H;Ulf Roger Olsen;23:19;18/06/26
+H;Ole Antonsen;23:21;18/06/26
+H;Johannes Øvstegård;24:06;18/06/26
+H;Roar Henriksen;24:08;18/06/26
+H;Sverre Berggren;24:32;18/06/26
+H;Aland Bazaz;24:35;18/06/26
+H;Aksel Günther;24:36;18/06/26
+H;Arnt Andersrød;24:59;18/06/26
+H;Odin Wolleberg;25:12;18/06/26
+D;Birthe Lundestad Høier;25:21;18/06/26
+H;Ulf Minge;25:23;18/06/26
+H;Henrik Løvfold;25:43;18/06/26
+H;Jan Tore Skaug;25:43;18/06/26
+H;Sivert Sloreby;25:43;18/06/26
+H;Oddbjørn Granli;25:51;18/06/26
+H;Terje Nyøygard;25:56;18/06/26
+H;Atle Rakvåg;26:04;18/06/26
+H;Leif Arne Skaar;26:06;18/06/26
+H;Vegard Knutsen;26:31;18/06/26
+H;Odin Borgen;26:36;18/06/26
+D;Inthiwa Sangphet Hansen;26:39;18/06/26
+H;Henrik Evensen;27:27;18/06/26
+H;Shaho Kanany;27:28;18/06/26
+H;Christian Pettersen;27:47;18/06/26
+D;Sarah Goplen;27:51;18/06/26
+H;Carsten Hartig;27:52;18/06/26
+H;Kenneth Ørseng;28:10;18/06/26
+H;David Buhinja;28:20;18/06/26
+D;Duangrudee Emrat;28:24;18/06/26
+H;Anders Farholm;28:34;18/06/26
+D;Nora Bråthe Farholm;28:34;18/06/26
+H;Hans Olaf Kirkeng;28:43;18/06/26
+D;Marianne Syverstad;28:53;18/06/26
+H;Sakaria Mohamed;29:59;18/06/26
+D;Helene Eriksen;30:21;18/06/26
+H;Kjetil Johansen;30:21;18/06/26
+D;Maria Veiby;30:45;18/06/26
+H;Svein Bergerud;31:24;18/06/26
+H;Mats Stene;31:58;18/06/26
+H;Tom Sognlien;32:05;18/06/26
+H;Dag Sletner;32:43;18/06/26
+D;Solveig Strømberg;32:55;18/06/26
+H;Ketil Gjølstad;35:56;18/06/26
+D;Anne-Lene Frølandshagen;37:15;18/06/26
+D;Sissel Aamodt;38:56;18/06/26
+H;Steinar Sævdal;41:05;18/06/26
+D;Camilla Petronella Jensen;42:08;18/06/26
+H;Sindre Fredriksen;17:46;11/06/26
+H;Martin Gundersen;18:08;11/06/26
+H;Kristoffer Rostad;19:06;11/06/26
+H;Rune Johnsen;20:38;11/06/26
+H;Tommy Heggenes;22:02;11/06/26
+H;Vidar Syverstad;22:32;11/06/26
+H;Pål Vikesland;22:35;11/06/26
+H;Simon Pinaas;22:35;11/06/26
+H;Leif Morten Jamissen;22:37;11/06/26
+H;Ulf Roger Olsen;22:37;11/06/26
+H;Roger Nilsen;22:39;11/06/26
+H;Glenn Klausen;22:47;11/06/26
+H;Rune Langnes;22:47;11/06/26
+H;Jørgen Minge;22:51;11/06/26
+H;Lars Noreng;22:51;11/06/26
+H;Daniel Stokkan;22:52;11/06/26
+H;Ole Antonsen;23:20;11/06/26
+H;Kai Berg;23:29;11/06/26
+H;Roar Henriksen;23:50;11/06/26
+H;Thomas Martinsen;24:10;11/06/26
+H;Odin Wolleberg;24:15;11/06/26
+H;Stein Johansen;24:19;11/06/26
+H;Olav Røyneberg;24:40;11/06/26
+H;Sanel Mecan;25:20;11/06/26
+H;Jan Tore Skaug;25:22;11/06/26
+H;Henning Klausen;25:27;11/06/26
+H;Ivar Sjømæling Andresen;25:30;11/06/26
+D;Kjersti Væge;25:30;11/06/26
+D;Inthiwa Sangphet Hansen;25:38;11/06/26
+H;Atle Rakvåg;25:40;11/06/26
+H;Ulf Minge;25:44;11/06/26
+H;Jan Olav Rive;25:56;11/06/26
+H;Sivert Sloreby;26:08;11/06/26
+H;Leif Arne Skaar;26:14;11/06/26
+H;Eirik Minge;26:20;11/06/26
+H;Odin Borgen;26:22;11/06/26
+H;Alf-Martin Nygård;26:41;11/06/26
+H;Kenneth Ørseng;26:52;11/06/26
+H;Henrik Evensen;27:09;11/06/26
+D;Nicola Dahle;27:19;11/06/26
+H;Tom Kristoffersen;26:35;11/06/26
+H;Rune Syversen;27:39;11/06/26
+H;Hans Olaf Kirkeng;27:42;11/06/26
+D;Duangrudee Emrat;27:48;11/06/26
+H;Carsten Hartig;28:10;11/06/26
+H;Arild Kraft;29:01;11/06/26
+H;Knut Willy Steen;29:03;11/06/26
+D;Tracy Nguyen;29:19;11/06/26
+D;Annika Pinaas;29:45;11/06/26
+D;Ingvild Wolleberg;30:02;11/06/26
+D;Maria Veiby;30:35;11/06/26
+D;Hilde Rive;30:55;11/06/26
+H;Jim Andersen;30:56;11/06/26
+D;Liv Marit Mjelve;31:19;11/06/26
+D;Felippa Gustavsen;31:24;11/06/26
+H;Johannes Øvstegård;31:24;11/06/26
+D;Line Aanes;31:39;11/06/26
+H;Derek Bateman;31:44;11/06/26
+H;Tom Sognlien;31:51;11/06/26
+H;Svein Bergerud;32:37;11/06/26
+H;Stig Andresen;33:55;11/06/26
+H;Tom Wahlgren;33:55;11/06/26
+H;Ketil Gjølstad;35:04;11/06/26
+D;Sissel Aamodt;37:29;11/06/26
+H;Steinar Sævdal;38:57;11/06/26
+D;Marianne Syverstad;100:00;11/06/26
+H;Simon Pinaas;19:49;04/06/26
+H;Anton Roaas;19:52;04/06/26
+H;Jon Pedersen;21:01;04/06/26
+H;Robin Bårdli;21:19;04/06/26
+H;Vidar Syverstad;21:51;04/06/26
+H;Tommy Heggenes;22:16;04/06/26
+H;Bjørn Arild Smaaberg;22:55;04/06/26
+H;Elias Pinaas;23:16;04/06/26
+H;Roger Nilsen;23:23;04/06/26
+H;Lars Noreng;23:31;04/06/26
+H;Roar Henriksen;23:35;04/06/26
+H;Morten Bruheim;23:42;04/06/26
+D;Kjersti Væge;24:18;04/06/26
+H;Henning Klausen;24:29;04/06/26
+H;Terje Nyøygard;24:44;04/06/26
+H;Hans Petter Moen;24:46;04/06/26
+H;Jørn Erik Christiansen;24:51;04/06/26
+H;Tommy Nilsen-Scherffenberg;25:28;04/06/26
+H;Sverre Berggren;25:37;04/06/26
+D;Ida Lundestad;25:43;04/06/26
+H;Lucas Lundestad-Kemi;25:43;04/06/26
+H;Oddbjørn Granli;25:59;04/06/26
+H;Kay Diedrichsen;26:17;04/06/26
+H;Jan Tore Skaug;26:20;04/06/26
+H;Ulf Minge;26:23;04/06/26
+H;Odin Borgen;26:38;04/06/26
+H;Sivert Sloreby;26:48;04/06/26
+H;Kenneth Ørseng;26:50;04/06/26
+H;Leif Arne Skaar;26:50;04/06/26
+H;Anders Johansen;27:19;04/06/26
+H;Henrik Evensen;27:19;04/06/26
+H;Vegard Knutsen;27:25;04/06/26
+H;Kjetil Søberg;27:44;04/06/26
+H;Hans Olaf Kirkeng;28:09;04/06/26
+H;Aksel Torkelsen;28:31;04/06/26
+D;Marianne Syverstad;28:38;04/06/26
+H;Ole Johnny Aasen;29:00;04/06/26
+H;Andrew Søgaard;29:21;04/06/26
+H;Carsten Hartig;29:25;04/06/26
+H;Arild Kraft;29:38;04/06/26
+H;Kjetil Johansen;29:38;04/06/26
+D;Annika Pinaas;30:16;04/06/26
+H;Vegar Pinaas;30:16;04/06/26
+H;Trond Vidar Torkelsen;30:18;04/06/26
+H;Atle Gravdal;30:44;04/06/26
+H;Jim Andersen;30:45;04/06/26
+D;Maria Veiby;31:26;04/06/26
+H;Svein Bergerud;31:26;04/06/26
+H;Vidar Bergerud;31:44;04/06/26
+D;Martine Strand Thøgersen;32:12;04/06/26
+H;Tom Sognlien;32:51;04/06/26
+H;Mads Nilsen-Scherffenberg;34:29;04/06/26
+H;Ole Magnus Bukholm;34:32;04/06/26
+D;Wivian Johansen;36:01;04/06/26
+H;Stig Andresen;36:11;04/06/26
+H;Daniel Mohamad;41:04;04/06/26
+D;Mona Bråthen;100:00;04/06/26
+H;Ulrik Lolland;16:51;28/05/26
+H;Marius Klavestad Hansen;18:39;28/05/26
+H;Theodor Holter;19:49;28/05/26
+H;Abdi Usman;19:55;28/05/26
+H;Alexander Jensen;20:46;28/05/26
+H;Glenn Olufsen;21:32;28/05/26
+H;Vidar Syverstad;21:42;28/05/26
+H;Anders Strand;21:45;28/05/26
+H;Bård Kolås;21:50;28/05/26
+H;Tommy Heggenes;22:12;28/05/26
+H;Andreas Risan Thøgersen;22:20;28/05/26
+H;Roger Nilsen;22:30;28/05/26
+H;Sveinung Eide Hansen;22:50;28/05/26
+H;Espen Grindahl;22:57;28/05/26
+H;David Buhinja;23:32;28/05/26
+D;Maj Engelstad;23:35;28/05/26
+H;Simon Pinaas;23:44;28/05/26
+H;Jacob Ali;23:48;28/05/26
+D;Birthe Lundestad Høier;23:59;28/05/26
+H;Faisal Al-Enezi;24:12;28/05/26
+H;Kay Diedrichsen;24:32;28/05/26
+H;Sverre Berggren;24:34;28/05/26
+H;Odin Wolleberg;24:40;28/05/26
+H;Jørn Erik Christiansen;24:42;28/05/26
+H;Jan Olav Rive;24:52;28/05/26
+H;Raymond Westberg;25:05;28/05/26
+H;Glenn Klausen;25:46;28/05/26
+D;Emma Klausen;25:49;28/05/26
+H;Henrik Evensen;26:16;28/05/26
+D;Kjersti Væge;26:16;28/05/26
+H;Ivar Sjømæling Andresen;26:17;28/05/26
+H;Sanel Mecan;26:34;28/05/26
+H;Kenneth Ørseng;26:51;28/05/26
+H;Sakaria Mohamed;26:55;28/05/26
+H;Ulrik Langvik;27:23;28/05/26
+H;Arild Kraft;27:33;28/05/26
+H;Yurii Bielov;27:33;28/05/26
+H;Hans Olaf Kirkeng;27:36;28/05/26
+H;Ulf Minge;28:11;28/05/26
+H;Ketil Arntsen;28:14;28/05/26
+H;Roar Henriksen;28:18;28/05/26
+D;Annika Pinaas;28:28;28/05/26
+D;Nicola Dahle;28:28;28/05/26
+D;Eva Agustsdottir;28:36;28/05/26
+H;Jan Tore Skaug;28:40;28/05/26
+H;Carsten Hartig;28:47;28/05/26
+H;Markus Weberg;29:10;28/05/26
+D;Maria Veiby;29:14;28/05/26
+H;Alf-Martin Nygård;29:37;28/05/26
+D;Marianne Syverstad;29:39;28/05/26
+H;Dag Sletner;30:23;28/05/26
+H;Soheil Azimi;30:35;28/05/26
+D;Kajsa Høiland;31:38;28/05/26
+D;Liv Marit Mjelve;31:38;28/05/26
+D;Felippa Gustavsen;32:09;28/05/26
+H;Johannes Øvstegård;32:11;28/05/26
+H;Tom Sognlien;32:19;28/05/26
+D;Tina Klausen;32:49;28/05/26
+D;Ragnhild Borgebund;34:13;28/05/26
+D;Marie Oven;34:20;28/05/26
+D;Wivian Johansen;34:36;28/05/26
+D;Sissel Aamodt;36:59;28/05/26
+H;Svein Bergerud;37:23;28/05/26
+H;Marius Klavestad Hansen;18:26;21/05/26
+H;Simon Pinaas;20:10;21/05/26
+H;Stian Fredriksen;20:34;21/05/26
+H;Abdi Usman;20:43;21/05/26
+H;Andreas Johansen Heier;21:26;21/05/26
+H;Magnus Skauge Oliversen;21:49;21/05/26
+H;Tommy Heggenes;21:53;21/05/26
+H;Andreas Risan Thøgersen;21:59;21/05/26
+H;Glenn Olufsen;22:02;21/05/26
+H;Ulf Roger Olsen;22:29;21/05/26
+H;Roger Nilsen;22:37;21/05/26
+H;Vidar Syverstad;22:41;21/05/26
+H;Pål Vikesland;22:44;21/05/26
+H;Kai Berg;22:48;21/05/26
+H;Sverre Lande Johansen;22:48;21/05/26
+H;Koshin Musse;22:56;21/05/26
+H;Sveinung Eide Hansen;22:56;21/05/26
+H;Rune Langnes;22:59;21/05/26
+D;Vilde Fredriksen;23:11;21/05/26
+H;Frithjof Dalen;23:19;21/05/26
+H;Elias Pinaas;23:42;21/05/26
+H;David Buhinja;23:53;21/05/26
+H;Roar Henriksen;23:55;21/05/26
+H;Lasse Skalle;23:58;21/05/26
+H;Ole Antonsen;24:05;21/05/26
+H;Jacob Ali;24:07;21/05/26
+H;Stein Johansen;24:10;21/05/26
+H;Theodor Holter;24:10;21/05/26
+H;Sverre Berggren;24:29;21/05/26
+H;Odin Wolleberg;24:35;21/05/26
+H;Olav Røyneberg;24:40;21/05/26
+D;Birthe Lundestad Høier;24:57;21/05/26
+H;Sanel Mecan;24:59;21/05/26
+H;Faisal Al-Enezi;25:06;21/05/26
+H;Oddbjørn Granli;25:24;21/05/26
+H;Johannes Øvstegård;25:31;21/05/26
+H;Terje Nyøygard;25:51;21/05/26
+H;Jens-Otto Løkkevik;25:52;21/05/26
+H;Ketil Arntsen;25:59;21/05/26
+H;Abdikarim Aweys;26:04;21/05/26
+H;Jørn Erik Christiansen;26:15;21/05/26
+H;Ulf Minge;26:28;21/05/26
+H;Tom Cato Gundersen;26:40;21/05/26
+D;Inthiwa Sangphet Hansen;26:41;21/05/26
+H;Eirik Minge;26:45;21/05/26
+H;Henrik Evensen;26:48;21/05/26
+H;Trond Bjerk;26:52;21/05/26
+H;Kjetil Søberg;27:12;21/05/26
+H;Alf-Martin Nygård;27:20;21/05/26
+H;Tom Kristoffersen;27:20;21/05/26
+D;Duangrudee Emrat;27:37;21/05/26
+H;Hans Olaf Kirkeng;27:57;21/05/26
+D;Marianne Syverstad;28:51;21/05/26
+H;Bikal Tivari;28:57;21/05/26
+H;Arild Kraft;29:13;21/05/26
+H;Carsten Hartig;29:13;21/05/26
+H;Shaho Kanany;29:18;21/05/26
+H;Bjørn Åstorp;29:24;21/05/26
+H;Morten Willy Johansen;29:26;21/05/26
+H;Bjørn Gundersen;29:29;21/05/26
+D;Annika Pinaas;29:34;21/05/26
+D;Maria Veiby;29:53;21/05/26
+H;Kjetil Johansen;30:12;21/05/26
+H;Svein Bergerud;30:39;21/05/26
+H;Dag Sletner;32:29;21/05/26
+H;Tom Sognlien;32:29;21/05/26
+H;Christian Bakke;32:35;21/05/26
+D;Inger-Elisabeth Knold;32:35;21/05/26
+D;Tina Klausen;33:42;21/05/26
+H;Mohamed Ali;34:21;21/05/26
+D;Wivian Johansen;34:51;21/05/26
+D;Beate Rydland;35:47;21/05/26
+H;Reber Ismail;35:59;21/05/26
+D;Sissel Aamodt;36:24;21/05/26
+D;Heidi Børstad;41:18;21/05/26
+H;Lars-Christian Frøiland ;42:23;21/05/26
+H;Lucas Lundestad-Kemi;18:21;14/05/26
+H;Martinius Sigvartsen;18:29;14/05/26
+H;Marius Klavestad Hansen;18:41;14/05/26
+H;Theodor Holter;18:51;14/05/26
+H;René Nilsen;19:19;14/05/26
+H;Alexander Hammer-Dybvad;19:36;14/05/26
+H;Ole Henry Bjørnstad Bjor;21:08;14/05/26
+H;Robin Bårdli;21:33;14/05/26
+D;Ida Lundestad;21:34;14/05/26
+H;Daniel Oliversen;21:40;14/05/26
+H;Anders Strand;21:43;14/05/26
+H;Vidar Syverstad;21:49;14/05/26
+H;Tommy Heggenes;22:28;14/05/26
+H;Christoffer Storm Mørseth;22:35;14/05/26
+H;Leif Morten Jamissen;22:42;14/05/26
+H;Lars Noreng;22:46;14/05/26
+H;David Buhinja;23:38;14/05/26
+H;Ole Antonsen;23:39;14/05/26
+H;Roger Nilsen;23:41;14/05/26
+H;Solan Oliversen;23:48;14/05/26
+H;Stian Fredriksen;23:53;14/05/26
+D;Vilde Fredriksen;23:53;14/05/26
+H;Kim Jakobsen;24:11;14/05/26
+H;Sveinung Eide Hansen;24:11;14/05/26
+H;Christian Bakke;24:34;14/05/26
+H;Benjamin Olavesen;24:39;14/05/26
+H;Sverre Berggren;24:44;14/05/26
+H;Olav Røyneberg;24:57;14/05/26
+H;Pål Magnus Stensholt;25:25;14/05/26
+H;Terje Nyøygard;25:44;14/05/26
+H;Sanel Mecan;25:55;14/05/26
+H;Christian Pettersen;26:20;14/05/26
+H;Odin Borgen;26:21;14/05/26
+H;Jørn Erik Christiansen;26:32;14/05/26
+H;Johannes Øvstegård;26:49;14/05/26
+H;Kenneth Ørseng;26:55;14/05/26
+H;Roar Henriksen;27:13;14/05/26
+H;Tom Kristoffersen;27:13;14/05/26
+H;Ole Johnny Aasen;27:46;14/05/26
+H;Hans Olaf Kirkeng;28:01;14/05/26
+H;Sivert Sloreby;28:04;14/05/26
+H;Henrik Evensen;28:29;14/05/26
+H;Anders Farholm;28:42;14/05/26
+D;Nora Bråthe Farholm;28:42;14/05/26
+H;Morten Willy Johansen;29:28;14/05/26
+H;Bjørn Åstorp;29:45;14/05/26
+H;Markus Weberg;29:59;14/05/26
+H;Frithjof Dalen;31:01;14/05/26
+H;Arild Kraft;33:15;14/05/26
+H;Dag Sletner;33:15;14/05/26
+H;Derek Bateman;33:20;14/05/26
+H;Mats Stene;33:33;14/05/26
+H;Svein Bergerud;33:47;14/05/26
+D;Liv Marit Mjelve;33:58;14/05/26
+D;Inger-Elisabeth Knold;34:01;14/05/26
+H;Stig Andresen;35:31;14/05/26
+H;Vidar Bergerud;35:31;14/05/26
+D;Sissel Aamodt;36:54;14/05/26
+D;Frida Kampenes;40:39;14/05/26
+D;Iselin Kampenes;40:39;14/05/26
+D;Mathea Stensrud;40:39;14/05/26
+D;Martine Strand Thøgersen;42:31;14/05/26
+D;Lilly Herfjord;53:19;14/05/26
+D;Maria Bergsten;53:19;14/05/26
+H;Henning Herfjord;53:28;14/05/26
+D;Marianne Syverstad;100:00;14/05/26
+H;Ole Magnus Bukholm;100:00;14/05/26
+H;Marius Klavestad Hansen;18:11;07/05/26
+H;Daniel Skjelhaugen;18:22;07/05/26
+H;Theodor Holter;18:42;07/05/26
+H;Simon Pinaas;19:45;07/05/26
+H;Jon Pedersen;20:55;07/05/26
+H;Jon Sigurd Brenne;21:45;07/05/26
+H;Vidar Syverstad;21:49;07/05/26
+H;Ulf Roger Olsen;22:12;07/05/26
+H;Tommy Heggenes;22:16;07/05/26
+H;Christian Bakke;22:43;07/05/26
+H;Roger Nilsen;22:44;07/05/26
+H;Lars Noreng;22:54;07/05/26
+H;Morten Bruheim;23:27;07/05/26
+H;Martin Wichstrøm Nilsen;23:55;07/05/26
+H;Ole Antonsen;23:59;07/05/26
+H;Elias Pinaas;24:03;07/05/26
+H;Sverre Berggren;24:13;07/05/26
+H;Raymond Westberg;24:14;07/05/26
+H;Kim Jakobsen;24:16;07/05/26
+H;Pål Magnus Stensholt;24:19;07/05/26
+H;Roar Henriksen;24:20;07/05/26
+H;Arnt Andersrød;24:39;07/05/26
+H;Kay Diedrichsen;25:06;07/05/26
+H;Tom Kristoffersen;25:16;07/05/26
+H;Christian Pettersen;25:25;07/05/26
+H;Aksel Hotvedt;25:31;07/05/26
+H;Aksel Søgaard;25:31;07/05/26
+H;Terje Nyøygard;25:36;07/05/26
+H;Sanel Mecan;25:37;07/05/26
+H;Jan Tore Skaug;25:48;07/05/26
+D;Inthiwa Sangphet Hansen;25:50;07/05/26
+H;Jens-Otto Løkkevik;25:58;07/05/26
+H;Kenneth Ørseng;26:02;07/05/26
+H;Øyvind Hofosseter;26:08;07/05/26
+H;Frode Andersen;26:22;07/05/26
+H;Johannes Øvstegård;26:56;07/05/26
+H;Jørn Erik Christiansen;27:07;07/05/26
+H;Kjetil Søberg;27:09;07/05/26
+H;Sivert Sloreby;27:12;07/05/26
+H;Jacob Ali;27:19;07/05/26
+H;Henrik Evensen;27:34;07/05/26
+D;Marianne Syverstad;27:51;07/05/26
+H;Hans Olaf Kirkeng;28:05;07/05/26
+H;Andrew Søgaard;28:21;07/05/26
+H;Knut Willy Steen;28:21;07/05/26
+D;Annika Pinaas;28:22;07/05/26
+H;Bjørn Åstorp;28:26;07/05/26
+D;Tracy Nguyen;28:27;07/05/26
+H;Carsten Hartig;28:31;07/05/26
+D;Martine Strand Thøgersen;28:35;07/05/26
+H;Steinar Jacobsen;28:53;07/05/26
+H;Arild Kraft;29:00;07/05/26
+H;Jim Andersen;29:24;07/05/26
+H;Ulf Minge;29:26;07/05/26
+H;Fredrik Texmo Grønn;30:52;07/05/26
+H;Atle Gravdal;31:46;07/05/26
+H;Svein Bergerud;32:58;07/05/26
+D;Inger-Elisabeth Knold;33:21;07/05/26
+D;Wivian Johansen;33:57;07/05/26
+D;Maria Veiby;34:14;07/05/26
+H;Tom Wahlgren;34:15;07/05/26
+H;Ali Rihda;35:57;07/05/26
+H;Kurdos Zarei;35:57;07/05/26
+H;Stig Andresen;36:33;07/05/26
+D;Marie Oven;36:41;07/05/26
+D;Ragnhild Borgebund;36:41;07/05/26
+D;Cathrine Olavessen;36:42;07/05/26
+D;Sissel Aamodt;37:19;07/05/26
+H;Daniel Mohamad;40:36;07/05/26
+D;Katrine Hotvedt;40:36;07/05/26
+H;Henrik Sørensen;41:16;07/05/26
+H;Jo-André Midtfjeld;42:47;07/05/26
+H;Even Storeheier;16:36;30/04/26
+H;Magnus Erstad;16:45;30/04/26
+H;Fredrik Bruland;19:03;30/04/26
+H;Simon Pinaas;20:32;30/04/26
+H;Theodor Holter;20:48;30/04/26
+H;Andreas Henriksen;21:31;30/04/26
+H;Anders Johansen;21:42;30/04/26
+H;Aksel Berg Svendsen;21:46;30/04/26
+H;Vidar Syverstad;21:52;30/04/26
+H;Amund Stenersen;21:58;30/04/26
+H;Tommy Heggenes;22:32;30/04/26
+H;Storm Justin Strand Akre;22:40;30/04/26
+H;Lars Noreng;22:35;30/04/26
+H;Roger Nilsen;22:54;30/04/26
+H;Lars Ramsjø;23:30;30/04/26
+H;Stian Fredriksen;23:54;30/04/26
+H;Pål Magnus Stensholt;24:11;30/04/26
+H;Stein Johansen;24:21;30/04/26
+H;Roar Henriksen;24:41;30/04/26
+H;Odin Wolleberg;24:42;30/04/26
+H;Raymond Westberg;24:44;30/04/26
+H;Knut Willy Steen;24:57;30/04/26
+H;Lars Bjerknes;24:59;30/04/26
+D;My Linnea Ramsjø;25:01;30/04/26
+H;Jan Tore Skaug;25:14;30/04/26
+H;Terje Nyøygard;25:18;30/04/26
+H;Tom Kristoffersen;25:23;30/04/26
+H;Oddbjørn Granli;25:27;30/04/26
+H;Eirik Minge;25:42;30/04/26
+H;Frode Andersen;25:46;30/04/26
+H;Sanel Mecan;25:48;30/04/26
+H;Kim Jakobsen;25:52;30/04/26
+D;Inthiwa Sangphet Hansen;25:55;30/04/26
+H;Jens-Otto Løkkevik;26:11;30/04/26
+H;Ismail Alasow;26:41;30/04/26
+H;Bjørn Erik Bratli;26:45;30/04/26
+H;Ulf Minge;27:02;30/04/26
+H;Kay Diedrichsen;27:08;30/04/26
+H;Vegard Knutsen;27:38;30/04/26
+H;Kenneth Ørseng;27:42;30/04/26
+H;Henrik Evensen;27:43;30/04/26
+D;Marianne Syverstad;28:07;30/04/26
+H;Hans Olaf Kirkeng;28:10;30/04/26
+H;Alf-Martin Nygård;28:17;30/04/26
+D;Duangrudee Emrat;28:20;30/04/26
+D;Annika Pinaas;28:28;30/04/26
+H;Trond Bjerk;28:28;30/04/26
+H;Fredrik Texmo Grønn;28:32;30/04/26
+H;Andrew Søgaard;28:48;30/04/26
+H;Arild Kraft;29:22;30/04/26
+D;Martine Strand Thøgersen;29:26;30/04/26
+D;Tracy Nguyen;30:15;30/04/26
+H;Svein Bergerud;31:00;30/04/26
+H;Tom Sognlien;33:07;30/04/26
+D;Wivian Johansen;33:27;30/04/26
+D;Sissel Aamodt;35:38;30/04/26
+H;Glenn Olufsen;100:00;30/04/26
+H;Magnus Erstad;17:59;23/04/26
+H;Theodor Holter;18:22;23/04/26
+H;René Nilsen;19:04;23/04/26
+H;Kristoffer Rostad;19:06;23/04/26
+H;Lucas Lundestad-Kemi;19:09;23/04/26
+H;Simon Pinaas;20:11;23/04/26
+H;Sindre Fredriksen;20:36;23/04/26
+H;Stian Fredriksen;20:36;23/04/26
+H;Robin Bårdli;21:11;23/04/26
+H;Bjørge Nesengen;21:18;23/04/26
+D;Ida Lundestad;21:20;23/04/26
+H;Vidar Syverstad;21:24;23/04/26
+H;Aksel Berg Svendsen;22:41;23/04/26
+H;Leif Morten Jamissen;22:45;23/04/26
+H;Lars Noreng;22:51;23/04/26
+H;André Stordal;23:29;23/04/26
+H;Stian Aasberg Johansen;23:31;23/04/26
+H;Kristian Tran;23:34;23/04/26
+H;Elias Pinaas;23:38;23/04/26
+H;Stein Johansen;23:40;23/04/26
+H;Rune Langnes;23:41;23/04/26
+H;Martin Lund;23:44;23/04/26
+H;Roger Nilsen;23:44;23/04/26
+H;Henning Klausen;24:13;23/04/26
+H;Henrik Løvfold;24:22;23/04/26
+H;Roar Henriksen;24:22;23/04/26
+H;Ole Antonsen;24:27;23/04/26
+H;Frithjof Dalen;24:49;23/04/26
+H;Sverre Berggren;25:08;23/04/26
+H;Odin Wolleberg;25:19;23/04/26
+H;Jens-Otto Løkkevik;25:24;23/04/26
+H;Frode Andersen;25:25;23/04/26
+H;Morten Pedersen;25:32;23/04/26
+H;Terje Nyøygard;25:32;23/04/26
+H;Sanel Mecan;25:50;23/04/26
+D;Inthiwa Sangphet Hansen;25:55;23/04/26
+H;Ole Johnny Aasen;26:18;23/04/26
+H;Oddbjørn Granli;26:28;23/04/26
+H;Odin Borgen;26:30;23/04/26
+H;Kjetil Søberg;26:57;23/04/26
+H;Knut Willy Steen;26:59;23/04/26
+H;Jan Olav Rive;27:14;23/04/26
+D;Sandra Broen;27:18;23/04/26
+H;Tom Kristoffersen;27:22;23/04/26
+H;Kay Diedrichsen;27:24;23/04/26
+H;Paal Stähli;27:24;23/04/26
+H;Kenneth Ørseng;27:29;23/04/26
+H;Henrik Evensen;27:43;23/04/26
+H;Ola Rasmussen;27:58;23/04/26
+D;Ingrid Sikkeland Lunde;28:03;23/04/26
+D;Marianne Syverstad;28:06;23/04/26
+H;Alf-Martin Nygård;28:08;23/04/26
+D;Helene Ileby;28:19;23/04/26
+H;Sivert Sloreby;28:20;23/04/26
+H;Jarle Fredriksen;28:26;23/04/26
+D;Duangrudee Emrat;28:49;23/04/26
+D;Mai Britt Solberg Grandahl;28:56;23/04/26
+H;Carsten Hartig;29:16;23/04/26
+H;Arild Kraft;29:20;23/04/26
+H;Kjetil Johansen;29:20;23/04/26
+H;Fredrik Texmo Grønn;29:29;23/04/26
+H;Ulf Minge;29:34;23/04/26
+D;Eline Botilsrud Andersen;29:38;23/04/26
+D;Martine Strand Thøgersen;29:43;23/04/26
+D;Marit Mjønes;29:59;23/04/26
+H;Dag Sletner;30:00;23/04/26
+H;Jonas Arntsen;31:40;23/04/26
+H;Svein Bergerud;31:45;23/04/26
+D;Annika Pinaas;32:43;23/04/26
+H;Tom Sognlien;32:59;23/04/26
+D;Wivian Johansen;33:35;23/04/26
+H;Tom Wahlgren;35:49;23/04/26
+H;Sebastian Kruse;36:50;23/04/26
+D;Maria Veiby;37:40;23/04/26
+D;Sissel Aamodt;37:46;23/04/26
+H;Even Storeheier;17:11;16/04/26
+H;Magnus Erstad;17:33;16/04/26
+H;Daniel Skjelhaugen;18:30;16/04/26
+H;Marius Klavestad Hansen;18:57;16/04/26
+H;Elias Røyneberg;19:14;16/04/26
+H;Ozzy Gurung;19:20;16/04/26
+H;Fredrik Bruland;19:25;16/04/26
+H;Isach Stevik;20:49;16/04/26
+H;Frederik Bjørnstad;21:12;16/04/26
+H;Mahesh Munikar;21:21;16/04/26
+H;Bjørge Nesengen;21:23;16/04/26
+H;Runar Sande;21:45;16/04/26
+H;Vidar Syverstad;21:49;16/04/26
+H;Jørgen Skalle;21:51;16/04/26
+H;Kristian Tran;22:36;16/04/26
+H;Martin S. Torp;22:43;16/04/26
+H;Simon Pinaas;22:43;16/04/26
+H;Theodor Holter;22:43;16/04/26
+H;Lars Noreng;22:48;16/04/26
+H;Tommy Heggenes;22:54;16/04/26
+H;Lars Skalle;22:58;16/04/26
+H;Kai Berg;23:02;16/04/26
+H;Roger Nilsen;23:23;16/04/26
+H;Hans Erik Davidsen;24:04;16/04/26
+H;Robin Johannessen;24:04;16/04/26
+H;Ole Nedrebø;24:17;16/04/26
+H;Stein Johansen;24:22;16/04/26
+H;Sivert Danielsen;24:34;16/04/26
+H;Olav Røyneberg;24:39;16/04/26
+H;Sverre Berggren;24:49;16/04/26
+H;Roar Henriksen;24:55;16/04/26
+H;Jens-Otto Løkkevik;24:59;16/04/26
+H;Henning Klausen;25:16;16/04/26
+H;Terje Nyøygard;25:24;16/04/26
+H;Frode Andersen;25:25;16/04/26
+H;Magnus Thorsen;25:39;16/04/26
+H;Jan Tore Skaug;25:42;16/04/26
+H;Eirik Minge;25:43;16/04/26
+H;Ole-Henrik Andersen;25:56;16/04/26
+H;Odin Borgen;26:07;16/04/26
+H;Sanel Mecan;26:11;16/04/26
+H;Jan Olav Rive;26:22;16/04/26
+H;Tom Kristoffersen;26:27;16/04/26
+H;Sivert Sloreby;26:30;16/04/26
+D;Sandra Broen;26:33;16/04/26
+H;Trond Bjerk;26:37;16/04/26
+H;Leif Arne Skaar;26:38;16/04/26
+D;Inthiwa Sangphet Hansen;26:48;16/04/26
+H;Bjørn Erik Bratli;27:03;16/04/26
+H;Kenneth Ørseng;27:12;16/04/26
+H;Kjetil Søberg;27:18;16/04/26
+H;Jarle Fredriksen;27:26;16/04/26
+H;Ole Johnny Aasen;27:27;16/04/26
+H;Henrik Evensen;27:28;16/04/26
+H;Christian Pettersen;28:05;16/04/26
+H;Vegard Knutsen;28:07;16/04/26
+D;Marianne Syverstad;28:25;16/04/26
+D;Duangrudee Emrat;28:41;16/04/26
+H;Ulf Minge;28:44;16/04/26
+H;Alf-Martin Nygård;28:57;16/04/26
+H;Bjørn Åstorp;29:06;16/04/26
+H;Steinar Jacobsen;29:38;16/04/26
+H;Arild Kraft;30:05;16/04/26
+H;Dag Sletner;30:56;16/04/26
+H;Tom Sognlien;33:10;16/04/26
+D;Wivian Johansen;33:32;16/04/26
+H;Svein Bergerud;33:47;16/04/26
+D;Maria Veiby;33:50;16/04/26
+H;Ole Petter Glückstad;34:17;16/04/26
+D;Ragnhild Borgebund;34:39;16/04/26
+D;Annika Pinaas;35:03;16/04/26
+H;Sebastian Kruse;35:03;16/04/26
+D;Sissel Aamodt;36:55;16/04/26
+H;Knut Erik Kristiansen;100:00;16/04/26
+H;Marius Klavestad Hansen;18:18;09/04/26
+H;Daniel Skjelhaugen;18:36;09/04/26
+H;Simon Pinaas;20:05;09/04/26
+H;Robin Bårdli;21:19;09/04/26
+H;Amund Stenersen;21:28;09/04/26
+H;Aksel Berg Svendsen;21:53;09/04/26
+H;Vidar Syverstad;22:06;09/04/26
+H;Knut Willy Steen;22:44;09/04/26
+H;Lars Noreng;22:52;09/04/26
+H;Jon Pedersen;23:06;09/04/26
+H;Glenn Olufsen;23:32;09/04/26
+H;Nicklas Jørgensen;23:41;09/04/26
+H;Rune Langnes;23:43;09/04/26
+H;Roger Nilsen;23:49;09/04/26
+H;Kai Berg;23:58;09/04/26
+H;Jørgen Minge;24:18;09/04/26
+H;Raymond Handelsby;24:19;09/04/26
+H;Jarle Jørgensen;24:27;09/04/26
+D;Elin Lien;24:30;09/04/26
+H;Andreas Thunem;24:43;09/04/26
+H;Christian Pettersen;25:01;09/04/26
+H;Roar Henriksen;25:02;09/04/26
+H;Mads Pedersen;25:15;09/04/26
+H;Magnus Thorsen;25:31;09/04/26
+H;Henning Klausen;25:39;09/04/26
+H;Sverre Berggren;25:40;09/04/26
+H;Jens-Otto Løkkevik;25:43;09/04/26
+H;Anders Johansen;25:51;09/04/26
+D;Ida Lundestad;25:51;09/04/26
+D;Luna Lundestad-Kemi;25:51;09/04/26
+H;Eirik Minge;26:13;09/04/26
+H;Terje Nyøygard;26:26;09/04/26
+H;Henrik Lunde;26:27;09/04/26
+H;Frode Andersen;26:28;09/04/26
+H;Trond Bjerk;26:31;09/04/26
+H;Jan Tore Skaug;26:47;09/04/26
+H;Kenneth Ørseng;26:49;09/04/26
+H;Sanel Mecan;26:56;09/04/26
+D;Birthe Lundestad Høier;27:12;09/04/26
+H;Bjørn Erik Bratli;27:12;09/04/26
+H;Tom Kristoffersen;27:25;09/04/26
+D;Inthiwa Sangphet Hansen;27:32;09/04/26
+H;Ola Rasmussen;27:45;09/04/26
+H;Jarle Fredriksen;27:48;09/04/26
+H;Ole Johnny Aasen;27:50;09/04/26
+H;Kjetil Søberg;28:02;09/04/26
+H;Henrik Evensen;28:11;09/04/26
+H;Sivert Sloreby;28:13;09/04/26
+H;Hans Olaf Kirkeng;28:23;09/04/26
+D;Duangrudee Emrat;28:27;09/04/26
+D;Ingrid Sikkeland Lunde;28:41;09/04/26
+H;Ulf Minge;29:36;09/04/26
+H;Vegard Knutsen;29:53;09/04/26
+H;Arild Kraft;30:31;09/04/26
+D;Annika Pinaas;31:00;09/04/26
+D;Ronja Aalberg;32:01;09/04/26
+D;Sandra Broen;32:01;09/04/26
+H;Steinar Jacobsen;32:42;09/04/26
+H;Tom Sognlien;33:31;09/04/26
+D;Wivian Johansen;34:43;09/04/26
+H;Svein Bergerud;34:53;09/04/26
+D;Maria Veiby;37:04;09/04/26
+H;Stig Andresen;37:24;09/04/26
+D;Sissel Aamodt;37:40;09/04/26
+H;Rasmus Buflod-Halstensen;40:35;09/04/26
+D;Hilde Buflod;40:44;09/04/26
+H;Rolf Erik Halvorsen;100:00;09/04/26
+H;Torgeir Sloreby;100:00;09/04/26

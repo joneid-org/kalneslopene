@@ -11,6 +11,7 @@ import com.grimsgaards.kalneslopene.repository.RunnerRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.transaction.interceptor.TransactionAspectSupport
@@ -26,8 +27,11 @@ import java.util.UUID
  * `race_runner` rows are replaced. Weather, course conditions and photos are left alone. Runners are
  * matched by name and updated in place; runners that no longer appear in any csv are reported, not
  * deleted, so results attached to races outside the csv dates keep working.
+ *
+ * Always runs after [BaselineDataGenerator] as long as the order value is higher than what is in [BaselineDataGenerator].
  */
 @Component
+@Order(200)
 @ConditionalOnProperty(prefix = "results-repair", name = ["enabled"], havingValue = "true")
 class CsvResultsRepair(
     private val runnerRepository: RunnerRepository,
@@ -174,7 +178,7 @@ class CsvResultsRepair(
             if (duplicates.size > 1) {
                 report.warnings +=
                     "$name exists ${duplicates.size} times in the runner table; " +
-                    "keeping the one with the most results, the others are reported as not-in-csv"
+                    "the csv results go to the one with the most results, the others are left untouched"
             }
             duplicates.maxWith(compareBy({ it.races.size }, { it.uuid.toString() }))
         }

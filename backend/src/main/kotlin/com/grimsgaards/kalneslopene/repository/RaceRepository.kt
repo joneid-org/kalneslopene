@@ -1,7 +1,10 @@
 package com.grimsgaards.kalneslopene.repository
 
+import com.grimsgaards.kalneslopene.model.dto.RaceInfoDto
 import com.grimsgaards.kalneslopene.model.entities.RaceEntity
 import com.grimsgaards.kalneslopene.model.input.RaceFilter
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
@@ -12,6 +15,17 @@ import java.util.UUID
 interface RaceRepository : JpaRepository<RaceEntity, UUID> {
     @Query(
         """
+        SELECT new com.grimsgaards.kalneslopene.model.dto.RaceInfoDto(n.uuid, n.raceDate) FROM RaceEntity n
+        WHERE n.raceDate >= COALESCE(:#{#filter.from}, n.raceDate)
+          AND n.raceDate <= COALESCE(:#{#filter.to}, n.raceDate)
+          AND n.isPublished = COALESCE(:#{#filter.isPublished}, n.isPublished)
+        ORDER BY n.raceDate DESC
+    """,
+    )
+    fun findAllInfoByFilter(filter: RaceFilter): List<RaceInfoDto>
+
+    @Query(
+        """
         SELECT n FROM RaceEntity n
         WHERE n.raceDate >= COALESCE(:#{#filter.from}, n.raceDate)
           AND n.raceDate <= COALESCE(:#{#filter.to}, n.raceDate)
@@ -19,7 +33,10 @@ interface RaceRepository : JpaRepository<RaceEntity, UUID> {
         ORDER BY n.raceDate DESC
     """,
     )
-    fun findAllByFilter(filter: RaceFilter): List<RaceEntity>
+    fun findAllByFilter(
+        filter: RaceFilter,
+        pageable: Pageable,
+    ): Page<RaceEntity>
 
     fun findFirstByRaceDateGreaterThanEqualOrderByRaceDateAsc(dateTime: LocalDateTime): RaceEntity?
 

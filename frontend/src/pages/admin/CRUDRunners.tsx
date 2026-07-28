@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ChevronLeftIcon, PlusIcon } from "lucide-react";
+import { ChevronLeftIcon, ExternalLinkIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { MUTATIONS } from "@/api/mutations.ts";
 import { QUERIES } from "@/api/queries.ts";
 import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog.tsx";
@@ -14,6 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog.tsx";
+import { formatDateFull } from "@/lib/timeUtils.ts";
 import type { RunnerDTO } from "@/model/DTO.ts";
 
 export function CRUDRunners() {
@@ -46,6 +47,11 @@ export function CRUDRunners() {
   });
 
   const [deleting, setDeleting] = useState<RunnerDTO | null>(null);
+  const { data: deletingRaces, isPending: isPendingDeletingRaces } = useQuery({
+    ...QUERIES.runner.getAllRacesByRunner(deleting?.uuid ?? ""),
+    enabled: !!deleting?.uuid,
+    placeholderData: undefined,
+  });
   const deleteMutation = useMutation({
     mutationFn: (uuid: string) => MUTATIONS.runner.deleteRunner(uuid),
     onSuccess: () => {
@@ -133,12 +139,37 @@ export function CRUDRunners() {
                 ? Dette kan ikke angres.
               </>
             }
-            isPending={deleteMutation.isPending}
+            isPending={deleteMutation.isPending || isPendingDeletingRaces}
+            disableConfirm={!!deletingRaces?.length}
             onConfirm={() =>
               deleting.uuid && deleteMutation.mutate(deleting.uuid)
             }
             onClose={() => setDeleting(null)}
-          />
+          >
+            {!!deletingRaces?.length && (
+              <div className="space-y-2 rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm">
+                <p>
+                  {deleting.name} er med i {deletingRaces.length} løp og må
+                  fjernes derfra før løperen kan slettes:
+                </p>
+                <ul className="max-h-40 list-inside list-disc space-y-1 overflow-y-auto">
+                  {deletingRaces.map((raceRunner) => (
+                    <li key={raceRunner.raceInfo.uuid}>
+                      <Link
+                        to={`/admin/resultater/${raceRunner.raceInfo.uuid}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 underline hover:text-foreground"
+                      >
+                        {formatDateFull(raceRunner.raceInfo.raceDate)}
+                        <ExternalLinkIcon className="size-3.5" />
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </ConfirmDeleteDialog>
         )}
       </Dialog>
     </div>

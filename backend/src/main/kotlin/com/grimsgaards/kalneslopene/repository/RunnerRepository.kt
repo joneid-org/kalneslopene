@@ -1,7 +1,10 @@
 package com.grimsgaards.kalneslopene.repository
 
+import com.grimsgaards.kalneslopene.model.dto.Gender
 import com.grimsgaards.kalneslopene.model.entities.RunnerEntity
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
+import org.springframework.data.jpa.repository.NativeQuery
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
 import java.util.UUID
@@ -24,4 +27,18 @@ interface RunnerRepository : JpaRepository<RunnerEntity, UUID> {
     """,
     )
     fun countRunnersWithAtLeastOneRace(): Long
+
+    @Query(
+        """
+        SELECT r FROM RunnerEntity r
+        WHERE r.gender = :gender AND r.historicPersonalRecord IS NOT NULL
+        ORDER BY r.historicPersonalRecord ASC
+        LIMIT 1
+    """,
+    )
+    fun findFastestHistoricRunner(gender: Gender): RunnerEntity?
+
+    @Modifying
+    @NativeQuery("delete from runner r where r.uuid = :uuid")
+    fun deleteByUuid(uuid: UUID)
 }

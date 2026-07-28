@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { QUERIES } from "@/api/queries.ts";
 import { formatDDMonth, formatRaceDateTime } from "@/lib/timeUtils.ts";
-import { cn, getUpcomingRaces } from "@/lib/utils.ts";
+import { cn } from "@/lib/utils.ts";
 import {
   weatherIcon,
   weatherLabel,
@@ -245,15 +245,11 @@ export function NextRace({
 }: {
   variant?: "overlay" | "stacked";
 }) {
-  const {
-    data: races,
-    isPending,
-    isError,
-  } = useQuery(QUERIES.race.getAllRaces());
-  const race = getUpcomingRaces(races ?? [])[0];
+  const { data, isPending, isError } = useQuery(QUERIES.race.getNextRace());
+  const race = data ?? undefined;
   const weather = race?.weather;
 
-  if (isError && !races) return null;
+  if (isError && !race) return null;
 
   const props = { isPending, race, weather };
 

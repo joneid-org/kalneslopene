@@ -11,7 +11,12 @@ import {
   mapResultTimeToNumber,
   raceDateToSortKey,
 } from "@/lib/timeUtils.ts";
-import type { OrganizerDTO, RaceDTO, RaceRunnerDTO } from "@/model/DTO.ts";
+import type {
+  OrganizerDTO,
+  RaceDTO,
+  RaceInfoDTO,
+  RaceRunnerDTO,
+} from "@/model/DTO.ts";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -24,7 +29,9 @@ export function genderLabel(gender: string): string {
   return gender;
 }
 
-export function getYears(races: RaceDTO[]): number[] {
+export function getYears(races: RaceDTO[]): number[];
+export function getYears(races: RaceInfoDTO[]): number[];
+export function getYears(races: RaceDTO[] | RaceInfoDTO[]): number[] {
   const now = new Date().toISOString();
   const years = new Set<number>();
   for (const race of races) {
@@ -35,7 +42,15 @@ export function getYears(races: RaceDTO[]): number[] {
   return Array.from(years).toSorted((a, b) => b - a);
 }
 
-export function getRacesDTOByYear(races: RaceDTO[], year: number): RaceDTO[] {
+export function getRacesDTOByYear(
+  races: RaceInfoDTO[],
+  year: number,
+): RaceInfoDTO[];
+export function getRacesDTOByYear(races: RaceDTO[], year: number): RaceDTO[];
+export function getRacesDTOByYear(
+  races: RaceDTO[] | RaceInfoDTO[],
+  year: number,
+): RaceDTO[] | RaceInfoDTO[] {
   const now = new Date().toISOString();
   return races
     .filter(
@@ -57,13 +72,21 @@ export function getContactPerson(
 }
 
 export function getPreviousRace(
+  races: RaceInfoDTO[],
+  uuid?: string,
+): RaceInfoDTO | null;
+export function getPreviousRace(
   races: RaceDTO[],
   uuid?: string,
-): RaceDTO | null {
+): RaceDTO | null;
+export function getPreviousRace(
+  races: RaceDTO[] | RaceInfoDTO[],
+  uuid?: string,
+): RaceDTO | RaceInfoDTO | null {
   const currentRace = races.find((race) => race.uuid === uuid);
   if (!currentRace) return null;
   const currentKey = raceDateToSortKey(currentRace.raceDate);
-  let best: RaceDTO | null = null;
+  let best: RaceDTO | RaceInfoDTO | null = null;
   let bestKey = "";
   for (const race of races) {
     const key = raceDateToSortKey(race.raceDate);
@@ -75,9 +98,19 @@ export function getPreviousRace(
   return best;
 }
 
-export function getMostRecentRace(races: RaceDTO[]): RaceDTO | null {
+export function getMostRecentRace(
+  races: RaceInfoDTO[],
+  uuid?: string,
+): RaceInfoDTO | null;
+export function getMostRecentRace(
+  races: RaceDTO[],
+  uuid?: string,
+): RaceDTO | null;
+export function getMostRecentRace(
+  races: RaceDTO[] | RaceInfoDTO[],
+): RaceDTO | RaceInfoDTO | null {
   const now = new Date().toISOString();
-  let best: RaceDTO | null = null;
+  let best: RaceDTO | RaceInfoDTO | null = null;
   let bestKey = "";
   for (const race of races) {
     const key = raceDateToSortKey(race.raceDate);
@@ -89,12 +122,20 @@ export function getMostRecentRace(races: RaceDTO[]): RaceDTO | null {
   return best;
 }
 
-export function getNextRace(races: RaceDTO[], uuid?: string): RaceDTO | null {
+export function getNextRace(
+  races: RaceInfoDTO[],
+  uuid?: string,
+): RaceInfoDTO | null;
+export function getNextRace(races: RaceDTO[], uuid?: string): RaceDTO | null;
+export function getNextRace(
+  races: RaceDTO[] | RaceInfoDTO[],
+  uuid?: string,
+): RaceDTO | RaceInfoDTO | null {
   const now = new Date().toISOString();
   const currentRace = races.find((race) => race.uuid === uuid);
   if (!currentRace) return null;
   const currentKey = raceDateToSortKey(currentRace.raceDate);
-  let best: RaceDTO | null = null;
+  let best: RaceDTO | RaceInfoDTO | null = null;
   let bestKey = "";
   for (const race of races) {
     const key = raceDateToSortKey(race.raceDate);
@@ -176,19 +217,8 @@ export function getBestRaceThisYearFromRunner(
   return getBestTimeThisYear(raceRunner, year);
 }
 
-export function isPast(race: RaceDTO): boolean {
+export function isPast(race: RaceInfoDTO): boolean {
   return raceDateToSortKey(race.raceDate) < new Date().toISOString();
-}
-
-export function getUpcomingRaces(races: RaceDTO[]): RaceDTO[] {
-  const now = new Date().toISOString();
-  return races
-    .filter((r) => raceDateToSortKey(r.raceDate) >= now)
-    .sort((a, b) =>
-      raceDateToSortKey(a.raceDate).localeCompare(
-        raceDateToSortKey(b.raceDate),
-      ),
-    );
 }
 
 export function readFileAsDataURL(file: File): Promise<string> {

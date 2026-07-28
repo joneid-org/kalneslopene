@@ -118,9 +118,9 @@ export const MUTATIONS = {
   milestone: {
     createMilestone: (milestone: MilestoneInput) =>
       kyClient
-        .post("/api/milestones/createMilestone", { json: milestone })
+        .post("/api/milestones", { json: milestone })
         .json<MilestoneDTO>(),
-    updateMilestone: (uuid: string, milestone: MilestoneDTO) =>
+    updateMilestone: (uuid: string, milestone: MilestoneInput) =>
       kyClient
         .patch(`/api/milestones/${uuid}`, { json: milestone })
         .json<MilestoneDTO>(),

@@ -45,6 +45,7 @@ export type NewsFeedDTO = {
   date: Date;
   headerImage?: S3FileDto;
   images?: string[];
+  connectedRace?: RaceDTO;
 };
 export type NewsFeedInput = Omit<NewsFeedDTO, "uuid">;
 
@@ -138,8 +139,14 @@ export type RaceStatisticsDTO = {
     total: number;
   };
   averageRunnersPerRace: number;
-  courseRecordMale?: RaceRunnerDTO;
-  courseRecordFemale?: RaceRunnerDTO;
+  courseRecordMale?: CourseRecordDTO;
+  courseRecordFemale?: CourseRecordDTO;
+};
+
+export type CourseRecordDTO = {
+  runner: RunnerDTO;
+  resultTime: string;
+  raceInfo?: RaceInfoDTO;
 };
 
 export type RunnerOverviewStatsDTO = {

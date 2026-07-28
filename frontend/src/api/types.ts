@@ -1,4 +1,6 @@
+/** `from`/`to` are local "YYYY-MM-DDTHH:MM:SS" strings — the backend reads them as LocalDateTime. */
 export type RaceFilter = {
-  from?: Date;
-  to?: Date;
+  from?: string;
+  to?: string;
+  isPublished?: boolean;
 };

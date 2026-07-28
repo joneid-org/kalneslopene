@@ -16,6 +16,8 @@ import org.mockito.Mockito
 import org.mockito.Mockito.any
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.quality.Strictness
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.Year
@@ -58,8 +60,22 @@ class StatisticsServiceTest {
 
     private fun anyFilter(): RaceFilter = any(RaceFilter::class.java) ?: RaceFilter()
 
+    private fun anyPageable(): Pageable = any(Pageable::class.java) ?: Pageable.unpaged()
+
     private fun stubRaces(vararg races: RaceEntity) {
-        Mockito.`when`(raceRepository.findAllByFilter(anyFilter())).thenReturn(races.toList())
+        Mockito
+            .`when`(raceRepository.findAllByFilter(anyFilter(), anyPageable()))
+            .thenReturn(PageImpl(races.toList()))
+    }
+
+    private fun stubHistoricRecord(
+        gender: Gender,
+        record: Duration,
+        name: String = "Historic",
+    ) {
+        Mockito
+            .`when`(runnerRepository.findFastestHistoricRunner(gender))
+            .thenReturn(RunnerEntity(name = name, gender = gender, historicPersonalRecord = record))
     }
 
     @Nested
@@ -214,6 +230,70 @@ class StatisticsServiceTest {
             assertThat(stats.courseRecordMale).isNotNull()
             assertThat(stats.courseRecordFemale).isNull()
         }
+
+        @Test
+        fun `includes the race the record was set in`() {
+            val race = race(past)
+            addRunner(race, runner(Gender.MALE), resultTime = Duration.ofMinutes(20))
+            stubRaces(race)
+
+            val stats = service.getRaceStatistics(null)
+
+            assertThat(stats.courseRecordMale?.raceInfo?.uuid).isEqualTo(race.uuid)
+        }
+    }
+
+    @Nested
+    inner class HistoricCourseRecords {
+        @Test
+        fun `a historic personal record beats a slower recorded result`() {
+            val race = race(past)
+            addRunner(race, runner(Gender.MALE), resultTime = Duration.ofMinutes(20))
+            stubRaces(race)
+            stubHistoricRecord(Gender.MALE, Duration.ofMinutes(17), name = "Gammel Rekordholder")
+
+            val stats = service.getRaceStatistics(null)
+
+            assertThat(stats.courseRecordMale?.resultTime).isEqualTo(Duration.ofMinutes(17))
+            assertThat(stats.courseRecordMale?.runner?.name).isEqualTo("Gammel Rekordholder")
+            assertThat(stats.courseRecordMale?.raceInfo).isNull()
+        }
+
+        @Test
+        fun `a faster recorded result beats the historic personal record`() {
+            val race = race(past)
+            addRunner(race, runner(Gender.FEMALE), resultTime = Duration.ofMinutes(18))
+            stubRaces(race)
+            stubHistoricRecord(Gender.FEMALE, Duration.ofMinutes(21))
+
+            val stats = service.getRaceStatistics(null)
+
+            assertThat(stats.courseRecordFemale?.resultTime).isEqualTo(Duration.ofMinutes(18))
+            assertThat(stats.courseRecordFemale?.raceInfo).isNotNull()
+        }
+
+        @Test
+        fun `is used when no races have eligible results`() {
+            stubRaces(race(past))
+            stubHistoricRecord(Gender.FEMALE, Duration.ofMinutes(23))
+
+            val stats = service.getRaceStatistics(null)
+
+            assertThat(stats.courseRecordFemale?.resultTime).isEqualTo(Duration.ofMinutes(23))
+            assertThat(stats.courseRecordMale).isNull()
+        }
+
+        @Test
+        fun `are excluded when statistics are scoped to a single year`() {
+            val race = race(past)
+            addRunner(race, runner(Gender.MALE), resultTime = Duration.ofMinutes(20))
+            stubRaces(race)
+            stubHistoricRecord(Gender.MALE, Duration.ofMinutes(17))
+
+            val stats = service.getRaceStatistics(Year.of(past.year))
+
+            assertThat(stats.courseRecordMale?.resultTime).isEqualTo(Duration.ofMinutes(20))
+        }
     }
 
     @Nested
@@ -225,7 +305,7 @@ class StatisticsServiceTest {
 
             service.getRaceStatistics(Year.of(2025))
 
-            Mockito.verify(raceRepository).findAllByFilter(captor.capture() ?: RaceFilter())
+            Mockito.verify(raceRepository).findAllByFilter(captor.capture() ?: RaceFilter(), anyPageable())
             assertThat(captor.value.from).isEqualTo(LocalDateTime.parse("2025-01-01T00:00:00"))
             assertThat(
                 captor.value.to
@@ -241,7 +321,7 @@ class StatisticsServiceTest {
 
             service.getRaceStatistics(null)
 
-            Mockito.verify(raceRepository).findAllByFilter(captor.capture() ?: RaceFilter())
+            Mockito.verify(raceRepository).findAllByFilter(captor.capture() ?: RaceFilter(), anyPageable())
             assertThat(captor.value.from).isNull()
             assertThat(captor.value.to).isNull()
         }

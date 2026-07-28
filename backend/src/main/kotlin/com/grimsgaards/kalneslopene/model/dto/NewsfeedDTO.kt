@@ -11,4 +11,5 @@ data class NewsfeedDTO(
     val date: OffsetDateTime,
     val headerImage: FileDto? = null,
     val images: List<String> = emptyList(),
+    val connectedRace: RaceDTO? = null,
 )

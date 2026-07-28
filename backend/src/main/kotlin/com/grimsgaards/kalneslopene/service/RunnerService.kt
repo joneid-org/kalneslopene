@@ -6,8 +6,12 @@ import com.grimsgaards.kalneslopene.model.dto.RunnerDTO
 import com.grimsgaards.kalneslopene.model.entities.RunnerEntity
 import com.grimsgaards.kalneslopene.model.input.RunnerInput
 import com.grimsgaards.kalneslopene.repository.RunnerRepository
+import jakarta.transaction.Transactional
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
 
 @Service
@@ -42,6 +46,7 @@ class RunnerService(
                 },
             ).map { it.toDto() }
 
+    @Transactional
     fun updateRunner(
         uuid: UUID,
         updatedRunner: RunnerInput,
@@ -56,11 +61,16 @@ class RunnerService(
             gender = Gender.valueOf(updatedRunner.gender.uppercase())
             isVerified = updatedRunner.isVerified
         }
-        return runnerRepository.save(existingRunner).toDto()
+        return existingRunner.toDto()
     }
 
+    @Transactional
     fun deleteRunner(uuid: UUID) {
-        runnerRepository.deleteById(uuid)
+        try {
+            runnerRepository.deleteByUuid(uuid)
+        } catch (e: DataIntegrityViolationException) {
+            throw ResponseStatusException(HttpStatus.CONFLICT, "Løper er med i løp og kan ikke slettes", e)
+        }
     }
 
     fun findAllRacesByRunner(uuid: UUID): List<RaceRunnerDTO> {

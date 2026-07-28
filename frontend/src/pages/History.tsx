@@ -1,29 +1,67 @@
-import { useQuery } from "@tanstack/react-query";
-import {
-  Calendar,
-  Flag,
-  type LucideIcon,
-  MapPin,
-  Quote,
-  Trophy,
-  Users,
-} from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { PlusIcon, Quote } from "lucide-react";
+import { useState } from "react";
+import { MUTATIONS } from "@/api/mutations.ts";
 import { QUERIES } from "@/api/queries.ts";
+import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog.tsx";
+import { MilestoneForm } from "@/components/admin/MilestoneForm.tsx";
 import { MilestoneCard } from "@/components/History/MilestoneCard.tsx";
+import { getMilestoneIcon } from "@/components/History/milestoneIcons.ts";
+import { Button } from "@/components/ui/button.tsx";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog.tsx";
+import { useAuth } from "@/hooks/useAuth.ts";
 import { cn } from "@/lib/utils.ts";
-
-const iconMap: Record<string, LucideIcon> = {
-  Flag,
-  Users,
-  Trophy,
-  MapPin,
-  Calendar,
-};
+import type { MilestoneDTO, MilestoneInput } from "@/model/DTO.ts";
 
 export function History() {
+  const { isAuthenticated } = useAuth();
+  const qc = useQueryClient();
+
   const { data: milestones = [] } = useQuery(
     QUERIES.milestone.getAllMilestones,
   );
+
+  const invalidateMilestones = () =>
+    qc.invalidateQueries({ queryKey: ["milestone"] });
+
+  const [showAdd, setShowAdd] = useState(false);
+  const addMutation = useMutation({
+    mutationFn: (milestone: MilestoneInput) =>
+      MUTATIONS.milestone.createMilestone(milestone),
+    onSuccess: () => {
+      invalidateMilestones();
+      setShowAdd(false);
+    },
+  });
+
+  const [editing, setEditing] = useState<MilestoneDTO | null>(null);
+  const editMutation = useMutation({
+    mutationFn: ({
+      uuid,
+      milestone,
+    }: {
+      uuid: string;
+      milestone: MilestoneInput;
+    }) => MUTATIONS.milestone.updateMilestone(uuid, milestone),
+    onSuccess: () => {
+      invalidateMilestones();
+      setEditing(null);
+    },
+  });
+
+  const [deleting, setDeleting] = useState<MilestoneDTO | null>(null);
+  const deleteMutation = useMutation({
+    mutationFn: (uuid: string) => MUTATIONS.milestone.deleteMilestone(uuid),
+    onSuccess: () => {
+      invalidateMilestones();
+      setDeleting(null);
+    },
+  });
 
   const sortedMilestones = [...milestones].sort((a, b) => {
     const yearA = Number.parseInt(a.year, 10);
@@ -52,13 +90,23 @@ export function History() {
               en levende lokal tradisjon.
             </span>
           </p>
+          {isAuthenticated && (
+            <Button
+              className="mt-5 gap-1.5"
+              onClick={() => setShowAdd(true)}
+              disabled={addMutation.isPending}
+            >
+              <PlusIcon className="size-4" />
+              Legg til milepæl
+            </Button>
+          )}
         </section>
 
         <section className="mx-auto w-full max-w-6xl">
           <div className="relative">
             <div className="absolute top-1 bottom-1 left-3.5 w-0.5 -translate-x-1/2 bg-linear-to-b from-transparent via-border to-transparent sm:left-1/2" />
             {sortedMilestones.map((milestone, i) => {
-              const Icon = iconMap[milestone.icon] ?? Flag;
+              const Icon = getMilestoneIcon(milestone.icon);
               const isLeft = i % 2 === 0;
               return (
                 <div
@@ -79,7 +127,14 @@ export function History() {
                         : "sm:col-start-3 sm:pl-3",
                     )}
                   >
-                    <MilestoneCard milestone={milestone} />
+                    <MilestoneCard
+                      milestone={milestone}
+                      onEdit={
+                        isAuthenticated
+                          ? () => setEditing(milestone)
+                          : undefined
+                      }
+                    />
                   </div>
                   {milestone.extra && (
                     <div
@@ -104,6 +159,73 @@ export function History() {
           </div>
         </section>
       </div>
+
+      <Dialog open={showAdd} onOpenChange={setShowAdd}>
+        <DialogContent className="max-h-[90dvh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Legg til milepæl</DialogTitle>
+          </DialogHeader>
+          <MilestoneForm
+            initial={{}}
+            submitLabel="Legg til"
+            onCancel={() => setShowAdd(false)}
+            onSubmit={(milestone) => addMutation.mutate(milestone)}
+          />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={!!editing}
+        onOpenChange={(open) => {
+          if (!open) setEditing(null);
+        }}
+      >
+        <DialogContent className="max-h-[90dvh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Rediger milepæl</DialogTitle>
+          </DialogHeader>
+          {editing && (
+            <MilestoneForm
+              key={editing.uuid}
+              initial={editing}
+              submitLabel="Lagre"
+              onCancel={() => setEditing(null)}
+              onDelete={() => {
+                setDeleting(editing);
+                setEditing(null);
+              }}
+              onSubmit={(milestone) =>
+                editMutation.mutate({ uuid: editing.uuid, milestone })
+              }
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={!!deleting}
+        onOpenChange={(open) => {
+          if (!open) setDeleting(null);
+        }}
+      >
+        {deleting && (
+          <ConfirmDeleteDialog
+            title="Slett milepæl"
+            description={
+              <>
+                Er du sikker på at du vil slette{" "}
+                <span className="font-semibold text-foreground">
+                  {deleting.year} – {deleting.title}
+                </span>
+                ? Dette kan ikke angres.
+              </>
+            }
+            isPending={deleteMutation.isPending}
+            onConfirm={() => deleteMutation.mutate(deleting.uuid)}
+            onClose={() => setDeleting(null)}
+          />
+        )}
+      </Dialog>
     </div>
   );
 }

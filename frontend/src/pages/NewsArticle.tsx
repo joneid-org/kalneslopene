@@ -7,12 +7,7 @@ import { QUERIES } from "@/api/queries.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator.tsx";
-import {
-  findRaceForPost,
-  NEWS_IMAGES,
-  tagColor,
-  useTags,
-} from "@/lib/newsUtils.ts";
+import { NEWS_IMAGES, tagColor, useTags } from "@/lib/newsUtils.ts";
 import { formatDateFull } from "@/lib/timeUtils.ts";
 
 type Lightbox = { src: string; alt: string };
@@ -23,7 +18,6 @@ export function NewsArticle() {
   const contentRef = useRef<HTMLDivElement>(null);
   const postQuery = useQuery(QUERIES.newsfeed.getNewsFeedByUuid(uuid ?? ""));
   const post = postQuery.data;
-  const { data: races } = useQuery(QUERIES.race.getAllRaces());
   const tags = useTags();
 
   // Stable object identity: React re-assigns innerHTML whenever this prop is a
@@ -81,7 +75,6 @@ export function NewsArticle() {
   const imgIndex = [...post.uuid].reduce((sum, c) => sum + c.charCodeAt(0), 0);
   const fallbackImg = NEWS_IMAGES[imgIndex % NEWS_IMAGES.length] ?? "";
   const headerImage = post.headerImage?.url ?? fallbackImg;
-  const matchedRace = findRaceForPost(races ?? [], post);
 
   return (
     <div className="w-full px-4 py-6">
@@ -109,8 +102,8 @@ export function NewsArticle() {
               </Link>
             ))}
           </div>
-          {matchedRace?.uuid && (
-            <Link to={`/resultater/${matchedRace.uuid}`}>
+          {post.connectedRace?.uuid && (
+            <Link to={`/resultater/${post.connectedRace.uuid}`}>
               <Button
                 size="sm"
                 variant="outline"
@@ -168,7 +161,7 @@ export function NewsArticle() {
               <img
                 src={lightbox.src}
                 alt={lightbox.alt}
-                className="block h-auto w-auto max-w-[calc(100vw-2rem)] max-h-[calc(100dvh-2rem)] object-contain rounded-md sm:max-w-[calc(100vw-4rem)] sm:max-h-[calc(100dvh-4rem)]"
+                className="block h-auto w-auto max-h-[calc(100dvh-3rem)] max-w-[calc(100vw-2rem)] max-h-[calc(100dvh-2rem)] object-contain rounded-md object-contain sm:max-h-[calc(100dvh-5rem)] sm:max-w-[calc(100vw-4rem)] sm:max-h-[calc(100dvh-4rem)]"
               />
             )}
           </DialogContent>

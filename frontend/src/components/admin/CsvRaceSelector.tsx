@@ -6,7 +6,7 @@ import {
   formatDDMonth,
   raceDateToSortKey,
 } from "@/lib/timeUtils.ts";
-import type { RaceDTO } from "@/model/DTO.ts";
+import type { RaceInfoDTO } from "@/model/DTO.ts";
 
 export function CsvRaceSelector({
   races,
@@ -14,9 +14,9 @@ export function CsvRaceSelector({
   onSelect,
   onNext,
 }: {
-  races: RaceDTO[];
-  selected: RaceDTO | null;
-  onSelect: (race: RaceDTO) => void;
+  races: RaceInfoDTO[];
+  selected: RaceInfoDTO | null;
+  onSelect: (race: RaceInfoDTO) => void;
   onNext: () => void;
 }) {
   const sorted = races.toSorted((a, b) =>

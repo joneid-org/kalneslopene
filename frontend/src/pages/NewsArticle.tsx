@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import DOMPurify from "dompurify";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ArrowLeft, ExternalLink, Images } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
@@ -100,18 +100,33 @@ export function NewsArticle() {
               </Link>
             ))}
           </div>
-          {post.connectedRace?.uuid && (
-            <Link to={`/resultater/${post.connectedRace.uuid}`}>
-              <Button
-                size="sm"
-                variant="outline"
-                className="gap-1.5 text-primary border-border hover:bg-primary/10 shrink-0"
-              >
-                <ExternalLink className="size-3.5" />
-                Se resultater
-              </Button>
-            </Link>
-          )}
+          <div className="flex flex-wrap gap-2">
+            {post.connectedRace?.uuid && (
+              <Link to={`/resultater/${post.connectedRace.uuid}`}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="gap-1.5 text-primary border-border hover:bg-primary/10 shrink-0"
+                >
+                  <ExternalLink className="size-3.5" />
+                  Se resultater
+                </Button>
+              </Link>
+            )}
+            {post.connectedRace?.uuid &&
+              post.connectedRace.photos.length > 1 && (
+                <Link to={`/bilder/${post.connectedRace.uuid}`}>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="gap-1.5 text-primary border-border hover:bg-primary/10 shrink-0"
+                  >
+                    <Images className="size-3.5" />
+                    Se bilder
+                  </Button>
+                </Link>
+              )}
+          </div>
         </div>
 
         <h2 className="mb-1">{post.header}</h2>

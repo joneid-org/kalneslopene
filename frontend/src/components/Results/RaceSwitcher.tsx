@@ -7,12 +7,12 @@ import {
   formatWeekdayDateFull,
 } from "@/lib/timeUtils.ts";
 import { cn } from "@/lib/utils.ts";
-import type { RaceDTO } from "@/model/DTO.ts";
+import type { RaceDTO, RaceInfoDTO } from "@/model/DTO.ts";
 
 type RaceSwitcherProps = {
   race: RaceDTO;
-  previousRace: RaceDTO | null;
-  nextRace: RaceDTO | null;
+  previousRace: RaceInfoDTO | null;
+  nextRace: RaceInfoDTO | null;
   path: string;
 };
 
@@ -21,7 +21,7 @@ function SwitchButton({
   path,
   direction,
 }: {
-  race: RaceDTO | null;
+  race: RaceInfoDTO | null;
   path: string;
   direction: "previous" | "next";
 }) {

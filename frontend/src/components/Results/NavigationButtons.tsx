@@ -1,11 +1,11 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router";
 import { formatDate } from "@/lib/timeUtils.ts";
-import type { RaceDTO } from "@/model/DTO.ts";
+import type { RaceInfoDTO } from "@/model/DTO.ts";
 
 type Props = {
-  previousRace: RaceDTO | null;
-  nextRace: RaceDTO | null;
+  previousRace: RaceInfoDTO | null;
+  nextRace: RaceInfoDTO | null;
   path: string;
 };
 

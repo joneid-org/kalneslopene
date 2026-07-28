@@ -8,6 +8,7 @@ import com.grimsgaards.kalneslopene.model.entities.RacePhotoEntity
 import com.grimsgaards.kalneslopene.model.entities.RaceRunnerEntity
 import com.grimsgaards.kalneslopene.model.entities.RaceRunnerKey
 import com.grimsgaards.kalneslopene.model.entities.RunnerEntity
+import com.grimsgaards.kalneslopene.model.input.RaceFilter
 import com.grimsgaards.kalneslopene.model.input.RaceInput
 import com.grimsgaards.kalneslopene.model.input.ReorderPhotoInput
 import com.grimsgaards.kalneslopene.repository.RacePhotoRepository
@@ -19,12 +20,15 @@ import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.any
 import org.mockito.Mockito.anyList
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.quality.Strictness
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
@@ -114,6 +118,111 @@ class RaceServiceTest {
             assertThat(dto.weatherManuallyEdited).isFalse()
             assertThat(dto.courseCondition).isEqualTo("Vått")
             assertThat(dto.weather?.symbol).isEqualTo("cloudy")
+        }
+    }
+
+    @Nested
+    inner class NextRace {
+        private fun stubNextRace(race: RaceEntity?) {
+            val anyDateTime = any(LocalDateTime::class.java) ?: LocalDateTime.MIN
+            Mockito
+                .`when`(raceRepository.findFirstByRaceDateGreaterThanEqualOrderByRaceDateAsc(anyDateTime))
+                .thenReturn(race)
+        }
+
+        @Test
+        fun `returns the first upcoming race`() {
+            val race = existingRace()
+            stubNextRace(race)
+
+            val dto = service.findNextRace()
+
+            assertThat(dto?.uuid).isEqualTo(race.uuid)
+            assertThat(dto?.raceDate).isEqualTo(raceDate)
+        }
+
+        @Test
+        fun `returns null when no race is upcoming`() {
+            stubNextRace(null)
+
+            assertThat(service.findNextRace()).isNull()
+        }
+    }
+
+    @Nested
+    inner class GetAll {
+        private fun capturePageable(
+            filter: RaceFilter,
+            page: Int = 0,
+            pageSize: Int? = null,
+        ): Pageable {
+            Mockito
+                .`when`(
+                    raceRepository.findAllByFilter(
+                        any(RaceFilter::class.java) ?: filter,
+                        any(Pageable::class.java) ?: Pageable.unpaged(),
+                    ),
+                ).thenReturn(PageImpl(emptyList()))
+
+            service.getAll(filter, page, pageSize)
+
+            val captor = ArgumentCaptor.forClass(Pageable::class.java)
+            Mockito.verify(raceRepository).findAllByFilter(any(RaceFilter::class.java) ?: filter, captor.capture() ?: Pageable.unpaged())
+            return captor.value
+        }
+
+        @Test
+        fun `uses the requested page size`() {
+            val pageable = capturePageable(RaceFilter(), page = 2, pageSize = 5)
+
+            assertThat(pageable.isPaged).isTrue()
+            assertThat(pageable.pageNumber).isEqualTo(2)
+            assertThat(pageable.pageSize).isEqualTo(5)
+        }
+
+        @Test
+        fun `allows the maximum page size`() {
+            assertThat(capturePageable(RaceFilter(), pageSize = MAX_RACE_PAGE_SIZE).pageSize).isEqualTo(MAX_RACE_PAGE_SIZE)
+        }
+
+        @Test
+        fun `throws when page size exceeds the maximum`() {
+            assertThatThrownBy { service.getAll(RaceFilter(), 0, MAX_RACE_PAGE_SIZE + 1) }
+                .isInstanceOf(IllegalArgumentException::class.java)
+        }
+
+        @Test
+        fun `throws when page size is not positive`() {
+            assertThatThrownBy { service.getAll(RaceFilter(), 0, 0) }
+                .isInstanceOf(IllegalArgumentException::class.java)
+        }
+
+        @Test
+        fun `omitting page size is unpaged when the filter stays within one year`() {
+            val filter =
+                RaceFilter(
+                    from = LocalDateTime.parse("2026-01-01T00:00:00"),
+                    to = LocalDateTime.parse("2026-12-31T23:59:59"),
+                )
+
+            assertThat(capturePageable(filter).isUnpaged).isTrue()
+        }
+
+        @Test
+        fun `throws when page size is omitted and the filter spans several years`() {
+            val filter =
+                RaceFilter(
+                    from = LocalDateTime.parse("2025-01-01T00:00:00"),
+                    to = LocalDateTime.parse("2026-12-31T23:59:59"),
+                )
+
+            assertThatThrownBy { service.getAll(filter, 0, null) }.isInstanceOf(IllegalArgumentException::class.java)
+        }
+
+        @Test
+        fun `throws when page size is omitted and the filter has no bounds`() {
+            assertThatThrownBy { service.getAll(RaceFilter(from = LocalDateTime.parse("2026-01-01T00:00:00")), 0, null) }
+                .isInstanceOf(IllegalArgumentException::class.java)
         }
     }
 

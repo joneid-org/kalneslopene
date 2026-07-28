@@ -7,19 +7,19 @@ import { StatTile } from "@/components/StatTile.tsx";
 import { YearSelector } from "@/components/YearSelector.tsx";
 import { getFastestRunner } from "@/lib/statisticsUtils.ts";
 import {
-  extractYear,
+  endOfYearString,
   formatSecondsToTime,
   mapResultTimeToNumber,
-  raceDateToSortKey,
+  startOfYearString,
 } from "@/lib/timeUtils.ts";
-import { getYears, isPast } from "@/lib/utils.ts";
+import { getYears } from "@/lib/utils.ts";
 
 export default function RaceStatistics() {
   const [selectedYear, setSelectedYear] = useState<number | undefined>(
     undefined,
   );
 
-  const { data: races } = useQuery(QUERIES.race.getAllRaces());
+  const { data: races } = useQuery(QUERIES.race.getAllRaceInfos());
   const { data: allTimeStatistics } = useQuery(QUERIES.statistics.race());
   const { data: runnerOverview } = useQuery(
     QUERIES.statistics.runnerOverview(),
@@ -33,17 +33,18 @@ export default function RaceStatistics() {
     enabled: effectiveYear != null,
   });
 
-  const yearRaces = useMemo(
-    () =>
-      (races ?? [])
-        .filter((r) => isPast(r) && extractYear(r.raceDate) === effectiveYear)
-        .sort((a, b) =>
-          raceDateToSortKey(a.raceDate).localeCompare(
-            raceDateToSortKey(b.raceDate),
-          ),
-        ),
-    [races, effectiveYear],
-  );
+  const { data: yearRacesData } = useQuery({
+    ...QUERIES.race.getRaces({
+      filter: {
+        from: startOfYearString(effectiveYear),
+        to: endOfYearString(effectiveYear),
+        isPublished: true,
+      },
+      pageSize: null,
+    }),
+    enabled: effectiveYear != null,
+  });
+  const yearRaces = yearRacesData?.content ?? [];
 
   const recordMale = allTimeStatistics?.courseRecordMale;
   const recordFemale = allTimeStatistics?.courseRecordFemale;

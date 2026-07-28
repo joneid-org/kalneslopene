@@ -17,15 +17,15 @@ import {
 } from "@/components/ui/dialog.tsx";
 import { formatDDMonth, raceDateToSortKey } from "@/lib/timeUtils.ts";
 import { isPast } from "@/lib/utils.ts";
-import type { RaceDTO } from "@/model/DTO.ts";
+import type { RaceDTO, RaceInfoDTO } from "@/model/DTO.ts";
 
 export function CRUDRaces() {
   const qc = useQueryClient();
   const navigate = useNavigate();
 
-  const { data: races } = useQuery(QUERIES.race.getAllRaces());
+  const { data } = useQuery(QUERIES.race.getAllRaceInfos());
 
-  const upcoming = (races ?? [])
+  const upcoming = (data ?? [])
     .filter((r) => !isPast(r))
     .toSorted((a, b) =>
       raceDateToSortKey(a.raceDate).localeCompare(
@@ -35,25 +35,25 @@ export function CRUDRaces() {
 
   const [showSeason, setShowSeason] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
-  const [editing, setEditing] = useState<RaceDTO | null>(null);
-  const [deleting, setDeleting] = useState<RaceDTO | null>(null);
+  const [editing, setEditing] = useState<RaceInfoDTO | null>(null);
+  const [deleting, setDeleting] = useState<RaceInfoDTO | null>(null);
 
   const addMutation = useMutation({
     mutationFn: (raceDate: string) => createRaces([{ raceDate } as RaceDTO]),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["race", "getAll"] });
+      qc.invalidateQueries({ queryKey: ["race"] });
       setShowAdd(false);
     },
   });
 
   const editMutation = useMutation({
-    mutationFn: (update: { race: RaceDTO; raceDate: string }) =>
+    mutationFn: (update: { race: RaceInfoDTO; raceDate: string }) =>
       MUTATIONS.race.updateRace(update.race.uuid, {
         ...update.race,
         raceDate: update.raceDate,
       }),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["race", "getAll"] });
+      qc.invalidateQueries({ queryKey: ["race"] });
       setEditing(null);
     },
   });
@@ -61,7 +61,7 @@ export function CRUDRaces() {
   const deleteMutation = useMutation({
     mutationFn: (uuid: string) => MUTATIONS.race.deleteRace(uuid),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["race", "getAll"] });
+      qc.invalidateQueries({ queryKey: ["race"] });
       setDeleting(null);
     },
   });

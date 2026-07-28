@@ -81,7 +81,7 @@ export function RegisterResultsWizard() {
   });
 
   const invalidateRaceLists = () => {
-    qc.invalidateQueries({ queryKey: ["race", "getAll"] });
+    qc.invalidateQueries({ queryKey: ["race"] });
     qc.invalidateQueries({ queryKey: ["runner", "getAll"] });
   };
 
@@ -206,9 +206,7 @@ export function RegisterResultsWizard() {
       return MUTATIONS.race.publishResults(uuid);
     },
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["race", "getAll"] });
-      qc.invalidateQueries({ queryKey: ["race", "getById", uuid] });
-      qc.invalidateQueries({ queryKey: ["race", uuid, "runnersInRace"] });
+      qc.invalidateQueries({ queryKey: ["race"] });
       qc.invalidateQueries({ queryKey: ["runner", "getAll"] });
       navigate("/admin/resultater");
     },

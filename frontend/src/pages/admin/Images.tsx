@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { type InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
 import { queryClient } from "@/api/queryClient.ts";
@@ -12,14 +12,21 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
+import { Button } from "@/components/ui/button.tsx";
 import {
   confirmUploadedFiles,
   deleteS3Files,
   requestPresignedUrls,
 } from "@/lib/fileUploadUtils.ts";
 import { convertImageToWebp } from "@/lib/photoUtils.ts";
-import { extractYear, formatDDMonth } from "@/lib/timeUtils.ts";
-import type { RaceDTO, S3FileDto } from "@/model/DTO.ts";
+import {
+  extractYear,
+  formatDDMonth,
+  toLocalDateTimeString,
+} from "@/lib/timeUtils.ts";
+import type { PagedResponse, RaceDTO, S3FileDto } from "@/model/DTO.ts";
+
+const NOW = toLocalDateTimeString(new Date());
 
 export interface UploadItem {
   id: string;
@@ -30,12 +37,11 @@ export interface UploadItem {
   error?: string;
 }
 
-const NOW = new Date();
-const RACE_LIST_KEY = QUERIES.race.getAllRaces({ to: NOW }).queryKey;
-
 export function ImagesPage() {
-  const { data, isLoading } = useQuery(QUERIES.race.getAllRaces({ to: NOW }));
-  const races = data ?? [];
+  const query = QUERIES.race.getRacesInfinite({ filter: { to: NOW } });
+  const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } =
+    useInfiniteQuery(query);
+  const races = data?.pages.flatMap((page) => page.content) ?? [];
 
   const [uploads, setUploads] = useState<Record<string, UploadItem[]>>({});
 
@@ -65,12 +71,20 @@ export function ImagesPage() {
   };
 
   const addPhotoToCache = (raceUuid: string, photo: S3FileDto) => {
-    queryClient.setQueryData<RaceDTO[]>(RACE_LIST_KEY, (races) =>
-      races?.map((race) =>
-        race.uuid === raceUuid
-          ? { ...race, photos: [...race.photos, photo] }
-          : race,
-      ),
+    queryClient.setQueryData<InfiniteData<PagedResponse<RaceDTO>>>(
+      query.queryKey,
+      (data) =>
+        data && {
+          ...data,
+          pages: data.pages.map((page) => ({
+            ...page,
+            content: page.content.map((race) =>
+              race.uuid === raceUuid
+                ? { ...race, photos: [...race.photos, photo] }
+                : race,
+            ),
+          })),
+        },
     );
   };
 
@@ -137,7 +151,7 @@ export function ImagesPage() {
     if (uploadedUuids.length === 0) return;
 
     await confirmUploadedFiles(uploadedUuids);
-    await queryClient.invalidateQueries({ queryKey: ["race", "getAll"] });
+    await queryClient.invalidateQueries({ queryKey: query.queryKey });
   };
 
   return (
@@ -183,7 +197,7 @@ export function ImagesPage() {
                     onBulkDelete={async (ids) => {
                       await deleteS3Files(ids);
                       await queryClient.invalidateQueries({
-                        queryKey: ["race", "getAll"],
+                        queryKey: query.queryKey,
                       });
                     }}
                     onDismissUpload={(uploadId) =>
@@ -195,6 +209,17 @@ export function ImagesPage() {
             );
           })}
         </Accordion>
+      )}
+
+      {hasNextPage && (
+        <Button
+          variant="outline"
+          className="w-full"
+          onClick={() => fetchNextPage()}
+          disabled={isFetchingNextPage}
+        >
+          {isFetchingNextPage ? "Laster …" : "Vis flere løp"}
+        </Button>
       )}
     </div>
   );

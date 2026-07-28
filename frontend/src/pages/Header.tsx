@@ -12,7 +12,9 @@ const navLinks = [
 ];
 
 export function Header({ ref }: { ref?: Ref<HTMLElement> }) {
-  const { data: races } = useQuery(QUERIES.race.getAllRaces());
+  const { data: races } = useQuery(
+    QUERIES.race.getAllRaceInfos({ isPublished: true }),
+  );
   const pathname = decodeURIComponent(useLocation().pathname);
 
   return (
@@ -41,7 +43,7 @@ export function Header({ ref }: { ref?: Ref<HTMLElement> }) {
           <DynamicDropDownMenu
             label="Resultater"
             basePath="/resultater"
-            races={(races ?? []).filter((r) => r.isPublished)}
+            races={races ?? []}
             active={pathname.startsWith("/resultater")}
           />
           <DynamicDropDownMenu

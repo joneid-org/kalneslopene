@@ -19,96 +19,96 @@ import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
+const val RACE_API = "/api/races"
+
 @Suppress("TooManyFunctions")
 @RestController
-@RequestMapping("/api/races")
 class RaceController(
     val raceService: RaceService,
 ) {
-    @GetMapping
+    @GetMapping(RACE_API)
     fun getRaces(
         filter: RaceFilter,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(required = false) pageSize: Int?,
     ): PagedResponse<RaceDTO> = raceService.getAll(filter, page, pageSize).toPagedResponse()
 
-    @GetMapping("/info")
+    @GetMapping("/api/race-info")
     fun getAllRacesInfo(
         @RequestParam(required = false) isPublished: Boolean?,
     ): List<RaceInfoDto> = raceService.getAllInfo(isPublished)
 
-    @GetMapping("/next")
+    @GetMapping("/api/race-next")
     fun getNextRace(): ResponseEntity<RaceDTO> =
         raceService.findNextRace()?.let { ResponseEntity.ok(it) }
             ?: ResponseEntity.noContent().build()
 
-    @GetMapping("/{uuid}")
+    @GetMapping("$RACE_API/{uuid}")
     fun getRaceById(
         @PathVariable uuid: UUID,
     ): RaceDTO = raceService.findByUuid(uuid)
 
-    @PatchMapping("/{uuid}")
+    @PatchMapping("$RACE_API/{uuid}")
     fun updateRace(
         @RequestBody input: RaceInput,
         @PathVariable uuid: UUID,
     ): RaceDTO = raceService.updateRace(uuid, input)
 
-    @DeleteMapping("/{uuid}")
+    @DeleteMapping("$RACE_API/{uuid}")
     fun deleteRaceById(
         @PathVariable uuid: UUID,
     ) = raceService.deleteRaceById(uuid)
 
-    @PostMapping()
+    @PostMapping(RACE_API)
     fun createRaces(
         @RequestBody races: List<RaceInput>,
     ): List<RaceDTO> = raceService.createRaces(races)
 
-    @PostMapping("/{uuid}/publish")
+    @PostMapping("$RACE_API/{uuid}/publish")
     fun publishRace(
         @PathVariable uuid: UUID,
     ): RaceDTO = raceService.publishRace(uuid)
 
-    @GetMapping("/{uuid}/runners")
+    @GetMapping("$RACE_API/{uuid}/runners")
     fun getRunnersInRace(
         @PathVariable uuid: UUID,
     ): List<RaceRunnerDTO> = raceService.findAllRunnersInRace(uuid)
 
-    @GetMapping("/{uuid}/results/summary")
+    @GetMapping("$RACE_API/{uuid}/results/summary")
     fun getResultSummary(
         @PathVariable uuid: UUID,
     ): RaceResultSummaryDto = raceService.getResultSummary(uuid)
 
-    @PostMapping("/{uuid}/runners")
+    @PostMapping("$RACE_API/{uuid}/runners")
     fun addRunnersToRace(
         @PathVariable uuid: UUID,
         @RequestBody runners: List<RaceRunnerDTO>,
     ): List<RaceRunnerDTO> = raceService.addRunnersToRace(uuid, runners)
 
-    @PostMapping("/{uuid}/photos")
+    @PostMapping("$RACE_API/{uuid}/photos")
     fun addPhotoToRace(
         @PathVariable uuid: UUID,
         @RequestBody photos: List<String>,
     ): Map<String, PhotoUploadInfo> = raceService.addPhotosToRace(uuid, photos)
 
-    @PatchMapping("/{uuid}/photos/order")
+    @PatchMapping("$RACE_API/{uuid}/photos/order")
     fun reorderPhoto(
         @PathVariable uuid: UUID,
         @RequestBody input: ReorderPhotoInput,
     ): List<FileDto> = raceService.reorderPhotoInRace(uuid, input)
 
-    @PatchMapping("/{uuid}/runners/{runnerUuid}")
+    @PatchMapping("$RACE_API/{uuid}/runners/{runnerUuid}")
     fun updateRunnerInRace(
         @PathVariable uuid: UUID,
         @PathVariable runnerUuid: UUID,
         @RequestBody runner: RaceRunnerDTO,
     ): RaceRunnerDTO = raceService.updateRunnerInRace(uuid, runnerUuid, runner)
 
-    @DeleteMapping("/{uuid}/runners")
+    @DeleteMapping("$RACE_API/{uuid}/runners")
     fun removeRunnersFromRace(
         @PathVariable uuid: UUID,
         @RequestBody runnerUuids: List<UUID>,

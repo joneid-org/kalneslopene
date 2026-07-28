@@ -76,7 +76,7 @@ export const QUERIES = {
       queryKey: ["race", "getAllRaceInfos", isPublished],
       queryFn: async () =>
         await kyClient
-          .get("/api/races/info", { searchParams: { isPublished } })
+          .get("/api/race-info", { searchParams: { isPublished } })
           .json<RaceInfoDTO[]>(),
     }),
     getRaces: ({
@@ -108,7 +108,7 @@ export const QUERIES = {
     getNextRace: () => ({
       queryKey: ["race", "next"],
       queryFn: async () => {
-        const response = await kyClient.get("/api/races/next");
+        const response = await kyClient.get("/api/race-next");
         return response.status === 204 ? null : await response.json<RaceDTO>();
       },
     }),

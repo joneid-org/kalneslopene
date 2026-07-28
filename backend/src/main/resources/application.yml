@@ -17,3 +17,7 @@ spring:
 results-repair:
   enabled: false
   dry-run: false
+
+ordering:
+  baseline: 100
+  repair: 200

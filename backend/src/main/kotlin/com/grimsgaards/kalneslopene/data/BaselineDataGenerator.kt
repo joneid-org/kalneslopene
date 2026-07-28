@@ -8,9 +8,10 @@ import com.grimsgaards.kalneslopene.model.entities.RunnerEntity
 import com.grimsgaards.kalneslopene.repository.RaceRepository
 import com.grimsgaards.kalneslopene.repository.RaceRunnerRepository
 import com.grimsgaards.kalneslopene.repository.RunnerRepository
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
-import org.springframework.core.annotation.Order
+import org.springframework.core.Ordered
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
@@ -20,18 +21,24 @@ import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 /**
- * Seeds an empty database from the csv files. Ordered ahead of [CsvResultsRepair] so that on a boot
- * with both enabled the data exists before the repair rebuilds it.
+ * Seeds an empty database from the csv files. `ordering.baseline` must stay below `ordering.repair`
+ * so that on a boot with both enabled the data exists before [CsvResultsRepair] rebuilds it.
+ *
+ * The order comes from [Ordered] rather than `@Order`, whose value is an annotation argument and so
+ * cannot hold a property placeholder.
  */
 @Component
-@Order(100)
 @ConditionalOnProperty(prefix = "baseline-data", name = ["enabled"], havingValue = "true")
 class BaselineDataGenerator(
     private val runnerRepository: RunnerRepository,
     private val raceRepository: RaceRepository,
     private val raceRunnerRepository: RaceRunnerRepository,
-) : CommandLineRunner {
+    @param:Value("\${ordering.baseline}") private val orderValue: Int,
+) : CommandLineRunner,
+    Ordered {
     private val log = logger()
+
+    override fun getOrder(): Int = orderValue
 
     private val runnersByName = mutableMapOf<String, RunnerEntity>()
 

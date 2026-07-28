@@ -11,7 +11,7 @@ import com.grimsgaards.kalneslopene.repository.RunnerRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
-import org.springframework.core.annotation.Order
+import org.springframework.core.Ordered
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.transaction.interceptor.TransactionAspectSupport
@@ -28,18 +28,22 @@ import java.util.UUID
  * matched by name and updated in place; runners that no longer appear in any csv are reported, not
  * deleted, so results attached to races outside the csv dates keep working.
  *
- * Always runs after [BaselineDataGenerator] as long as the order value is higher than what is in [BaselineDataGenerator].
+ * Always runs after [BaselineDataGenerator] as long as `ordering.repair` stays above
+ * `ordering.baseline`.
  */
 @Component
-@Order(200)
 @ConditionalOnProperty(prefix = "results-repair", name = ["enabled"], havingValue = "true")
 class CsvResultsRepair(
     private val runnerRepository: RunnerRepository,
     private val raceRepository: RaceRepository,
     private val raceRunnerRepository: RaceRunnerRepository,
     @param:Value("\${results-repair.dry-run:true}") private val dryRun: Boolean,
-) : CommandLineRunner {
+    @param:Value("\${ordering.repair}") private val orderValue: Int,
+) : CommandLineRunner,
+    Ordered {
     private val log = logger()
+
+    override fun getOrder(): Int = orderValue
 
     private class RunnerProgress {
         var personalRecord: Duration? = null

@@ -20,7 +20,7 @@ export function RegisterTimesStep({
   onRemove: (runnerUuid: string) => void;
   onUpdateResult: (
     runnerUuid: string,
-    patch: { resultTime?: string; hideTime?: boolean },
+    patch: { resultTime?: string | null; hideTime?: boolean },
   ) => void;
   isAdding: boolean;
 }) {
@@ -84,7 +84,7 @@ export function RegisterTimesStep({
                   onChange={(e) =>
                     onUpdateResult(entry.runner.uuid, {
                       hideTime: e.target.checked,
-                      ...(e.target.checked ? { resultTime: "PT0S" } : {}),
+                      ...(e.target.checked ? { resultTime: null } : {}),
                     })
                   }
                   className="rounded"

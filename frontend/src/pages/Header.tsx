@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { Ref } from "react";
 import { Link, useLocation } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
+import { AdminMenu } from "@/components/Navbar/AdminMenu.tsx";
 import { DynamicDropDownMenu } from "@/components/Navbar/DynamicDropDownMenu.tsx";
 import { cn } from "@/lib/utils.ts";
 
@@ -12,7 +13,9 @@ const navLinks = [
 ];
 
 export function Header({ ref }: { ref?: Ref<HTMLElement> }) {
-  const { data: races } = useQuery(QUERIES.race.getAllRaces());
+  const { data: races } = useQuery(
+    QUERIES.race.getAllRaceInfos({ isPublished: true }),
+  );
   const pathname = decodeURIComponent(useLocation().pathname);
 
   return (
@@ -41,7 +44,7 @@ export function Header({ ref }: { ref?: Ref<HTMLElement> }) {
           <DynamicDropDownMenu
             label="Resultater"
             basePath="/resultater"
-            races={(races ?? []).filter((r) => r.isPublished)}
+            races={races ?? []}
             active={pathname.startsWith("/resultater")}
           />
           <DynamicDropDownMenu
@@ -68,6 +71,8 @@ export function Header({ ref }: { ref?: Ref<HTMLElement> }) {
             );
           })}
         </nav>
+
+        <AdminMenu />
       </div>
     </header>
   );

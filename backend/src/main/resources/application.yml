@@ -8,6 +8,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+    properties:
+      hibernate:
+        default_batch_fetch_size: 20
 
 # One-off repair of runner/race_runner from the Resultater/v2 csv files. See scripts/results-repair.md.
 # Turn enabled on for a single boot, then off again. dry-run logs the full report and rolls back.

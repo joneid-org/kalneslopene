@@ -81,7 +81,7 @@ export function RegisterResultsWizard() {
   });
 
   const invalidateRaceLists = () => {
-    qc.invalidateQueries({ queryKey: ["race", "getAll"] });
+    qc.invalidateQueries({ queryKey: ["race"] });
     qc.invalidateQueries({ queryKey: ["runner", "getAll"] });
   };
 
@@ -123,7 +123,7 @@ export function RegisterResultsWizard() {
 
   const updateResult = (
     runnerUuid: string,
-    patch: { resultTime?: string; hideTime?: boolean },
+    patch: { resultTime?: string | null; hideTime?: boolean },
   ) => {
     const current = entries.find((e) => e.runner.uuid === runnerUuid);
     if (!current) return;
@@ -206,9 +206,7 @@ export function RegisterResultsWizard() {
       return MUTATIONS.race.publishResults(uuid);
     },
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["race", "getAll"] });
-      qc.invalidateQueries({ queryKey: ["race", "getById", uuid] });
-      qc.invalidateQueries({ queryKey: ["race", uuid, "runnersInRace"] });
+      qc.invalidateQueries({ queryKey: ["race"] });
       qc.invalidateQueries({ queryKey: ["runner", "getAll"] });
       navigate("/admin/resultater");
     },

@@ -23,13 +23,13 @@ export function RoutePhotoGallery() {
   return (
     <section>
       <div className="flex items-baseline justify-between gap-3">
-        <h2 className="page-title mt-2">Løypa 200m for 200m</h2>
+        <h2 className="page-title mt-2">Løypa 200 for 200</h2>
         <span className="shrink-0 text-xs font-bold tabular-nums text-muted-foreground sm:text-sm">
           {currentIndex + 1} / {total}
         </span>
       </div>
       <p className="mt-1 hidden text-sm text-muted-foreground sm:block">
-        Naviger gjennom bildene for å se navngitte steder langs ruten.
+        Naviger gjennom bildene for informasjon om de ulike delene av løypa.
       </p>
 
       <div className="mt-3 grid overflow-hidden rounded-2xl border bg-card shadow-sm sm:mt-4 md:grid-cols-[1fr_1.1fr]">

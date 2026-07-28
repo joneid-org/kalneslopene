@@ -1,3 +1,4 @@
+import { infiniteQueryOptions } from "@tanstack/react-query";
 import { kyClient } from "@/api/queryClient.ts";
 import type { RaceFilter } from "@/api/types.ts";
 import type {
@@ -9,6 +10,7 @@ import type {
   OrganizerDTO,
   PagedResponse,
   RaceDTO,
+  RaceInfoDTO,
   RaceResultSummaryDTO,
   RaceRunnerDTO,
   RaceStatisticsDTO,
@@ -29,6 +31,38 @@ export function requestNewsfeedContentUpload(fileName: string) {
     .json<{ uploadUrl: string; s3File: S3FileDto }>();
 }
 
+export function nextPageParam<T>(
+  lastPage: PagedResponse<T>,
+): number | undefined {
+  const next = lastPage.page + 1;
+  return next < lastPage.totalPages ? next : undefined;
+}
+
+export function previousPageParam<T>(
+  firstPage: PagedResponse<T>,
+): number | undefined {
+  return firstPage.page > 0 ? firstPage.page - 1 : undefined;
+}
+
+export const DEFAULT_RACE_PAGE_SIZE = 20;
+
+function fetchRaces(
+  filter: RaceFilter | undefined,
+  page: number,
+  pageSize: number | undefined | null,
+) {
+  const searchParams: Record<string, string> = { page: page.toString() };
+  if (pageSize !== undefined && pageSize !== null)
+    searchParams.pageSize = pageSize.toString();
+  if (filter?.from) searchParams.from = filter.from;
+  if (filter?.to) searchParams.to = filter.to;
+  if (filter?.isPublished !== undefined)
+    searchParams.isPublished = String(filter.isPublished);
+  return kyClient
+    .get("/api/races", { searchParams })
+    .json<PagedResponse<RaceDTO>>();
+}
+
 export const QUERIES = {
   config: {
     get: {
@@ -38,16 +72,44 @@ export const QUERIES = {
     },
   },
   race: {
-    getAllRaces: (filter?: RaceFilter) => ({
-      queryKey: ["race", "getAll", filter],
+    getAllRaceInfos: ({ isPublished }: { isPublished?: boolean } = {}) => ({
+      queryKey: ["race", "getAllRaceInfos", isPublished],
+      queryFn: async () =>
+        await kyClient
+          .get("/api/race-info", { searchParams: { isPublished } })
+          .json<RaceInfoDTO[]>(),
+    }),
+    getRaces: ({
+      filter,
+      page = 0,
+      pageSize = DEFAULT_RACE_PAGE_SIZE,
+    }: {
+      filter?: RaceFilter;
+      page?: number;
+      pageSize?: number | null;
+    } = {}) => ({
+      queryKey: ["race", "getAll", filter, page, pageSize],
+      queryFn: () => fetchRaces(filter, page, pageSize),
+    }),
+    getRacesInfinite: ({
+      filter,
+      pageSize = DEFAULT_RACE_PAGE_SIZE,
+    }: {
+      filter?: RaceFilter;
+      pageSize?: number;
+    } = {}) =>
+      infiniteQueryOptions({
+        queryKey: ["race", "getAllInfinite", filter, pageSize],
+        queryFn: ({ pageParam }) => fetchRaces(filter, pageParam, pageSize),
+        initialPageParam: 0,
+        getNextPageParam: nextPageParam,
+        getPreviousPageParam: previousPageParam,
+      }),
+    getNextRace: () => ({
+      queryKey: ["race", "next"],
       queryFn: async () => {
-        const searchParams: Record<string, string> = {};
-        if (filter?.from)
-          searchParams.from = filter.from.toISOString().slice(0, 19);
-        if (filter?.to) searchParams.to = filter.to.toISOString().slice(0, 19);
-        return await kyClient
-          .get("/api/races", { searchParams })
-          .json<RaceDTO[]>();
+        const response = await kyClient.get("/api/race-next");
+        return response.status === 204 ? null : await response.json<RaceDTO>();
       },
     }),
     getRaceByUuid: (uuid: string) => ({

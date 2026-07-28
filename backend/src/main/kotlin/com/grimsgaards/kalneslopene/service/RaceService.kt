@@ -3,6 +3,7 @@ package com.grimsgaards.kalneslopene.service
 import com.grimsgaards.kalneslopene.model.dto.FileDto
 import com.grimsgaards.kalneslopene.model.dto.Gender
 import com.grimsgaards.kalneslopene.model.dto.RaceDTO
+import com.grimsgaards.kalneslopene.model.dto.RaceInfoDto
 import com.grimsgaards.kalneslopene.model.dto.RaceResultSummaryDto
 import com.grimsgaards.kalneslopene.model.dto.RaceRunnerDTO
 import com.grimsgaards.kalneslopene.model.entities.RaceEntity
@@ -18,11 +19,21 @@ import com.grimsgaards.kalneslopene.repository.RacePhotoRepository
 import com.grimsgaards.kalneslopene.repository.RaceRepository
 import com.grimsgaards.kalneslopene.repository.RaceRunnerRepository
 import com.grimsgaards.kalneslopene.repository.RunnerRepository
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 import java.util.UUID
+
+const val MAX_RACE_PAGE_SIZE = 20
+const val RACE_INFO_CACHE = "raceInfo"
 
 @Suppress("TooManyFunctions")
 @Service
@@ -40,10 +51,38 @@ class RaceService(
             ?.authorities
             ?.any { it.authority == UserRole.ADMIN.toString() } == true
 
-    fun getAll(filter: RaceFilter): List<RaceDTO> {
+    @Cacheable(RACE_INFO_CACHE)
+    fun getAllInfo(isPublished: Boolean?): List<RaceInfoDto> = raceRepository.findAllInfoByFilter(RaceFilter(isPublished = isPublished))
+
+    fun getAll(
+        filter: RaceFilter,
+        page: Int,
+        pageSize: Int?,
+    ): Page<RaceDTO> {
         val effectiveFilter = if (isAdmin()) filter else filter.copy(isPublished = true)
-        return raceRepository.findAllByFilter(effectiveFilter).map { it.toDto() }
+        return raceRepository.findAllByFilter(effectiveFilter, resolvePageable(filter, page, pageSize)).map { it.toDto() }
     }
+
+    private fun resolvePageable(
+        filter: RaceFilter,
+        page: Int,
+        pageSize: Int?,
+    ): Pageable {
+        val sort = Sort.by(Sort.Direction.DESC, "raceDate")
+        if (pageSize == null) {
+            require(filter.spansSingleYear()) {
+                "pageSize is required unless the filter has from and to within the same year"
+            }
+            return Pageable.unpaged(sort)
+        }
+        require(pageSize in 1..MAX_RACE_PAGE_SIZE) { "pageSize must be between 1 and $MAX_RACE_PAGE_SIZE" }
+        return PageRequest.of(page, pageSize, sort)
+    }
+
+    fun findNextRace(): RaceDTO? =
+        raceRepository
+            .findFirstByRaceDateGreaterThanEqualOrderByRaceDateAsc(LocalDateTime.now())
+            ?.toDto()
 
     fun findByUuid(uuid: UUID): RaceDTO {
         val race =
@@ -55,11 +94,13 @@ class RaceService(
         return race.toDto()
     }
 
+    @CacheEvict(RACE_INFO_CACHE, allEntries = true)
     fun createRaces(races: List<RaceInput>): List<RaceDTO> =
         raceRepository
             .saveAll(races.map { RaceEntity(raceDate = it.raceDate) })
             .map { it.toDto() }
 
+    @CacheEvict(RACE_INFO_CACHE, allEntries = true)
     fun updateRace(
         uuid: UUID,
         updatedRace: RaceInput,
@@ -78,16 +119,18 @@ class RaceService(
         return raceRepository.save(existingRace).toDto()
     }
 
+    @CacheEvict(RACE_INFO_CACHE, allEntries = true)
     fun deleteRaceById(uuid: UUID) = raceRepository.deleteById(uuid)
 
     @Transactional
+    @CacheEvict(RACE_INFO_CACHE, allEntries = true)
     fun publishRace(uuid: UUID): RaceDTO {
         val race =
             raceRepository.findByIdOrNull(uuid)
                 ?: throw NoSuchElementException("Race $uuid not found")
         race.runners.forEach { raceRunner ->
             require(
-                (raceRunner.hideTime && raceRunner.resultTime == null) ||
+                raceRunner.hideTime ||
                     (raceRunner.resultTime != null && !raceRunner.resultTime!!.isZero),
             ) {
                 "Løper ${raceRunner.runner.name} mangler tid"
@@ -139,7 +182,7 @@ class RaceService(
                     id = RaceRunnerKey(runnerUuid = runnerEntity.uuid, raceUuid = raceUuid),
                     runner = runnerEntity,
                     race = race,
-                    resultTime = dto.resultTime,
+                    resultTime = if (dto.hideTime) null else dto.resultTime,
                     hideTime = dto.hideTime,
                 )
             }
@@ -206,7 +249,7 @@ class RaceService(
                 .findById(key)
                 .orElseThrow { NoSuchElementException("Runner $runnerUuid not found in race $raceUuid") }
         entity.apply {
-            resultTime = runnerDto.resultTime
+            resultTime = if (runnerDto.hideTime) null else runnerDto.resultTime
             hideTime = runnerDto.hideTime
         }
         return raceRunnerRepository.save(entity).toDto()

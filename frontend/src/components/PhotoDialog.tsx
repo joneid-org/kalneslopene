@@ -39,7 +39,7 @@ export default function PhotoDialog({
       onOpenChange={(open) => !open && onIndexChange(null)}
     >
       <DialogContent
-        className="fixed inset-0 flex w-screen h-screen max-w-none sm:max-w-none translate-x-0 translate-y-0 overflow-auto rounded-none border-0 bg-transparent p-4 shadow-none gap-0"
+        className="fixed inset-0 flex w-screen h-dvh max-w-none sm:max-w-none translate-x-0 translate-y-0 overflow-auto rounded-none border-0 bg-transparent p-4 shadow-none gap-0"
         onClick={(e) => {
           if (e.target === e.currentTarget) onIndexChange(null);
         }}
@@ -52,7 +52,7 @@ export default function PhotoDialog({
             <img
               src={photos[index].url}
               alt={photos[index].description}
-              className="block h-auto w-auto max-w-[calc(100vw-3rem)] rounded-md sm:max-w-[calc(100vw-4rem)]"
+              className="block h-auto w-auto max-h-[calc(100dvh-6rem)] max-w-[calc(100vw-3rem)] rounded-md object-contain sm:max-h-[calc(100dvh-7rem)] sm:max-w-[calc(100vw-4rem)]"
             />
             {onReplacePhoto && currentFileName && (
               <ReplacePhotoButton

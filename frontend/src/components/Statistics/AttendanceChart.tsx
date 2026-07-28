@@ -59,7 +59,7 @@ export function AttendanceChart({ races }: Props) {
   return (
     <div className="rounded-2xl border bg-card p-5">
       <h3 className="mb-4 font-display text-base font-extrabold tracking-tight">
-        Frammøte gjennom sesongen
+        Deltakelse gjennom sesongen
       </h3>
 
       <div className="flex gap-2">

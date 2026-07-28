@@ -25,9 +25,11 @@ export function Pictures() {
   const { isAuthenticated } = useAuth();
   const qc = useQueryClient();
 
-  const racesQueryOptions = QUERIES.race.getAllRaces();
-  const racesQuery = useQuery(racesQueryOptions);
-  const races = racesQuery.data;
+  const racesQueryOptions = QUERIES.race.getAllRaceInfos({ isPublished: true });
+  const { data: races } = useQuery(racesQueryOptions);
+  const { data: race, isPending: raceIsPending } = useQuery(
+    QUERIES.race.getRaceByUuid(uuid),
+  );
 
   const reorderMutation = useMutation({
     mutationFn: (input: ReorderVariables) =>
@@ -45,19 +47,18 @@ export function Pictures() {
       );
     },
     onError: () => {
-      qc.invalidateQueries({ queryKey: ["race", "getAll"] });
+      qc.invalidateQueries({ queryKey: ["race"] });
     },
   });
 
-  const allRaces = (races ?? []).filter((r) => r.isPublished);
-  const race = allRaces.find((r) => r.uuid === uuid);
+  const allRaces = races ?? [];
   const previous = getPreviousRace(allRaces, uuid);
   const next = getNextRace(allRaces, uuid);
   const title = formatDateFull(race?.raceDate);
 
   const racePhotos = race?.photos ?? [];
 
-  if (uuid && !race && !racesQuery.isPending) {
+  if (uuid && !race && !raceIsPending) {
     throw new Response("Fant ikke løpet", { status: 404 });
   }
 

@@ -1,8 +1,10 @@
 package com.grimsgaards.kalneslopene.service
 
+import com.grimsgaards.kalneslopene.model.dto.RaceDTO
 import com.grimsgaards.kalneslopene.model.entities.FileEntity
 import com.grimsgaards.kalneslopene.model.entities.NewsfeedEntity
 import com.grimsgaards.kalneslopene.model.input.NewsfeedInput
+import com.grimsgaards.kalneslopene.model.input.RaceFilter
 import com.grimsgaards.kalneslopene.repository.NewsfeedRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -26,6 +28,7 @@ import org.mockito.stubbing.OngoingStubbing
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.util.Optional
 import java.util.UUID
@@ -39,16 +42,18 @@ class NewsfeedServiceTest {
     @Mock
     lateinit var s3Service: S3Service
 
+    @Mock
+    lateinit var raceService: RaceService
+
     private lateinit var service: NewsfeedService
 
     @BeforeEach
     fun setUp() {
-        // The service resolves settings in a constructor-time field initializer; returning an
-        // existing settings row keeps construction from trying to persist a default.
-
         whenever(newsfeedRepository.save(any())).thenAnswer { it.getArgument(0) }
+        whenever(raceService.getAll(any(RaceFilter::class.java) ?: RaceFilter(), anyInt(), anyInt()))
+            .thenReturn(PageImpl(emptyList()))
 
-        service = NewsfeedService(newsfeedRepository, s3Service)
+        service = NewsfeedService(newsfeedRepository, s3Service, raceService)
     }
 
     @Nested
@@ -89,6 +94,43 @@ class NewsfeedServiceTest {
 
             verify(newsfeedRepository).findAll(pageable)
             verifyNoMoreInteractions(newsfeedRepository)
+        }
+    }
+
+    @Nested
+    inner class FindByUuid {
+        @Test
+        fun `connects the race the service finds for that day when tagged as a result`() {
+            val existing = newsfeed(headerImage = null, tags = listOf("resultater"))
+            val race = raceDto(raceDate = LocalDateTime.parse("2026-06-14T09:00:00"))
+            whenever(newsfeedRepository.findById(existing.uuid)).thenReturn(Optional.of(existing))
+            whenever(raceService.getAll(any(RaceFilter::class.java) ?: RaceFilter(), anyInt(), anyInt()))
+                .thenReturn(PageImpl(listOf(race)))
+
+            val result = service.findByUuid(existing.uuid)
+
+            assertThat(result.connectedRace?.uuid).isEqualTo(race.uuid)
+        }
+
+        @Test
+        fun `leaves connectedRace null without a result tag`() {
+            val existing = newsfeed(headerImage = null, tags = listOf("nyhet"))
+            whenever(newsfeedRepository.findById(existing.uuid)).thenReturn(Optional.of(existing))
+
+            val result = service.findByUuid(existing.uuid)
+
+            assertThat(result.connectedRace).isNull()
+            verifyNoInteractions(raceService)
+        }
+
+        @Test
+        fun `leaves connectedRace null when the service finds no race for that day`() {
+            val existing = newsfeed(headerImage = null, tags = listOf("resultat"))
+            whenever(newsfeedRepository.findById(existing.uuid)).thenReturn(Optional.of(existing))
+
+            val result = service.findByUuid(existing.uuid)
+
+            assertThat(result.connectedRace).isNull()
         }
     }
 
@@ -333,8 +375,9 @@ class NewsfeedServiceTest {
     private fun newsfeed(
         headerImage: FileEntity?,
         content: String = "Innhold",
+        tags: List<String> = listOf("nyhet"),
     ) = NewsfeedEntity(
-        tags = listOf("nyhet"),
+        tags = tags,
         header = "Tittel",
         content = content,
         date = OffsetDateTime.parse("2026-06-14T10:00:00Z"),
@@ -344,6 +387,18 @@ class NewsfeedServiceTest {
     private fun confirmedFile() =
         FileEntity(url = "https://minio.local/bucket/${UUID.randomUUID()}.jpg")
             .apply { uploadConfirmedAt = OffsetDateTime.now() }
+
+    private fun raceDto(raceDate: LocalDateTime) =
+        RaceDTO(
+            uuid = UUID.randomUUID(),
+            raceDate = raceDate,
+            weather = null,
+            courseCondition = null,
+            weatherManuallyEdited = false,
+            runnerCount = 0,
+            isPublished = true,
+            photos = emptyList(),
+        )
 
     private fun input(
         headerImageUuid: UUID? = null,

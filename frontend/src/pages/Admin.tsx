@@ -1,13 +1,4 @@
-import {
-  CalendarIcon,
-  ClipboardListIcon,
-  FileUpIcon,
-  ImageIcon,
-  LogOutIcon,
-  NewspaperIcon,
-  UserPlusIcon,
-  UsersIcon,
-} from "lucide-react";
+import { LogOutIcon } from "lucide-react";
 import { useNavigate } from "react-router";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -17,29 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card.tsx";
 import { useAuth } from "@/hooks/useAuth.ts";
-
-const actions = [
-  { label: "Administrer løp", icon: CalendarIcon, path: "/admin/løp" },
-  {
-    label: "Registrer resultater",
-    icon: ClipboardListIcon,
-    path: "/admin/resultater",
-  },
-  {
-    label: "Registrer resultat fra fil",
-    icon: FileUpIcon,
-    path: "/admin/resultater/import",
-  },
-  { label: "Legg til bilder", icon: ImageIcon, path: "/admin/bilder" },
-  { label: "Legg til løper", icon: UserPlusIcon, path: "/admin/løpere" },
-  {
-    label: "Legg til arrangør",
-    icon: UsersIcon,
-    path: "/admin/arrangører",
-  },
-  { label: "Legg til nyhet", icon: NewspaperIcon, path: "/admin/nyheter" },
-  { label: "Administrer tagger", icon: NewspaperIcon, path: "/admin/tagger" },
-] as const;
+import { ADMIN_ACTIONS } from "@/lib/constants.ts";
 
 export function Admin() {
   const navigate = useNavigate();
@@ -75,7 +44,7 @@ export function Admin() {
           <CardTitle className="text-base">Handlinger</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
-          {actions.map(({ label, icon: Icon, path }) => (
+          {ADMIN_ACTIONS.map(({ label, icon: Icon, path }) => (
             <Button
               key={label}
               variant="outline"

@@ -62,7 +62,7 @@ export function ReviewStep({
   onCourseConditionPersist: (value: string) => void;
   onUpdateResult: (
     runnerUuid: string,
-    patch: { resultTime?: string; hideTime?: boolean },
+    patch: { resultTime?: string | null; hideTime?: boolean },
   ) => void;
   onUpdateRunner: (
     runnerUuid: string,
@@ -276,7 +276,7 @@ export function ReviewStep({
                         onChange={(e) =>
                           onUpdateResult(runnerUuid, {
                             hideTime: e.target.checked,
-                            ...(e.target.checked ? { resultTime: "PT0S" } : {}),
+                            ...(e.target.checked ? { resultTime: null } : {}),
                           })
                         }
                         className="rounded"

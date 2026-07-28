@@ -1,32 +1,59 @@
 import { useQuery } from "@tanstack/react-query";
 import DOMPurify from "dompurify";
-import { ArrowLeft, ExternalLink } from "lucide-react";
-import { useState } from "react";
+import { ArrowLeft, ExternalLink, Images } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
+import PhotoDialog from "@/components/PhotoDialog.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator.tsx";
-import {
-  findRaceForPost,
-  NEWS_IMAGES,
-  tagColor,
-  useTags,
-} from "@/lib/newsUtils.ts";
+import type { StaticS3File } from "@/data/loypekartData.ts";
+import { NEWS_IMAGES, tagColor, useTags } from "@/lib/newsUtils.ts";
 import { formatDateFull } from "@/lib/timeUtils.ts";
 
 export function NewsArticle() {
   const { uuid } = useParams<{ uuid: string }>();
-  const [open, setOpen] = useState(false);
+  const [contentPhotos, setContentPhotos] = useState<StaticS3File[]>([]);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const postQuery = useQuery(QUERIES.newsfeed.getNewsFeedByUuid(uuid ?? ""));
   const post = postQuery.data;
-  const { data: races } = useQuery(QUERIES.race.getAllRaces());
   const tags = useTags();
+
+  // Stable object identity: React re-assigns innerHTML whenever this prop is a
+  // new reference, which would wipe the attributes set in the effect below.
+  const sanitizedContent = useMemo(
+    () => ({ __html: DOMPurify.sanitize(post?.content ?? "") }),
+    [post?.content],
+  );
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: sanitizedContent is not read here, but its identity changing is what makes React re-assign innerHTML and replace the images below
+  useEffect(() => {
+    const container = contentRef.current;
+    if (!container) return;
+
+    const images = [...container.querySelectorAll("img")];
+    for (const img of images) {
+      img.tabIndex = 0;
+      img.setAttribute("role", "button");
+      img.setAttribute("aria-label", "Vis bilde i full størrelse");
+    }
+    setContentPhotos(
+      images.map((img) => ({
+        url: img.currentSrc || img.src,
+        description: img.alt,
+      })),
+    );
+  }, [sanitizedContent]);
+
+  const openContentImage = (target: EventTarget) => {
+    const container = contentRef.current;
+    if (!container || !(target instanceof HTMLImageElement)) return false;
+    const index = [...container.querySelectorAll("img")].indexOf(target);
+    if (index < 0) return false;
+    setLightboxIndex(index);
+    return true;
+  };
 
   if (!post) {
     if (postQuery.isPending) {
@@ -42,7 +69,10 @@ export function NewsArticle() {
   const imgIndex = [...post.uuid].reduce((sum, c) => sum + c.charCodeAt(0), 0);
   const fallbackImg = NEWS_IMAGES[imgIndex % NEWS_IMAGES.length] ?? "";
   const headerImage = post.headerImage?.url ?? fallbackImg;
-  const matchedRace = findRaceForPost(races ?? [], post);
+
+  const photos: StaticS3File[] = headerImage
+    ? [...contentPhotos, { url: headerImage, description: post.header }]
+    : contentPhotos;
 
   return (
     <div className="w-full px-4 py-6">
@@ -70,18 +100,33 @@ export function NewsArticle() {
               </Link>
             ))}
           </div>
-          {matchedRace?.uuid && (
-            <Link to={`/resultater/${matchedRace.uuid}`}>
-              <Button
-                size="sm"
-                variant="outline"
-                className="gap-1.5 text-primary border-border hover:bg-primary/10 shrink-0"
-              >
-                <ExternalLink className="size-3.5" />
-                Se resultater
-              </Button>
-            </Link>
-          )}
+          <div className="flex flex-wrap gap-2">
+            {post.connectedRace?.uuid && (
+              <Link to={`/resultater/${post.connectedRace.uuid}`}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="gap-1.5 text-primary border-border hover:bg-primary/10 shrink-0"
+                >
+                  <ExternalLink className="size-3.5" />
+                  Se resultater
+                </Button>
+              </Link>
+            )}
+            {post.connectedRace?.uuid &&
+              post.connectedRace.photos.length > 1 && (
+                <Link to={`/bilder/${post.connectedRace.uuid}`}>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="gap-1.5 text-primary border-border hover:bg-primary/10 shrink-0"
+                  >
+                    <Images className="size-3.5" />
+                    Se bilder
+                  </Button>
+                </Link>
+              )}
+          </div>
         </div>
 
         <h2 className="mb-1">{post.header}</h2>
@@ -91,37 +136,39 @@ export function NewsArticle() {
 
         <Separator className="mb-3" />
 
+        {/** biome-ignore lint/a11y/noStaticElementInteractions: handlers delegate to the images inside, which get role="button" and tabIndex in the effect above */}
         <div
-          className="text-sm leading-relaxed mb-6 prose prose-sm max-w-none break-words [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-lg [&_img]:my-2 [&_a]:text-blue-600 [&_a]:underline"
-          // biome-ignore lint/security/noDangerouslySetInnerHtml: rich text HTML from admin editor, sanitized with DOMPurify below
-          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
+          ref={contentRef}
+          className="text-sm leading-relaxed mb-6 prose prose-sm max-w-none break-words [&_img]:max-w-full [&_img]:w-auto [&_img]:h-auto [&_img]:max-h-[80dvh] [&_img]:object-contain [&_img]:rounded-lg [&_img]:my-2 [&_img]:cursor-zoom-in [&_img]:hover:opacity-90 [&_img]:transition [&_a]:text-blue-600 [&_a]:underline"
+          onClick={(event) => openContentImage(event.target)}
+          onKeyDown={(event) => {
+            if (event.key !== "Enter" && event.key !== " ") return;
+            if (openContentImage(event.target)) event.preventDefault();
+          }}
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: rich text HTML from admin editor, sanitized with DOMPurify above
+          dangerouslySetInnerHTML={sanitizedContent}
         />
 
         {headerImage && (
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <button
-                type="button"
-                className="block w-full focus:outline-none"
-                aria-label="Vis bilde i full størrelse"
-              >
-                <img
-                  src={headerImage}
-                  alt={post.header}
-                  className="max-w-full h-auto mx-auto rounded-lg block cursor-zoom-in hover:opacity-90 transition object-contain"
-                />
-              </button>
-            </DialogTrigger>
-            <DialogContent className="w-fit max-w-[calc(100vw-1rem)] sm:max-w-[calc(100vw-2rem)] p-2 sm:p-4 bg-white border-0">
-              <DialogTitle className="sr-only">{post.header}</DialogTitle>
-              <img
-                src={headerImage}
-                alt={post.header}
-                className="block h-auto w-auto max-w-[calc(100vw-2rem)] rounded-md sm:max-w-[calc(100vw-4rem)]"
-              />
-            </DialogContent>
-          </Dialog>
+          <button
+            type="button"
+            className="block w-full focus:outline-none"
+            aria-label="Vis bilde i full størrelse"
+            onClick={() => setLightboxIndex(contentPhotos.length)}
+          >
+            <img
+              src={headerImage}
+              alt={post.header}
+              className="max-w-full w-auto h-auto max-h-[80dvh] mx-auto rounded-lg block cursor-zoom-in hover:opacity-90 transition object-contain"
+            />
+          </button>
         )}
+
+        <PhotoDialog
+          photos={photos}
+          index={lightboxIndex}
+          onIndexChange={setLightboxIndex}
+        />
       </div>
     </div>
   );

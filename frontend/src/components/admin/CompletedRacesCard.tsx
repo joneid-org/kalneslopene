@@ -1,4 +1,5 @@
 import { CheckCircle2Icon } from "lucide-react";
+import { useMemo } from "react";
 import { PastRacesTable } from "@/components/admin/PastRacesTable.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
 import {
@@ -7,10 +8,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
+import { toLocalDateTimeString } from "@/lib/timeUtils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 
+const NOW = toLocalDateTimeString(new Date());
+
 export function CompletedRacesCard({
-  races,
+  races: allRaces,
   expandedRaceUuid,
   onToggleExpand,
   onEdit,
@@ -22,6 +26,10 @@ export function CompletedRacesCard({
   onEdit: (race: RaceDTO) => void;
   onDelete: (race: RaceDTO) => void;
 }) {
+  const races = useMemo(
+    () => allRaces.filter((race) => race.isPublished && race.raceDate <= NOW),
+    [allRaces],
+  );
   return (
     <Card>
       <CardHeader className="pb-2">

@@ -33,7 +33,7 @@ export function SeasonDialog({ onClose }: { onClose: () => void }) {
   const createMutation = useMutation({
     mutationFn: (races: RaceInput[]) => createRaces(races),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["race", "getAll"] });
+      qc.invalidateQueries({ queryKey: ["race"] });
       onClose();
     },
   });

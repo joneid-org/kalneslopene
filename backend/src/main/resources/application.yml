@@ -16,4 +16,4 @@ spring:
 # Turn enabled on for a single boot, then off again. dry-run logs the full report and rolls back.
 results-repair:
   enabled: false
-  dry-run: true
+  dry-run: false

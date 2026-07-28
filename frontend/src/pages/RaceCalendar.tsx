@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { ArrowLeft, ArrowRight, Camera, CloudSun, Users } from "lucide-react";
 import { Link } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
@@ -6,13 +6,14 @@ import { Button } from "@/components/ui/button.tsx";
 import { WeatherLine } from "@/components/Weather/WeatherLine.tsx";
 import { NORWEGIAN_MONTH_NAMES } from "@/lib/constants.ts";
 import {
-  extractYear,
+  endOfYearString,
   formatTimeStamp,
   formatWeekdayDateFull,
   raceDateToSortKey,
+  startOfYearString,
 } from "@/lib/timeUtils.ts";
 import { cn, isPast } from "@/lib/utils.ts";
-import type { RaceDTO } from "@/model/DTO.ts";
+import type { RaceDTO, RaceInfoDTO } from "@/model/DTO.ts";
 
 const WEEKDAYS_SHORT = ["Søn", "Man", "Tir", "Ons", "Tor", "Fre", "Lør"];
 
@@ -23,10 +24,16 @@ function raceDateToDate(raceDate: unknown): Date {
   return new Date(y, (m ?? 1) - 1, d ?? 1);
 }
 
-type MonthGroup = { month: number; races: RaceDTO[] };
+function byRaceDate(a: RaceInfoDTO, b: RaceInfoDTO): number {
+  return raceDateToSortKey(a.raceDate).localeCompare(
+    raceDateToSortKey(b.raceDate),
+  );
+}
 
-function groupByMonth(races: RaceDTO[]): MonthGroup[] {
-  const groups: MonthGroup[] = [];
+type MonthGroup<T> = { month: number; races: T[] };
+
+function groupByMonth<T extends RaceInfoDTO>(races: T[]): MonthGroup<T>[] {
+  const groups: MonthGroup<T>[] = [];
   for (const race of races) {
     const month = raceDateToDate(race.raceDate).getMonth();
     const last = groups[groups.length - 1];
@@ -107,7 +114,7 @@ function PastRaceRow({ race, date }: { race: RaceDTO; date: Date }) {
   );
 }
 
-function NextRaceRow({ race, date }: { race: RaceDTO; date: Date }) {
+function NextRaceRow({ race, date }: { race: RaceInfoDTO; date: Date }) {
   return (
     <div className="flex items-center gap-4 rounded-xl bg-brand-ink p-3 shadow-[0_16px_30px_-16px_rgba(18,58,40,0.6)]">
       <DateBadge date={date} status="next" />
@@ -126,7 +133,7 @@ function NextRaceRow({ race, date }: { race: RaceDTO; date: Date }) {
   );
 }
 
-function UpcomingRaceRow({ race, date }: { race: RaceDTO; date: Date }) {
+function UpcomingRaceRow({ race, date }: { race: RaceInfoDTO; date: Date }) {
   return (
     <div className="flex items-center gap-4 rounded-xl border border-dashed bg-card p-3">
       <DateBadge date={date} status="upcoming" />
@@ -154,56 +161,63 @@ function RaceRowSkeleton() {
   );
 }
 
+function renderGroups<T extends RaceInfoDTO>(
+  groups: MonthGroup<T>[],
+  renderRace: (race: T, date: Date) => React.ReactNode,
+) {
+  return groups.map((group) => (
+    <section key={group.month} className="space-y-3">
+      <h2 className="text-label sticky top-0 z-10 -mx-3 bg-background/90 px-3 py-1 backdrop-blur sm:-mx-4 sm:px-4">
+        {NORWEGIAN_MONTH_NAMES[group.month]}
+      </h2>
+      <div className="space-y-3">
+        {group.races.map((race) =>
+          renderRace(race, raceDateToDate(race.raceDate)),
+        )}
+      </div>
+    </section>
+  ));
+}
+
 export function RaceCalendar() {
-  const { data: races = [], isPending } = useQuery(QUERIES.race.getAllRaces());
+  const currentYearDate = new Date();
+  const currentYear = currentYearDate.getFullYear();
+  const { data: raceInfos, isPending: isPendingInfos } = useQuery(
+    QUERIES.race.getAllRaceInfos(),
+  );
+  const {
+    data,
+    isPending: isPendingRaces,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery(
+    QUERIES.race.getRacesInfinite({
+      filter: {
+        from: startOfYearString(currentYear),
+        to: endOfYearString(currentYear),
+      },
+    }),
+  );
 
-  const currentYear = new Date().getFullYear();
+  const seasonRaceInfos = (raceInfos ?? [])
+    .filter(
+      (race) => raceDateToDate(race.raceDate).getFullYear() === currentYear,
+    )
+    .sort(byRaceDate);
+  const [completedRaceInfos, upcomingRaces] = seasonRaceInfos.partition(isPast);
 
-  const seasonRaces = races
-    .filter((r) => extractYear(r.raceDate) === currentYear)
-    .sort((a, b) =>
-      raceDateToSortKey(a.raceDate).localeCompare(
-        raceDateToSortKey(b.raceDate),
-      ),
-    );
+  const pastRaces = (data?.pages ?? [])
+    .flatMap((page) => page.content)
+    .filter(isPast)
+    .sort((a, b) => byRaceDate(b, a));
 
-  const [pastRaces, upcomingRaces] = seasonRaces.partition(isPast);
-  const completed = pastRaces.length;
-  const total = seasonRaces.length;
+  const isPending = isPendingInfos || isPendingRaces;
+  const completed = completedRaceInfos.length;
+  const total = seasonRaceInfos.length;
   const nextRace = upcomingRaces[0];
   const upcomingGroups = groupByMonth(upcomingRaces);
   const pastGroups = groupByMonth(pastRaces);
-
-  const renderGroups = (groups: MonthGroup[]) =>
-    groups.map((group) => (
-      <section key={group.month} className="space-y-3">
-        <h2 className="text-label sticky top-0 z-10 -mx-3 bg-background/90 px-3 py-1 backdrop-blur sm:-mx-4 sm:px-4">
-          {NORWEGIAN_MONTH_NAMES[group.month]}
-        </h2>
-        <div className="space-y-3">
-          {group.races.map((race) => {
-            const date = raceDateToDate(race.raceDate);
-            if (race.uuid === nextRace?.uuid)
-              return <NextRaceRow key={race.uuid} race={race} date={date} />;
-            if (isPast(race))
-              return (
-                <PastRaceRow
-                  key={race.uuid ?? date.toISOString()}
-                  race={race}
-                  date={date}
-                />
-              );
-            return (
-              <UpcomingRaceRow
-                key={race.uuid ?? date.toISOString()}
-                race={race}
-                date={date}
-              />
-            );
-          })}
-        </div>
-      </section>
-    ));
 
   return (
     <div className="page-content-sm section-stack">
@@ -252,7 +266,15 @@ export function RaceCalendar() {
       ) : (
         <div className="space-y-6">
           {upcomingRaces.length > 0 && (
-            <div className="space-y-6">{renderGroups(upcomingGroups)}</div>
+            <div className="space-y-6">
+              {renderGroups(upcomingGroups, (race, date) =>
+                race.uuid === nextRace?.uuid ? (
+                  <NextRaceRow key={race.uuid} race={race} date={date} />
+                ) : (
+                  <UpcomingRaceRow key={race.uuid} race={race} date={date} />
+                ),
+              )}
+            </div>
           )}
 
           {pastRaces.length > 0 && (
@@ -264,7 +286,21 @@ export function RaceCalendar() {
                 </span>
                 <div className="h-px flex-1 bg-border" />
               </div>
-              <div className="space-y-6">{renderGroups(pastGroups)}</div>
+              <div className="space-y-6">
+                {renderGroups(pastGroups, (race, date) => (
+                  <PastRaceRow key={race.uuid} race={race} date={date} />
+                ))}
+              </div>
+              {hasNextPage && (
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => fetchNextPage()}
+                  disabled={isFetchingNextPage}
+                >
+                  {isFetchingNextPage ? "Laster …" : "Vis flere løp"}
+                </Button>
+              )}
             </>
           )}
         </div>

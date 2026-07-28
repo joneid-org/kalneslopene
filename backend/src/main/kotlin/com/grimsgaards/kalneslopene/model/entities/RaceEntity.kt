@@ -1,6 +1,7 @@
 package com.grimsgaards.kalneslopene.model.entities
 
 import com.grimsgaards.kalneslopene.model.dto.RaceDTO
+import com.grimsgaards.kalneslopene.model.dto.RaceInfoDto
 import com.grimsgaards.kalneslopene.model.dto.WeatherDto
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
@@ -9,6 +10,7 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
+import org.hibernate.annotations.Formula
 import java.time.Instant
 import java.time.LocalDateTime
 import java.util.UUID
@@ -19,11 +21,14 @@ class RaceEntity(
     @Column(name = "race_date", columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     var raceDate: LocalDateTime,
     var isPublished: Boolean = false,
-    @OneToMany(mappedBy = "race", fetch = FetchType.EAGER, cascade = [CascadeType.PERSIST], orphanRemoval = true)
+    @OneToMany(mappedBy = "race", fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST], orphanRemoval = true)
     val runners: MutableList<RaceRunnerEntity> = mutableListOf(),
 ) {
     @Id
     val uuid: UUID = UUID.randomUUID()
+
+    @Formula("(SELECT COUNT(*) FROM race_runner rr WHERE rr.race_uuid = {alias}.uuid)")
+    val runnerCount: Int = 0
     var courseCondition: String? = null
     var weatherSymbol: String? = null
     var weatherTemperature: Double? = null
@@ -33,7 +38,7 @@ class RaceEntity(
     var weatherUpdatedAt: Instant? = null
     var weatherManuallyEdited: Boolean = false
 
-    @OneToMany(mappedBy = "race", fetch = FetchType.EAGER, cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "race", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     val racePhotos: MutableList<RacePhotoEntity> = mutableListOf()
 
     fun applyWeatherOverride(weather: WeatherDto?) {
@@ -63,10 +68,12 @@ class RaceEntity(
             weather = weatherToDto(),
             courseCondition = courseCondition,
             weatherManuallyEdited = weatherManuallyEdited,
-            runnerCount = runners.size,
+            runnerCount = runnerCount,
             isPublished = isPublished,
             photos = racePhotos.sortedBy { it.orderIndex }.mapNotNull { it.file.toDto() },
         )
+
+    fun toInfoDto(): RaceInfoDto = RaceInfoDto(uuid = uuid, raceDate = raceDate)
 
     private fun weatherToDto(): WeatherDto? {
         val symbol = weatherSymbol

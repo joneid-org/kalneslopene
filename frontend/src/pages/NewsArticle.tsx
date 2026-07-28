@@ -12,12 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator.tsx";
-import {
-  findRaceForPost,
-  NEWS_IMAGES,
-  tagColor,
-  useTags,
-} from "@/lib/newsUtils.ts";
+import { NEWS_IMAGES, tagColor, useTags } from "@/lib/newsUtils.ts";
 import { formatDateFull } from "@/lib/timeUtils.ts";
 
 export function NewsArticle() {
@@ -25,7 +20,6 @@ export function NewsArticle() {
   const [open, setOpen] = useState(false);
   const postQuery = useQuery(QUERIES.newsfeed.getNewsFeedByUuid(uuid ?? ""));
   const post = postQuery.data;
-  const { data: races } = useQuery(QUERIES.race.getAllRaces());
   const tags = useTags();
 
   if (!post) {
@@ -42,7 +36,6 @@ export function NewsArticle() {
   const imgIndex = [...post.uuid].reduce((sum, c) => sum + c.charCodeAt(0), 0);
   const fallbackImg = NEWS_IMAGES[imgIndex % NEWS_IMAGES.length] ?? "";
   const headerImage = post.headerImage?.url ?? fallbackImg;
-  const matchedRace = findRaceForPost(races ?? [], post);
 
   return (
     <div className="w-full px-4 py-6">
@@ -70,8 +63,8 @@ export function NewsArticle() {
               </Link>
             ))}
           </div>
-          {matchedRace?.uuid && (
-            <Link to={`/resultater/${matchedRace.uuid}`}>
+          {post.connectedRace?.uuid && (
+            <Link to={`/resultater/${post.connectedRace.uuid}`}>
               <Button
                 size="sm"
                 variant="outline"

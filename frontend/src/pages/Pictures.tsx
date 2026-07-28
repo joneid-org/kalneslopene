@@ -25,9 +25,11 @@ export function Pictures() {
   const { isAuthenticated } = useAuth();
   const qc = useQueryClient();
 
-  const racesQueryOptions = QUERIES.race.getAllRaces();
+  const racesQueryOptions = QUERIES.race.getAllRaceInfos({ isPublished: true });
   const racesQuery = useQuery(racesQueryOptions);
   const races = racesQuery.data;
+
+  const { data: race } = useQuery(QUERIES.race.getRaceByUuid(uuid));
 
   const reorderMutation = useMutation({
     mutationFn: (input: ReorderVariables) =>
@@ -45,12 +47,11 @@ export function Pictures() {
       );
     },
     onError: () => {
-      qc.invalidateQueries({ queryKey: ["race", "getAll"] });
+      qc.invalidateQueries({ queryKey: ["race"] });
     },
   });
 
-  const allRaces = (races ?? []).filter((r) => r.isPublished);
-  const race = allRaces.find((r) => r.uuid === uuid);
+  const allRaces = races ?? [];
   const previous = getPreviousRace(allRaces, uuid);
   const next = getNextRace(allRaces, uuid);
   const title = formatDateFull(race?.raceDate);

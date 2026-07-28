@@ -1,7 +1,7 @@
 info:
   name: Get all runners in race
   type: http
-  seq: 6
+  seq: 7
 
 http:
   method: GET

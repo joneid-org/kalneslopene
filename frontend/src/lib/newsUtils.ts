@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { QUERIES } from "@/api/queries.ts";
-import type { NewsFeedDTO, NewsfeedTagDTO, RaceDTO } from "@/model/DTO.ts";
+import type { NewsfeedTagDTO } from "@/model/DTO.ts";
 
 export const PREDEFINED_TAGS: NewsfeedTagDTO[] = [
   { value: "resultater", color: "#2563eb" },
@@ -31,20 +31,3 @@ export const NEWS_IMAGES = import.meta.env.DEV
       "https://images.unsplash.com/photo-1766970096331-78c8af007a3b?w=600&q=75",
     ]
   : [];
-
-export function sameDate(a: unknown, b: Date): boolean {
-  const aStr = String(a).slice(0, 10);
-  const bStr = `${b.getFullYear()}-${String(b.getMonth() + 1).padStart(2, "0")}-${String(b.getDate()).padStart(2, "0")}`;
-  return aStr === bStr;
-}
-
-export function findRaceForPost(
-  races: RaceDTO[],
-  post: NewsFeedDTO,
-): RaceDTO | undefined {
-  const hasResultTag = post.tags.some((t) =>
-    ["resultat", "resultater"].includes(t.toLowerCase()),
-  );
-  if (!hasResultTag) return undefined;
-  return races.find((r) => sameDate(r.raceDate, post.date));
-}

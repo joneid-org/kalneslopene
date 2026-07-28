@@ -12,7 +12,7 @@ import { CsvUploadStep } from "@/components/admin/CsvUploadStep.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { secondsToDuration } from "@/lib/timeUtils.ts";
 import { isPast } from "@/lib/utils.ts";
-import type { RaceDTO } from "@/model/DTO.ts";
+import type { RaceInfoDTO } from "@/model/DTO.ts";
 
 type Step = "race" | "upload" | "review";
 
@@ -36,15 +36,15 @@ function stepBubbleClass(s: Step, current: Step) {
 export function ImportResultsFromFile() {
   const navigate = useNavigate();
 
-  const { data: races } = useQuery(QUERIES.race.getAllRaces());
+  const { data: races } = useQuery(QUERIES.race.getAllRaceInfos());
   const pastRaces = (races ?? []).filter(isPast);
 
   const [step, setStep] = useState<Step>("race");
-  const [selectedRace, setSelectedRace] = useState<RaceDTO | null>(null);
+  const [selectedRace, setSelectedRace] = useState<RaceInfoDTO | null>(null);
   const [rows, setRows] = useState<CsvRow[]>([]);
 
   const saveMutation = useMutation({
-    mutationFn: async (race: RaceDTO) => {
+    mutationFn: async (race: RaceInfoDTO) => {
       const raceUuid = race.uuid;
       const raceRunners = rows.flatMap((r) =>
         r.resolvedRunner === null
@@ -66,7 +66,7 @@ export function ImportResultsFromFile() {
       queryClient.invalidateQueries({
         queryKey: ["race", race.uuid, "runnersInRace"],
       });
-      queryClient.invalidateQueries({ queryKey: ["race", "getAll"] });
+      queryClient.invalidateQueries({ queryKey: ["race"] });
       navigate("/admin/resultater");
     },
   });

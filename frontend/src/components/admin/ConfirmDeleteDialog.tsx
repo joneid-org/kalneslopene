@@ -1,5 +1,6 @@
 import { Trash2Icon } from "lucide-react";
 import type { ReactNode } from "react";
+import { LoadingButton } from "@/components/LoadingButton.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
   DialogContent,
@@ -12,12 +13,16 @@ export function ConfirmDeleteDialog({
   title,
   description,
   isPending,
+  disableConfirm,
+  children,
   onConfirm,
   onClose,
 }: {
   title: string;
   description: ReactNode;
   isPending: boolean;
+  disableConfirm?: boolean;
+  children?: ReactNode;
   onConfirm: () => void;
   onClose: () => void;
 }) {
@@ -27,14 +32,20 @@ export function ConfirmDeleteDialog({
         <DialogTitle>{title}</DialogTitle>
       </DialogHeader>
       <p className="text-sm text-muted-foreground">{description}</p>
+      {children}
       <DialogFooter>
         <Button variant="outline" onClick={onClose}>
           Avbryt
         </Button>
-        <Button variant="destructive" disabled={isPending} onClick={onConfirm}>
-          <Trash2Icon className="size-4" />
+        <LoadingButton
+          variant="destructive"
+          loading={isPending}
+          disabled={disableConfirm}
+          icon={<Trash2Icon className="size-4" />}
+          onClick={onConfirm}
+        >
           Slett
-        </Button>
+        </LoadingButton>
       </DialogFooter>
     </DialogContent>
   );

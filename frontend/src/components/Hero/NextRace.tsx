@@ -126,14 +126,6 @@ function NextRaceStacked({ isPending, race, weather }: NextRaceVariantProps) {
                       {items.symbol.text}
                     </WeatherItem>
                   )}
-                  {items.precipitation && (
-                    <WeatherItem
-                      icon={items.precipitation.icon}
-                      className="text-[13px] font-medium text-white/85"
-                    >
-                      {items.precipitation.text}
-                    </WeatherItem>
-                  )}
                   {items.temperature && (
                     <WeatherItem
                       icon={items.temperature.icon}
@@ -202,11 +194,6 @@ function NextRaceOverlay({ isPending, race, weather }: NextRaceVariantProps) {
                     {items.symbol && (
                       <WeatherItem icon={items.symbol.icon}>
                         {items.symbol.text}
-                      </WeatherItem>
-                    )}
-                    {items.precipitation && (
-                      <WeatherItem icon={items.precipitation.icon}>
-                        {items.precipitation.text}
                       </WeatherItem>
                     )}
                     {items.temperature && (

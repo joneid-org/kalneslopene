@@ -105,18 +105,7 @@ function WeatherTypeCombobox({
             onValueChange={setSearch}
           />
           <CommandList>
-            <CommandEmpty>
-              {search.trim() && (
-                <button
-                  type="button"
-                  className="flex w-full items-center gap-2 px-2 py-1.5 text-sm hover:bg-accent"
-                  onClick={() => select(search.trim())}
-                >
-                  <PlusIcon className="size-4" />
-                  Legg til «{search.trim()}»
-                </button>
-              )}
-            </CommandEmpty>
+            <CommandEmpty>Ingen treff.</CommandEmpty>
             <CommandGroup>
               {options.map((opt) => (
                 <CommandItem
@@ -134,6 +123,17 @@ function WeatherTypeCombobox({
                 </CommandItem>
               ))}
             </CommandGroup>
+            {search.trim() && (
+              <CommandGroup>
+                <CommandItem
+                  value={`__custom__${search.trim()}`}
+                  onSelect={() => select(search.trim())}
+                >
+                  <PlusIcon className="size-4" />
+                  Bruk egendefinert værforhold: «{search.trim()}»
+                </CommandItem>
+              </CommandGroup>
+            )}
           </CommandList>
         </Command>
       </PopoverContent>

@@ -201,11 +201,16 @@ export function buildTableRows(runners: RaceRunnerDTO[]): RowData[] {
 }
 
 export function getBestRaceFromRunner(raceRunner: RaceRunnerDTO[]): string {
-  const latest = raceRunner.toSorted((a, b) =>
-    raceDateToSortKey(b.raceInfo.raceDate).localeCompare(
-      raceDateToSortKey(a.raceInfo.raceDate),
-    ),
-  )[0];
+  console.log(raceRunner);
+  let latest: RaceRunnerDTO | null = null;
+  let latestKey = "";
+  for (const rr of raceRunner) {
+    const key = raceDateToSortKey(rr.raceInfo.raceDate);
+    if (key > latestKey) {
+      latest = rr;
+      latestKey = key;
+    }
+  }
   if (!latest) return "-";
   return formatSecondsToTime(
     mapResultTimeToNumber(latest.previousPersonalRecord),

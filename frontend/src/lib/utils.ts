@@ -1,10 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { DISTANCE_KM } from "@/lib/constants.ts";
-import {
-  getBestTimeThisYear,
-  getFastestRunner,
-} from "@/lib/statisticsUtils.ts";
+import { getBestTimeThisYear } from "@/lib/statisticsUtils.ts";
 import {
   extractYear,
   formatSecondsToTime,
@@ -220,10 +217,19 @@ export function buildTableRows(runners: RaceRunnerDTO[]): RowData[] {
 }
 
 export function getBestRaceFromRunner(raceRunner: RaceRunnerDTO[]): string {
-  const best = getFastestRunner(raceRunner);
-  return best
-    ? formatSecondsToTime(mapResultTimeToNumber(best.resultTime))
-    : "-";
+  let latest: RaceRunnerDTO | null = null;
+  let latestKey = "";
+  for (const rr of raceRunner) {
+    const key = raceDateToSortKey(rr.raceInfo.raceDate);
+    if (key > latestKey) {
+      latest = rr;
+      latestKey = key;
+    }
+  }
+  if (!latest) return "-";
+  return formatSecondsToTime(
+    mapResultTimeToNumber(latest.previousPersonalRecord),
+  );
 }
 
 export function getBestRaceThisYearFromRunner(

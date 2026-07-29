@@ -201,7 +201,6 @@ export function buildTableRows(runners: RaceRunnerDTO[]): RowData[] {
 }
 
 export function getBestRaceFromRunner(raceRunner: RaceRunnerDTO[]): string {
-  console.log(raceRunner);
   let latest: RaceRunnerDTO | null = null;
   let latestKey = "";
   for (const rr of raceRunner) {

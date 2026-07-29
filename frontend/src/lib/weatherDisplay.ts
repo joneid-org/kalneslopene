@@ -5,10 +5,15 @@ import {
   CloudLightning,
   CloudRain,
   CloudSnow,
+  Compass,
+  Droplets,
   Eye,
   Sun,
   SunDim,
+  Thermometer,
+  Wind,
 } from "lucide-react";
+import type { WeatherDto } from "@/model/DTO.ts";
 
 /** Maps a Yr symbol_code to a human-readable Norwegian label. */
 const SYMBOL_LABELS: Record<string, string> = {
@@ -79,4 +84,32 @@ export function weatherIcon(symbol: string): LucideIcon {
   if (s.includes("sleet")) return CloudDrizzle;
   if (s.includes("rain")) return CloudRain;
   return Cloud;
+}
+
+/**
+ * Icon + display text for each weather field that has a value, undefined otherwise.
+ * The single source for which fields render and how; consumers own layout and styling.
+ */
+export function weatherItems(weather: WeatherDto = {}) {
+  const { symbol, temperature, windSpeed, windDirection, precipitation } =
+    weather;
+  return {
+    symbol: symbol
+      ? { icon: weatherIcon(symbol), text: weatherLabel(symbol) }
+      : undefined,
+    temperature:
+      temperature != null
+        ? { icon: Thermometer, text: `${temperature}°C` }
+        : undefined,
+    windSpeed:
+      windSpeed != null ? { icon: Wind, text: `${windSpeed} m/s` } : undefined,
+    windDirection:
+      windDirection != null
+        ? { icon: Compass, text: windDirectionLabel(windDirection) }
+        : undefined,
+    precipitation:
+      precipitation != null && precipitation > 0
+        ? { icon: Droplets, text: `${precipitation} mm` }
+        : undefined,
+  };
 }

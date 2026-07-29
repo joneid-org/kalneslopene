@@ -9,11 +9,11 @@ export interface ConfigDTO {
 }
 
 export type WeatherDto = {
-  symbol: string;
-  temperature: number;
-  windSpeed: number;
-  precipitation: number;
-  windDirection: number | null;
+  symbol?: string;
+  temperature?: number;
+  windSpeed?: number;
+  precipitation?: number;
+  windDirection?: number | null;
 };
 
 export type RaceDTO = {

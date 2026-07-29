@@ -1,24 +1,20 @@
 import { XIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge.tsx";
-import type { RaceRunnerDTO, RunnerDTO } from "@/model/DTO.ts";
+import type { RaceRunnerDTO, RunnerDTO, RunnerInput } from "@/model/DTO.ts";
 import { AddRunnerForm } from "./AddRunnerForm.tsx";
 import { genderLabel } from "./helpers.ts";
 
 export function RegisterRunnersStep({
   entries,
-  onAddExisting,
-  onAddNew,
+  onAdd,
   onRemove,
   isAdding,
 }: {
   entries: RaceRunnerDTO[];
-  onAddExisting: (runner: RunnerDTO) => void;
-  onAddNew: (name: string, gender: string) => void;
+  onAdd: (runner: RunnerDTO | RunnerInput) => void;
   onRemove: (runnerUuid: string) => void;
   isAdding: boolean;
 }) {
-  const existingRunnerUuids = new Set(entries.map((e) => e.runner.uuid));
-
   return (
     <div className="space-y-5">
       <div className="space-y-1">
@@ -30,9 +26,8 @@ export function RegisterRunnersStep({
       </div>
 
       <AddRunnerForm
-        existingRunnerUuids={existingRunnerUuids}
-        onAddExisting={onAddExisting}
-        onAddNew={onAddNew}
+        existingRunnerUuids={new Set(entries.map((e) => e.runner.uuid))}
+        onAdd={onAdd}
         isAdding={isAdding}
       />
 

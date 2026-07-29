@@ -6,6 +6,7 @@ import {
   XIcon,
 } from "lucide-react";
 import { useState } from "react";
+import { Controller, type UseFormReturn } from "react-hook-form";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Input } from "@/components/ui/input.tsx";
@@ -25,7 +26,13 @@ import {
 } from "@/lib/weatherDisplay.ts";
 import type { RaceRunnerDTO, RunnerDTO } from "@/model/DTO.ts";
 import { ChangeRunnerField } from "./ChangeRunnerField.tsx";
-import { entrySeconds, genderLabel, type WeatherForm } from "./helpers.ts";
+import {
+  entrySeconds,
+  genderLabel,
+  type RaceForm,
+  type RaceValues,
+  runnerFormSchema,
+} from "./helpers.ts";
 import { TimeField } from "./TimeField.tsx";
 
 const WEATHER_NUMBER_FIELDS: {
@@ -37,14 +44,45 @@ const WEATHER_NUMBER_FIELDS: {
   { key: "precipitation", label: "Nedbør (mm)" },
 ];
 
+/** Same name rules as when the runner was created — nothing is saved on a failure. */
+function RunnerNameField({
+  entry,
+  onCommit,
+}: {
+  entry: RaceRunnerDTO;
+  onCommit: (name: string) => void;
+}) {
+  const [error, setError] = useState<string | null>(null);
+  const errorId = `${entry.runner.uuid}-name-error`;
+
+  return (
+    <div className="flex-1 space-y-1">
+      <Input
+        defaultValue={entry.runner.name}
+        aria-label="Navn"
+        aria-invalid={!!error}
+        aria-describedby={error ? errorId : undefined}
+        onBlur={(e) => {
+          const parsed = runnerFormSchema.shape.name.safeParse(e.target.value);
+          setError(parsed.success ? null : parsed.error.issues[0].message);
+          if (parsed.success && parsed.data !== entry.runner.name)
+            onCommit(parsed.data);
+        }}
+        className="h-8 text-sm"
+      />
+      {error && (
+        <p id={errorId} className="text-xs text-destructive">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
 export function ReviewStep({
   entries,
-  weather,
-  onWeatherChange,
-  onWeatherPersist,
-  courseCondition,
-  onCourseConditionChange,
-  onCourseConditionPersist,
+  form,
+  onPersistRace,
   onUpdateResult,
   onUpdateRunner,
   onRemove,
@@ -54,30 +92,22 @@ export function ReviewStep({
   onClose,
 }: {
   entries: RaceRunnerDTO[];
-  weather: WeatherForm;
-  onWeatherChange: (weather: WeatherForm) => void;
-  onWeatherPersist: (weather: WeatherForm) => void;
-  courseCondition: string;
-  onCourseConditionChange: (value: string) => void;
-  onCourseConditionPersist: (value: string) => void;
-  onUpdateResult: (
-    runnerUuid: string,
-    patch: { resultTime?: string | null; hideTime?: boolean },
-  ) => void;
-  onUpdateRunner: (
-    runnerUuid: string,
-    patch: { name?: string; gender?: string },
-  ) => void;
+  form: UseFormReturn<RaceForm, unknown, RaceValues>;
+  onPersistRace: () => void;
+  onUpdateResult: (entry: RaceRunnerDTO) => void;
+  onUpdateRunner: (entry: RaceRunnerDTO, patch: Partial<RunnerDTO>) => void;
   onRemove: (runnerUuid: string) => void;
-  onVerifyRunner: (runnerUuid: string) => void;
-  onChangeRunner: (runnerUuid: string, newRunner: RunnerDTO) => void;
+  onVerifyRunner: (runner: RunnerDTO) => void;
+  onChangeRunner: (entry: RaceRunnerDTO, runner: RunnerDTO) => void;
   busyRunnerUuid: string | null;
   onClose?: () => void;
 }) {
   const [changingRunnerUuid, setChangingRunnerUuid] = useState<string | null>(
     null,
   );
+  const { errors } = form.formState;
 
+  const excludeUuids = new Set(entries.map((e) => e.runner.uuid));
   const sortedEntries = entries.toSorted((a, b) => {
     const secondsA = entrySeconds(a);
     const secondsB = entrySeconds(b);
@@ -103,82 +133,105 @@ export function ReviewStep({
         <p className="text-xs text-muted-foreground">
           Hentet automatisk fra Yr. Overstyr ved behov.
         </p>
-        <Select
-          value={weather.symbol}
-          onValueChange={(symbol) => {
-            const next = { ...weather, symbol };
-            onWeatherChange(next);
-            onWeatherPersist(next);
-          }}
-        >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Velg værtype" />
-          </SelectTrigger>
-          <SelectContent>
-            {WEATHER_SYMBOL_OPTIONS.map((opt) => (
-              <SelectItem key={opt.value} value={opt.value}>
-                {opt.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <Controller
+          control={form.control}
+          name="symbol"
+          render={({ field }) => (
+            <Select
+              value={field.value}
+              onValueChange={(symbol) => {
+                field.onChange(symbol);
+                onPersistRace();
+              }}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Velg værtype" />
+              </SelectTrigger>
+              <SelectContent>
+                {WEATHER_SYMBOL_OPTIONS.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
         <div className="grid grid-cols-4 gap-2">
           {WEATHER_NUMBER_FIELDS.map(({ key, label }) => (
             <div key={key} className="space-y-1">
-              <Label className="text-xs font-normal text-muted-foreground">
+              <Label
+                htmlFor={key}
+                className="text-xs font-normal text-muted-foreground"
+              >
                 {label}
               </Label>
               <Input
+                id={key}
                 type="number"
                 inputMode="decimal"
                 step="any"
-                value={weather[key]}
-                onChange={(e) =>
-                  onWeatherChange({ ...weather, [key]: e.target.value })
-                }
-                onBlur={() => onWeatherPersist(weather)}
+                aria-invalid={!!errors[key]}
+                aria-describedby={errors[key] && `${key}-error`}
+                {...form.register(key, { onBlur: onPersistRace })}
               />
+              {errors[key] && (
+                <p id={`${key}-error`} className="text-xs text-destructive">
+                  {errors[key]?.message}
+                </p>
+              )}
             </div>
           ))}
           <div className="space-y-1">
             <Label className="text-xs font-normal text-muted-foreground">
               Retning
             </Label>
-            <Select
-              value={
-                weather.windDirection != null
-                  ? windDirectionSector(weather.windDirection).toString()
-                  : ""
-              }
-              onValueChange={(value) => {
-                const next = { ...weather, windDirection: Number(value) };
-                onWeatherChange(next);
-                onWeatherPersist(next);
-              }}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="—" />
-              </SelectTrigger>
-              <SelectContent>
-                {WIND_DIRECTION_OPTIONS.map((opt) => (
-                  <SelectItem key={opt.value} value={opt.value.toString()}>
-                    {opt.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Controller
+              control={form.control}
+              name="windDirection"
+              render={({ field }) => (
+                <Select
+                  value={
+                    field.value != null
+                      ? windDirectionSector(field.value).toString()
+                      : ""
+                  }
+                  onValueChange={(value) => {
+                    field.onChange(Number(value));
+                    onPersistRace();
+                  }}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="—" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {WIND_DIRECTION_OPTIONS.map((opt) => (
+                      <SelectItem key={opt.value} value={opt.value.toString()}>
+                        {opt.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
           </div>
         </div>
       </div>
 
       <div className="space-y-1.5">
-        <Label>Løypeforhold</Label>
+        <Label htmlFor="courseCondition">Løypeforhold</Label>
         <Input
+          id="courseCondition"
           placeholder="f.eks. Tørt og fint"
-          value={courseCondition}
-          onChange={(e) => onCourseConditionChange(e.target.value)}
-          onBlur={() => onCourseConditionPersist(courseCondition)}
+          aria-invalid={!!errors.courseCondition}
+          aria-describedby={errors.courseCondition && "courseCondition-error"}
+          {...form.register("courseCondition", { onBlur: onPersistRace })}
         />
+        {errors.courseCondition && (
+          <p id="courseCondition-error" className="text-xs text-destructive">
+            {errors.courseCondition.message}
+          </p>
+        )}
       </div>
 
       <div className="space-y-2">
@@ -193,11 +246,9 @@ export function ReviewStep({
         ) : (
           <div className="space-y-2">
             {sortedEntries.map((entry) => {
-              const runnerUuid = entry.runner.uuid;
+              const { uuid: runnerUuid, name, gender } = entry.runner;
               const isNew = !entry.runner.isVerified;
-              const isChanging = changingRunnerUuid === runnerUuid;
               const isBusy = busyRunnerUuid === runnerUuid;
-              const excludeUuids = new Set(entries.map((e) => e.runner.uuid));
 
               return (
                 <div
@@ -206,16 +257,15 @@ export function ReviewStep({
                 >
                   <div className="flex items-center gap-2">
                     {isNew ? (
-                      <Input
-                        value={entry.runner.name}
-                        onChange={(e) =>
-                          onUpdateRunner(runnerUuid, { name: e.target.value })
+                      <RunnerNameField
+                        entry={entry}
+                        onCommit={(newName) =>
+                          onUpdateRunner(entry, { name: newName })
                         }
-                        className="h-8 flex-1 text-sm"
                       />
                     ) : (
                       <span className="flex-1 truncate text-sm font-medium">
-                        {entry.runner.name}
+                        {name}
                       </span>
                     )}
                     <Badge
@@ -228,7 +278,7 @@ export function ReviewStep({
                       type="button"
                       className="shrink-0 text-destructive hover:text-destructive/80"
                       onClick={() => onRemove(runnerUuid)}
-                      aria-label={`Fjern ${entry.runner.name}`}
+                      aria-label={`Fjern ${name}`}
                     >
                       <XIcon className="size-4" />
                     </button>
@@ -241,11 +291,9 @@ export function ReviewStep({
                           <button
                             key={g}
                             type="button"
-                            onClick={() =>
-                              onUpdateRunner(runnerUuid, { gender: g })
-                            }
+                            onClick={() => onUpdateRunner(entry, { gender: g })}
                             className={`rounded-md border px-2.5 py-1 text-xs transition-colors ${
-                              entry.runner.gender.toUpperCase() === g
+                              gender.toUpperCase() === g
                                 ? "border-primary bg-primary text-primary-foreground"
                                 : "border-border bg-background hover:bg-muted"
                             }`}
@@ -256,14 +304,15 @@ export function ReviewStep({
                       </div>
                     ) : (
                       <span className="text-xs text-muted-foreground">
-                        {genderLabel(entry.runner.gender)}
+                        {genderLabel(gender)}
                       </span>
                     )}
                     <TimeField
                       seconds={entrySeconds(entry)}
                       disabled={entry.hideTime}
                       onBlur={(seconds) =>
-                        onUpdateResult(runnerUuid, {
+                        onUpdateResult({
+                          ...entry,
                           resultTime: secondsToDuration(seconds ?? 0),
                         })
                       }
@@ -274,7 +323,8 @@ export function ReviewStep({
                         type="checkbox"
                         checked={entry.hideTime}
                         onChange={(e) =>
-                          onUpdateResult(runnerUuid, {
+                          onUpdateResult({
+                            ...entry,
                             hideTime: e.target.checked,
                             ...(e.target.checked ? { resultTime: null } : {}),
                           })
@@ -289,7 +339,7 @@ export function ReviewStep({
                         variant="outline"
                         className="ml-auto h-8 gap-1.5 text-xs"
                         disabled={isBusy}
-                        onClick={() => onVerifyRunner(runnerUuid)}
+                        onClick={() => onVerifyRunner(entry.runner)}
                       >
                         {isBusy ? (
                           <Loader2Icon className="size-3.5 animate-spin" />
@@ -305,7 +355,11 @@ export function ReviewStep({
                         className="ml-auto h-8 gap-1.5 text-xs"
                         disabled={isBusy}
                         onClick={() =>
-                          setChangingRunnerUuid(isChanging ? null : runnerUuid)
+                          setChangingRunnerUuid(
+                            changingRunnerUuid === runnerUuid
+                              ? null
+                              : runnerUuid,
+                          )
                         }
                       >
                         <ReplaceIcon className="size-3.5" />
@@ -314,11 +368,11 @@ export function ReviewStep({
                     )}
                   </div>
 
-                  {isChanging && !isNew && (
+                  {changingRunnerUuid === runnerUuid && !isNew && (
                     <ChangeRunnerField
                       excludeRunnerUuids={excludeUuids}
                       onPick={(runner) => {
-                        onChangeRunner(runnerUuid, runner);
+                        onChangeRunner(entry, runner);
                         setChangingRunnerUuid(null);
                       }}
                       onCancel={() => setChangingRunnerUuid(null)}

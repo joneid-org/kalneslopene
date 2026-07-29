@@ -34,6 +34,16 @@ class RaceEntityToDtoTest {
     }
 
     @Test
+    fun `exposes partially filled weather`() {
+        val weather = race().apply { weatherTemperature = 15.0 }.toDto().weather
+
+        assertThat(weather?.temperature).isEqualTo(15.0)
+        assertThat(weather?.symbol).isNull()
+        assertThat(weather?.windSpeed).isNull()
+        assertThat(weather?.precipitation).isNull()
+    }
+
+    @Test
     fun `exposes only confirmed photos and never nulls`() {
         val race = race()
         race.racePhotos.add(

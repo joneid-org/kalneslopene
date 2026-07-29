@@ -21,17 +21,19 @@ export default function RaceStatistics() {
 
   const { data: races } = useQuery(QUERIES.race.getAllRaceInfos());
   const { data: allTimeStatistics } = useQuery(QUERIES.statistics.race());
-  const { data: runnerOverview } = useQuery(
+  const { data: runnerOverview, isPending: isPendingOverview } = useQuery(
     QUERIES.statistics.runnerOverview(),
   );
 
   const availableYears = useMemo(() => getYears(races ?? []), [races]);
   const effectiveYear = selectedYear ?? availableYears[0];
 
-  const { data: yearStatistics } = useQuery({
-    ...QUERIES.statistics.race(effectiveYear),
-    enabled: effectiveYear != null,
-  });
+  const { data: yearStatistics, isPending: isPendingYearStatistics } = useQuery(
+    {
+      ...QUERIES.statistics.race(effectiveYear),
+      enabled: effectiveYear != null,
+    },
+  );
 
   const { data: yearRacesData } = useQuery({
     ...QUERIES.race.getRaces({
@@ -108,6 +110,7 @@ export default function RaceStatistics() {
           value={runnerOverview?.totalRunners}
           label="Unike løpere siden 1978"
           tone="primary"
+          isLoading={isPendingOverview}
         />
         <StatTile
           value={runnerOverview?.runnersInRaces}
@@ -117,6 +120,7 @@ export default function RaceStatistics() {
               : "Unike løpere"
           }
           tone="primary"
+          isLoading={isPendingOverview}
         />
       </div>
 
@@ -139,10 +143,12 @@ export default function RaceStatistics() {
               : undefined
           }
           label="Løpsdeltakelser"
+          isLoading={isPendingYearStatistics}
         />
         <StatTile
           value={yearStatistics?.uniqueRunners.total}
           label="Unike løpere"
+          isLoading={isPendingYearStatistics}
         />
         <StatTile
           value={
@@ -151,6 +157,7 @@ export default function RaceStatistics() {
               : undefined
           }
           label="Snitt deltakere"
+          isLoading={isPendingYearStatistics}
         />
         <StatTile
           value={formatSecondsToTime(
@@ -158,6 +165,7 @@ export default function RaceStatistics() {
           )}
           label="Raskeste tid"
           tone="primary"
+          isLoading={isPendingYearStatistics}
         />
       </div>
 

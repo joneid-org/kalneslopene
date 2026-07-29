@@ -205,9 +205,11 @@ export function buildTableRows(runners: RaceRunnerDTO[]): RowData[] {
 
 export function getBestRaceFromRunner(raceRunner: RaceRunnerDTO[]): string {
   const best = getFastestRunner(raceRunner);
-  return best
-    ? formatSecondsToTime(mapResultTimeToNumber(best.resultTime))
-    : "-";
+  const candidates = [
+    best ? mapResultTimeToNumber(best.resultTime) : Number.NaN,
+    ...raceRunner.map((rr) => mapResultTimeToNumber(rr.previousPersonalRecord)),
+  ].filter((seconds) => Number.isFinite(seconds) && seconds > 0);
+  return formatSecondsToTime(Math.min(...candidates));
 }
 
 export function getBestRaceThisYearFromRunner(

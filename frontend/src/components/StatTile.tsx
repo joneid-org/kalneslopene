@@ -12,19 +12,29 @@ type StatTileProps = {
   value: string | number | undefined;
   label: string;
   tone?: Tone;
+  isLoading?: boolean;
 };
 
-export function StatTile({ value, label, tone = "default" }: StatTileProps) {
+export function StatTile({
+  value,
+  label,
+  tone = "default",
+  isLoading = false,
+}: StatTileProps) {
   return (
     <div className="rounded-[14px] border bg-card px-2 py-3.5 text-center md:py-4">
-      <div
-        className={cn(
-          "font-display text-[22px] font-extrabold leading-none tabular-nums md:text-[28px]",
-          toneClasses[tone],
-        )}
-      >
-        {value ?? "–"}
-      </div>
+      {isLoading ? (
+        <div className="mx-auto h-[22px] w-10 animate-pulse rounded bg-muted md:h-[28px]" />
+      ) : (
+        <div
+          className={cn(
+            "font-display text-[22px] font-extrabold leading-none tabular-nums md:text-[28px]",
+            toneClasses[tone],
+          )}
+        >
+          {value ?? "–"}
+        </div>
+      )}
       <div className="mt-1.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
         {label}
       </div>

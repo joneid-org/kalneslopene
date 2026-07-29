@@ -19,7 +19,7 @@ const EMPTY_RACE_HISTORY: RaceRunnerDTO[] = [];
 export default function RunnerStatistics() {
   const [selectedRunner, setSelectedRunner] = useState<RunnerDTO | null>(null);
 
-  const { data } = useQuery({
+  const { data, isPending } = useQuery({
     ...QUERIES.runner.getAllRacesByRunner(selectedRunner?.uuid ?? ""),
     enabled: !!selectedRunner?.uuid,
   });
@@ -50,8 +50,17 @@ export default function RunnerStatistics() {
           <RunnerStatisticsHeader runner={selectedRunner} />
 
           <div className="grid grid-cols-2 gap-3">
-            <StatTile value={totalRaces} label="Løp fullført" />
-            <StatTile value={pr} label="Personlig rekord" tone="primary" />
+            <StatTile
+              value={totalRaces}
+              label="Løp fullført"
+              isLoading={isPending}
+            />
+            <StatTile
+              value={pr}
+              label="Personlig rekord"
+              tone="primary"
+              isLoading={isPending}
+            />
           </div>
 
           <Suspense fallback={null}>

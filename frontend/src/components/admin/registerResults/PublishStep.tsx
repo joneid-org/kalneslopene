@@ -1,28 +1,40 @@
 import { AlertTriangleIcon, Loader2Icon, RocketIcon } from "lucide-react";
+import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import { WeatherLine } from "@/components/Weather/WeatherLine.tsx";
 import { formatSecondsToTime } from "@/lib/timeUtils.ts";
 import type { RaceRunnerDTO } from "@/model/DTO.ts";
-import type { WeatherForm } from "./helpers.ts";
-import { entryHasTime, entrySeconds, formToWeather } from "./helpers.ts";
+import type { RacePatch } from "./helpers.ts";
+import { entryHasTime, entrySeconds } from "./helpers.ts";
+
+function Warning({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <div className="flex gap-2 rounded-md border border-orange-300 bg-orange-50 p-3 text-sm dark:border-orange-900 dark:bg-orange-950/30">
+      <AlertTriangleIcon className="size-4 shrink-0 text-orange-500" />
+      <div>
+        <p className="font-medium">{title}</p>
+        <p className="text-muted-foreground">{children}</p>
+      </div>
+    </div>
+  );
+}
 
 export function PublishStep({
   entries,
-  weather,
-  courseCondition,
+  race,
   onPublish,
   isPublishing,
 }: {
   entries: RaceRunnerDTO[];
-  weather: WeatherForm;
-  courseCondition: string;
+  /** Sanitized patch from the wizard form, or null when the form is invalid. */
+  race: RacePatch | null;
   onPublish: () => void;
   isPublishing: boolean;
 }) {
   const missingTime = entries.filter((e) => !entryHasTime(e));
   const unverified = entries.filter((e) => !e.runner.isVerified);
-  const canPublish = entries.length > 0 && missingTime.length === 0;
-  const weatherDto = formToWeather(weather);
+  const resultsReady = entries.length > 0 && missingTime.length === 0;
+  const canPublish = resultsReady && !!race;
 
   return (
     <div className="space-y-5">
@@ -46,8 +58,8 @@ export function PublishStep({
         <div className="flex justify-between gap-4">
           <span className="text-muted-foreground">Vær</span>
           <span className="font-medium text-right">
-            {weatherDto ? (
-              <WeatherLine weather={weatherDto} className="justify-end" />
+            {race?.weather ? (
+              <WeatherLine weather={race.weather} className="justify-end" />
             ) : (
               <span className="italic text-muted-foreground">
                 Ikke registrert
@@ -58,7 +70,7 @@ export function PublishStep({
         <div className="flex justify-between gap-4">
           <span className="text-muted-foreground">Løypeforhold</span>
           <span className="font-medium text-right">
-            {courseCondition.trim() || (
+            {race?.courseCondition || (
               <span className="italic text-muted-foreground">
                 Ikke registrert
               </span>
@@ -68,34 +80,24 @@ export function PublishStep({
       </div>
 
       {missingTime.length > 0 && (
-        <div className="flex gap-2 rounded-md border border-orange-300 bg-orange-50 p-3 text-sm dark:border-orange-900 dark:bg-orange-950/30">
-          <AlertTriangleIcon className="size-4 shrink-0 text-orange-500" />
-          <div>
-            <p className="font-medium">
-              {missingTime.length} løper(e) mangler tid
-            </p>
-            <p className="text-muted-foreground">
-              {missingTime.map((e) => e.runner.name).join(", ")}
-            </p>
-          </div>
-        </div>
+        <Warning title={`${missingTime.length} løper(e) mangler tid`}>
+          {missingTime.map((e) => e.runner.name).join(", ")}
+        </Warning>
       )}
 
       {unverified.length > 0 && (
-        <div className="flex gap-2 rounded-md border border-orange-300 bg-orange-50 p-3 text-sm dark:border-orange-900 dark:bg-orange-950/30">
-          <AlertTriangleIcon className="size-4 shrink-0 text-orange-500" />
-          <div>
-            <p className="font-medium">
-              {unverified.length} løper(e) er ikke bekreftet
-            </p>
-            <p className="text-muted-foreground">
-              Bekreft nye løpere i «Se over» før du publiserer.
-            </p>
-          </div>
-        </div>
+        <Warning title={`${unverified.length} løper(e) er ikke bekreftet`}>
+          Bekreft nye løpere i «Se over» før du publiserer.
+        </Warning>
       )}
 
-      {canPublish && (
+      {!race && (
+        <Warning title="Ugyldige verdier i vær eller løypeforhold">
+          Rett opp de røde feltene i «Se over» før du publiserer.
+        </Warning>
+      )}
+
+      {resultsReady && (
         <div className="max-h-64 divide-y overflow-y-auto rounded-md border">
           {entries.map((e) => (
             <div

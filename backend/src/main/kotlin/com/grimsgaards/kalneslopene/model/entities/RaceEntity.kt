@@ -75,21 +75,12 @@ class RaceEntity(
 
     fun toInfoDto(): RaceInfoDto = RaceInfoDto(uuid = uuid, raceDate = raceDate)
 
-    private fun weatherToDto(): WeatherDto? {
-        val symbol = weatherSymbol
-        val temperature = weatherTemperature
-        val windSpeed = weatherWindSpeed
-        if (symbol == null || temperature == null || windSpeed == null) return null
-        return WeatherDto(
-            symbol = symbol,
-            temperature = temperature,
-            windSpeed = windSpeed,
-            precipitation = weatherPrecipitation ?: NO_PRECIPITATION,
+    private fun weatherToDto(): WeatherDto? =
+        WeatherDto(
+            symbol = weatherSymbol,
+            temperature = weatherTemperature,
+            windSpeed = weatherWindSpeed,
+            precipitation = weatherPrecipitation,
             windDirection = weatherWindDirection,
-        )
-    }
-
-    companion object {
-        private const val NO_PRECIPITATION = 0.0
-    }
+        ).takeIf { it != WeatherDto() }
 }

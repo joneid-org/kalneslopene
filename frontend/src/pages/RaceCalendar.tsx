@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, ArrowRight, Camera, CloudSun, Users } from "lucide-react";
 import { Link } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
@@ -185,18 +185,13 @@ export function RaceCalendar() {
   const { data: raceInfos, isPending: isPendingInfos } = useQuery(
     QUERIES.race.getAllRaceInfos(),
   );
-  const {
-    data,
-    isPending: isPendingRaces,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery(
-    QUERIES.race.getRacesInfinite({
+  const { data, isPending: isPendingRaces } = useQuery(
+    QUERIES.race.getRaces({
       filter: {
         from: startOfYearString(currentYear),
         to: endOfYearString(currentYear),
       },
+      pageSize: null,
     }),
   );
 
@@ -207,8 +202,7 @@ export function RaceCalendar() {
     .sort(byRaceDate);
   const [completedRaceInfos, upcomingRaces] = seasonRaceInfos.partition(isPast);
 
-  const pastRaces = (data?.pages ?? [])
-    .flatMap((page) => page.content)
+  const pastRaces = (data?.content ?? [])
     .filter(isPast)
     .sort((a, b) => byRaceDate(b, a));
 
@@ -291,16 +285,6 @@ export function RaceCalendar() {
                   <PastRaceRow key={race.uuid} race={race} date={date} />
                 ))}
               </div>
-              {hasNextPage && (
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => fetchNextPage()}
-                  disabled={isFetchingNextPage}
-                >
-                  {isFetchingNextPage ? "Laster …" : "Vis flere løp"}
-                </Button>
-              )}
             </>
           )}
         </div>

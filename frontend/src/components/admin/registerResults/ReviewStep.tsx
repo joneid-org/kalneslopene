@@ -1,15 +1,30 @@
 import {
   CheckIcon,
+  ChevronsUpDownIcon,
   Loader2Icon,
   LogOutIcon,
+  PlusIcon,
   ReplaceIcon,
   XIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover.tsx";
 import {
   Select,
   SelectContent,
@@ -18,6 +33,7 @@ import {
   SelectValue,
 } from "@/components/ui/select.tsx";
 import { secondsToDuration } from "@/lib/timeUtils.ts";
+import { cn } from "@/lib/utils.ts";
 import {
   WEATHER_SYMBOL_OPTIONS,
   WIND_DIRECTION_OPTIONS,
@@ -29,13 +45,101 @@ import { entrySeconds, genderLabel, type WeatherForm } from "./helpers.ts";
 import { TimeField } from "./TimeField.tsx";
 
 const WEATHER_NUMBER_FIELDS: {
-  key: "temperature" | "windSpeed" | "precipitation";
+  key: "temperature" | "windSpeed";
   label: string;
 }[] = [
   { key: "temperature", label: "Temp (°C)" },
   { key: "windSpeed", label: "Vind (m/s)" },
-  { key: "precipitation", label: "Nedbør (mm)" },
 ];
+
+/** Combobox for værtype: pick a known Yr symbol, or type a free-text description and add it. */
+function WeatherTypeCombobox({
+  value,
+  onSelect,
+}: {
+  value: string;
+  onSelect: (value: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [customOptions, setCustomOptions] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (!value) return;
+    if (WEATHER_SYMBOL_OPTIONS.some((opt) => opt.value === value)) return;
+    setCustomOptions((prev) =>
+      prev.includes(value) ? prev : [...prev, value],
+    );
+  }, [value]);
+
+  const options = [
+    ...WEATHER_SYMBOL_OPTIONS,
+    ...customOptions.map((v) => ({ value: v, label: v })),
+  ];
+  const selectedLabel = options.find((opt) => opt.value === value)?.label;
+
+  function select(next: string) {
+    onSelect(next);
+    setSearch("");
+    setOpen(false);
+  }
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-full justify-between font-normal"
+        >
+          <span className="truncate">{selectedLabel ?? "Velg værtype"}</span>
+          <ChevronsUpDownIcon className="size-4 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-(--radix-popover-trigger-width) p-0">
+        <Command>
+          <CommandInput
+            placeholder="Søk eller skriv en værtype…"
+            value={search}
+            onValueChange={setSearch}
+          />
+          <CommandList>
+            <CommandEmpty>
+              {search.trim() && (
+                <button
+                  type="button"
+                  className="flex w-full items-center gap-2 px-2 py-1.5 text-sm hover:bg-accent"
+                  onClick={() => select(search.trim())}
+                >
+                  <PlusIcon className="size-4" />
+                  Legg til «{search.trim()}»
+                </button>
+              )}
+            </CommandEmpty>
+            <CommandGroup>
+              {options.map((opt) => (
+                <CommandItem
+                  key={opt.value}
+                  value={opt.label}
+                  onSelect={() => select(opt.value)}
+                >
+                  <CheckIcon
+                    className={cn(
+                      "size-4",
+                      value === opt.value ? "opacity-100" : "opacity-0",
+                    )}
+                  />
+                  {opt.label}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}
 
 export function ReviewStep({
   entries,
@@ -103,26 +207,15 @@ export function ReviewStep({
         <p className="text-xs text-muted-foreground">
           Hentet automatisk fra Yr. Overstyr ved behov.
         </p>
-        <Select
+        <WeatherTypeCombobox
           value={weather.symbol}
-          onValueChange={(symbol) => {
+          onSelect={(symbol) => {
             const next = { ...weather, symbol };
             onWeatherChange(next);
             onWeatherPersist(next);
           }}
-        >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Velg værtype" />
-          </SelectTrigger>
-          <SelectContent>
-            {WEATHER_SYMBOL_OPTIONS.map((opt) => (
-              <SelectItem key={opt.value} value={opt.value}>
-                {opt.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <div className="grid grid-cols-4 gap-2">
+        />
+        <div className="grid grid-cols-3 gap-2">
           {WEATHER_NUMBER_FIELDS.map(({ key, label }) => (
             <div key={key} className="space-y-1">
               <Label className="text-xs font-normal text-muted-foreground">

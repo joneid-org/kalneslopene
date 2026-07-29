@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Compass, Droplets, Footprints, Thermometer, Wind } from "lucide-react";
+import { Compass, Footprints, Thermometer, Wind } from "lucide-react";
 import { cn } from "@/lib/utils.ts";
 import {
   weatherIcon,
@@ -56,9 +56,6 @@ export function WeatherLine({
             <Item icon={Compass}>
               {windDirectionLabel(weather.windDirection)}
             </Item>
-          )}
-          {weather.precipitation > 0 && (
-            <Item icon={Droplets}>{weather.precipitation} mm</Item>
           )}
         </>
       )}

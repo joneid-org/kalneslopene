@@ -3,7 +3,6 @@ import type { LucideIcon } from "lucide-react";
 import {
   CalendarDays,
   Compass,
-  Droplets,
   Footprints,
   Thermometer,
   Wind,
@@ -134,14 +133,6 @@ function NextRaceStacked({ isPending, race, weather }: NextRaceVariantProps) {
                   <WeatherItem icon={weatherIcon(weather.symbol)}>
                     {weatherLabel(weather.symbol)}
                   </WeatherItem>
-                  {weather.precipitation > 0 && (
-                    <WeatherItem
-                      icon={Droplets}
-                      className="text-[13px] font-medium text-white/85"
-                    >
-                      {weather.precipitation} mm
-                    </WeatherItem>
-                  )}
                   <WeatherItem
                     icon={Thermometer}
                     className="text-[13px] font-medium text-white/85"
@@ -205,11 +196,6 @@ function NextRaceOverlay({ isPending, race, weather }: NextRaceVariantProps) {
                     <WeatherItem icon={weatherIcon(weather.symbol)}>
                       {weatherLabel(weather.symbol)}
                     </WeatherItem>
-                    {weather.precipitation > 0 && (
-                      <WeatherItem icon={Droplets}>
-                        {weather.precipitation} mm
-                      </WeatherItem>
-                    )}
                     <WeatherItem icon={Thermometer}>
                       {weather.temperature}°C
                     </WeatherItem>

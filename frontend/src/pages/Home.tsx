@@ -2,6 +2,7 @@ import { SeasonStatBoxes } from "@/components/SeasonStatBoxes.tsx";
 import { Hero } from "../components/Hero/Hero.tsx";
 import NewsFeed from "../components/News/NewsFeed.tsx";
 import OrganisersBlock from "../components/OrganisersBlock.tsx";
+import PracticalInfoBlock from "../components/PracticalInfoBlock.tsx";
 import { Slogan } from "../components/Slogan.tsx";
 import SponsorsBlock from "../components/SponsorsBlock.tsx";
 
@@ -13,6 +14,7 @@ export function Home() {
         <Slogan />
         <NewsFeed />
         <SeasonStatBoxes />
+        <PracticalInfoBlock />
         <OrganisersBlock />
         <SponsorsBlock />
       </div>

@@ -1,9 +1,13 @@
 import {
   CalendarIcon,
   ClipboardListIcon,
+  ClipboardPenIcon,
   FileUpIcon,
   ImageIcon,
+  MapPinIcon,
   NewspaperIcon,
+  SquareParkingIcon,
+  TimerIcon,
   UserPlusIcon,
   UsersIcon,
 } from "lucide-react";
@@ -55,6 +59,53 @@ export const NORWEGIAN_MONTH_NAMES = [
   "november",
   "desember",
 ];
+
+export const PRACTICAL_INFO_INTRO =
+  "Torsdagsløpet ønsker alle hjertelig velkommen til å delta. Vi har plass " +
+  "til alle uansett alder og nivå, og vil gjøre vårt beste for at deltakerne " +
+  "skal få en god opplevelse.";
+
+export const PRACTICAL_INFO = [
+  {
+    title: "Oppmøtested",
+    icon: MapPinIcon,
+    text:
+      "Start og mål er ved parkeringsplassen i krysset mellom Lundestadveien " +
+      "og Gamle Kongevei i Kalnesskogen. Startbua er som regel betjent fra " +
+      "45 minutter før start.",
+  },
+  {
+    title: "Påmelding",
+    icon: ClipboardPenIcon,
+    text:
+      "Det er ingen forhåndspåmelding, så her er det bare å møte opp. Meld " +
+      "deg på hos vår ansvarlige i eller ved startbua senest noen minutter " +
+      "før start, og si gjerne fra dersom du er helt ny i Torsdagsløpet. Det " +
+      "er ingen deltakeravgift.",
+  },
+  {
+    title: "Parkering",
+    icon: SquareParkingIcon,
+    text:
+      "Asfaltert parkeringsplass finnes rett ved startområdet i begynnelsen " +
+      "av Lundestadveien. Denne kan bli fort full, men man kan også parkere " +
+      "langs Gamle Kongevei og den første delen av Lundestadveien.",
+  },
+  {
+    title: "Tidtaking",
+    icon: TimerIcon,
+    text:
+      "Din tid blir ropt opp ved målgang, og denne oppgir du i startbua. " +
+      "Ønsker du ikke tiden din i den endelige resultatlisten, kan du i " +
+      "stedet velge å stå med «deltatt».",
+  },
+] as const;
+
+export const PRACTICAL_INFO_FOOTNOTE =
+  "Ukens resultatliste blir presentert på hjemmesiden og Facebook noen timer " +
+  "etter løpet, og sendes til lokalavisen SA dagen etter. Bilder fra løpet " +
+  "legges som regel ut i løpet av de to påfølgende dagene — si fra til oss " +
+  "dersom du ikke ønsker bildet ditt vist.";
 
 export const ORGANIZER_DESCRIPTION =
   "Torsdagsløpet er et frivillig drevet mosjonsløp som har arrangert " +

@@ -1,11 +1,7 @@
 import type { LucideIcon } from "lucide-react";
-import { Compass, Footprints, Thermometer, Wind } from "lucide-react";
+import { Footprints } from "lucide-react";
 import { cn } from "@/lib/utils.ts";
-import {
-  weatherIcon,
-  weatherLabel,
-  windDirectionLabel,
-} from "@/lib/weatherDisplay.ts";
+import { weatherItems } from "@/lib/weatherDisplay.ts";
 import type { WeatherDto } from "@/model/DTO.ts";
 
 function Item({
@@ -45,19 +41,13 @@ export function WeatherLine({
         className,
       )}
     >
-      {weather && (
-        <>
-          <Item icon={weatherIcon(weather.symbol)}>
-            {weatherLabel(weather.symbol)}
-          </Item>
-          <Item icon={Thermometer}>{weather.temperature}°C</Item>
-          <Item icon={Wind}>{weather.windSpeed} m/s</Item>
-          {weather.windDirection != null && (
-            <Item icon={Compass}>
-              {windDirectionLabel(weather.windDirection)}
+      {Object.entries(weatherItems(weather)).map(
+        ([key, item]) =>
+          item && (
+            <Item key={key} icon={item.icon}>
+              {item.text}
             </Item>
-          )}
-        </>
+          ),
       )}
       {courseCondition && <Item icon={Footprints}>{courseCondition}</Item>}
     </span>

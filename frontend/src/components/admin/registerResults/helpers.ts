@@ -1,43 +1,71 @@
+import { z } from "zod";
 import { mapResultTimeToNumber } from "@/lib/timeUtils.ts";
-import type { RaceRunnerDTO, WeatherDto } from "@/model/DTO.ts";
+import type { RaceDTO, RaceInput, RaceRunnerDTO } from "@/model/DTO.ts";
 
-/** String-backed mirror of WeatherDto for the admin weather inputs. */
-export type WeatherForm = {
-  symbol: string;
-  temperature: string;
-  windSpeed: string;
-  precipitation: string;
-  windDirection: number | null;
-};
+/** Blank-or-number text input: trimmed, range-checked, emitted as number | undefined. */
+const numberField = (min: number, max: number) =>
+  z
+    .string()
+    .trim()
+    .transform((value) => (value === "" ? undefined : Number(value)))
+    .refine(
+      (value) => value === undefined || (value >= min && value <= max),
+      `Må være et tall mellom ${min} og ${max}`,
+    );
 
-export function weatherToForm(weather?: WeatherDto): WeatherForm {
+export const raceFormSchema = z.object({
+  symbol: z.string().transform((value) => value || undefined),
+  temperature: numberField(-60, 60),
+  windSpeed: numberField(0, 120),
+  precipitation: numberField(0, 500),
+  windDirection: z.number().min(0).max(360).nullable(),
+  courseCondition: z.string().trim().max(200, "Maks 200 tegn"),
+});
+
+/** String-backed mirror of WeatherDto + course condition for the admin inputs. */
+export type RaceForm = z.input<typeof raceFormSchema>;
+/** Same fields after validation: numbers parsed, blanks dropped. */
+export type RaceValues = z.output<typeof raceFormSchema>;
+
+export const runnerFormSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(1, "Navnet kan ikke være tomt")
+    .max(100, "Maks 100 tegn"),
+  gender: z.enum(["MALE", "FEMALE"]),
+});
+
+export type RunnerFormValues = z.infer<typeof runnerFormSchema>;
+
+export type RacePatch = Omit<RaceInput, "raceDate">;
+
+export function raceToForm({ weather, courseCondition }: RaceDTO): RaceForm {
   return {
     symbol: weather?.symbol ?? "",
     temperature: weather?.temperature?.toString() ?? "",
     windSpeed: weather?.windSpeed?.toString() ?? "",
     precipitation: weather?.precipitation?.toString() ?? "",
     windDirection: weather?.windDirection ?? null,
+    courseCondition: courseCondition ?? "",
   };
 }
 
-/** Full WeatherDto when every field is valid, else undefined (leaves stored weather untouched). */
-export function formToWeather(form: WeatherForm): WeatherDto | undefined {
-  const temperature = Number.parseFloat(form.temperature);
-  const windSpeed = Number.parseFloat(form.windSpeed);
-  const precipitation = Number.parseFloat(form.precipitation);
-  if (
-    !form.symbol ||
-    Number.isNaN(temperature) ||
-    Number.isNaN(windSpeed) ||
-    Number.isNaN(precipitation)
-  )
-    return undefined;
+/**
+ * Sanitized race patch, or null when a field is invalid (nothing is then persisted).
+ * Blank fields become undefined so they are cleared on save; weather stays undefined
+ * when nothing is filled in at all, leaving stored weather untouched.
+ */
+export function formToRace(form: RaceForm): RacePatch | null {
+  const parsed = raceFormSchema.safeParse(form);
+  if (!parsed.success) return null;
+
+  const { courseCondition, ...weather } = parsed.data;
   return {
-    symbol: form.symbol,
-    temperature,
-    windSpeed,
-    precipitation,
-    windDirection: form.windDirection,
+    weather: Object.values(weather).some((value) => value != null)
+      ? weather
+      : undefined,
+    courseCondition: courseCondition || undefined,
   };
 }
 

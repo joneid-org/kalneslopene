@@ -28,7 +28,7 @@ export function RoutePhotoGallery() {
           {currentIndex + 1} / {total}
         </span>
       </div>
-      <p className="mt-1 hidden text-sm text-muted-foreground sm:block">
+      <p className="mt-1 hidden page-subtitle text-muted-foreground sm:block">
         Naviger gjennom bildene for informasjon om de ulike delene av løypa.
       </p>
 

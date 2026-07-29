@@ -119,6 +119,18 @@ class RaceServiceTest {
             assertThat(dto.courseCondition).isEqualTo("Vått")
             assertThat(dto.weather?.symbol).isEqualTo("cloudy")
         }
+
+        @Test
+        fun `submitted weather replaces every field, clearing the omitted ones`() {
+            stubExisting(existingRace())
+
+            val dto = service.updateRace(uuid, RaceInput(raceDate = raceDate, weather = WeatherDto(temperature = 12.0)))
+
+            assertThat(dto.weatherManuallyEdited).isTrue()
+            assertThat(dto.weather?.temperature).isEqualTo(12.0)
+            assertThat(dto.weather?.symbol).isNull()
+            assertThat(dto.weather?.windSpeed).isNull()
+        }
     }
 
     @Nested

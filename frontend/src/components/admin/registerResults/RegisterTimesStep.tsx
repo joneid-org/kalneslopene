@@ -1,30 +1,24 @@
 import { XIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge.tsx";
 import { secondsToDuration } from "@/lib/timeUtils.ts";
-import type { RaceRunnerDTO, RunnerDTO } from "@/model/DTO.ts";
+import type { RaceRunnerDTO, RunnerDTO, RunnerInput } from "@/model/DTO.ts";
 import { AddRunnerForm } from "./AddRunnerForm.tsx";
 import { entrySeconds } from "./helpers.ts";
 import { TimeField } from "./TimeField.tsx";
 
 export function RegisterTimesStep({
   entries,
-  onAddExisting,
-  onAddNew,
+  onAdd,
   onRemove,
   onUpdateResult,
   isAdding,
 }: {
   entries: RaceRunnerDTO[];
-  onAddExisting: (runner: RunnerDTO) => void;
-  onAddNew: (name: string, gender: string) => void;
+  onAdd: (runner: RunnerDTO | RunnerInput) => void;
   onRemove: (runnerUuid: string) => void;
-  onUpdateResult: (
-    runnerUuid: string,
-    patch: { resultTime?: string | null; hideTime?: boolean },
-  ) => void;
+  onUpdateResult: (entry: RaceRunnerDTO) => void;
   isAdding: boolean;
 }) {
-  const existingRunnerUuids = new Set(entries.map((e) => e.runner.uuid));
   const sortedEntries = entries.toSorted((a, b) =>
     a.runner.name.localeCompare(b.runner.name, "nb"),
   );
@@ -40,9 +34,8 @@ export function RegisterTimesStep({
       </div>
 
       <AddRunnerForm
-        existingRunnerUuids={existingRunnerUuids}
-        onAddExisting={onAddExisting}
-        onAddNew={onAddNew}
+        existingRunnerUuids={new Set(entries.map((e) => e.runner.uuid))}
+        onAdd={onAdd}
         isAdding={isAdding}
       />
 
@@ -71,7 +64,8 @@ export function RegisterTimesStep({
                 seconds={entrySeconds(entry)}
                 disabled={entry.hideTime}
                 onBlur={(seconds) =>
-                  onUpdateResult(entry.runner.uuid, {
+                  onUpdateResult({
+                    ...entry,
                     resultTime: secondsToDuration(seconds ?? 0),
                   })
                 }
@@ -82,7 +76,8 @@ export function RegisterTimesStep({
                   type="checkbox"
                   checked={entry.hideTime}
                   onChange={(e) =>
-                    onUpdateResult(entry.runner.uuid, {
+                    onUpdateResult({
+                      ...entry,
                       hideTime: e.target.checked,
                       ...(e.target.checked ? { resultTime: null } : {}),
                     })

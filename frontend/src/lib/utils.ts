@@ -147,7 +147,7 @@ export function getNextRace(
 
 export type RowData = {
   uuid: string;
-  position: number | null;
+  position: number;
   runnerName: string;
   gender: string;
   time: string;
@@ -168,11 +168,13 @@ export function buildTableRows(runners: RaceRunnerDTO[]): RowData[] {
     );
   });
 
-  // Dense ranking: equal times share a position, and the next distinct time
-  // continues without a gap (1, 2, 2, 3). "Deltatt" rows are sorted last and
-  // get no position at all.
+  // Standard competition ranking: equal times share a position and the next
+  // distinct time skips the tied places (1, 2, 2, 4). "Deltatt" rows are sorted
+  // last and all share the position right after the runners with a time.
+  const timedCount = sorted.filter((runner) => !runner.hideTime).length;
   let previousTime = Number.NaN;
   let previousPosition = 0;
+  let finished = 0;
 
   return sorted.map((runner) => {
     const timeSeconds = mapResultTimeToNumber(runner.resultTime ?? "");
@@ -190,10 +192,12 @@ export function buildTableRows(runners: RaceRunnerDTO[]): RowData[] {
       hasVisibleTime &&
       (!Number.isFinite(previousSeasonBest) ||
         timeSeconds < previousSeasonBest);
-    let position: number | null = null;
-    if (!runner.hideTime) {
-      position =
-        timeSeconds === previousTime ? previousPosition : previousPosition + 1;
+    let position: number;
+    if (runner.hideTime) {
+      position = timedCount + 1;
+    } else {
+      finished += 1;
+      position = timeSeconds === previousTime ? previousPosition : finished;
       previousTime = timeSeconds;
       previousPosition = position;
     }

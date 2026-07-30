@@ -58,17 +58,19 @@ class RaceService(
         filter: RaceFilter,
         page: Int,
         pageSize: Int?,
+        sortDirection: Sort.Direction = Sort.Direction.DESC,
     ): Page<RaceDTO> {
         val effectiveFilter = if (isAdmin()) filter else filter.copy(isPublished = true)
-        return raceRepository.findAllByFilter(effectiveFilter, resolvePageable(filter, page, pageSize)).map { it.toDto() }
+        return raceRepository.findAllByFilter(effectiveFilter, resolvePageable(filter, page, pageSize, sortDirection)).map { it.toDto() }
     }
 
     private fun resolvePageable(
         filter: RaceFilter,
         page: Int,
         pageSize: Int?,
+        sortDirection: Sort.Direction = Sort.Direction.DESC,
     ): Pageable {
-        val sort = Sort.by(Sort.Direction.DESC, "raceDate")
+        val sort = Sort.by(sortDirection, "raceDate")
         if (pageSize == null) {
             require(filter.spansSingleYear()) {
                 "pageSize is required unless the filter has from and to within the same year"

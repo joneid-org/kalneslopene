@@ -12,6 +12,7 @@ import com.grimsgaards.kalneslopene.model.input.RaceFilter
 import com.grimsgaards.kalneslopene.model.input.RaceInput
 import com.grimsgaards.kalneslopene.model.input.ReorderPhotoInput
 import com.grimsgaards.kalneslopene.service.RaceService
+import org.springframework.data.domain.Sort
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -35,7 +36,15 @@ class RaceController(
         filter: RaceFilter,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(required = false) pageSize: Int?,
-    ): PagedResponse<RaceDTO> = raceService.getAll(filter, page, pageSize).toPagedResponse()
+        @RequestParam(required = false) sortDirection: String?,
+    ): PagedResponse<RaceDTO> =
+        raceService
+            .getAll(
+                filter,
+                page,
+                pageSize,
+                sortDirection?.let { Sort.Direction.valueOf(it.trim().uppercase()) } ?: Sort.Direction.DESC,
+            ).toPagedResponse()
 
     @GetMapping("/api/race-info")
     fun getAllRacesInfo(

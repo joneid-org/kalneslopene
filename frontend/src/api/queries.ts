@@ -50,6 +50,7 @@ function fetchRaces(
   filter: RaceFilter | undefined,
   page: number,
   pageSize: number | undefined | null,
+  sortDirection: "asc" | "desc" = "desc",
 ) {
   const searchParams: Record<string, string> = { page: page.toString() };
   if (pageSize !== undefined && pageSize !== null)
@@ -58,6 +59,7 @@ function fetchRaces(
   if (filter?.to) searchParams.to = filter.to;
   if (filter?.isPublished !== undefined)
     searchParams.isPublished = String(filter.isPublished);
+  searchParams.sortDirection = sortDirection;
   return kyClient
     .get("/api/races", { searchParams })
     .json<PagedResponse<RaceDTO>>();
@@ -83,24 +85,29 @@ export const QUERIES = {
       filter,
       page = 0,
       pageSize = DEFAULT_RACE_PAGE_SIZE,
+      sortDirection = "desc",
     }: {
       filter?: RaceFilter;
       page?: number;
       pageSize?: number | null;
+      sortDirection?: "asc" | "desc";
     } = {}) => ({
-      queryKey: ["race", "getAll", filter, page, pageSize],
-      queryFn: () => fetchRaces(filter, page, pageSize),
+      queryKey: ["race", "getAll", filter, page, pageSize, sortDirection],
+      queryFn: () => fetchRaces(filter, page, pageSize, sortDirection),
     }),
     getRacesInfinite: ({
       filter,
       pageSize = DEFAULT_RACE_PAGE_SIZE,
+      sortDirection = "desc",
     }: {
       filter?: RaceFilter;
       pageSize?: number;
+      sortDirection?: "asc" | "desc";
     } = {}) =>
       infiniteQueryOptions({
-        queryKey: ["race", "getAllInfinite", filter, pageSize],
-        queryFn: ({ pageParam }) => fetchRaces(filter, pageParam, pageSize),
+        queryKey: ["race", "getAllInfinite", filter, pageSize, sortDirection],
+        queryFn: ({ pageParam }) =>
+          fetchRaces(filter, pageParam, pageSize, sortDirection),
         initialPageParam: 0,
         getNextPageParam: nextPageParam,
         getPreviousPageParam: previousPageParam,

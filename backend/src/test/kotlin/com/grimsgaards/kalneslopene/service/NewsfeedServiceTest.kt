@@ -50,8 +50,14 @@ class NewsfeedServiceTest {
     @BeforeEach
     fun setUp() {
         whenever(newsfeedRepository.save(any())).thenAnswer { it.getArgument(0) }
-        whenever(raceService.getAll(any(RaceFilter::class.java) ?: RaceFilter(), anyInt(), anyInt()))
-            .thenReturn(PageImpl(emptyList()))
+        whenever(
+            raceService.getAll(
+                any(RaceFilter::class.java) ?: RaceFilter(),
+                anyInt(),
+                anyInt(),
+                any(Sort.Direction::class.java) ?: Sort.Direction.DESC,
+            ),
+        ).thenReturn(PageImpl(emptyList()))
 
         service = NewsfeedService(newsfeedRepository, s3Service, raceService)
     }
@@ -104,8 +110,14 @@ class NewsfeedServiceTest {
             val existing = newsfeed(headerImage = null, tags = listOf("resultater"))
             val race = raceDto(raceDate = LocalDateTime.parse("2026-06-14T09:00:00"))
             whenever(newsfeedRepository.findById(existing.uuid)).thenReturn(Optional.of(existing))
-            whenever(raceService.getAll(any(RaceFilter::class.java) ?: RaceFilter(), anyInt(), anyInt()))
-                .thenReturn(PageImpl(listOf(race)))
+            whenever(
+                raceService.getAll(
+                    any(RaceFilter::class.java) ?: RaceFilter(),
+                    anyInt(),
+                    anyInt(),
+                    any(Sort.Direction::class.java) ?: Sort.Direction.DESC,
+                ),
+            ).thenReturn(PageImpl(listOf(race)))
 
             val result = service.findByUuid(existing.uuid)
 

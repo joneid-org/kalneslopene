@@ -52,7 +52,7 @@ export const pins: Pin[] = [
     category: "poi",
     distance: "1 - 1,4 km",
     description:
-      "Strekningen fra 1 km-merket og deretter ca. 370 meter kalles Sletnersletta. Den har fått navn etter Dag Inge Sletner som har tidligere har gjort en formidabel innsats for å holde den blå løypa framkommelig. Høsten 2019 gravde han langt og lenge for å lede vannet vekk rett etter 1 km-merket. Dag løper også gjerne Torsdagsløpet.",
+      "Strekningen fra 1 km-merket og deretter ca. 370 meter kalles Sletnersletta. Den har fått navn etter Dag Inge Sletner som tidligere har gjort en formidabel innsats for å holde den blå løypa framkommelig. Høsten 2019 gravde han langt og lenge for å lede vannet vekk rett etter 1 km-merket. Dag løper også gjerne Torsdagsløpet.",
     photo: {
       fileName: "sletnersletta.webp",
       fallback:

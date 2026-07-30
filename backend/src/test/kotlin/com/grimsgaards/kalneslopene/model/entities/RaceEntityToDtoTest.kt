@@ -1,5 +1,8 @@
 package com.grimsgaards.kalneslopene.model.entities
 
+import com.grimsgaards.kalneslopene.race.model.RaceEntity
+import com.grimsgaards.kalneslopene.race.model.RacePhotoEntity
+import com.grimsgaards.kalneslopene.s3.FileEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
@@ -47,10 +50,18 @@ class RaceEntityToDtoTest {
     fun `exposes only confirmed photos and never nulls`() {
         val race = race()
         race.racePhotos.add(
-            RacePhotoEntity(race = race, file = confirmedFile("https://minio.local/bucket/confirmed.jpg"), orderIndex = 1.0),
+            RacePhotoEntity(
+                race = race,
+                file = confirmedFile("https://minio.local/bucket/confirmed.jpg"),
+                orderIndex = 1.0,
+            ),
         )
         race.racePhotos.add(
-            RacePhotoEntity(race = race, file = FileEntity(url = "https://minio.local/bucket/pending.jpg"), orderIndex = 2.0),
+            RacePhotoEntity(
+                race = race,
+                file = FileEntity(url = "https://minio.local/bucket/pending.jpg"),
+                orderIndex = 2.0,
+            ),
         )
 
         val dto = race.toDto()
@@ -64,10 +75,18 @@ class RaceEntityToDtoTest {
     fun `returns no photos when none are confirmed`() {
         val race = race()
         race.racePhotos.add(
-            RacePhotoEntity(race = race, file = FileEntity(url = "https://minio.local/bucket/pending-a.jpg"), orderIndex = 1.0),
+            RacePhotoEntity(
+                race = race,
+                file = FileEntity(url = "https://minio.local/bucket/pending-a.jpg"),
+                orderIndex = 1.0,
+            ),
         )
         race.racePhotos.add(
-            RacePhotoEntity(race = race, file = FileEntity(url = "https://minio.local/bucket/pending-b.jpg"), orderIndex = 2.0),
+            RacePhotoEntity(
+                race = race,
+                file = FileEntity(url = "https://minio.local/bucket/pending-b.jpg"),
+                orderIndex = 2.0,
+            ),
         )
 
         val dto = race.toDto()

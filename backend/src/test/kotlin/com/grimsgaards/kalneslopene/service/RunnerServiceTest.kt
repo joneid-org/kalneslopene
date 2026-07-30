@@ -1,6 +1,7 @@
 package com.grimsgaards.kalneslopene.service
 
-import com.grimsgaards.kalneslopene.repository.RunnerRepository
+import com.grimsgaards.kalneslopene.runner.RunnerRepository
+import com.grimsgaards.kalneslopene.runner.RunnerService
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

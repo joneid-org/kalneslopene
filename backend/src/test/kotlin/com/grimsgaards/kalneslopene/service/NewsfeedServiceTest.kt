@@ -1,11 +1,14 @@
 package com.grimsgaards.kalneslopene.service
 
-import com.grimsgaards.kalneslopene.model.dto.RaceDTO
-import com.grimsgaards.kalneslopene.model.entities.FileEntity
-import com.grimsgaards.kalneslopene.model.entities.NewsfeedEntity
-import com.grimsgaards.kalneslopene.model.input.NewsfeedInput
-import com.grimsgaards.kalneslopene.model.input.RaceFilter
-import com.grimsgaards.kalneslopene.repository.NewsfeedRepository
+import com.grimsgaards.kalneslopene.newsfeed.NewsfeedService
+import com.grimsgaards.kalneslopene.newsfeed.dto.NewsfeedInput
+import com.grimsgaards.kalneslopene.newsfeed.model.NewsfeedEntity
+import com.grimsgaards.kalneslopene.newsfeed.model.NewsfeedRepository
+import com.grimsgaards.kalneslopene.race.RaceService
+import com.grimsgaards.kalneslopene.race.dto.RaceDTO
+import com.grimsgaards.kalneslopene.race.dto.RaceFilter
+import com.grimsgaards.kalneslopene.s3.FileEntity
+import com.grimsgaards.kalneslopene.s3.S3Service
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach

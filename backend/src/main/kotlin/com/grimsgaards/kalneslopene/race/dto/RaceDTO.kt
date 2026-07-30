@@ -1,0 +1,17 @@
+package com.grimsgaards.kalneslopene.race.dto
+
+import com.grimsgaards.kalneslopene.s3.FileDto
+import com.grimsgaards.kalneslopene.weather.WeatherDto
+import java.time.LocalDateTime
+import java.util.UUID
+
+data class RaceDTO(
+    val uuid: UUID,
+    val raceDate: LocalDateTime,
+    val weather: WeatherDto?,
+    val courseCondition: String?,
+    val weatherManuallyEdited: Boolean,
+    val runnerCount: Int,
+    val isPublished: Boolean,
+    val photos: List<FileDto>,
+)

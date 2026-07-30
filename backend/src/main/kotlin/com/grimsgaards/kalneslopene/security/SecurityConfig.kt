@@ -1,7 +1,5 @@
 package com.grimsgaards.kalneslopene.security
 
-import com.grimsgaards.kalneslopene.model.entities.UserRole
-import com.grimsgaards.kalneslopene.repository.UserRepository
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod

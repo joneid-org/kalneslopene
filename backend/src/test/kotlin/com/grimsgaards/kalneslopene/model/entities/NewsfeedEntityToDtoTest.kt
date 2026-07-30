@@ -1,5 +1,7 @@
 package com.grimsgaards.kalneslopene.model.entities
 
+import com.grimsgaards.kalneslopene.newsfeed.model.NewsfeedEntity
+import com.grimsgaards.kalneslopene.s3.FileEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test

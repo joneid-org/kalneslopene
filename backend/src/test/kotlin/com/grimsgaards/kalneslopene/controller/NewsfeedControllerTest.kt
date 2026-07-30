@@ -1,15 +1,16 @@
 package com.grimsgaards.kalneslopene.controller
 
-import com.grimsgaards.kalneslopene.model.dto.FileDto
-import com.grimsgaards.kalneslopene.model.dto.NewsfeedDTO
-import com.grimsgaards.kalneslopene.model.dto.NewsfeedTagDTO
-import com.grimsgaards.kalneslopene.model.dto.PagedResponse
-import com.grimsgaards.kalneslopene.model.input.NewsfeedInput
-import com.grimsgaards.kalneslopene.model.input.NewsfeedTagInput
-import com.grimsgaards.kalneslopene.model.input.NewsfeedTagUpdateInput
-import com.grimsgaards.kalneslopene.model.input.PhotoUploadInfo
-import com.grimsgaards.kalneslopene.service.NewsfeedService
-import com.grimsgaards.kalneslopene.service.NewsfeedTagService
+import com.grimsgaards.kalneslopene.common.PagedResponse
+import com.grimsgaards.kalneslopene.newsfeed.NewsfeedController
+import com.grimsgaards.kalneslopene.newsfeed.NewsfeedService
+import com.grimsgaards.kalneslopene.newsfeed.NewsfeedTagService
+import com.grimsgaards.kalneslopene.newsfeed.dto.NewsfeedDTO
+import com.grimsgaards.kalneslopene.newsfeed.dto.NewsfeedInput
+import com.grimsgaards.kalneslopene.newsfeed.dto.NewsfeedTagDTO
+import com.grimsgaards.kalneslopene.newsfeed.dto.NewsfeedTagInput
+import com.grimsgaards.kalneslopene.newsfeed.dto.NewsfeedTagUpdateInput
+import com.grimsgaards.kalneslopene.s3.FileDto
+import com.grimsgaards.kalneslopene.s3.PhotoUploadInfo
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito

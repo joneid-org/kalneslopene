@@ -1,6 +1,6 @@
 package com.grimsgaards.kalneslopene.data
 
-import com.grimsgaards.kalneslopene.model.dto.Gender
+import com.grimsgaards.kalneslopene.runner.Gender
 import org.springframework.core.io.ClassPathResource
 import java.time.Duration
 import java.time.LocalDate

@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button.tsx";
 import { Dialog } from "@/components/ui/dialog.tsx";
 import { YearSelector } from "@/components/YearSelector.tsx";
 import {
+  addHoursToDate,
   endOfYearString,
   formatDDMonth,
   startOfYearString,
@@ -40,7 +41,7 @@ export function RegisterResults() {
         from: startOfYearString(effectiveYear),
         to:
           effectiveYear === NOW.getFullYear()
-            ? toLocalDateTimeString(NOW)
+            ? toLocalDateTimeString(addHoursToDate(NOW, 2))
             : endOfYearString(effectiveYear),
       },
       pageSize: null,

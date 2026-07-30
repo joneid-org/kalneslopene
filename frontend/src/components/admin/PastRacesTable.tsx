@@ -81,7 +81,7 @@ export function PastRacesTable({
                     <WeatherLine
                       weather={race.weather}
                       courseCondition={race.courseCondition}
-                      className="flex-nowrap text-xs"
+                      className="text-xs break-words"
                     />
                   ) : (
                     <span className="italic text-xs">Ikke registrert</span>

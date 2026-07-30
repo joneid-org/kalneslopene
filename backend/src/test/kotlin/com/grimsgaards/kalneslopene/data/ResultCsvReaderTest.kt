@@ -1,6 +1,6 @@
 package com.grimsgaards.kalneslopene.data
 
-import com.grimsgaards.kalneslopene.model.dto.Gender
+import com.grimsgaards.kalneslopene.runner.Gender
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.time.Duration

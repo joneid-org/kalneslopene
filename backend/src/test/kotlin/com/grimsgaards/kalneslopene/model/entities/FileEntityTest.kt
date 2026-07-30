@@ -1,5 +1,6 @@
 package com.grimsgaards.kalneslopene.model.entities
 
+import com.grimsgaards.kalneslopene.s3.FileEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Nested

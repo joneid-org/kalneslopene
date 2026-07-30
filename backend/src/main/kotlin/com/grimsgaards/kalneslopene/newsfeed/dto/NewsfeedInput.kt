@@ -1,0 +1,14 @@
+package com.grimsgaards.kalneslopene.newsfeed.dto
+
+import java.time.OffsetDateTime
+import java.util.UUID
+
+data class NewsfeedInput(
+    val uuid: UUID? = null,
+    val tags: List<String>,
+    val header: String,
+    val content: String,
+    val date: OffsetDateTime,
+    val headerImageUuid: UUID? = null,
+    val images: List<String> = emptyList(),
+)

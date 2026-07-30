@@ -1,7 +1,8 @@
 package com.grimsgaards.kalneslopene.service
 
-import com.grimsgaards.kalneslopene.model.entities.FileEntity
-import com.grimsgaards.kalneslopene.repository.FileRepository
+import com.grimsgaards.kalneslopene.s3.FileEntity
+import com.grimsgaards.kalneslopene.s3.FileRepository
+import com.grimsgaards.kalneslopene.s3.S3Service
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test

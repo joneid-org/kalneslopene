@@ -127,7 +127,7 @@ export const pins: Pin[] = [
     category: "poi",
     distance: "ca. 2,4 km",
     description:
-      "En av de få stedene i løypa som lenge har hatt et allment kjent navn blant løperne. Et godt referansepunkt halvveis ut i skogen.",
+      "Etter 2400 meter gjør løypa en 90-graders sving til venstre. Den har fått navnet Liansvingen etter løperen Svein Lian, som en gang tok til venstre litt for tidlig og dermed kuttet svingen.\n",
     photo: {
       fileName: "liansvingen.webp",
       fallback:
@@ -157,7 +157,7 @@ export const pins: Pin[] = [
     category: "poi",
     distance: "ca. 3,4 km",
     description:
-      "Et av de mest kjente stedene i løypa, og det med lengst tradisjon for navn blant løperne. En krevende bakke som tester bena sent i løypa.",
+      "Hundebakken er et av de mest kjente stedene i torsdagsløypa, og et parti mange kjenner godt i beina. Bakken starter ved 3400 meter og er 130 meter lang, målt til der en annen sti går til venstre. Den har fått sitt navn etter en hund som pleide å bjeffe når løperne kom opp bakken.",
     tips: "Du er over halvveis - gi det du har igjen!",
     photo: {
       fileName: "hundebakken.webp",

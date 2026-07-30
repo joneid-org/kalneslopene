@@ -52,5 +52,5 @@ class RunnerEntity(
     @Column(name = "season_races", table = "runner_stats", insertable = false, updatable = false)
     val seasonRaces: Int? = null
 
-    fun toDto(): RunnerDTO = RunnerDTO(uuid, name, gender, isVerified)
+    fun toDto(): RunnerDTO = RunnerDTO(uuid, name, gender, isVerified, historicPersonalRecord)
 }

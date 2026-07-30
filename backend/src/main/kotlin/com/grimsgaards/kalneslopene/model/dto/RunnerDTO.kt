@@ -1,5 +1,6 @@
 package com.grimsgaards.kalneslopene.model.dto
 
+import java.time.Duration
 import java.util.UUID
 
 data class RunnerDTO(
@@ -7,6 +8,7 @@ data class RunnerDTO(
     val name: String,
     val gender: Gender,
     val isVerified: Boolean,
+    val historicPersonalRecord: Duration?,
 )
 
 enum class Gender {

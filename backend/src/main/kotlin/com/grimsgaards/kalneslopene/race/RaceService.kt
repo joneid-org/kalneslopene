@@ -18,7 +18,7 @@ import com.grimsgaards.kalneslopene.runner.RunnerRepository
 import com.grimsgaards.kalneslopene.s3.FileDto
 import com.grimsgaards.kalneslopene.s3.PhotoUploadInfo
 import com.grimsgaards.kalneslopene.s3.S3Service
-import com.grimsgaards.kalneslopene.security.UserRole
+import com.grimsgaards.kalneslopene.security.AuthenticatedUserProvider
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
@@ -26,7 +26,6 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -43,14 +42,8 @@ class RaceService(
     val raceRunnerRepository: RaceRunnerRepository,
     val racePhotoRepository: RacePhotoRepository,
     val s3Service: S3Service,
+    val authenticatedUserProvider: AuthenticatedUserProvider,
 ) {
-    private fun isAdmin(): Boolean =
-        SecurityContextHolder
-            .getContext()
-            .authentication
-            ?.authorities
-            ?.any { it.authority == UserRole.ADMIN.toString() } == true
-
     @Cacheable(RACE_INFO_CACHE)
     fun getAllInfo(isPublished: Boolean?): List<RaceInfoDto> = raceRepository.findAllInfoByFilter(RaceFilter(isPublished = isPublished))
 
@@ -60,7 +53,7 @@ class RaceService(
         pageSize: Int?,
         sortDirection: Sort.Direction = Sort.Direction.DESC,
     ): Page<RaceDTO> {
-        val effectiveFilter = if (isAdmin()) filter else filter.copy(isPublished = true)
+        val effectiveFilter = if (authenticatedUserProvider.isAdmin()) filter else filter.copy(isPublished = true)
         return raceRepository.findAllByFilter(effectiveFilter, resolvePageable(filter, page, pageSize, sortDirection)).map { it.toDto() }
     }
 
@@ -90,7 +83,7 @@ class RaceService(
         val race =
             raceRepository.findByIdOrNull(uuid)
                 ?: throw NoSuchElementException("Race with id $uuid not found")
-        if (!isAdmin() && !race.isPublished) {
+        if (!authenticatedUserProvider.isAdmin() && !race.isPublished) {
             throw NoSuchElementException("Race with id $uuid not found")
         }
         return race.toDto()
@@ -146,7 +139,7 @@ class RaceService(
         val race =
             raceRepository.findByIdOrNull(uuid)
                 ?: throw NoSuchElementException("Race with id $uuid not found")
-        if (!isAdmin() && !race.isPublished) {
+        if (!authenticatedUserProvider.isAdmin() && !race.isPublished) {
             throw NoSuchElementException("Race with id $uuid not found")
         }
         return race.runners.map { it.toDto() }

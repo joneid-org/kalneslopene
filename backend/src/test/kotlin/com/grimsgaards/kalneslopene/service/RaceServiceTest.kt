@@ -17,6 +17,7 @@ import com.grimsgaards.kalneslopene.runner.RunnerEntity
 import com.grimsgaards.kalneslopene.runner.RunnerRepository
 import com.grimsgaards.kalneslopene.s3.FileEntity
 import com.grimsgaards.kalneslopene.s3.S3Service
+import com.grimsgaards.kalneslopene.security.AuthenticatedUserProvider
 import com.grimsgaards.kalneslopene.weather.WeatherDto
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -55,13 +56,24 @@ class RaceServiceTest {
     @Mock
     lateinit var s3Service: S3Service
 
+    @Mock
+    lateinit var authenticatedUserProvider: AuthenticatedUserProvider
+
     private lateinit var service: RaceService
     private val uuid: UUID = UUID.randomUUID()
     private val raceDate: LocalDateTime = LocalDateTime.parse("2026-08-13T18:00:00")
 
     @BeforeEach
     fun setUp() {
-        service = RaceService(raceRepository, runnerRepository, raceRunnerRepository, racePhotoRepository, s3Service)
+        service =
+            RaceService(
+                raceRepository,
+                runnerRepository,
+                raceRunnerRepository,
+                racePhotoRepository,
+                s3Service,
+                authenticatedUserProvider,
+            )
         Mockito.`when`(raceRepository.save(any(RaceEntity::class.java))).thenAnswer { it.getArgument<RaceEntity>(0) }
     }
 

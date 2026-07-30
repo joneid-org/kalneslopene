@@ -19,5 +19,8 @@
     "lib": "@/lib",
     "hooks": "@/hooks"
   },
-  "registries": {}
+  "registries": {
+    "@diceui": "https://diceui.com/r/{style}/{name}.json",
+    "@reui": "https://reui.io/r/{style}/{name}.json"
+  }
 }

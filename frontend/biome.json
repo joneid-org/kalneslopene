@@ -7,7 +7,13 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "includes": ["**", "!src/App.css", "!src/styles.css", "!src/components/ui"]
+    "includes": [
+      "**",
+      "!src/App.css",
+      "!src/styles.css",
+      "!src/components/ui",
+      "!src/components/reui"
+    ]
   },
   "formatter": {
     "enabled": true,

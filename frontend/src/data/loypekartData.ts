@@ -82,7 +82,7 @@ export const pins: Pin[] = [
     category: "poi",
     distance: "1,6 - 1,7 km",
     description:
-      "Like etter Baustadkollen, vi er nå på mellom 1600 og 1700 meter, kommer vi til et parti der tidligere kunne være vanskelig å komme seg trygt og greit gjennom. Det var nødvendig både å legge på grus og gjøre andre grep for å lede vannet vekk. Hovedmannen bak dette er Svein Bergerud. Svein gjør en formidabel jobb med å forbedre og vedlikeholde de ulike løypene i Kalnesskogen. Han har dessuten vært med i samtlige torsdagsløp i perioden 2011-2019, og har deltatt i så å si hvert eneste løp etter dette. Det passer fint at han gir navn til denne strekningen, som er like før den blå og den gule løypa skiller lag.",
+      "Like etter Baustadkollen, vi er nå på mellom 1600 og 1700 meter, kommer vi til et parti der det tidligere kunne være vanskelig å komme seg trygt og greit gjennom. Det var nødvendig både å legge på grus og gjøre andre grep for å lede vannet vekk. Hovedmannen bak dette er Svein Bergerud. Svein gjør en formidabel jobb med å forbedre og vedlikeholde de ulike løypene i Kalnesskogen. Han har dessuten vært med i samtlige torsdagsløp i perioden 2011-2019, og har deltatt i så å si hvert eneste løp etter dette. Det passer fint at han gir navn til denne strekningen, som er like før den blå og den gule løypa skiller lag.",
     photo: {
       fileName: "bergerudpassasjen.webp",
       fallback:

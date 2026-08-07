@@ -83,7 +83,7 @@ export function History() {
             Historien om Torsdagsløpet
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:mt-4 sm:text-[17px]">
-            Over 40 år med fellesskap, frisk luft og gode bein i Kalnesskogen.
+            Over 45 år med fellesskap, frisk luft og gode bein i Kalnesskogen.
             <span className="hidden sm:inline">
               {" "}
               Her er historien bak løpet — fra de første forsiktige stegene til

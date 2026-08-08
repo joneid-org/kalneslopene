@@ -45,13 +45,13 @@ export function PastRacesTable({
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-1/4">Dato</TableHead>
-          <TableHead className="w-1/4">Tid</TableHead>
-          <TableHead className="w-1/4">Vær</TableHead>
+          <TableHead className="text-center">Dato</TableHead>
+          <TableHead className="text-center">Tid</TableHead>
           {expandable && (
-            <TableHead className="w-1/4 text-right">Antall løpere</TableHead>
+            <TableHead className="text-center">Antall løpere</TableHead>
           )}
-          <TableHead className="w-20" />
+          <TableHead className="w-full">Vær</TableHead>
+          <TableHead />
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -63,20 +63,27 @@ export function PastRacesTable({
                 className={expandable ? "cursor-pointer hover:bg-muted/50" : ""}
                 onClick={expandable ? () => onToggleExpand(race) : undefined}
               >
-                <TableCell className="flex items-center gap-2">
-                  {race.isPublished ? (
-                    <CheckCircle2Icon className="size-3.5 shrink-0 text-green-600" />
-                  ) : (
-                    <CircleDashedIcon className="size-3.5 shrink-0 text-red-600" />
-                  )}
-                  <span className="font-medium">
-                    {formatDDMonth(race.raceDate)}
+                <TableCell className="align-top text-center">
+                  <span className="inline-flex items-center gap-2">
+                    {race.isPublished ? (
+                      <CheckCircle2Icon className="size-3.5 shrink-0 text-green-600" />
+                    ) : (
+                      <CircleDashedIcon className="size-3.5 shrink-0 text-red-600" />
+                    )}
+                    <span className="font-medium">
+                      {formatDDMonth(race.raceDate)}
+                    </span>
                   </span>
                 </TableCell>
-                <TableCell className="tabular-nums text-muted-foreground">
+                <TableCell className="align-top text-center tabular-nums text-muted-foreground">
                   {formatTimeStamp(race.raceDate)}
                 </TableCell>
-                <TableCell className="text-muted-foreground">
+                {expandable && (
+                  <TableCell className="align-top text-center tabular-nums text-muted-foreground">
+                    {race.runnerCount ?? "–"}
+                  </TableCell>
+                )}
+                <TableCell className="align-top text-muted-foreground whitespace-normal">
                   {race.weather || race.courseCondition ? (
                     <WeatherLine
                       weather={race.weather}
@@ -87,12 +94,7 @@ export function PastRacesTable({
                     <span className="italic text-xs">Ikke registrert</span>
                   )}
                 </TableCell>
-                {expandable && (
-                  <TableCell className="text-right tabular-nums text-muted-foreground">
-                    {race.runnerCount ?? "–"}
-                  </TableCell>
-                )}
-                <TableCell>
+                <TableCell className="align-top">
                   <div className="flex items-center gap-1 justify-end">
                     <Button
                       size="sm"

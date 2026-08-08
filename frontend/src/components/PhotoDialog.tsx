@@ -1,7 +1,12 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useEffect } from "react";
 import { ReplacePhotoButton } from "@/components/ReplacePhotoButton.tsx";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog.tsx";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTitle,
+} from "@/components/ui/dialog.tsx";
 import type { StaticS3File } from "@/data/loypekartData.ts";
 import type { S3FileDto } from "@/model/DTO.ts";
 
@@ -39,7 +44,8 @@ export default function PhotoDialog({
       onOpenChange={(open) => !open && onIndexChange(null)}
     >
       <DialogContent
-        className="fixed inset-0 flex w-screen h-dvh max-w-none sm:max-w-none translate-x-0 translate-y-0 overflow-auto rounded-none border-0 bg-transparent p-4 shadow-none gap-0"
+        showCloseButton={false}
+        className="fixed inset-0 flex w-screen h-dvh max-w-none sm:max-w-none translate-x-0 translate-y-0 overflow-auto rounded-none border-0 bg-transparent p-4 pt-14 shadow-none gap-0"
         onClick={(e) => {
           if (e.target === e.currentTarget) onIndexChange(null);
         }}
@@ -47,12 +53,18 @@ export default function PhotoDialog({
         <DialogTitle className="sr-only">
           Bilde {(index ?? 0) + 1} av {photos.length}
         </DialogTitle>
+        <DialogClose
+          aria-label="Lukk"
+          className="absolute top-3 right-3 z-20 rounded-full bg-black/60 p-2 text-white transition-colors hover:bg-black/80"
+        >
+          <X className="size-5" />
+        </DialogClose>
         {index !== null && (
           <div className="relative m-auto w-fit max-w-full rounded-md bg-white p-2 sm:p-4">
             <img
               src={photos[index].url}
               alt={photos[index].description}
-              className="block h-auto w-auto max-h-[calc(100dvh-6rem)] max-w-[calc(100vw-3rem)] rounded-md object-contain sm:max-h-[calc(100dvh-7rem)] sm:max-w-[calc(100vw-4rem)]"
+              className="block h-auto w-auto max-h-[calc(100dvh-8rem)] max-w-[calc(100vw-3rem)] rounded-md object-contain sm:max-h-[calc(100dvh-9rem)] sm:max-w-[calc(100vw-4rem)]"
             />
             {onReplacePhoto && currentFileName && (
               <ReplacePhotoButton
@@ -88,9 +100,6 @@ export default function PhotoDialog({
                 <ChevronRight className="size-7" />
               </button>
             </div>
-            <p className="absolute bottom-6 inset-x-0 text-center text-xs text-black/70">
-              {index + 1} / {photos.length}
-            </p>
           </div>
         )}
       </DialogContent>

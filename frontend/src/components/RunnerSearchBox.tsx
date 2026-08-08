@@ -50,6 +50,7 @@ export default function RunnerSearchBox({
       )}
     >
       <CommandInput
+        className="text-base"
         placeholder={selectedName ?? placeholder}
         value={query}
         onValueChange={setQuery}

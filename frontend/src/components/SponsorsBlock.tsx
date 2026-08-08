@@ -3,7 +3,11 @@ import sa from "../images/sa.svg";
 import xxlLogo from "../images/xxl.svg";
 
 const sponsors = [
-  { name: "Kiwi", url: "https://kiwi.no/", logo: kiwiLogo },
+  {
+    name: "Kiwi",
+    url: "https://kiwi.no/finn-butikk/kiwi-412-gralum",
+    logo: kiwiLogo,
+  },
   { name: "XXL", url: "https://www.xxl.no/", logo: xxlLogo },
   { name: "Sa", url: "https://www.sa.no/", logo: sa },
 ];

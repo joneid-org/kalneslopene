@@ -213,3 +213,9 @@ export function secondsToDuration(totalSeconds: number): string {
   if (s > 0) result += `${s}S`;
   return result;
 }
+
+export function addHoursToDate(date: Date, hours: number): Date {
+  const newDate = new Date(date);
+  newDate.setHours(newDate.getHours() + hours);
+  return newDate;
+}

@@ -1,13 +1,13 @@
 package com.grimsgaards.kalneslopene.data
 
 import com.grimsgaards.kalneslopene.common.logger
-import com.grimsgaards.kalneslopene.model.dto.Gender
-import com.grimsgaards.kalneslopene.model.entities.RaceEntity
-import com.grimsgaards.kalneslopene.model.entities.RaceRunnerEntity
-import com.grimsgaards.kalneslopene.model.entities.RunnerEntity
-import com.grimsgaards.kalneslopene.repository.RaceRepository
-import com.grimsgaards.kalneslopene.repository.RaceRunnerRepository
-import com.grimsgaards.kalneslopene.repository.RunnerRepository
+import com.grimsgaards.kalneslopene.race.model.RaceEntity
+import com.grimsgaards.kalneslopene.race.model.RaceRepository
+import com.grimsgaards.kalneslopene.race.model.RaceRunnerEntity
+import com.grimsgaards.kalneslopene.race.model.RaceRunnerRepository
+import com.grimsgaards.kalneslopene.runner.Gender
+import com.grimsgaards.kalneslopene.runner.RunnerEntity
+import com.grimsgaards.kalneslopene.runner.RunnerRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty

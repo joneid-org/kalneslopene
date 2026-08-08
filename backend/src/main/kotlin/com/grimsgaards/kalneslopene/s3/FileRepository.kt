@@ -1,0 +1,13 @@
+package com.grimsgaards.kalneslopene.s3
+
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.stereotype.Repository
+import java.time.OffsetDateTime
+import java.util.UUID
+
+@Repository
+interface FileRepository : JpaRepository<FileEntity, UUID> {
+    fun findAllByUploadConfirmedAtIsNullAndCreatedAtBefore(cutoff: OffsetDateTime): List<FileEntity>
+
+    fun findAllByUrlIn(urls: Collection<String>): List<FileEntity>
+}

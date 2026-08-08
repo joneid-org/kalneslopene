@@ -84,7 +84,7 @@ export type RunnerDTO = {
   name: string;
   gender: string;
   isVerified: boolean;
-  pr?: string;
+  historicPersonalRecord?: string;
 };
 export type RunnerInput = Omit<RunnerDTO, "uuid" | "isVerified"> & {
   isVerified?: boolean;

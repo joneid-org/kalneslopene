@@ -1,12 +1,13 @@
 package com.grimsgaards.kalneslopene.service
 
-import com.grimsgaards.kalneslopene.model.dto.Gender
-import com.grimsgaards.kalneslopene.model.entities.RaceEntity
-import com.grimsgaards.kalneslopene.model.entities.RaceRunnerEntity
-import com.grimsgaards.kalneslopene.model.entities.RunnerEntity
-import com.grimsgaards.kalneslopene.model.input.RaceFilter
-import com.grimsgaards.kalneslopene.repository.RaceRepository
-import com.grimsgaards.kalneslopene.repository.RunnerRepository
+import com.grimsgaards.kalneslopene.race.dto.RaceFilter
+import com.grimsgaards.kalneslopene.race.model.RaceEntity
+import com.grimsgaards.kalneslopene.race.model.RaceRepository
+import com.grimsgaards.kalneslopene.race.model.RaceRunnerEntity
+import com.grimsgaards.kalneslopene.runner.Gender
+import com.grimsgaards.kalneslopene.runner.RunnerEntity
+import com.grimsgaards.kalneslopene.runner.RunnerRepository
+import com.grimsgaards.kalneslopene.statistics.StatisticsService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested

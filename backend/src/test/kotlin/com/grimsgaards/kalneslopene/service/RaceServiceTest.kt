@@ -1,20 +1,24 @@
 package com.grimsgaards.kalneslopene.service
 
-import com.grimsgaards.kalneslopene.model.dto.Gender
-import com.grimsgaards.kalneslopene.model.dto.WeatherDto
-import com.grimsgaards.kalneslopene.model.entities.FileEntity
-import com.grimsgaards.kalneslopene.model.entities.RaceEntity
-import com.grimsgaards.kalneslopene.model.entities.RacePhotoEntity
-import com.grimsgaards.kalneslopene.model.entities.RaceRunnerEntity
-import com.grimsgaards.kalneslopene.model.entities.RaceRunnerKey
-import com.grimsgaards.kalneslopene.model.entities.RunnerEntity
-import com.grimsgaards.kalneslopene.model.input.RaceFilter
-import com.grimsgaards.kalneslopene.model.input.RaceInput
-import com.grimsgaards.kalneslopene.model.input.ReorderPhotoInput
-import com.grimsgaards.kalneslopene.repository.RacePhotoRepository
-import com.grimsgaards.kalneslopene.repository.RaceRepository
-import com.grimsgaards.kalneslopene.repository.RaceRunnerRepository
-import com.grimsgaards.kalneslopene.repository.RunnerRepository
+import com.grimsgaards.kalneslopene.race.MAX_RACE_PAGE_SIZE
+import com.grimsgaards.kalneslopene.race.RaceRunnerKey
+import com.grimsgaards.kalneslopene.race.RaceService
+import com.grimsgaards.kalneslopene.race.dto.RaceFilter
+import com.grimsgaards.kalneslopene.race.dto.RaceInput
+import com.grimsgaards.kalneslopene.race.dto.ReorderPhotoInput
+import com.grimsgaards.kalneslopene.race.model.RaceEntity
+import com.grimsgaards.kalneslopene.race.model.RacePhotoEntity
+import com.grimsgaards.kalneslopene.race.model.RacePhotoRepository
+import com.grimsgaards.kalneslopene.race.model.RaceRepository
+import com.grimsgaards.kalneslopene.race.model.RaceRunnerEntity
+import com.grimsgaards.kalneslopene.race.model.RaceRunnerRepository
+import com.grimsgaards.kalneslopene.runner.Gender
+import com.grimsgaards.kalneslopene.runner.RunnerEntity
+import com.grimsgaards.kalneslopene.runner.RunnerRepository
+import com.grimsgaards.kalneslopene.s3.FileEntity
+import com.grimsgaards.kalneslopene.s3.S3Service
+import com.grimsgaards.kalneslopene.security.AuthenticatedUserProvider
+import com.grimsgaards.kalneslopene.weather.WeatherDto
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
@@ -52,13 +56,24 @@ class RaceServiceTest {
     @Mock
     lateinit var s3Service: S3Service
 
+    @Mock
+    lateinit var authenticatedUserProvider: AuthenticatedUserProvider
+
     private lateinit var service: RaceService
     private val uuid: UUID = UUID.randomUUID()
     private val raceDate: LocalDateTime = LocalDateTime.parse("2026-08-13T18:00:00")
 
     @BeforeEach
     fun setUp() {
-        service = RaceService(raceRepository, runnerRepository, raceRunnerRepository, racePhotoRepository, s3Service)
+        service =
+            RaceService(
+                raceRepository,
+                runnerRepository,
+                raceRunnerRepository,
+                racePhotoRepository,
+                s3Service,
+                authenticatedUserProvider,
+            )
         Mockito.`when`(raceRepository.save(any(RaceEntity::class.java))).thenAnswer { it.getArgument<RaceEntity>(0) }
     }
 
@@ -194,7 +209,9 @@ class RaceServiceTest {
 
         @Test
         fun `allows the maximum page size`() {
-            assertThat(capturePageable(RaceFilter(), pageSize = MAX_RACE_PAGE_SIZE).pageSize).isEqualTo(MAX_RACE_PAGE_SIZE)
+            assertThat(capturePageable(RaceFilter(), pageSize = MAX_RACE_PAGE_SIZE).pageSize).isEqualTo(
+                MAX_RACE_PAGE_SIZE,
+            )
         }
 
         @Test

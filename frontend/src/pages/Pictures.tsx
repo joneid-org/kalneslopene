@@ -40,10 +40,18 @@ export function Pictures() {
           r.uuid === input.raceUuid ? { ...r, photos: input.newOrder } : r,
         ),
       );
+      qc.setQueryData<RaceDTO>(
+        QUERIES.race.getRaceByUuid(input.raceUuid).queryKey,
+        (cached) => cached && { ...cached, photos: input.newOrder },
+      );
     },
     onSuccess: (photos, input) => {
       qc.setQueryData<RaceDTO[]>(racesQueryOptions.queryKey, (cached) =>
         cached?.map((r) => (r.uuid === input.raceUuid ? { ...r, photos } : r)),
+      );
+      qc.setQueryData<RaceDTO>(
+        QUERIES.race.getRaceByUuid(input.raceUuid).queryKey,
+        (cached) => cached && { ...cached, photos },
       );
     },
     onError: () => {

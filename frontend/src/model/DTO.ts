@@ -6,6 +6,9 @@ export interface S3FileDto {
 
 export interface ConfigDTO {
   s3BaseUrl: string;
+  sentryDsn: string | null;
+  environment: string;
+  release: string | null;
 }
 
 export type WeatherDto = {

@@ -21,3 +21,28 @@ results-repair:
 ordering:
   baseline: 100
   repair: 200
+
+# Error tracking. An empty DSN disables the SDK entirely, so local dev and tests are unaffected.
+sentry:
+  dsn: ${SENTRY_DSN:}
+  environment: ${SENTRY_ENVIRONMENT:local}
+  release: ${SENTRY_RELEASE:}
+  send-default-pii: false
+  traces-sample-rate: 0.0
+  logging:
+    minimum-event-level: error
+    minimum-breadcrumb-level: info
+
+# Served to the browser by /api/config. Separate DSN from the backend one so frontend
+# errors land in their own GlitchTip project.
+client-config:
+  sentry-dsn: ${SENTRY_FRONTEND_DSN:}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never

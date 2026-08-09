@@ -134,7 +134,7 @@ export default function RaceStatistics() {
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-3">
+      <div className="grid grid-cols-2 gap-2 md:gap-3 xl:grid-cols-4">
         <StatTile
           value={
             yearStatistics != null

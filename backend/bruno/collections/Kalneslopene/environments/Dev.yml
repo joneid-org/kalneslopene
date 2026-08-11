@@ -1,1 +1,5 @@
 name: Dev
+variables:
+  - name: url
+    value: https://torsdagslopet.dev.ejoneid.dev
+    description: ""

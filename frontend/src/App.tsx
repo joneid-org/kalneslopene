@@ -6,6 +6,7 @@ import { ErrorFallback } from "@/components/ErrorFallback.tsx";
 import { Toaster } from "@/components/ui/sonner.tsx";
 import { ApplicationProvider } from "@/context/ApplicationProvider.tsx";
 import { AuthProvider } from "@/context/AuthProvider.tsx";
+import { reportRouterError } from "@/lib/errorTracking.ts";
 import { router } from "./routes";
 
 export default function App() {
@@ -14,7 +15,7 @@ export default function App() {
       <AuthProvider>
         <ApplicationProvider>
           <ErrorBoundary fallback={<ErrorFallback />}>
-            <RouterProvider router={router} />
+            <RouterProvider router={router} onError={reportRouterError} />
           </ErrorBoundary>
           <Toaster />
         </ApplicationProvider>

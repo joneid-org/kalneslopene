@@ -23,6 +23,8 @@ repositories {
 }
 
 dependencies {
+    implementation(platform("io.sentry:sentry-bom:8.52.0"))
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
@@ -33,6 +35,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("tools.jackson.module:jackson-module-kotlin")
     implementation("io.minio:minio:9.0.1")
+    implementation("io.sentry:sentry-spring-boot-4")
+    implementation("io.sentry:sentry-logback")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
     testImplementation("org.springframework.boot:spring-boot-starter-jdbc-test")

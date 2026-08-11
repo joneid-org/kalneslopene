@@ -29,6 +29,10 @@ services:
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
       MINIO_BUCKET_NAME: ${MINIO_BUCKET_NAME}
+      SENTRY_DSN: ${SENTRY_DSN:-}
+      SENTRY_FRONTEND_DSN: ${SENTRY_FRONTEND_DSN:-}
+      SENTRY_ENVIRONMENT: ${SENTRY_ENVIRONMENT:-dev}
+      SENTRY_RELEASE: ${IMAGE_TAG:-latest}
     networks:
       - internal
       - dokploy-network

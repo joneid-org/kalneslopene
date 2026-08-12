@@ -40,6 +40,12 @@ export type ReorderPhotoInput = {
   afterFileUuid?: string;
 };
 
+export type ReorderOrganizerInput = {
+  organizerUuid: string;
+  beforeOrganizerUuid?: string;
+  afterOrganizerUuid?: string;
+};
+
 export type NewsFeedDTO = {
   uuid: string;
   tags: string[];

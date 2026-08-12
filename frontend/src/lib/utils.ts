@@ -220,22 +220,6 @@ export function buildTableRows(runners: RaceRunnerDTO[]): RowData[] {
   });
 }
 
-export function getBestRaceFromRunner(raceRunner: RaceRunnerDTO[]): string {
-  let latest: RaceRunnerDTO | null = null;
-  let latestKey = "";
-  for (const rr of raceRunner) {
-    const key = raceDateToSortKey(rr.raceInfo.raceDate);
-    if (key > latestKey) {
-      latest = rr;
-      latestKey = key;
-    }
-  }
-  if (!latest) return "-";
-  return formatSecondsToTime(
-    mapResultTimeToNumber(latest.previousPersonalRecord),
-  );
-}
-
 export function getBestRaceThisYearFromRunner(
   raceRunner: RaceRunnerDTO[],
   year: number,

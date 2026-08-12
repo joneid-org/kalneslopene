@@ -6,12 +6,8 @@ import RunnerRaceResults from "@/components/Statistics/RunnerRaceResults.tsx";
 import RunnerStatisticsHeader from "@/components/Statistics/RunnerStatisticsHeader.tsx";
 import RunnerStatisticsSeasonBest from "@/components/Statistics/RunnerStatisticsSeasonBest.tsx";
 import { StatTile } from "@/components/StatTile.tsx";
-import {
-  extractYear,
-  formatSecondsToTime,
-  mapResultTimeToNumber,
-} from "@/lib/timeUtils.ts";
-import { getBestRaceFromRunner } from "@/lib/utils.ts";
+import { getPersonalRecord } from "@/lib/statisticsUtils.ts";
+import { extractYear } from "@/lib/timeUtils.ts";
 import type { RaceRunnerDTO, RunnerDTO } from "@/model/DTO.ts";
 
 const RunnerTimeChart = lazy(
@@ -31,13 +27,11 @@ export default function RunnerStatistics() {
 
   const totalRaces = raceHistory.length;
 
-  const pr = useMemo(() => {
-    const bestRace = getBestRaceFromRunner(raceHistory);
-    if (bestRace !== "-") return bestRace;
-    return formatSecondsToTime(
-      mapResultTimeToNumber(selectedRunner?.historicPersonalRecord),
-    );
-  }, [raceHistory, selectedRunner]);
+  const pr = useMemo(
+    () =>
+      getPersonalRecord(raceHistory, selectedRunner?.historicPersonalRecord),
+    [raceHistory, selectedRunner],
+  );
 
   const availableYears = useMemo(() => {
     const years = new Set<number>();

@@ -26,6 +26,20 @@ export function getFastestRunner<T extends TimedResult>(
   return best;
 }
 
+export function getPersonalRecord(
+  raceHistory: RaceRunnerDTO[],
+  historicPersonalRecord?: string,
+): string {
+  const fastest = getFastestRunner(raceHistory);
+  const candidates = [
+    mapResultTimeToNumber(fastest?.resultTime),
+    mapResultTimeToNumber(historicPersonalRecord),
+  ].filter((seconds) => Number.isFinite(seconds) && seconds > 0);
+  return candidates.length > 0
+    ? formatSecondsToTime(Math.min(...candidates))
+    : "-";
+}
+
 export function getBestTimeThisYear(
   raceRunners: RaceRunnerDTO[],
   year: number,

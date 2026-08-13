@@ -1,5 +1,9 @@
-import { useEffect, useRef, useState } from "react";
-import { formatDayMonthShort, formatDDMonth } from "@/lib/timeUtils.ts";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  formatDayMonthShort,
+  formatDDMonth,
+  raceDateToSortKey,
+} from "@/lib/timeUtils.ts";
 import { cn } from "@/lib/utils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 
@@ -36,22 +40,31 @@ export function AttendanceChart({ races }: Props) {
     };
   }, [activeUuid]);
 
-  if (races.length === 0) return null;
+  const orderedRaces = useMemo(
+    () =>
+      races.toSorted((a, b) =>
+        raceDateToSortKey(a.raceDate).localeCompare(
+          raceDateToSortKey(b.raceDate),
+        ),
+      ),
+    [races],
+  );
+  if (orderedRaces.length === 0) return null;
 
-  const rawMax = Math.max(...races.map((r) => r.runnerCount), 1);
+  const rawMax = Math.max(...orderedRaces.map((r) => r.runnerCount), 1);
   const step = niceStep(rawMax / 4);
   const axisMax = step * Math.ceil(rawMax / step);
 
   const ticks: number[] = [];
   for (let v = axisMax; v >= 0; v -= step) ticks.push(v);
 
-  const targetLabels = Math.min(races.length, 5);
+  const targetLabels = Math.min(orderedRaces.length, 5);
   const labelIndices = [
     ...new Set(
       targetLabels <= 1
         ? [0]
         : Array.from({ length: targetLabels }, (_, k) =>
-            Math.round((k * (races.length - 1)) / (targetLabels - 1)),
+            Math.round((k * (orderedRaces.length - 1)) / (targetLabels - 1)),
           ),
     ),
   ];
@@ -84,7 +97,7 @@ export function AttendanceChart({ races }: Props) {
               ref={barsRef}
               className="absolute inset-0 flex items-end gap-1"
             >
-              {races.map((race) => {
+              {orderedRaces.map((race) => {
                 const isMax = race.runnerCount === rawMax;
                 const isActive = activeUuid === race.uuid;
                 return (
@@ -126,15 +139,15 @@ export function AttendanceChart({ races }: Props) {
           <div className="relative mt-2.5 h-8 text-[10px] tabular-nums text-muted-foreground sm:h-4">
             {labelIndices.map((i) => {
               const isFirst = i === 0;
-              const isLast = i === races.length - 1;
+              const isLast = i === orderedRaces.length - 1;
               const style = isFirst
                 ? { left: 0 }
                 : isLast
                   ? { right: 0 }
-                  : { left: `${((i + 0.5) / races.length) * 100}%` };
+                  : { left: `${((i + 0.5) / orderedRaces.length) * 100}%` };
               return (
                 <span
-                  key={races[i].uuid}
+                  key={orderedRaces[i].uuid}
                   className={cn(
                     "absolute origin-top-right -rotate-45 whitespace-nowrap leading-none sm:origin-center sm:rotate-0",
                     !isFirst && !isLast && "-translate-x-1/2",
@@ -142,10 +155,10 @@ export function AttendanceChart({ races }: Props) {
                   style={style}
                 >
                   <span className="sm:hidden">
-                    {formatDayMonthShort(races[i].raceDate)}
+                    {formatDayMonthShort(orderedRaces[i].raceDate)}
                   </span>
                   <span className="hidden sm:inline">
-                    {formatDDMonth(races[i].raceDate)}
+                    {formatDDMonth(orderedRaces[i].raceDate)}
                   </span>
                 </span>
               );

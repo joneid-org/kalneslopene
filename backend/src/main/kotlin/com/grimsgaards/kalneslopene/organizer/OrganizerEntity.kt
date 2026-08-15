@@ -17,6 +17,7 @@ data class OrganizerEntity(
     var contactperson: Boolean,
     @Column(name = "image", columnDefinition = "TEXT")
     var image: String? = null,
+    var orderIndex: Double = 1.0,
 ) {
     @Id
     val uuid: UUID = UUID.randomUUID()

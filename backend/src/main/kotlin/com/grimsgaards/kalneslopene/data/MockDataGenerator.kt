@@ -145,6 +145,7 @@ class MockDataGenerator(
     }
 
     private fun generateOrganizers() {
+        organizerSeed.forEachIndexed { index, organizer -> organizer.orderIndex = index + 1.0 }
         organizerRepository.saveAll(organizerSeed)
     }
 

@@ -5,4 +5,6 @@ import org.springframework.stereotype.Repository
 import java.util.UUID
 
 @Repository
-interface OrganizerRepository : JpaRepository<OrganizerEntity, UUID>
+interface OrganizerRepository : JpaRepository<OrganizerEntity, UUID> {
+    fun findAllByOrderByOrderIndexAsc(): List<OrganizerEntity>
+}

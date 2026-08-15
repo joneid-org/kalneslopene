@@ -14,15 +14,57 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog.tsx";
-import { useOrganizerOrder } from "@/lib/organizerOrder.ts";
-import type { OrganizerDTO } from "@/model/DTO.ts";
+import type { OrganizerDTO, ReorderOrganizerInput } from "@/model/DTO.ts";
+
+type ReorderVariables = ReorderOrganizerInput & {
+  newOrder: OrganizerDTO[];
+};
+
+// Stable identity so OrganizersCard's local mirror doesn't resync every render
+// while the query is still pending.
+const NO_ORGANIZERS: OrganizerDTO[] = [];
 
 export function CRUDOrganizers() {
   const qc = useQueryClient();
   const navigate = useNavigate();
 
   const { data: organizers } = useQuery(QUERIES.organizer.getAllOrganizers);
-  const { ordered, move } = useOrganizerOrder(organizers ?? []);
+
+  const reorderMutation = useMutation({
+    mutationFn: (input: ReorderVariables) =>
+      MUTATIONS.organizer.reorderOrganizer(input),
+    onMutate: (input) => {
+      qc.setQueryData(
+        QUERIES.organizer.getAllOrganizers.queryKey,
+        input.newOrder,
+      );
+    },
+    onSuccess: (reordered) => {
+      qc.setQueryData(QUERIES.organizer.getAllOrganizers.queryKey, reordered);
+    },
+    onError: () => {
+      qc.invalidateQueries({ queryKey: ["organizer"] });
+    },
+  });
+
+  function handleReorder(movedUuid: string, newOrder: OrganizerDTO[]) {
+    const idx = newOrder.findIndex((o) => o.uuid === movedUuid);
+    const nextOrganizer = newOrder[idx + 1];
+    const prevOrganizer = newOrder[idx - 1];
+    if (nextOrganizer) {
+      reorderMutation.mutate({
+        organizerUuid: movedUuid,
+        beforeOrganizerUuid: nextOrganizer.uuid,
+        newOrder,
+      });
+    } else if (prevOrganizer) {
+      reorderMutation.mutate({
+        organizerUuid: movedUuid,
+        afterOrganizerUuid: prevOrganizer.uuid,
+        newOrder,
+      });
+    }
+  }
 
   const [showAdd, setShowAdd] = useState(false);
   const addMutation = useMutation({
@@ -72,10 +114,10 @@ export function CRUDOrganizers() {
       </div>
 
       <OrganizersCard
-        organizers={ordered}
+        organizers={organizers ?? NO_ORGANIZERS}
         onEdit={setEditing}
         onDelete={setDeleting}
-        onReorder={move}
+        onReorder={handleReorder}
       />
 
       <Dialog open={showAdd} onOpenChange={setShowAdd}>

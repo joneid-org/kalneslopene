@@ -29,6 +29,11 @@ class OrganizerController(
         @RequestBody organizer: OrganizerInput,
     ): OrganizerDTO = organizerService.updateOrganizer(uuid, organizer)
 
+    @PatchMapping("/order")
+    fun reorderOrganizer(
+        @RequestBody input: ReorderOrganizerInput,
+    ): List<OrganizerDTO> = organizerService.reorderOrganizer(input)
+
     @PostMapping("/createOrganizer")
     fun createOrganizer(
         @RequestBody organizer: OrganizerInput,

@@ -8,11 +8,9 @@ import {
   CardTitle,
 } from "@/components/ui/card.tsx";
 import { ORGANIZER_DESCRIPTION } from "@/lib/constants.ts";
-import { applySavedOrder } from "@/lib/organizerOrder.ts";
 
 export default function OrganisersBlock() {
   const { data: organizers } = useQuery(QUERIES.organizer.getAllOrganizers);
-  const ordered = applySavedOrder(organizers ?? []);
 
   return (
     <Card className="rounded-2xl">
@@ -29,9 +27,9 @@ export default function OrganisersBlock() {
           {ORGANIZER_DESCRIPTION}
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {ordered.map((organizer) => (
+          {(organizers ?? []).map((organizer) => (
             <div
-              key={organizer.name}
+              key={organizer.uuid}
               className="flex gap-3 items-center bg-background border rounded-xl p-3"
             >
               {organizer.image ? (

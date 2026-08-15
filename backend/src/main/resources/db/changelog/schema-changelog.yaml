@@ -197,4 +197,11 @@ databaseChangeLog:
         - sqlFile:
             path: db/changelog/sql/migrate/migrate_race_runner_restrict_runner_delete.sql
             relativeToChangelogFile: false
+  - changeSet:
+      id: migrate_organizer_add_order_index
+      author: ejoneid
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_organizer_add_order_index.sql
+            relativeToChangelogFile: false
 

@@ -26,7 +26,9 @@ export function RegisterResults() {
   const qc = useQueryClient();
   const navigate = useNavigate();
 
-  const { data: raceInfos } = useQuery(QUERIES.race.getAllRaceInfos());
+  const { data: raceInfos, isLoading: raceInfosLoading } = useQuery(
+    QUERIES.race.getAllRaceInfos(),
+  );
 
   const [selectedYear, setSelectedYear] = useState<number | undefined>(
     undefined,
@@ -35,7 +37,7 @@ export function RegisterResults() {
   const availableYears = useMemo(() => getYears(raceInfos ?? []), [raceInfos]);
   const effectiveYear = selectedYear ?? availableYears[0];
 
-  const { data: yearRacesData } = useQuery({
+  const { data: yearRacesData, isLoading: yearRacesLoading } = useQuery({
     ...QUERIES.race.getRaces({
       filter: {
         from: startOfYearString(effectiveYear),
@@ -108,6 +110,7 @@ export function RegisterResults() {
         onToggleExpand={toggleExpanded}
         onEdit={openEditing}
         onDelete={setDeleting}
+        isLoading={raceInfosLoading || yearRacesLoading}
       />
 
       <Dialog

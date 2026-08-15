@@ -4,8 +4,10 @@ import {
   ClipboardPenIcon,
   FileUpIcon,
   ImageIcon,
+  type LucideIcon,
   MapPinIcon,
   NewspaperIcon,
+  ShieldUserIcon,
   SquareParkingIcon,
   TimerIcon,
   UserPlusIcon,
@@ -14,7 +16,14 @@ import {
 
 export const DISTANCE_KM = 5.1;
 
-export const ADMIN_ACTIONS = [
+type AdminAction = {
+  label: string;
+  icon: LucideIcon;
+  path: string;
+  adminOnly?: boolean;
+};
+
+export const ADMIN_ACTIONS: AdminAction[] = [
   { label: "Administrer løp", icon: CalendarIcon, path: "/admin/løp" },
   {
     label: "Registrer resultater",
@@ -31,7 +40,19 @@ export const ADMIN_ACTIONS = [
   { label: "Legg til arrangør", icon: UsersIcon, path: "/admin/arrangører" },
   { label: "Legg til nyhet", icon: NewspaperIcon, path: "/admin/nyheter" },
   { label: "Administrer tagger", icon: NewspaperIcon, path: "/admin/tagger" },
-] as const;
+  {
+    label: "Brukeradministrasjon",
+    icon: ShieldUserIcon,
+    path: "/admin/brukere",
+    adminOnly: true,
+  },
+];
+
+export function visibleAdminActions(roles: string[]): AdminAction[] {
+  return ADMIN_ACTIONS.filter(
+    (action) => !action.adminOnly || roles.includes("ADMIN"),
+  );
+}
 
 export const COLUMN_LABELS: Record<string, string> = {
   position: "#",

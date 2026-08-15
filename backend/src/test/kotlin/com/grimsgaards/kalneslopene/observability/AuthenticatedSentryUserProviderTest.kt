@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.stubbing.OngoingStubbing
+import java.util.UUID
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
@@ -19,7 +20,14 @@ class AuthenticatedSentryUserProviderTest {
         @Test
         fun `reports the username and roles when logged in`() {
             whenever(authenticatedUserProvider.authenticatedUser())
-                .thenReturn(UserDto(username = "eirik", roles = setOf(UserRole.ADMIN)))
+                .thenReturn(
+                    UserDto(
+                        uuid = UUID.randomUUID(),
+                        username = "eirik",
+                        roles = setOf(UserRole.ADMIN),
+                        banned = false,
+                    ),
+                )
 
             val user = provider.provideUser()
 
@@ -30,7 +38,14 @@ class AuthenticatedSentryUserProviderTest {
         @Test
         fun `never attaches email or ip address`() {
             whenever(authenticatedUserProvider.authenticatedUser())
-                .thenReturn(UserDto(username = "eirik", roles = setOf(UserRole.ADMIN)))
+                .thenReturn(
+                    UserDto(
+                        uuid = UUID.randomUUID(),
+                        username = "eirik",
+                        roles = setOf(UserRole.ADMIN),
+                        banned = false,
+                    ),
+                )
 
             val user = provider.provideUser()
 

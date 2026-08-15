@@ -1,5 +1,6 @@
 import { kyClient } from "@/api/queryClient.ts";
 import type {
+  InviteDTO,
   LoginRequest,
   LoginResponse,
   MilestoneDTO,
@@ -19,6 +20,8 @@ import type {
   RunnerDTO,
   RunnerInput,
   S3FileDto,
+  UserDTO,
+  UserRole,
 } from "../model/DTO.ts";
 
 export const MUTATIONS = {
@@ -119,6 +122,27 @@ export const MUTATIONS = {
       kyClient.post("/api/auth/login", { json: request }).json<LoginResponse>(),
     setup: (request: { username: string; password: string }) =>
       kyClient.post("/api/auth/setup", { json: request }).json<LoginResponse>(),
+    registerWithInvite: (
+      token: string,
+      request: { username: string; password: string },
+    ) =>
+      kyClient
+        .post(`/api/auth/register/${token}`, { json: request })
+        .json<LoginResponse>(),
+  },
+  user: {
+    createInvite: (roles: UserRole[]) =>
+      kyClient
+        .post("/api/users/invites", { json: { roles } })
+        .json<InviteDTO>(),
+    setRoles: (uuid: string, roles: UserRole[]) =>
+      kyClient
+        .patch(`/api/users/${uuid}/roles`, { json: { roles } })
+        .json<UserDTO>(),
+    setBanned: (uuid: string, banned: boolean) =>
+      kyClient
+        .patch(`/api/users/${uuid}/banned`, { json: { banned } })
+        .json<UserDTO>(),
   },
   milestone: {
     createMilestone: (milestone: MilestoneInput) =>

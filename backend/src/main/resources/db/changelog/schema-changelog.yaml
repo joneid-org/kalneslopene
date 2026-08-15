@@ -204,4 +204,18 @@ databaseChangeLog:
         - sqlFile:
             path: db/changelog/sql/migrate/migrate_organizer_add_order_index.sql
             relativeToChangelogFile: false
+  - changeSet:
+      id: migrate_user_add_banned
+      author: ejoneid
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_user_add_banned.sql
+            relativeToChangelogFile: false
+  - changeSet:
+      id: create_user_invite_table
+      author: ejoneid
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/create/create_user_invite.sql
+            relativeToChangelogFile: false
 

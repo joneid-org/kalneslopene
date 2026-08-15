@@ -10,6 +10,7 @@ import { CRUDNewsfeeds } from "./pages/admin/CRUDNewsfeeds.tsx";
 import { CRUDOrganizers } from "./pages/admin/CRUDOrganizers.tsx";
 import { CRUDRaces } from "./pages/admin/CRUDRaces.tsx";
 import { CRUDRunners } from "./pages/admin/CRUDRunners.tsx";
+import { CRUDUsers } from "./pages/admin/CRUDUsers.tsx";
 import { ImportResultsFromFile } from "./pages/admin/ImportResultsFromFile.tsx";
 import { RegisterResults } from "./pages/admin/RegisterResults.tsx";
 import { RegisterResultsWizard } from "./pages/admin/RegisterResultsWizard.tsx";
@@ -21,6 +22,7 @@ import { News } from "./pages/News.tsx";
 import { NewsArticle } from "./pages/NewsArticle.tsx";
 import { NewsTag } from "./pages/NewsTag.tsx";
 import { Pictures } from "./pages/Pictures.tsx";
+import { RedeemInvite } from "./pages/RedeemInvite.tsx";
 import { Results } from "./pages/Results.tsx";
 import { Statistics } from "./pages/Statistics.tsx";
 
@@ -82,6 +84,10 @@ export const router = createBrowserRouter([
             Component: Login,
           },
           {
+            path: "invitasjon/:token",
+            Component: RedeemInvite,
+          },
+          {
             Component: AuthGuard,
             children: [
               {
@@ -123,6 +129,10 @@ export const router = createBrowserRouter([
               {
                 path: "admin/tagger",
                 Component: NewsfeedTagManager,
+              },
+              {
+                path: "admin/brukere",
+                Component: CRUDUsers,
               },
             ],
           },

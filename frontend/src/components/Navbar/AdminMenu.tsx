@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu.tsx";
 import { useAuth } from "@/hooks/useAuth.ts";
-import { ADMIN_ACTIONS } from "@/lib/constants.ts";
+import { visibleAdminActions } from "@/lib/constants.ts";
 
 export function AdminMenu() {
   const { user, isAuthenticated, logout } = useAuth();
@@ -49,14 +49,16 @@ export function AdminMenu() {
               Adminpanel
             </Link>
           </DropdownMenuItem>
-          {ADMIN_ACTIONS.map(({ label, icon: Icon, path }) => (
-            <DropdownMenuItem key={path} asChild>
-              <Link to={path}>
-                <Icon />
-                {label}
-              </Link>
-            </DropdownMenuItem>
-          ))}
+          {visibleAdminActions(user.roles).map(
+            ({ label, icon: Icon, path }) => (
+              <DropdownMenuItem key={path} asChild>
+                <Link to={path}>
+                  <Icon />
+                  {label}
+                </Link>
+              </DropdownMenuItem>
+            ),
+          )}
         </DropdownMenuGroup>
 
         <DropdownMenuSeparator />

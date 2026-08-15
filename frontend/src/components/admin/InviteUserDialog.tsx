@@ -1,5 +1,6 @@
 import { CheckIcon, CopyIcon, LinkIcon } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { RoleCombobox } from "@/components/admin/RoleCombobox.tsx";
 import { LoadingButton } from "@/components/LoadingButton.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -11,8 +12,6 @@ import {
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import type { InviteDTO, UserRole } from "@/model/DTO.ts";
-
-const ROLES: UserRole[] = ["ADMIN", "EDITOR"];
 
 export function InviteUserDialog({
   invite,
@@ -27,14 +26,7 @@ export function InviteUserDialog({
 }) {
   const [roles, setRoles] = useState<UserRole[]>(["EDITOR"]);
   const [copied, setCopied] = useState(false);
-
-  function toggleRole(role: UserRole) {
-    setRoles((current) =>
-      current.includes(role)
-        ? current.filter((r) => r !== role)
-        : [...current, role],
-    );
-  }
+  const contentRef = useRef<HTMLDivElement>(null);
 
   // The backend serves this SPA from the same origin, so the link needs no configured base URL
   const inviteLink = invite
@@ -86,28 +78,17 @@ export function InviteUserDialog({
   }
 
   return (
-    <DialogContent>
+    <DialogContent ref={contentRef}>
       <DialogHeader>
         <DialogTitle>Inviter bruker</DialogTitle>
       </DialogHeader>
       <div className="space-y-1.5">
         <Label>Roller</Label>
-        <div className="flex gap-3">
-          {ROLES.map((role) => (
-            <button
-              key={role}
-              type="button"
-              onClick={() => toggleRole(role)}
-              className={`flex-1 rounded-md border px-3 py-2 text-sm transition-colors ${
-                roles.includes(role)
-                  ? "border-primary bg-primary text-primary-foreground"
-                  : "border-border bg-background hover:bg-muted"
-              }`}
-            >
-              {role}
-            </button>
-          ))}
-        </div>
+        <RoleCombobox
+          roles={roles}
+          onRolesChange={setRoles}
+          container={contentRef}
+        />
         <p className="text-sm text-muted-foreground">
           Lenken er gyldig i 24 timer og kan bare brukes én gang.
         </p>

@@ -22,6 +22,11 @@ export function CRUDUsers() {
   const invalidate = () =>
     qc.invalidateQueries({ queryKey: ["user", "getAll"] });
 
+  const patchUser = (uuid: string, patch: (user: UserDTO) => UserDTO) =>
+    qc.setQueryData(QUERIES.user.getUsers.queryKey, (current: UserDTO[] = []) =>
+      current.map((user) => (user.uuid === uuid ? patch(user) : user)),
+    );
+
   const [showInvite, setShowInvite] = useState(false);
   const [invite, setInvite] = useState<InviteDTO | null>(null);
   // No invalidation: an invite creates no user until someone redeems the link
@@ -33,7 +38,10 @@ export function CRUDUsers() {
   const rolesMutation = useMutation({
     mutationFn: ({ uuid, roles }: { uuid: string; roles: UserRole[] }) =>
       MUTATIONS.user.setRoles(uuid, roles),
-    onSuccess: invalidate,
+    onMutate: ({ uuid, roles }) =>
+      patchUser(uuid, (user) => ({ ...user, roles })),
+    onSuccess: (updated) => patchUser(updated.uuid, () => updated),
+    onError: invalidate,
   });
 
   const [banning, setBanning] = useState<UserDTO | null>(null);
@@ -74,13 +82,8 @@ export function CRUDUsers() {
       <UsersCard
         users={users ?? []}
         currentUsername={currentUser?.username}
-        onToggleRole={(user, role) =>
-          rolesMutation.mutate({
-            uuid: user.uuid,
-            roles: user.roles.includes(role)
-              ? user.roles.filter((r) => r !== role)
-              : [...user.roles, role],
-          })
+        onRolesChange={(user, roles) =>
+          rolesMutation.mutate({ uuid: user.uuid, roles })
         }
         onBan={setBanning}
         onUnban={(user) =>

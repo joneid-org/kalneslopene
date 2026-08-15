@@ -1,5 +1,9 @@
 import cardImage from "../../images/hero.webp";
+import cardImage1280 from "../../images/hero-1280.webp";
+import cardImage1920 from "../../images/hero-1920.webp";
 import { NextRace } from "./NextRace.tsx";
+
+const cardImageSrcSet = `${cardImage1280} 1280w, ${cardImage1920} 1920w, ${cardImage} 2560w`;
 
 export function Hero() {
   return (
@@ -9,6 +13,8 @@ export function Hero() {
         <section className="relative h-[clamp(190px,52vw,230px)] mx-3 rounded-t-3xl overflow-hidden">
           <img
             src={cardImage}
+            srcSet={cardImageSrcSet}
+            sizes="100vw"
             alt="Torsdagsløpet"
             fetchPriority="high"
             decoding="async"
@@ -31,6 +37,8 @@ export function Hero() {
       <section className="hidden sm:block relative overflow-hidden w-full h-[clamp(260px,30vw,350px)]">
         <img
           src={cardImage}
+          srcSet={cardImageSrcSet}
+          sizes="100vw"
           alt="Torsdagsløpet"
           fetchPriority="high"
           decoding="async"

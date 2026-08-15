@@ -21,7 +21,10 @@ import { cn, type RowData } from "@/lib/utils.ts";
 
 type ResultsTableProps = {
   tableData: RowData[];
+  isLoading?: boolean;
 };
+
+const skeletonRows = [0, 1, 2, 3, 4, 5, 6, 7];
 
 const centeredColumns = new Set(["time", "pace", "yearBest", "pr", "races"]);
 
@@ -134,13 +137,29 @@ function ResultCard({
   );
 }
 
+function ResultCardSkeleton() {
+  return (
+    <div className="flex items-center gap-3 rounded-[14px] border bg-card px-3 py-2.5">
+      <div className="h-4 w-6 shrink-0 animate-pulse rounded bg-muted" />
+      <div className="min-w-0 flex-1 space-y-1.5">
+        <div className="h-4 w-32 animate-pulse rounded bg-muted" />
+        <div className="h-2.5 w-20 animate-pulse rounded bg-muted" />
+      </div>
+      <div className="h-5 w-14 shrink-0 animate-pulse rounded bg-muted" />
+    </div>
+  );
+}
+
 const numCell = ({ getValue }: CellContext<RowData, unknown>) => (
   <span className="tabular-nums text-muted-foreground">
     {String(getValue())}
   </span>
 );
 
-export default function ResultsTable({ tableData }: ResultsTableProps) {
+export default function ResultsTable({
+  tableData,
+  isLoading = false,
+}: ResultsTableProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     pace: true,
     yearBest: true,
@@ -232,10 +251,16 @@ export default function ResultsTable({ tableData }: ResultsTableProps) {
             setVisibility={setMobileVisibility}
           />
         </div>
-        <div className="flex flex-col gap-2">
-          {visibleRows.map((row) => (
-            <ResultCard key={row.uuid} row={row} visibility={cardVisibility} />
-          ))}
+        <div className="flex flex-col gap-2" aria-busy={isLoading}>
+          {isLoading
+            ? skeletonRows.map((i) => <ResultCardSkeleton key={i} />)
+            : visibleRows.map((row) => (
+                <ResultCard
+                  key={row.uuid}
+                  row={row}
+                  visibility={cardVisibility}
+                />
+              ))}
         </div>
       </div>
 
@@ -274,30 +299,62 @@ export default function ResultsTable({ tableData }: ResultsTableProps) {
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
-            {visibleTableRows.map((row, i) => (
-              <TableRow
-                key={row.id}
-                className={cn(
-                  "border-0 hover:bg-transparent",
-                  i % 2 === 1 && "bg-muted/40",
-                )}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell
-                    key={cell.id}
+          <TableBody aria-busy={isLoading}>
+            {isLoading
+              ? skeletonRows.map((i) => (
+                  <TableRow
+                    key={i}
                     className={cn(
-                      "py-3 text-sm first:pl-6 last:pr-6",
-                      columnWidths[cell.column.id],
-                      cell.column.id !== "runnerName" && "whitespace-nowrap",
-                      centeredColumns.has(cell.column.id) && "text-center",
+                      "border-0 hover:bg-transparent",
+                      i % 2 === 1 && "bg-muted/40",
                     )}
                   >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
+                    {table.getVisibleFlatColumns().map((column) => (
+                      <TableCell
+                        key={column.id}
+                        className={cn(
+                          "py-3 first:pl-6 last:pr-6",
+                          columnWidths[column.id],
+                        )}
+                      >
+                        <div
+                          className={cn(
+                            "h-4 animate-pulse rounded bg-muted",
+                            column.id === "runnerName" ? "w-32" : "w-10",
+                            centeredColumns.has(column.id) && "mx-auto",
+                          )}
+                        />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              : visibleTableRows.map((row, i) => (
+                  <TableRow
+                    key={row.id}
+                    className={cn(
+                      "border-0 hover:bg-transparent",
+                      i % 2 === 1 && "bg-muted/40",
+                    )}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell
+                        key={cell.id}
+                        className={cn(
+                          "py-3 text-sm first:pl-6 last:pr-6",
+                          columnWidths[cell.column.id],
+                          cell.column.id !== "runnerName" &&
+                            "whitespace-nowrap",
+                          centeredColumns.has(cell.column.id) && "text-center",
+                        )}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
                 ))}
-              </TableRow>
-            ))}
           </TableBody>
         </Table>
       </div>

@@ -21,24 +21,48 @@ export function Results() {
   const { data: allRaces = [] } = useQuery(
     QUERIES.race.getAllRaceInfos({ isPublished: true }),
   );
-  const { data: race, isPending: raceQueryPending } = useQuery({
+  const {
+    data: race,
+    isPending: raceQueryPending,
+    isPlaceholderData: raceIsStale,
+  } = useQuery({
     ...QUERIES.race.getRaceByUuid(uuid),
     enabled: !!uuid,
   });
-  const { data: raceRunners } = useQuery({
+  const {
+    data: raceRunners,
+    isError: runnersQueryError,
+    isPlaceholderData: runnersAreStale,
+  } = useQuery({
     ...QUERIES.race.getAllRunnersInRace(uuid),
     enabled: !!uuid,
   });
-  const { data: summary } = useQuery({
+  const {
+    data: summary,
+    isError: summaryQueryError,
+    isPlaceholderData: summaryIsStale,
+  } = useQuery({
     ...QUERIES.race.getResultSummary(uuid),
     enabled: !!uuid,
   });
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
+  // keepPreviousData lets each query resolve on its own, so without this the
+  // previous race's results would show under the new race's title. Anything
+  // that isn't confirmed to belong to the race in the title is dropped, and
+  // the page shows a loading state until its own data arrives.
+  const runnersLoaded = !!raceRunners && !runnersAreStale;
+  const summaryLoaded = !!summary && !summaryIsStale;
+  const isLoadingRaceData =
+    raceIsStale ||
+    (!runnersLoaded && !runnersQueryError) ||
+    (!summaryLoaded && !summaryQueryError);
+
   const previous = getPreviousRace(allRaces, uuid);
   const next = getNextRace(allRaces, uuid);
-  const tableData = buildTableRows(raceRunners ?? []);
+  const tableData = buildTableRows(runnersLoaded ? raceRunners : []);
+  const raceSummary = summaryLoaded ? summary : undefined;
   const racePhotos = race?.photos ?? [];
 
   if (!race) {
@@ -64,31 +88,46 @@ export function Results() {
       <ResultsHeader race={race} />
 
       <div className="grid grid-cols-3 gap-2 md:grid-cols-6 md:gap-3">
-        <StatTile value={summary?.participants} label="Deltakere" />
-        <StatTile value={summary?.male} label="Menn" />
-        <StatTile value={summary?.female} label="Kvinner" />
         <StatTile
-          value={summary?.seasonBestCount}
+          value={raceSummary?.participants}
+          label="Deltakere"
+          isLoading={isLoadingRaceData}
+        />
+        <StatTile
+          value={raceSummary?.male}
+          label="Menn"
+          isLoading={isLoadingRaceData}
+        />
+        <StatTile
+          value={raceSummary?.female}
+          label="Kvinner"
+          isLoading={isLoadingRaceData}
+        />
+        <StatTile
+          value={raceSummary?.seasonBestCount}
           label="Årsbeste"
           tone="primary"
+          isLoading={isLoadingRaceData}
         />
         <StatTile
-          value={summary?.personalBestCount}
+          value={raceSummary?.personalBestCount}
           label="Personlig rek."
           tone="primary"
+          isLoading={isLoadingRaceData}
         />
         <StatTile
-          value={summary?.debutantCount}
+          value={raceSummary?.debutantCount}
           label="Debutanter"
           tone="brand"
+          isLoading={isLoadingRaceData}
         />
       </div>
 
-      <ResultsTable tableData={tableData} />
+      <ResultsTable tableData={tableData} isLoading={isLoadingRaceData} />
 
       <RacePhotoGrid
         photos={racePhotos}
-        uuid={uuid}
+        uuid={race.uuid}
         onPhotoClick={setLightboxIndex}
       />
       <PhotoDialog

@@ -173,3 +173,18 @@ export type LoginResponse = {
   username: string;
   roles: string[];
 };
+
+export type UserRole = "ADMIN" | "EDITOR";
+
+export type UserDTO = {
+  uuid: string;
+  username: string;
+  roles: UserRole[];
+  banned: boolean;
+};
+
+export type InviteDTO = {
+  token: string;
+  expiresAt: string;
+  roles: UserRole[];
+};

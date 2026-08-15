@@ -14,6 +14,8 @@ export function ConfirmDeleteDialog({
   description,
   isPending,
   disableConfirm,
+  confirmLabel = "Slett",
+  confirmIcon = <Trash2Icon className="size-4" />,
   children,
   onConfirm,
   onClose,
@@ -22,6 +24,8 @@ export function ConfirmDeleteDialog({
   description: ReactNode;
   isPending: boolean;
   disableConfirm?: boolean;
+  confirmLabel?: string;
+  confirmIcon?: ReactNode;
   children?: ReactNode;
   onConfirm: () => void;
   onClose: () => void;
@@ -41,10 +45,10 @@ export function ConfirmDeleteDialog({
           variant="destructive"
           loading={isPending}
           disabled={disableConfirm}
-          icon={<Trash2Icon className="size-4" />}
+          icon={confirmIcon}
           onClick={onConfirm}
         >
-          Slett
+          {confirmLabel}
         </LoadingButton>
       </DialogFooter>
     </DialogContent>

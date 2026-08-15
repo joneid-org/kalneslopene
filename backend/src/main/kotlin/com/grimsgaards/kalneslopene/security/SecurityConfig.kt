@@ -22,16 +22,24 @@ class SecurityConfig {
             .csrf { it.disable() }
             .authorizeHttpRequests { auth ->
                 auth
-                    .requestMatchers(HttpMethod.GET, "/api/s3/presigned-url")
+                    // Must precede the blanket GET rule below, or the user list would be world-readable
+                    .requestMatchers(HttpMethod.GET, "/api/users/**")
                     .hasAuthority(UserRole.ADMIN.toString())
+                    .requestMatchers(HttpMethod.GET, "/api/s3/presigned-url")
+                    .hasAnyAuthority(UserRole.ADMIN.toString(), UserRole.EDITOR.toString())
                     .requestMatchers(HttpMethod.GET, "/**")
                     .permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/auth/login")
                     .permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/auth/setup")
                     .permitAll()
-                    .anyRequest()
+                    // Redeeming an invite, not creating one — creation is POST /api/users/invites below
+                    .requestMatchers(HttpMethod.POST, "/api/auth/register/*")
+                    .permitAll()
+                    .requestMatchers("/api/users/**")
                     .hasAuthority(UserRole.ADMIN.toString())
+                    .anyRequest()
+                    .hasAnyAuthority(UserRole.ADMIN.toString(), UserRole.EDITOR.toString())
             }.httpBasic { }
         return http.build()
     }
@@ -48,6 +56,7 @@ class SecurityConfig {
                 .username(user.username)
                 .password(user.password)
                 .authorities(authorities)
+                .disabled(user.banned)
                 .build()
         }
 

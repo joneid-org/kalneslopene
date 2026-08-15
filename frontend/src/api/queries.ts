@@ -17,6 +17,7 @@ import type {
   RunnerDTO,
   RunnerOverviewStatsDTO,
   S3FileDto,
+  UserDTO,
 } from "../model/DTO.ts";
 
 export function requestNewsfeedHeaderUpload(fileName: string) {
@@ -240,6 +241,12 @@ export const QUERIES = {
       queryKey: ["auth", "setup", "needed"],
       queryFn: () =>
         kyClient.get("/api/auth/setup/needed").json<{ needed: boolean }>(),
+    },
+  },
+  user: {
+    getUsers: {
+      queryKey: ["user", "getAll"],
+      queryFn: () => kyClient.get("/api/users").json<UserDTO[]>(),
     },
   },
   milestone: {

@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card.tsx";
 import { useAuth } from "@/hooks/useAuth.ts";
-import { ADMIN_ACTIONS } from "@/lib/constants.ts";
+import { visibleAdminActions } from "@/lib/constants.ts";
 
 export function Admin() {
   const navigate = useNavigate();
@@ -44,17 +44,19 @@ export function Admin() {
           <CardTitle className="text-base">Handlinger</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
-          {ADMIN_ACTIONS.map(({ label, icon: Icon, path }) => (
-            <Button
-              key={label}
-              variant="outline"
-              className="justify-start gap-3 h-11"
-              onClick={() => navigate(path)}
-            >
-              <Icon className="size-4 text-primary" />
-              {label}
-            </Button>
-          ))}
+          {visibleAdminActions(user?.roles ?? []).map(
+            ({ label, icon: Icon, path }) => (
+              <Button
+                key={label}
+                variant="outline"
+                className="justify-start gap-3 h-11"
+                onClick={() => navigate(path)}
+              >
+                <Icon className="size-4 text-primary" />
+                {label}
+              </Button>
+            ),
+          )}
         </CardContent>
       </Card>
     </div>

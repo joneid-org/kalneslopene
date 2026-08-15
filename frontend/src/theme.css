@@ -8,7 +8,7 @@
   /* ─── Body ─────────────────────────────────────────────── */
   body {
     font-family:
-      "Hanken Grotesk", system-ui, -apple-system, BlinkMacSystemFont,
+      "Hanken Grotesk Variable", system-ui, -apple-system, BlinkMacSystemFont,
       "Segoe UI", sans-serif;
     font-size: 0.9375rem; /* 15 px mobile */
     line-height: 1.6;
@@ -33,7 +33,7 @@
   h2,
   h3,
   h4 {
-    font-family: "Archivo", system-ui, sans-serif;
+    font-family: "Archivo Variable", system-ui, sans-serif;
   }
   h1 {
     font-size: 1.375rem; /* 22 px */

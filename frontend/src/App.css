@@ -9,9 +9,9 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-    --font-sans: "Hanken Grotesk", system-ui, -apple-system, BlinkMacSystemFont,
+    --font-sans: "Hanken Grotesk Variable", system-ui, -apple-system, BlinkMacSystemFont,
         "Segoe UI", sans-serif;
-    --font-display: "Archivo", system-ui, sans-serif;
+    --font-display: "Archivo Variable", system-ui, sans-serif;
 
     --radius-sm: calc(var(--radius) - 8px);
     --radius-md: calc(var(--radius) - 4px);

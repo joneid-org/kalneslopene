@@ -21,6 +21,8 @@ import org.springframework.test.web.servlet.get
         "client-config.sentry-dsn=https://key@glitchtip.example/2",
         "sentry.environment=test",
         "sentry.release=abc1234",
+        "client-config.umami-script-url=https://umami.example/script.js",
+        "client-config.umami-website-id=11111111-2222-3333-4444-555555555555",
     ],
 )
 class ConfigControllerTest {
@@ -44,6 +46,35 @@ class ConfigControllerTest {
                     jsonPath("$.sentryDsn") { value("https://key@glitchtip.example/2") }
                     jsonPath("$.environment") { value("test") }
                     jsonPath("$.release") { value("abc1234") }
+                }
+        }
+
+        @Test
+        fun `returns analytics config`() {
+            whenever(s3Service.getPublicBaseUrl()).thenReturn("https://s3.example/bucket")
+
+            mockMvc
+                .get("/api/config")
+                .andExpect {
+                    status { isOk() }
+                    jsonPath("$.umamiScriptUrl") { value("https://umami.example/script.js") }
+                    jsonPath("$.umamiWebsiteId") { value("11111111-2222-3333-4444-555555555555") }
+                }
+        }
+    }
+
+    @Nested
+    @TestPropertySource(properties = ["client-config.umami-website-id="])
+    inner class GetConfigWithoutAnalytics {
+        @Test
+        fun `reports blank website id as null`() {
+            whenever(s3Service.getPublicBaseUrl()).thenReturn("https://s3.example/bucket")
+
+            mockMvc
+                .get("/api/config")
+                .andExpect {
+                    status { isOk() }
+                    jsonPath("$.umamiWebsiteId") { value(null) }
                 }
         }
     }

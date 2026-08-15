@@ -9,7 +9,12 @@ export function NewsCard({ post, img }: { post: NewsFeedDTO; img: string }) {
 
   return (
     <Card className="overflow-hidden rounded-2xl card-hover hover:shadow-md h-full flex flex-row sm:flex-col gap-0 py-0">
-      <Link to={`/nyheter/${post.uuid}`} className="hidden sm:block group">
+      <Link
+        to={`/nyheter/${post.uuid}`}
+        className="hidden sm:block group"
+        data-umami-event="nyhet-klikk"
+        data-umami-event-tittel={post.header}
+      >
         <div className="aspect-video overflow-hidden shrink-0 bg-muted">
           <img
             src={post.headerImage?.url ?? img}
@@ -36,7 +41,12 @@ export function NewsCard({ post, img }: { post: NewsFeedDTO; img: string }) {
               </Link>
             ))}
           </div>
-          <Link to={`/nyheter/${post.uuid}`} className="block group">
+          <Link
+            to={`/nyheter/${post.uuid}`}
+            className="block group"
+            data-umami-event="nyhet-klikk"
+            data-umami-event-tittel={post.header}
+          >
             <p className="font-display text-base sm:text-lg font-bold transition-colors leading-snug line-clamp-2">
               {post.header}
             </p>
@@ -57,6 +67,8 @@ export function NewsCard({ post, img }: { post: NewsFeedDTO; img: string }) {
       <Link
         to={`/nyheter/${post.uuid}`}
         className="block sm:hidden shrink-0 self-stretch group"
+        data-umami-event="nyhet-klikk"
+        data-umami-event-tittel={post.header}
       >
         <div className="w-28 h-full overflow-hidden bg-muted">
           <img

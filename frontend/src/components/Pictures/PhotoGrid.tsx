@@ -26,6 +26,7 @@ export default function PhotoGrid({ photos, onPhotoClick }: PhotoGridProps) {
               type="button"
               className="aspect-video sm:aspect-square overflow-hidden rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               onClick={() => onPhotoClick(idx)}
+              data-umami-event="bilde-apnet"
             >
               <img
                 src={photo.url}

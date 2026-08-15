@@ -26,6 +26,8 @@ export default function SponsorsBlock() {
             target="_blank"
             rel="noopener noreferrer"
             title={name}
+            data-umami-event="sponsor-klikk"
+            data-umami-event-sponsor={name}
             className="flex items-center justify-center hover:opacity-70 transition-opacity"
           >
             <img src={logo} alt={name} className="h-8 sm:h-10 object-contain" />

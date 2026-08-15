@@ -39,9 +39,12 @@ sentry:
     minimum-breadcrumb-level: info
 
 # Served to the browser by /api/config. Separate DSN from the backend one so frontend
-# errors land in their own GlitchTip project.
+# errors land in their own GlitchTip project. Umami gets its own website id per environment,
+# and a blank id keeps the tracker script out of the page entirely.
 client-config:
   sentry-dsn: ${SENTRY_FRONTEND_DSN:}
+  umami-script-url: ${UMAMI_SCRIPT_URL:}
+  umami-website-id: ${UMAMI_WEBSITE_ID:}
 
 management:
   endpoints:

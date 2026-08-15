@@ -15,7 +15,7 @@ export function SeasonStatBoxes() {
   const stats = [
     {
       value: totalRunners,
-      label: "Deltakere totalt",
+      label: "Løpsdeltakelser",
       shortLabel: "Deltakere",
     },
     {

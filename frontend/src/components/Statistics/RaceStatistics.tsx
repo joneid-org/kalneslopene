@@ -156,7 +156,7 @@ export default function RaceStatistics() {
               ? Math.round(yearStatistics.averageRunnersPerRace)
               : undefined
           }
-          label="Snitt deltakere"
+          label="Snittdeltakelse"
           isLoading={isPendingYearStatistics}
         />
         <StatTile

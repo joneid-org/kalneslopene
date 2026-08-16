@@ -3,7 +3,6 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "@fontsource-variable/archivo";
 import "@fontsource-variable/hanken-grotesk";
-import "leaflet/dist/leaflet.css";
 import "./App.css";
 import App from "./App.tsx";
 import { bufferErrorsUntilInitialized } from "./lib/errorTracking.ts";

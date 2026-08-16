@@ -1,30 +1,12 @@
 import { createBrowserRouter } from "react-router";
-import { NewsfeedTagManager } from "@/components/admin/NewsfeedTagManager.tsx";
-import { ImagesPage } from "@/pages/admin/Images.tsx";
-import { RaceCalendar } from "@/pages/RaceCalendar.tsx";
 import { RouteError } from "@/pages/RouteError.tsx";
 import { AuthGuard } from "./components/admin/AuthGuard.tsx";
 import { Layout } from "./Layout.tsx";
-import { Admin } from "./pages/Admin.tsx";
-import { CRUDNewsfeeds } from "./pages/admin/CRUDNewsfeeds.tsx";
-import { CRUDOrganizers } from "./pages/admin/CRUDOrganizers.tsx";
-import { CRUDRaces } from "./pages/admin/CRUDRaces.tsx";
-import { CRUDRunners } from "./pages/admin/CRUDRunners.tsx";
-import { CRUDUsers } from "./pages/admin/CRUDUsers.tsx";
-import { ImportResultsFromFile } from "./pages/admin/ImportResultsFromFile.tsx";
-import { RegisterResults } from "./pages/admin/RegisterResults.tsx";
-import { RegisterResultsWizard } from "./pages/admin/RegisterResultsWizard.tsx";
-import { CourseMap } from "./pages/CourseMap.tsx";
-import { History } from "./pages/History.tsx";
 import { Home } from "./pages/Home.tsx";
-import { Login } from "./pages/Login.tsx";
-import { News } from "./pages/News.tsx";
-import { NewsArticle } from "./pages/NewsArticle.tsx";
-import { NewsTag } from "./pages/NewsTag.tsx";
-import { Pictures } from "./pages/Pictures.tsx";
-import { RedeemInvite } from "./pages/RedeemInvite.tsx";
-import { Results } from "./pages/Results.tsx";
-import { Statistics } from "./pages/Statistics.tsx";
+
+const results = async () => ({
+  Component: (await import("./pages/Results.tsx")).Results,
+});
 
 export const router = createBrowserRouter([
   {
@@ -41,98 +23,155 @@ export const router = createBrowserRouter([
           },
           {
             path: "resultater",
-            Component: Results,
+            lazy: results,
           },
           {
             path: "resultater/:uuid",
-            Component: Results,
+            lazy: results,
           },
           {
             path: "bilder/:uuid",
-            Component: Pictures,
+            lazy: async () => ({
+              Component: (await import("./pages/Pictures.tsx")).Pictures,
+            }),
           },
           {
             path: "statistikk",
-            Component: Statistics,
+            lazy: async () => ({
+              Component: (await import("./pages/Statistics.tsx")).Statistics,
+            }),
           },
           {
             path: "historie",
-            Component: History,
+            lazy: async () => ({
+              Component: (await import("./pages/History.tsx")).History,
+            }),
           },
           {
             path: "løypekart",
-            Component: CourseMap,
+            lazy: async () => ({
+              Component: (await import("./pages/CourseMap.tsx")).CourseMap,
+            }),
           },
           {
             path: "løpskalender",
-            Component: RaceCalendar,
+            lazy: async () => ({
+              Component: (await import("./pages/RaceCalendar.tsx"))
+                .RaceCalendar,
+            }),
           },
           {
             path: "nyheter",
-            Component: News,
+            lazy: async () => ({
+              Component: (await import("./pages/News.tsx")).News,
+            }),
           },
           {
             path: "nyheter/tagg/:tag",
-            Component: NewsTag,
+            lazy: async () => ({
+              Component: (await import("./pages/NewsTag.tsx")).NewsTag,
+            }),
           },
           {
             path: "nyheter/:uuid",
-            Component: NewsArticle,
+            lazy: async () => ({
+              Component: (await import("./pages/NewsArticle.tsx")).NewsArticle,
+            }),
           },
           {
             path: "logg-inn",
-            Component: Login,
+            lazy: async () => ({
+              Component: (await import("./pages/Login.tsx")).Login,
+            }),
           },
           {
             path: "invitasjon/:token",
-            Component: RedeemInvite,
+            lazy: async () => ({
+              Component: (await import("./pages/RedeemInvite.tsx"))
+                .RedeemInvite,
+            }),
           },
           {
             Component: AuthGuard,
             children: [
               {
                 path: "admin",
-                Component: Admin,
+                lazy: async () => ({
+                  Component: (await import("./pages/Admin.tsx")).Admin,
+                }),
               },
               {
                 path: "admin/løp",
-                Component: CRUDRaces,
+                lazy: async () => ({
+                  Component: (await import("./pages/admin/CRUDRaces.tsx"))
+                    .CRUDRaces,
+                }),
               },
               {
                 path: "admin/resultater",
-                Component: RegisterResults,
+                lazy: async () => ({
+                  Component: (await import("./pages/admin/RegisterResults.tsx"))
+                    .RegisterResults,
+                }),
               },
               {
                 path: "admin/resultater/import",
-                Component: ImportResultsFromFile,
+                lazy: async () => ({
+                  Component: (
+                    await import("./pages/admin/ImportResultsFromFile.tsx")
+                  ).ImportResultsFromFile,
+                }),
               },
               {
                 path: "admin/resultater/:uuid",
-                Component: RegisterResultsWizard,
+                lazy: async () => ({
+                  Component: (
+                    await import("./pages/admin/RegisterResultsWizard.tsx")
+                  ).RegisterResultsWizard,
+                }),
               },
               {
                 path: "admin/bilder",
-                Component: ImagesPage,
+                lazy: async () => ({
+                  Component: (await import("./pages/admin/Images.tsx"))
+                    .ImagesPage,
+                }),
               },
               {
                 path: "admin/løpere",
-                Component: CRUDRunners,
+                lazy: async () => ({
+                  Component: (await import("./pages/admin/CRUDRunners.tsx"))
+                    .CRUDRunners,
+                }),
               },
               {
                 path: "admin/arrangører",
-                Component: CRUDOrganizers,
+                lazy: async () => ({
+                  Component: (await import("./pages/admin/CRUDOrganizers.tsx"))
+                    .CRUDOrganizers,
+                }),
               },
               {
                 path: "admin/nyheter",
-                Component: CRUDNewsfeeds,
+                lazy: async () => ({
+                  Component: (await import("./pages/admin/CRUDNewsfeeds.tsx"))
+                    .CRUDNewsfeeds,
+                }),
               },
               {
                 path: "admin/tagger",
-                Component: NewsfeedTagManager,
+                lazy: async () => ({
+                  Component: (
+                    await import("./components/admin/NewsfeedTagManager.tsx")
+                  ).NewsfeedTagManager,
+                }),
               },
               {
                 path: "admin/brukere",
-                Component: CRUDUsers,
+                lazy: async () => ({
+                  Component: (await import("./pages/admin/CRUDUsers.tsx"))
+                    .CRUDUsers,
+                }),
               },
             ],
           },

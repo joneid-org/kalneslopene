@@ -6,6 +6,7 @@ import {
   TileLayer,
   Tooltip,
 } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
 import { colorIcon } from "@/components/CourseMap/mapUtils.ts";
 import { blaaRoute } from "@/data/coordinater.ts";
 import { MAP_CENTER, MAP_ZOOM, mapLegend, pins } from "@/data/loypekartData.ts";

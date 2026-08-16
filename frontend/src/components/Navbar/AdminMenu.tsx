@@ -18,7 +18,7 @@ export function AdminMenu() {
   if (!isAuthenticated || !user) return null;
 
   function handleLogout() {
-    logout();
+    void logout();
   }
 
   return (

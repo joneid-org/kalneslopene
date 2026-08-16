@@ -1,0 +1,28 @@
+info:
+  name: Get CSRF token
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{url}}/api/config"
+  auth: inherit
+
+script:
+  res: |-
+    // Any GET issues the XSRF-TOKEN cookie. Stash it so the writing requests below can
+    // echo it back as X-XSRF-TOKEN, which is what Spring's CSRF filter checks.
+    const setCookie = res.getHeader("set-cookie");
+    const headers = Array.isArray(setCookie) ? setCookie : [setCookie];
+    for (const header of headers) {
+      const match = /XSRF-TOKEN=([^;]+)/.exec(header || "");
+      if (match) {
+        bru.setVar("csrfToken", decodeURIComponent(match[1]));
+      }
+    }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

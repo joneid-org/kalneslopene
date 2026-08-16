@@ -1,7 +1,17 @@
 server:
+  # Traefik terminates TLS and forwards plain http, so without this the app believes every request
+  # is insecure and never marks the session cookie Secure. Must be "native" rather than "framework":
+  # Tomcat builds the session cookie itself, below the servlet filter that "framework" installs.
+  forward-headers-strategy: native
   compression:
     enabled: true
     mime-types: text/html,text/css,text/javascript,application/javascript,application/json,image/svg+xml,font/woff2
+  servlet:
+    session:
+      timeout: 7d
+      cookie:
+        http-only: true
+        same-site: strict
 
 spring:
   application:

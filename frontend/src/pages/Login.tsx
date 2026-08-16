@@ -37,7 +37,7 @@ export function Login() {
     setLoading(true);
     try {
       const result = await MUTATIONS.auth.login({ username, password });
-      login(username, password, result.roles);
+      login({ username: result.username, roles: result.roles });
       navigate("/admin");
     } catch {
       setError("Ugyldig brukernavn eller passord.");
@@ -52,7 +52,7 @@ export function Login() {
     setLoading(true);
     try {
       const result = await MUTATIONS.auth.setup({ username, password });
-      login(username, password, result.roles);
+      login({ username: result.username, roles: result.roles });
       navigate("/admin");
     } catch {
       setError("Kunne ikke opprette bruker. Prøv igjen.");

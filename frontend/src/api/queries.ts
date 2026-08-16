@@ -3,6 +3,7 @@ import { kyClient } from "@/api/queryClient.ts";
 import type { RaceFilter } from "@/api/types.ts";
 import type {
   ConfigDTO,
+  LoginResponse,
   MilestoneDTO,
   NewsFeedDTO,
   NewsfeedSettingsDTO,
@@ -241,6 +242,10 @@ export const QUERIES = {
       queryKey: ["auth", "setup", "needed"],
       queryFn: () =>
         kyClient.get("/api/auth/setup/needed").json<{ needed: boolean }>(),
+    },
+    me: {
+      queryKey: ["auth", "me"],
+      queryFn: () => kyClient.get("/api/auth/me").json<LoginResponse>(),
     },
   },
   user: {

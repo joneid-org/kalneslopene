@@ -3,5 +3,4 @@ export type RaceFilter = {
   from?: string;
   to?: string;
   isPublished?: boolean;
-  containsPictures?: boolean;
 };

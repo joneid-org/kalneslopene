@@ -88,6 +88,7 @@ class S3Service(
     }
 
     @Transactional
+    @CacheEvict(RACE_INFO_CACHE, allEntries = true)
     fun deleteFilesByUuid(fileUuids: List<UUID>) {
         val fileEntities = fileRepository.findAllById(fileUuids)
         if (fileEntities.isEmpty()) return
@@ -115,6 +116,7 @@ class S3Service(
     }
 
     @Transactional
+    @CacheEvict(RACE_INFO_CACHE, allEntries = true)
     fun deleteFilesByUrl(urls: Collection<String>) {
         if (urls.isEmpty()) return
         val fileEntities = fileRepository.findAllByUrlIn(urls)
@@ -122,7 +124,6 @@ class S3Service(
         deleteFiles(fileEntities)
     }
 
-    @CacheEvict(RACE_INFO_CACHE, allEntries = true)
     private fun deleteFiles(fileEntities: List<FileEntity>) {
         val objectsToDelete =
             fileEntities.map { DeleteRequest.Object(it.url.substringAfter("$baseUrl/$minioBucketName/")) }
@@ -139,6 +140,7 @@ class S3Service(
 
     @Scheduled(cron = "0 0 * * * *")
     @Transactional
+    @CacheEvict(RACE_INFO_CACHE, allEntries = true)
     fun deleteExpiredUnconfirmedUploads() {
         logger.info("Running scheduled task to delete expired unconfirmed uploads")
         val expiredFiles =

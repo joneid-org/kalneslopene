@@ -45,7 +45,10 @@ class RaceService(
     val authenticatedUserProvider: AuthenticatedUserProvider,
 ) {
     @Cacheable(RACE_INFO_CACHE)
-    fun getAllInfo(isPublished: Boolean?): List<RaceInfoDto> = raceRepository.findAllInfoByFilter(RaceFilter(isPublished = isPublished))
+    fun getAllInfo(
+        isPublished: Boolean?,
+        containsPictures: Boolean?,
+    ): List<RaceInfoDto> = raceRepository.findAllInfoByFilter(RaceFilter(isPublished = isPublished, containsPictures = containsPictures))
 
     fun getAll(
         filter: RaceFilter,
@@ -54,7 +57,9 @@ class RaceService(
         sortDirection: Sort.Direction = Sort.Direction.DESC,
     ): Page<RaceDTO> {
         val effectiveFilter = if (authenticatedUserProvider.isAdmin()) filter else filter.copy(isPublished = true)
-        return raceRepository.findAllByFilter(effectiveFilter, resolvePageable(filter, page, pageSize, sortDirection)).map { it.toDto() }
+        return raceRepository
+            .findAllByFilter(effectiveFilter, resolvePageable(filter, page, pageSize, sortDirection))
+            .map { it.toDto() }
     }
 
     private fun resolvePageable(
@@ -185,6 +190,7 @@ class RaceService(
     }
 
     @Transactional
+    @CacheEvict(RACE_INFO_CACHE, allEntries = true)
     fun addPhotosToRace(
         raceUuid: UUID,
         photoNames: List<String>,

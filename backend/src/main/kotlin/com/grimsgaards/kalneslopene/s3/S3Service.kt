@@ -1,6 +1,7 @@
 package com.grimsgaards.kalneslopene.s3
 
 import com.grimsgaards.kalneslopene.common.logger
+import com.grimsgaards.kalneslopene.race.RACE_INFO_CACHE
 import io.minio.GetPresignedObjectUrlArgs
 import io.minio.Http
 import io.minio.MinioClient
@@ -8,6 +9,7 @@ import io.minio.RemoveObjectsArgs
 import io.minio.messages.DeleteRequest
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.cache.annotation.CacheEvict
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.time.OffsetDateTime
@@ -86,6 +88,7 @@ class S3Service(
     }
 
     @Transactional
+    @CacheEvict(RACE_INFO_CACHE, allEntries = true)
     fun deleteFilesByUuid(fileUuids: List<UUID>) {
         val fileEntities = fileRepository.findAllById(fileUuids)
         if (fileEntities.isEmpty()) return
@@ -113,6 +116,7 @@ class S3Service(
     }
 
     @Transactional
+    @CacheEvict(RACE_INFO_CACHE, allEntries = true)
     fun deleteFilesByUrl(urls: Collection<String>) {
         if (urls.isEmpty()) return
         val fileEntities = fileRepository.findAllByUrlIn(urls)
@@ -136,6 +140,7 @@ class S3Service(
 
     @Scheduled(cron = "0 0 * * * *")
     @Transactional
+    @CacheEvict(RACE_INFO_CACHE, allEntries = true)
     fun deleteExpiredUnconfirmedUploads() {
         logger.info("Running scheduled task to delete expired unconfirmed uploads")
         val expiredFiles =

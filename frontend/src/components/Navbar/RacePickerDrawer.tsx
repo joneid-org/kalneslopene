@@ -13,9 +13,11 @@ import {
 import { formatDDMonth } from "@/lib/timeUtils.ts";
 import { cn, getRacesDTOByYear, getYears } from "@/lib/utils.ts";
 
+export type RacePickerBasePath = "/resultater" | "/bilder";
+
 type RacePickerDrawerProps = {
   children: ReactNode;
-  basePath?: string;
+  basePath?: RacePickerBasePath;
 };
 
 export function RacePickerDrawer({
@@ -23,7 +25,10 @@ export function RacePickerDrawer({
   basePath = "/resultater",
 }: RacePickerDrawerProps) {
   const { data: races } = useQuery(
-    QUERIES.race.getAllRaceInfos({ isPublished: true }),
+    QUERIES.race.getAllRaceInfos({
+      isPublished: true,
+      containsPictures: basePath === "/bilder" ? true : undefined,
+    }),
   );
   const years = getYears(races ?? []);
   const [selectedYear, setSelectedYear] = useState<number | null>(null);

@@ -1,6 +1,7 @@
 package com.grimsgaards.kalneslopene.s3
 
 import com.grimsgaards.kalneslopene.common.logger
+import com.grimsgaards.kalneslopene.race.RACE_INFO_CACHE
 import io.minio.GetPresignedObjectUrlArgs
 import io.minio.Http
 import io.minio.MinioClient
@@ -8,6 +9,7 @@ import io.minio.RemoveObjectsArgs
 import io.minio.messages.DeleteRequest
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.cache.annotation.CacheEvict
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.time.OffsetDateTime
@@ -120,6 +122,7 @@ class S3Service(
         deleteFiles(fileEntities)
     }
 
+    @CacheEvict(RACE_INFO_CACHE, allEntries = true)
     private fun deleteFiles(fileEntities: List<FileEntity>) {
         val objectsToDelete =
             fileEntities.map { DeleteRequest.Object(it.url.substringAfter("$baseUrl/$minioBucketName/")) }

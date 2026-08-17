@@ -18,6 +18,11 @@ interface RaceRepository : JpaRepository<RaceEntity, UUID> {
         WHERE n.raceDate >= COALESCE(:#{#filter.from}, n.raceDate)
           AND n.raceDate <= COALESCE(:#{#filter.to}, n.raceDate)
           AND n.isPublished = COALESCE(:#{#filter.isPublished}, n.isPublished)
+          AND (
+            :#{#filter.containsPictures} IS NULL
+            OR (:#{#filter.containsPictures} = TRUE AND SIZE(n.racePhotos) > 0)
+            OR (:#{#filter.containsPictures} = FALSE AND SIZE(n.racePhotos) = 0)
+          )
         ORDER BY n.raceDate DESC
     """,
     )

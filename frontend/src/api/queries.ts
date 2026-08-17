@@ -75,11 +75,19 @@ export const QUERIES = {
     },
   },
   race: {
-    getAllRaceInfos: ({ isPublished }: { isPublished?: boolean } = {}) => ({
-      queryKey: ["race", "getAllRaceInfos", isPublished],
+    getAllRaceInfos: ({
+      isPublished,
+      containsPictures,
+    }: {
+      isPublished?: boolean;
+      containsPictures?: boolean;
+    } = {}) => ({
+      queryKey: ["race", "getAllRaceInfos", isPublished, containsPictures],
       queryFn: async () =>
         await kyClient
-          .get("/api/race-info", { searchParams: { isPublished } })
+          .get("/api/race-info", {
+            searchParams: { isPublished, containsPictures },
+          })
           .json<RaceInfoDTO[]>(),
     }),
     getRaces: ({

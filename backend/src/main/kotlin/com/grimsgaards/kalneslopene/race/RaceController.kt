@@ -48,7 +48,8 @@ class RaceController(
     @GetMapping("/api/race-info")
     fun getAllRacesInfo(
         @RequestParam(required = false) isPublished: Boolean?,
-    ): List<RaceInfoDto> = raceService.getAllInfo(isPublished)
+        @RequestParam(required = false) containsPictures: Boolean?,
+    ): List<RaceInfoDto> = raceService.getAllInfo(isPublished, containsPictures)
 
     @GetMapping("/api/race-next")
     fun getNextRace(): ResponseEntity<RaceDTO> =

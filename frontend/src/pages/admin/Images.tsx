@@ -1,5 +1,10 @@
-import { type InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
+import {
+  type InfiniteData,
+  useInfiniteQuery,
+  useMutation,
+} from "@tanstack/react-query";
 import { useState } from "react";
+import { MUTATIONS } from "@/api/mutations.ts";
 import { QUERIES } from "@/api/queries.ts";
 import { queryClient } from "@/api/queryClient.ts";
 import { IMMUTABLE_CACHE_CONTROL, uploadToS3 } from "@/api/s3.ts";
@@ -13,11 +18,6 @@ import {
 } from "@/components/ui/accordion.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import {
-  confirmUploadedFiles,
-  deleteS3Files,
-  requestPresignedUrls,
-} from "@/lib/fileUploadUtils.ts";
 import { convertImageToWebp } from "@/lib/photoUtils.ts";
 import {
   extractYear,
@@ -132,27 +132,42 @@ export function ImagesPage() {
     }
   };
 
-  const handleFilesSelected = async (raceUuid: string, fileList: FileList) => {
-    const files = await Promise.all(
-      Array.from(fileList).map((file) => convertImageToWebp(file)),
-    );
-    const urlMap = await requestPresignedUrls(
+  const uploadMutation = useMutation({
+    mutationFn: async ({
       raceUuid,
-      files.map((file) => file.name),
-    );
-    const results = await Promise.all(
-      files.map((file) => {
-        const { uploadUrl, s3File } = urlMap[file.name];
-        return startUpload(raceUuid, file, uploadUrl, s3File);
-      }),
-    );
+      fileList,
+    }: {
+      raceUuid: string;
+      fileList: FileList;
+    }) => {
+      const files = await Promise.all(
+        Array.from(fileList).map((file) => convertImageToWebp(file)),
+      );
+      const urlMap = await MUTATIONS.race.requestPhotoUploads(
+        raceUuid,
+        files.map((file) => file.name),
+      );
+      const results = await Promise.all(
+        files.map((file) => {
+          const { uploadUrl, s3File } = urlMap[file.name];
+          return startUpload(raceUuid, file, uploadUrl, s3File);
+        }),
+      );
 
-    const uploadedUuids = results.filter((uuid) => uuid !== null);
-    if (uploadedUuids.length === 0) return;
+      const uploadedUuids = results.filter((uuid) => uuid !== null);
+      if (uploadedUuids.length === 0) return;
 
-    await confirmUploadedFiles(uploadedUuids);
-    await queryClient.invalidateQueries({ queryKey: query.queryKey });
-  };
+      await MUTATIONS.s3.confirmUploads(uploadedUuids);
+    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: query.queryKey }),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (fileUuids: string[]) => MUTATIONS.s3.deleteFiles(fileUuids),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: query.queryKey }),
+  });
 
   return (
     <div className="page-content max-w-3xl mx-auto space-y-6">
@@ -187,19 +202,14 @@ export function ImagesPage() {
                 </AccordionTrigger>
                 <AccordionContent className="space-y-3">
                   <UploadDropzone
-                    onFilesSelected={(files) =>
-                      handleFilesSelected(race.uuid, files)
+                    onFilesSelected={(fileList) =>
+                      uploadMutation.mutate({ raceUuid: race.uuid, fileList })
                     }
                   />
                   <AdminPhotoGrid
                     photos={race.photos}
                     uploads={uploads[race.uuid] ?? []}
-                    onBulkDelete={async (ids) => {
-                      await deleteS3Files(ids);
-                      await queryClient.invalidateQueries({
-                        queryKey: query.queryKey,
-                      });
-                    }}
+                    onBulkDelete={(ids) => deleteMutation.mutateAsync(ids)}
                     onDismissUpload={(uploadId) =>
                       removeUpload(race.uuid, uploadId)
                     }

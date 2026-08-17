@@ -1,5 +1,6 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { LogInIcon, UserPlusIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import { MUTATIONS } from "@/api/mutations.ts";
 import { QUERIES } from "@/api/queries.ts";
@@ -16,52 +17,34 @@ import { useAuth } from "@/hooks/useAuth.ts";
 
 export function Login() {
   const navigate = useNavigate();
+  const qc = useQueryClient();
   const { login } = useAuth();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [setupNeeded, setSetupNeeded] = useState<boolean | null>(null);
 
-  useEffect(() => {
-    QUERIES.auth.isSetupNeeded
-      .queryFn()
-      .then((res) => setSetupNeeded(res.needed))
-      .catch(() => setSetupNeeded(false));
-  }, []);
+  const { data: setupStatus, isPending } = useQuery(QUERIES.auth.isSetupNeeded);
 
-  async function handleLogin(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-    try {
-      const result = await MUTATIONS.auth.login({ username, password });
+  const loginMutation = useMutation({
+    mutationFn: () => MUTATIONS.auth.login({ username, password }),
+    onSuccess: (result) => {
       login(username, password, result.roles);
       navigate("/admin");
-    } catch {
-      setError("Ugyldig brukernavn eller passord.");
-    } finally {
-      setLoading(false);
-    }
-  }
+    },
+    meta: { showsOwnError: true },
+  });
 
-  async function handleSetup(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-    try {
-      const result = await MUTATIONS.auth.setup({ username, password });
+  const setupMutation = useMutation({
+    mutationFn: () => MUTATIONS.auth.setup({ username, password }),
+    onSuccess: (result) => {
+      qc.setQueryData(QUERIES.auth.isSetupNeeded.queryKey, { needed: false });
       login(username, password, result.roles);
       navigate("/admin");
-    } catch {
-      setError("Kunne ikke opprette bruker. Prøv igjen.");
-    } finally {
-      setLoading(false);
-    }
-  }
+    },
+    meta: { showsOwnError: true },
+  });
 
-  if (setupNeeded === null) {
+  if (isPending) {
     return (
       <div className="flex min-h-[70vh] items-center justify-center px-4">
         <p className="text-sm text-muted-foreground">Laster...</p>
@@ -69,7 +52,19 @@ export function Login() {
     );
   }
 
-  const isSetup = setupNeeded;
+  const isSetup = setupStatus?.needed ?? false;
+  const activeMutation = isSetup ? setupMutation : loginMutation;
+  const loading = activeMutation.isPending;
+  const error = activeMutation.isError
+    ? isSetup
+      ? "Kunne ikke opprette bruker. Prøv igjen."
+      : "Ugyldig brukernavn eller passord."
+    : null;
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    activeMutation.mutate();
+  };
 
   return (
     <div className="flex min-h-[70vh] items-center justify-center px-4">
@@ -93,10 +88,7 @@ export function Login() {
             )}
           </CardHeader>
           <CardContent>
-            <form
-              onSubmit={isSetup ? handleSetup : handleLogin}
-              className="flex flex-col gap-4"
-            >
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="username">Brukernavn</Label>
                 <Input

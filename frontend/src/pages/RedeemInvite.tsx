@@ -1,4 +1,5 @@
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { useMutation } from "@tanstack/react-query";
 import { UserPlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
@@ -38,23 +39,30 @@ export function RedeemInvite() {
       defaultValues: { username: "", password: "", confirmPassword: "" },
       resolver: standardSchemaResolver(redeemInviteSchema),
     });
-  const { errors, isSubmitting } = formState;
+  const { errors } = formState;
 
-  const onSubmit = handleSubmit(async ({ username, password }) => {
-    try {
-      const result = await MUTATIONS.auth.registerWithInvite(token ?? "", {
-        username,
-        password,
-      });
+  const registerMutation = useMutation({
+    mutationFn: ({
+      username,
+      password,
+    }: Pick<RedeemInviteValues, "username" | "password">) =>
+      MUTATIONS.auth.registerWithInvite(token ?? "", { username, password }),
+    onSuccess: (result, { username, password }) => {
       login(username, password, result.roles);
       navigate("/admin");
-    } catch {
+    },
+    onError: () =>
       setError("root", {
         message:
           "Kunne ikke opprette bruker. Invitasjonen kan være utløpt eller allerede brukt, eller brukernavnet kan være opptatt.",
-      });
-    }
+      }),
+    meta: { showsOwnError: true },
   });
+
+  const onSubmit = handleSubmit(({ username, password }) =>
+    registerMutation.mutate({ username, password }),
+  );
+  const isSubmitting = registerMutation.isPending;
 
   return (
     <div className="flex min-h-[70vh] items-center justify-center px-4">

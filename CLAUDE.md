@@ -37,6 +37,7 @@ In production, `Dockerfile` runs a multi-stage build that compiles the frontend 
 ### API contract (frontend ↔ backend)
 - Backend exposes `/api/races`, `/api/organizers`, `/api/runners`, `/api/newsfeeds`, `/api/milestones` (standard CRUD, `UUID` ids), plus `/api/statistics` and `/api/config` (read-only), `/api/s3` (presigned upload URLs), and `/api/auth` (login/setup — see Authentication below). Controllers live in `backend/.../controller/`.
 - Frontend never hand-writes fetch calls inline. All endpoints live in `frontend/src/api/queries.ts` as a single `QUERIES` const object, called via `useQuery(QUERIES.race.getRaceByUuid(uuid))`. HTTP client is `ky`; the shared `kyClient` and `QueryClient` (with `staleTime: 2min`, `retry: false`, `keepPreviousData`) are in `frontend/src/api/queryClient.ts`. New endpoints go in `QUERIES`, not ad-hoc.
+- Writes live in `frontend/src/api/mutations.ts` as a single `MUTATIONS` const object, and are **always** invoked through `useMutation` — never called directly from an event handler. The `MutationCache` in `queryClient.ts` toasts offline/rate-limit/generic errors for every mutation, so a direct call silently loses that error handling. A mutation that renders its own inline error message sets `meta: { showsOwnError: true }` to suppress the generic toast (see `Login.tsx`).
 - DTO shapes are duplicated: Kotlin in `backend/.../model/dto/` and TypeScript in `frontend/src/model/DTO.ts`. Keep them in sync manually when changing the API.
 - `backend/bruno/collections/` is a Bruno API collection (Local/Dev/Test/Prod environments) mirroring the REST surface — useful as a live reference for request/response shapes.
 
@@ -56,7 +57,7 @@ Controller → Service → Repository (Spring Data JPA). Entities live in `model
 - Routes are declared in `src/routes.ts`. Top-level public pages are capitalized Norwegian (`/Resultater`, `/Bilder`, `/Statistikk`, `/Historie`, `/Løypekart`, `/Løpskalender`); `nyheter/*`, `logg-inn`, and `admin/*` are lowercase — match whichever group a new route belongs to.
 - Biome ignores `src/App.css` and `src/components/ui/` (shadcn-generated code). Don't hand-edit generated shadcn components — regenerate them.
 - Biome formatter: 2-space indent, double quotes (enforced by `biome.json`).
-- Utils are split by domain rather than dumped into one file: `timeUtils.ts`, `statisticsUtils.ts`, `newsUtils.ts`, `photoUtils.ts`, `organizerOrder.ts`, `fileUploadUtils.ts`, plus a general `utils.ts`. Extend the matching file, or genericize an existing helper, before adding a near-duplicate one-off.
+- Utils are split by domain rather than dumped into one file: `timeUtils.ts`, `statisticsUtils.ts`, `newsUtils.ts`, `photoUtils.ts`, `organizerOrder.ts`, plus a general `utils.ts`. Extend the matching file, or genericize an existing helper, before adding a near-duplicate one-off.
 - Race dates are parsed as literal `YYYY-MM-DDTHH:MM:SS` strings (`timeUtils.ts`) with no timezone conversion — never route them through `Date`-based local-time conversion.
 - Fetch data as high in the component tree as reasonable and pass it down as props, rather than calling `useQuery` again further down — avoids redundant backend calls.
 - `arrayExtensions.ts` polyfills `Array.prototype.partition` globally (side-effect import in `main.tsx`) — don't reimplement it inline.

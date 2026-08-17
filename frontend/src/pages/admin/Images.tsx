@@ -28,6 +28,9 @@ import type { PagedResponse, RaceDTO, S3FileDto } from "@/model/DTO.ts";
 
 const NOW = toLocalDateTimeString(new Date());
 
+const invalidateRaces = () =>
+  queryClient.invalidateQueries({ queryKey: ["race"] });
+
 export interface UploadItem {
   id: string;
   name: string;
@@ -151,7 +154,7 @@ export function ImagesPage() {
     if (uploadedUuids.length === 0) return;
 
     await confirmUploadedFiles(uploadedUuids);
-    await queryClient.invalidateQueries({ queryKey: query.queryKey });
+    await invalidateRaces();
   };
 
   return (
@@ -196,9 +199,7 @@ export function ImagesPage() {
                     uploads={uploads[race.uuid] ?? []}
                     onBulkDelete={async (ids) => {
                       await deleteS3Files(ids);
-                      await queryClient.invalidateQueries({
-                        queryKey: query.queryKey,
-                      });
+                      await invalidateRaces();
                     }}
                     onDismissUpload={(uploadId) =>
                       removeUpload(race.uuid, uploadId)

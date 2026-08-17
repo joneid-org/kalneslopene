@@ -13,9 +13,11 @@ import {
 import { formatDDMonth } from "@/lib/timeUtils.ts";
 import { cn, getRacesDTOByYear, getYears } from "@/lib/utils.ts";
 
+export type RacePickerBasePath = "/resultater" | "/bilder";
+
 type RacePickerDrawerProps = {
   children: ReactNode;
-  basePath?: "/resultater" | "/bilder";
+  basePath?: RacePickerBasePath;
 };
 
 export function RacePickerDrawer({

@@ -10,7 +10,10 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer.tsx";
 import { cn } from "@/lib/utils.ts";
-import { RacePickerDrawer } from "./RacePickerDrawer.tsx";
+import {
+  type RacePickerBasePath,
+  RacePickerDrawer,
+} from "./RacePickerDrawer.tsx";
 
 type IconProps = { className?: string };
 
@@ -100,7 +103,10 @@ const tabs: Tab[] = [
   },
 ];
 
-const racePickerPaths = new Set(["/resultater", "/bilder"]);
+const racePickerPaths = new Set<string>(["/resultater", "/bilder"]);
+
+const isRacePickerPath = (path: string): path is RacePickerBasePath =>
+  racePickerPaths.has(path);
 
 const moreItems: {
   path: string;
@@ -134,7 +140,7 @@ export function BottomNavBar() {
             <span className={labelClasses(active)}>{label}</span>
           </>
         );
-        if (racePickerPaths.has(path)) {
+        if (isRacePickerPath(path)) {
           return (
             <RacePickerDrawer key={path} basePath={path}>
               <button type="button" className={tabClasses(active)}>

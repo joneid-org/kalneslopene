@@ -16,21 +16,8 @@ import type {
   RaceStatisticsDTO,
   RunnerDTO,
   RunnerOverviewStatsDTO,
-  S3FileDto,
   UserDTO,
 } from "../model/DTO.ts";
-
-export function requestNewsfeedHeaderUpload(fileName: string) {
-  return kyClient
-    .post("/api/newsfeeds/header-image", { searchParams: { fileName } })
-    .json<{ uploadUrl: string; s3File: S3FileDto }>();
-}
-
-export function requestNewsfeedContentUpload(fileName: string) {
-  return kyClient
-    .post("/api/newsfeeds/content-image", { searchParams: { fileName } })
-    .json<{ uploadUrl: string; s3File: S3FileDto }>();
-}
 
 export function nextPageParam<T>(
   lastPage: PagedResponse<T>,

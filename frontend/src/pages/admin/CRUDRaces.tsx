@@ -6,7 +6,7 @@ import { MUTATIONS } from "@/api/mutations.ts";
 import { QUERIES } from "@/api/queries.ts";
 import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog.tsx";
 import { RaceDateForm } from "@/components/admin/RaceDateForm.tsx";
-import { createRaces, SeasonDialog } from "@/components/admin/SeasonDialog.tsx";
+import { SeasonDialog } from "@/components/admin/SeasonDialog.tsx";
 import { UpcomingRacesCard } from "@/components/admin/UpcomingRacesCard.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -39,7 +39,8 @@ export function CRUDRaces() {
   const [deleting, setDeleting] = useState<RaceInfoDTO | null>(null);
 
   const addMutation = useMutation({
-    mutationFn: (raceDate: string) => createRaces([{ raceDate } as RaceDTO]),
+    mutationFn: (raceDate: string) =>
+      MUTATIONS.race.createRaces([{ raceDate } as RaceDTO]),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["race"] });
       setShowAdd(false);

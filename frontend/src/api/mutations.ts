@@ -24,8 +24,12 @@ import type {
   UserRole,
 } from "../model/DTO.ts";
 
+export type PresignedUpload = { uploadUrl: string; s3File: S3FileDto };
+
 export const MUTATIONS = {
   race: {
+    createRaces: (races: RaceInput[]) =>
+      kyClient.post("/api/races", { json: races }).json<RaceDTO[]>(),
     updateRace: (uuid: string, race: RaceInput) =>
       kyClient.patch(`/api/races/${uuid}`, { json: race }).json<RaceDTO>(),
     deleteRace: (uuid: string) =>
@@ -54,6 +58,18 @@ export const MUTATIONS = {
       kyClient
         .patch(`/api/races/${raceUuid}/photos/order`, { json: input })
         .json<S3FileDto[]>(),
+    requestPhotoUploads: (raceUuid: string, fileNames: string[]) =>
+      kyClient
+        .post(`/api/races/${raceUuid}/photos`, { json: fileNames })
+        .json<{ [key in string]: PresignedUpload }>(),
+  },
+  s3: {
+    confirmUploads: (fileUuids: string[]) =>
+      kyClient
+        .patch("/api/s3/files/confirm-uploads", { json: fileUuids })
+        .json<void>(),
+    deleteFiles: (fileUuids: string[]) =>
+      kyClient.delete("/api/s3/files", { json: fileUuids }).json<void>(),
   },
   organizer: {
     createOrganizer: (organizer: OrganizerInput) =>
@@ -102,6 +118,14 @@ export const MUTATIONS = {
     },
     deleteNewsFeed: (uuid: string) =>
       kyClient.delete(`/api/newsfeeds/${uuid}`).json<void>(),
+    requestHeaderImageUpload: (fileName: string) =>
+      kyClient
+        .post("/api/newsfeeds/header-image", { searchParams: { fileName } })
+        .json<PresignedUpload>(),
+    requestContentImageUpload: (fileName: string) =>
+      kyClient
+        .post("/api/newsfeeds/content-image", { searchParams: { fileName } })
+        .json<PresignedUpload>(),
     updateSettings: (dto: NewsfeedSettingsDTO) =>
       kyClient
         .patch("/api/newsfeeds/settings", { json: dto })

@@ -142,7 +142,7 @@ export const pins: Pin[] = [
     category: "poi",
     distance: "ca. 2,9 km",
     description:
-      "Etter ca. 2,9 km i løypa er vi på en topp med flott utsikt, som vi har altfor lite tid til å nyte når vi løper Torsdagsløpet. Legg derfor turen innom her ved en annen anledning, gjerne når solen er i ferd med å stå opp. Denne toppen har fått navn etter Bjørn Paulsruds arvtaker og nåværende leder for Torsdagsløpet, Per Prøitz. Den tidligere habile løperen har de siste årene gjort en formidabel jobb som arrangør og tidtaker, og det er alltid hyggelig å komme til Torsdagsløpet når Per står ved startstreken.",
+      "Etter ca. 2,9 km i løypa er vi på en topp med flott utsikt, som vi har altfor lite tid til å nyte når vi løper Torsdagsløpet. Legg derfor turen innom her ved en annen anledning, gjerne når solen er i ferd med å stå opp. Denne toppen har fått navn etter Bjørn Paulsruds arvtaker og nåværende leder for Torsdagsløpet, Per Prøitz. Den tidligere habile løperen har fra 2010 gjort en formidabel jobb som arrangør og tidtaker, og det er alltid hyggelig å komme til Torsdagsløpet når Per står ved startstreken.",
     photo: {
       fileName: "proitztoppen.webp",
       fallback:

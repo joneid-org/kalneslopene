@@ -56,7 +56,7 @@ export default function RunnerStatistics() {
           <div className="grid grid-cols-2 gap-3">
             <StatTile
               value={totalRaces}
-              label="Løp fullført"
+              label="Løp fullført fra 2019"
               isLoading={isPending}
             />
             <StatTile

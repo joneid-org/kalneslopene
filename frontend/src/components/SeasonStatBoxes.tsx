@@ -16,7 +16,7 @@ export function SeasonStatBoxes() {
     {
       value: totalRunners,
       label: "Løpsdeltakelser",
-      shortLabel: "Deltakere",
+      shortLabel: "Løpsdeltakelser",
     },
     {
       value: yearStatistics && Math.round(yearStatistics.averageRunnersPerRace),
@@ -36,12 +36,12 @@ export function SeasonStatBoxes() {
     {
       value: yearStatistics?.completedRaces,
       label: "Løp gjennomført",
-      shortLabel: "Gjennomført",
+      shortLabel: "Løp gjennomført",
     },
     {
       value: yearStatistics?.upcomingRaces,
       label: "Gjenstående løp",
-      shortLabel: "Igjen",
+      shortLabel: "Gjenstående løp",
       accent: true,
     },
   ];
@@ -56,7 +56,7 @@ export function SeasonStatBoxes() {
           {CURRENT_YEAR}
         </span>
       </div>
-      <div className="grid grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3">
+      <div className="grid grid-cols-2 lg:grid-cols-6 gap-2 sm:gap-3">
         {stats.map(({ value, label, shortLabel, accent }) => (
           <div
             key={label}

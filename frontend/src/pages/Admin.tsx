@@ -14,8 +14,8 @@ export function Admin() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
-  function handleLogout() {
-    logout();
+  async function handleLogout() {
+    await logout();
     navigate("/logg-inn");
   }
 

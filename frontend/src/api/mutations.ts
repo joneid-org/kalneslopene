@@ -129,6 +129,7 @@ export const MUTATIONS = {
       kyClient
         .post(`/api/auth/register/${token}`, { json: request })
         .json<LoginResponse>(),
+    logout: () => kyClient.post("/api/auth/logout"),
   },
   user: {
     createInvite: (roles: UserRole[]) =>

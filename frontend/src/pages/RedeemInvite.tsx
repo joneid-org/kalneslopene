@@ -46,7 +46,7 @@ export function RedeemInvite() {
         username,
         password,
       });
-      login(username, password, result.roles);
+      login({ username: result.username, roles: result.roles });
       navigate("/admin");
     } catch {
       setError("root", {

@@ -2,11 +2,11 @@ terraform {
   required_providers {
     hcloud = {
       source  = "hashicorp/hcloud"
-      version = "1.66.1"
+      version = "1.68.0"
     }
     minio = {
       source  = "aminueza/minio"
-      version = "3.38.4"
+      version = "3.40.1"
     }
   }
 }

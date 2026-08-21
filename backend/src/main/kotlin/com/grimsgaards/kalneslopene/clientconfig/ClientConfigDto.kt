@@ -5,4 +5,6 @@ data class ClientConfigDto(
     val sentryDsn: String?,
     val environment: String,
     val release: String?,
+    val umamiScriptUrl: String?,
+    val umamiWebsiteId: String?,
 )

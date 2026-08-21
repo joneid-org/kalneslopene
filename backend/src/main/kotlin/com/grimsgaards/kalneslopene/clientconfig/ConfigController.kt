@@ -16,6 +16,10 @@ class ConfigController(
     private val environment: String,
     @Value("\${sentry.release:}")
     private val release: String,
+    @Value("\${client-config.umami-script-url:}")
+    private val umamiScriptUrl: String,
+    @Value("\${client-config.umami-website-id:}")
+    private val umamiWebsiteId: String,
 ) {
     @GetMapping
     fun getConfig(): ClientConfigDto =
@@ -24,5 +28,7 @@ class ConfigController(
             sentryDsn = sentryDsn.ifBlank { null },
             environment = environment,
             release = release.ifBlank { null },
+            umamiScriptUrl = umamiScriptUrl.ifBlank { null },
+            umamiWebsiteId = umamiWebsiteId.ifBlank { null },
         )
 }

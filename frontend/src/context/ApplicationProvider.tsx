@@ -3,13 +3,16 @@ import type { ReactNode } from "react";
 import { useEffect, useMemo } from "react";
 import { QUERIES } from "@/api/queries.ts";
 import { ApplicationContext } from "@/context/ApplicationContext.ts";
+import { initAnalytics } from "@/lib/analytics.ts";
 import { initErrorTracking } from "@/lib/errorTracking.ts";
 
 export function ApplicationProvider({ children }: { children: ReactNode }) {
   const { data: config } = useQuery(QUERIES.config.get);
 
   useEffect(() => {
-    if (config) initErrorTracking(config);
+    if (!config) return;
+    initErrorTracking(config);
+    initAnalytics(config);
   }, [config]);
 
   const value = useMemo(

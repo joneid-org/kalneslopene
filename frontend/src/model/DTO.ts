@@ -9,6 +9,8 @@ export interface ConfigDTO {
   sentryDsn: string | null;
   environment: string;
   release: string | null;
+  umamiScriptUrl: string | null;
+  umamiWebsiteId: string | null;
 }
 
 export type WeatherDto = {

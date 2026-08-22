@@ -1,11 +1,11 @@
 plugins {
-    kotlin("jvm") version "2.4.0"
-    kotlin("plugin.spring") version "2.4.0"
-    id("org.springframework.boot") version "4.0.6"
+    kotlin("jvm") version "2.4.10"
+    kotlin("plugin.spring") version "2.4.10"
+    id("org.springframework.boot") version "4.1.0"
     id("io.spring.dependency-management") version "1.1.7"
-    kotlin("plugin.jpa") version "2.4.0"
+    kotlin("plugin.jpa") version "2.4.10"
     id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
-    id("dev.detekt") version "2.0.0-alpha.4"
+    id("dev.detekt") version "2.0.0-alpha.6"
 }
 
 group = "com.grimsgaards"
@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-    implementation(platform("io.sentry:sentry-bom:8.52.0"))
+    implementation(platform("io.sentry:sentry-bom:8.53.0"))
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -34,7 +34,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("tools.jackson.module:jackson-module-kotlin")
-    implementation("io.minio:minio:9.0.1")
+    implementation("io.minio:minio:9.0.3")
     implementation("io.sentry:sentry-spring-boot-4")
     implementation("io.sentry:sentry-logback")
     runtimeOnly("org.postgresql:postgresql")

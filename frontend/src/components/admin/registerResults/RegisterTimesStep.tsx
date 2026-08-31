@@ -48,7 +48,7 @@ export function RegisterTimesStep({
           {sortedEntries.map((entry) => (
             <div
               key={entry.runner.uuid}
-              className="flex items-center gap-2 px-3 py-2 text-sm"
+              className="flex items-center gap-2 px-3 py-2 text-sm even:bg-muted/50"
             >
               <div className="flex min-w-0 flex-1 items-center gap-2">
                 <span className="truncate font-medium">

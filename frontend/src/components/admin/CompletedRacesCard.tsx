@@ -21,6 +21,7 @@ export function CompletedRacesCard({
   onToggleExpand,
   onEdit,
   onDelete,
+  onExport,
   isLoading = false,
 }: {
   races: RaceDTO[];
@@ -28,6 +29,7 @@ export function CompletedRacesCard({
   onToggleExpand: (race: RaceDTO) => void;
   onEdit: (race: RaceDTO) => void;
   onDelete: (race: RaceDTO) => void;
+  onExport: (race: RaceDTO) => void;
   isLoading?: boolean;
 }) {
   const races = useMemo(
@@ -66,6 +68,7 @@ export function CompletedRacesCard({
             onToggleExpand={onToggleExpand}
             onEdit={onEdit}
             onDelete={onDelete}
+            onExport={onExport}
           />
         )}
       </CardContent>

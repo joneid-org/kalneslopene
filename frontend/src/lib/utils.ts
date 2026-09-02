@@ -220,6 +220,13 @@ export function buildTableRows(runners: RaceRunnerDTO[]): RowData[] {
   });
 }
 
+/** Resultatliste as plain text — "1) Navn 17:33", one blank line between rows. */
+export function formatResultsAsText(rows: RowData[]): string {
+  return rows
+    .map((row) => `${row.position}) ${row.runnerName} ${row.time}`)
+    .join("\n");
+}
+
 export function getBestRaceThisYearFromRunner(
   raceRunner: RaceRunnerDTO[],
   year: number,

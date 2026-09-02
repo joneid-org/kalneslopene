@@ -6,6 +6,7 @@ import { MUTATIONS } from "@/api/mutations.ts";
 import { QUERIES } from "@/api/queries.ts";
 import { CompletedRacesCard } from "@/components/admin/CompletedRacesCard.tsx";
 import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog.tsx";
+import { ExportResultsDialog } from "@/components/admin/ExportResultsDialog.tsx";
 import { UnpublishedResultsCard } from "@/components/admin/UnpublishedResultsCard.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Dialog } from "@/components/ui/dialog.tsx";
@@ -53,6 +54,7 @@ export function RegisterResults() {
   const yearRaces = yearRacesData?.content ?? [];
 
   const [deleting, setDeleting] = useState<RaceDTO | null>(null);
+  const [exporting, setExporting] = useState<RaceDTO | null>(null);
   const [expandedRaceUuid, setExpandedRaceUuid] = useState<string | null>(null);
 
   const toggleExpanded = (race: RaceDTO) =>
@@ -110,8 +112,23 @@ export function RegisterResults() {
         onToggleExpand={toggleExpanded}
         onEdit={openEditing}
         onDelete={setDeleting}
+        onExport={setExporting}
         isLoading={raceInfosLoading || yearRacesLoading}
       />
+
+      <Dialog
+        open={!!exporting}
+        onOpenChange={(o) => {
+          if (!o) setExporting(null);
+        }}
+      >
+        {exporting && (
+          <ExportResultsDialog
+            race={exporting}
+            onClose={() => setExporting(null)}
+          />
+        )}
+      </Dialog>
 
       <Dialog
         open={!!deleting}

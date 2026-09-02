@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   CheckCircle2Icon,
   CircleDashedIcon,
+  FileTextIcon,
   Loader2Icon,
   PencilIcon,
 } from "lucide-react";
@@ -33,6 +34,7 @@ export function PastRacesTable({
   onToggleExpand,
   onEdit,
   onDelete,
+  onExport,
 }: {
   rows: RaceDTO[];
   expandable: boolean;
@@ -40,6 +42,7 @@ export function PastRacesTable({
   onToggleExpand: (race: RaceDTO) => void;
   onEdit: (race: RaceDTO) => void;
   onDelete: (race: RaceDTO) => void;
+  onExport?: (race: RaceDTO) => void;
 }) {
   return (
     <Table>
@@ -96,6 +99,20 @@ export function PastRacesTable({
                 </TableCell>
                 <TableCell className="align-top">
                   <div className="flex items-center gap-1 justify-end">
+                    {onExport && race.isPublished && (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="size-7 p-0"
+                        aria-label="Eksporter resultatliste"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onExport(race);
+                        }}
+                      >
+                        <FileTextIcon className="size-3.5" />
+                      </Button>
+                    )}
                     <Button
                       size="sm"
                       variant="ghost"

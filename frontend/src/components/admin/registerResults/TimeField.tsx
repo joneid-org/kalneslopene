@@ -1,28 +1,48 @@
 import { clsx } from "clsx";
-import { useState } from "react";
+import { type Ref, useEffect, useRef, useState } from "react";
 import { Input } from "@/components/ui/input.tsx";
 import { formatSecondsToTime, parseFlexibleTime } from "@/lib/timeUtils.ts";
+
+function toText(seconds: number | null) {
+  return seconds != null && seconds > 0 ? formatSecondsToTime(seconds) : "";
+}
 
 export function TimeField({
   seconds,
   disabled,
-  onBlur,
+  onCommit,
+  onEnter,
+  inputRef,
   className,
 }: {
   seconds: number | null;
   disabled?: boolean;
-  onBlur: (seconds: number | null) => void;
+  onCommit: (seconds: number | null) => void;
+  onEnter?: (direction: 1 | -1) => void;
+  inputRef?: Ref<HTMLInputElement>;
   className?: string;
 }) {
-  const [text, setText] = useState(
-    seconds != null && seconds > 0 ? formatSecondsToTime(seconds) : "",
-  );
+  const [text, setText] = useState(() => toText(seconds));
+  const committed = useRef(text);
+
+  // A time changed from the outside (saved, cleared by "Deltatt") wins over the draft.
+  useEffect(() => {
+    committed.current = toText(seconds);
+    setText(committed.current);
+  }, [seconds]);
 
   const trimmed = text.trim();
   const invalid = trimmed !== "" && parseFlexibleTime(trimmed) === null;
 
+  const commit = () => {
+    if (trimmed === committed.current) return;
+    committed.current = trimmed;
+    onCommit(trimmed === "" ? null : parseFlexibleTime(trimmed));
+  };
+
   return (
     <Input
+      ref={inputRef}
       placeholder="mm:ss"
       value={text}
       disabled={disabled}
@@ -31,15 +51,19 @@ export function TimeField({
         className,
         invalid && "border-destructive focus-visible:ring-destructive",
       )}
-      onChange={(e) => {
-        const value = e.target.value;
-        setText(value);
+      onChange={(e) => setText(e.target.value)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          if (invalid) return;
+          commit();
+          onEnter?.(e.shiftKey ? -1 : 1);
+        } else if (e.key === "Escape") {
+          e.preventDefault();
+          setText(committed.current);
+        }
       }}
-      onBlur={(e) => {
-        const value = e.target.value;
-        const next = value.trim();
-        onBlur(next === "" ? null : parseFlexibleTime(next));
-      }}
+      onBlur={commit}
     />
   );
 }

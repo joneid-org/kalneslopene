@@ -1,6 +1,7 @@
 import { XIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog.tsx";
+import { Kbd } from "@/components/Kbd.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Dialog } from "@/components/ui/dialog.tsx";
 import { secondsToDuration } from "@/lib/timeUtils.ts";
@@ -36,7 +37,9 @@ export function RegisterTimesStep({
         <h2 className="text-lg font-semibold">Registrer tider</h2>
         <p className="text-sm text-muted-foreground">
           Legg inn tid etter hvert som løperne kommer i mål. Du kan også legge
-          til løpere du glemte.
+          til løpere du glemte. Trykk <Kbd>Enter</Kbd> for å lagre og hoppe til
+          neste løper, <Kbd>Shift</Kbd> + <Kbd>Enter</Kbd> for forrige og{" "}
+          <Kbd>Esc</Kbd> for å angre.
         </p>
       </div>
 
@@ -50,6 +53,7 @@ export function RegisterTimesStep({
             title="Mangler tid"
             entries={missing}
             emptyText="Alle løperne har fått tid."
+            focusFirst
             onRemove={setConfirmRemove}
             onUpdateResult={onUpdateResult}
           />
@@ -106,15 +110,33 @@ function EntryTable({
   title,
   entries,
   emptyText,
+  focusFirst = false,
   onRemove,
   onUpdateResult,
 }: {
   title: string;
   entries: RaceRunnerDTO[];
   emptyText: string;
+  focusFirst?: boolean;
   onRemove: (entry: RaceRunnerDTO) => void;
   onUpdateResult: (entry: RaceRunnerDTO) => void;
 }) {
+  const inputs = useRef(new Map<string, HTMLInputElement>());
+  const hasAutoFocused = useRef(false);
+
+  const focusEntry = (entry: RaceRunnerDTO | undefined) => {
+    if (!entry) return;
+    const input = inputs.current.get(entry.runner.uuid);
+    input?.focus();
+    input?.select();
+  };
+
+  useEffect(() => {
+    if (!focusFirst || hasAutoFocused.current || entries.length === 0) return;
+    hasAutoFocused.current = true;
+    focusEntry(entries[0]);
+  });
+
   return (
     <div className="space-y-2">
       <h3 className="text-sm font-semibold">
@@ -127,7 +149,7 @@ function EntryTable({
         <p className="text-sm italic text-muted-foreground">{emptyText}</p>
       ) : (
         <div className="divide-y overflow-hidden rounded-md border">
-          {entries.map((entry) => (
+          {entries.map((entry, index) => (
             <div
               key={entry.runner.uuid}
               className="flex items-center gap-2 px-3 py-2 text-sm even:bg-muted/50"
@@ -145,12 +167,17 @@ function EntryTable({
               <TimeField
                 seconds={entrySeconds(entry)}
                 disabled={entry.hideTime}
-                onBlur={(seconds) =>
+                inputRef={(input) => {
+                  if (input) inputs.current.set(entry.runner.uuid, input);
+                  else inputs.current.delete(entry.runner.uuid);
+                }}
+                onCommit={(seconds) =>
                   onUpdateResult({
                     ...entry,
                     resultTime: secondsToDuration(seconds ?? 0),
                   })
                 }
+                onEnter={(direction) => focusEntry(entries[index + direction])}
                 className="h-8 w-24 shrink-0 px-2 text-sm"
               />
               <label className="flex shrink-0 items-center gap-1.5 text-xs">

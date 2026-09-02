@@ -29,6 +29,7 @@ export function RegisterRunnersStep({
         existingRunnerUuids={new Set(entries.map((e) => e.runner.uuid))}
         onAdd={onAdd}
         isAdding={isAdding}
+        focusOnMount
       />
 
       <div className="space-y-2">

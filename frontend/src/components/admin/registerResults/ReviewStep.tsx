@@ -404,7 +404,7 @@ export function ReviewStep({
                     <TimeField
                       seconds={entrySeconds(entry)}
                       disabled={entry.hideTime}
-                      onBlur={(seconds) =>
+                      onCommit={(seconds) =>
                         onUpdateResult({
                           ...entry,
                           resultTime: secondsToDuration(seconds ?? 0),

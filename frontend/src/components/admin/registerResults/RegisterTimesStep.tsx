@@ -1,5 +1,8 @@
 import { XIcon } from "lucide-react";
+import { useState } from "react";
+import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
+import { Dialog } from "@/components/ui/dialog.tsx";
 import { secondsToDuration } from "@/lib/timeUtils.ts";
 import type { RaceRunnerDTO, RunnerDTO, RunnerInput } from "@/model/DTO.ts";
 import { AddRunnerForm } from "./AddRunnerForm.tsx";
@@ -23,6 +26,9 @@ export function RegisterTimesStep({
     a.runner.name.localeCompare(b.runner.name, "nb"),
   );
   const [registered, missing] = sortedEntries.partition(entryHasTime);
+  const [confirmRemove, setConfirmRemove] = useState<RaceRunnerDTO | null>(
+    null,
+  );
 
   return (
     <div className="space-y-5">
@@ -44,14 +50,14 @@ export function RegisterTimesStep({
             title="Mangler tid"
             entries={missing}
             emptyText="Alle løperne har fått tid."
-            onRemove={onRemove}
+            onRemove={setConfirmRemove}
             onUpdateResult={onUpdateResult}
           />
           <EntryTable
             title="Ferdig registrert"
             entries={registered}
             emptyText="Ingen løpere har fått tid ennå."
-            onRemove={onRemove}
+            onRemove={setConfirmRemove}
             onUpdateResult={onUpdateResult}
           />
         </div>
@@ -62,6 +68,36 @@ export function RegisterTimesStep({
         onAdd={onAdd}
         isAdding={isAdding}
       />
+
+      <Dialog
+        open={!!confirmRemove}
+        onOpenChange={(open) => {
+          if (!open) setConfirmRemove(null);
+        }}
+      >
+        {confirmRemove && (
+          <ConfirmDeleteDialog
+            title="Fjern løper"
+            description={
+              <>
+                Er du sikker på at du vil fjerne{" "}
+                <span className="font-semibold text-foreground">
+                  {confirmRemove.runner.name}
+                </span>{" "}
+                fra dette løpet? Løperen slettes ikke fra systemet.
+              </>
+            }
+            isPending={false}
+            confirmLabel="Fjern"
+            confirmIcon={<XIcon className="size-4" />}
+            onConfirm={() => {
+              onRemove(confirmRemove.runner.uuid);
+              setConfirmRemove(null);
+            }}
+            onClose={() => setConfirmRemove(null)}
+          />
+        )}
+      </Dialog>
     </div>
   );
 }
@@ -76,7 +112,7 @@ function EntryTable({
   title: string;
   entries: RaceRunnerDTO[];
   emptyText: string;
-  onRemove: (runnerUuid: string) => void;
+  onRemove: (entry: RaceRunnerDTO) => void;
   onUpdateResult: (entry: RaceRunnerDTO) => void;
 }) {
   return (
@@ -135,7 +171,7 @@ function EntryTable({
               <button
                 type="button"
                 className="shrink-0 text-destructive hover:text-destructive/80"
-                onClick={() => onRemove(entry.runner.uuid)}
+                onClick={() => onRemove(entry)}
                 aria-label={`Fjern ${entry.runner.name}`}
               >
                 <XIcon className="size-4" />

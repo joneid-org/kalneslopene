@@ -1,9 +1,12 @@
 import { XIcon } from "lucide-react";
+import { useState } from "react";
+import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
+import { Dialog } from "@/components/ui/dialog.tsx";
 import { secondsToDuration } from "@/lib/timeUtils.ts";
 import type { RaceRunnerDTO, RunnerDTO, RunnerInput } from "@/model/DTO.ts";
 import { AddRunnerForm } from "./AddRunnerForm.tsx";
-import { entrySeconds } from "./helpers.ts";
+import { entryHasTime, entrySeconds } from "./helpers.ts";
 import { TimeField } from "./TimeField.tsx";
 
 export function RegisterTimesStep({
@@ -22,6 +25,10 @@ export function RegisterTimesStep({
   const sortedEntries = entries.toSorted((a, b) =>
     a.runner.name.localeCompare(b.runner.name, "nb"),
   );
+  const [registered, missing] = sortedEntries.partition(entryHasTime);
+  const [confirmRemove, setConfirmRemove] = useState<RaceRunnerDTO | null>(
+    null,
+  );
 
   return (
     <div className="space-y-5">
@@ -33,22 +40,97 @@ export function RegisterTimesStep({
         </p>
       </div>
 
+      {entries.length === 0 ? (
+        <p className="text-sm italic text-muted-foreground">
+          Ingen løpere registrert ennå.
+        </p>
+      ) : (
+        <div className="space-y-6">
+          <EntryTable
+            title="Mangler tid"
+            entries={missing}
+            emptyText="Alle løperne har fått tid."
+            onRemove={setConfirmRemove}
+            onUpdateResult={onUpdateResult}
+          />
+          <EntryTable
+            title="Ferdig registrert"
+            entries={registered}
+            emptyText="Ingen løpere har fått tid ennå."
+            onRemove={setConfirmRemove}
+            onUpdateResult={onUpdateResult}
+          />
+        </div>
+      )}
+
       <AddRunnerForm
         existingRunnerUuids={new Set(entries.map((e) => e.runner.uuid))}
         onAdd={onAdd}
         isAdding={isAdding}
       />
 
+      <Dialog
+        open={!!confirmRemove}
+        onOpenChange={(open) => {
+          if (!open) setConfirmRemove(null);
+        }}
+      >
+        {confirmRemove && (
+          <ConfirmDeleteDialog
+            title="Fjern løper"
+            description={
+              <>
+                Er du sikker på at du vil fjerne{" "}
+                <span className="font-semibold text-foreground">
+                  {confirmRemove.runner.name}
+                </span>{" "}
+                fra dette løpet? Løperen slettes ikke fra systemet.
+              </>
+            }
+            isPending={false}
+            confirmLabel="Fjern"
+            confirmIcon={<XIcon className="size-4" />}
+            onConfirm={() => {
+              onRemove(confirmRemove.runner.uuid);
+              setConfirmRemove(null);
+            }}
+            onClose={() => setConfirmRemove(null)}
+          />
+        )}
+      </Dialog>
+    </div>
+  );
+}
+
+function EntryTable({
+  title,
+  entries,
+  emptyText,
+  onRemove,
+  onUpdateResult,
+}: {
+  title: string;
+  entries: RaceRunnerDTO[];
+  emptyText: string;
+  onRemove: (entry: RaceRunnerDTO) => void;
+  onUpdateResult: (entry: RaceRunnerDTO) => void;
+}) {
+  return (
+    <div className="space-y-2">
+      <h3 className="text-sm font-semibold">
+        {title}{" "}
+        <span className="font-normal text-muted-foreground">
+          ({entries.length})
+        </span>
+      </h3>
       {entries.length === 0 ? (
-        <p className="text-sm italic text-muted-foreground">
-          Ingen løpere registrert ennå.
-        </p>
+        <p className="text-sm italic text-muted-foreground">{emptyText}</p>
       ) : (
         <div className="divide-y overflow-hidden rounded-md border">
-          {sortedEntries.map((entry) => (
+          {entries.map((entry) => (
             <div
               key={entry.runner.uuid}
-              className="flex items-center gap-2 px-3 py-2 text-sm"
+              className="flex items-center gap-2 px-3 py-2 text-sm even:bg-muted/50"
             >
               <div className="flex min-w-0 flex-1 items-center gap-2">
                 <span className="truncate font-medium">
@@ -89,7 +171,7 @@ export function RegisterTimesStep({
               <button
                 type="button"
                 className="shrink-0 text-destructive hover:text-destructive/80"
-                onClick={() => onRemove(entry.runner.uuid)}
+                onClick={() => onRemove(entry)}
                 aria-label={`Fjern ${entry.runner.name}`}
               >
                 <XIcon className="size-4" />

@@ -1,11 +1,12 @@
 import { AlertTriangleIcon, Loader2Icon, RocketIcon } from "lucide-react";
 import type { ReactNode } from "react";
+import ResultsTable from "@/components/Results/ResultsTable.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { WeatherLine } from "@/components/Weather/WeatherLine.tsx";
-import { formatSecondsToTime } from "@/lib/timeUtils.ts";
+import { buildTableRows } from "@/lib/utils.ts";
 import type { RaceRunnerDTO } from "@/model/DTO.ts";
 import type { RacePatch } from "./helpers.ts";
-import { entryHasTime, entrySeconds } from "./helpers.ts";
+import { entryHasTime } from "./helpers.ts";
 
 function Warning({ title, children }: { title: string; children: ReactNode }) {
   return (
@@ -97,23 +98,7 @@ export function PublishStep({
         </Warning>
       )}
 
-      {resultsReady && (
-        <div className="max-h-64 divide-y overflow-y-auto rounded-md border">
-          {entries.map((e) => (
-            <div
-              key={e.runner.uuid}
-              className="flex items-center justify-between px-3 py-1.5 text-sm"
-            >
-              <span className="font-medium">{e.runner.name}</span>
-              <span className="font-mono text-xs tabular-nums text-muted-foreground">
-                {e.hideTime
-                  ? "Kun deltatt"
-                  : formatSecondsToTime(entrySeconds(e) ?? 0)}
-              </span>
-            </div>
-          ))}
-        </div>
-      )}
+      {resultsReady && <ResultsTable tableData={buildTableRows(entries)} />}
 
       <Button
         className="w-full gap-2"

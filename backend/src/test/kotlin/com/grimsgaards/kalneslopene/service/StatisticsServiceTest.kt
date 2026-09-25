@@ -298,6 +298,48 @@ class StatisticsServiceTest {
     }
 
     @Nested
+    inner class MonthlyParticipation {
+        @Test
+        fun `groups published completed races by month in calendar order`() {
+            val june = race(LocalDateTime.parse("2025-06-05T18:00:00"))
+            addRunner(june, runner(Gender.MALE))
+            addRunner(june, runner(Gender.FEMALE))
+            val mayA = race(LocalDateTime.parse("2025-05-08T18:00:00"))
+            addRunner(mayA, runner(Gender.MALE))
+            addRunner(mayA, runner(Gender.MALE))
+            addRunner(mayA, runner(Gender.FEMALE))
+            val mayB = race(LocalDateTime.parse("2025-05-15T18:00:00"))
+            addRunner(mayB, runner(Gender.FEMALE))
+            stubRaces(june, mayA, mayB)
+
+            val monthly = service.getRaceStatistics(Year.of(2025)).monthlyParticipation
+
+            assertThat(monthly.map { it.month }).containsExactly(5, 6)
+            with(monthly.first()) {
+                assertThat(races).isEqualTo(2)
+                assertThat(male).isEqualTo(2)
+                assertThat(female).isEqualTo(2)
+                assertThat(total).isEqualTo(4)
+                assertThat(averageRunnersPerRace).isEqualTo(2.0)
+            }
+        }
+
+        @Test
+        fun `excludes unpublished and upcoming races`() {
+            val published = race(past)
+            addRunner(published, runner(Gender.MALE))
+            val unpublished = race(past, published = false)
+            addRunner(unpublished, runner(Gender.MALE))
+            stubRaces(published, unpublished, race(future))
+
+            val monthly = service.getRaceStatistics(null).monthlyParticipation
+
+            assertThat(monthly.sumOf { it.races }).isEqualTo(1)
+            assertThat(monthly.sumOf { it.total }).isEqualTo(1)
+        }
+    }
+
+    @Nested
     inner class SeasonFilter {
         @Test
         fun `passes the year bounds to the repository filter`() {

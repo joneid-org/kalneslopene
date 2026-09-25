@@ -115,14 +115,6 @@ export const router = createBrowserRouter([
                 }),
               },
               {
-                path: "admin/resultater/import",
-                lazy: async () => ({
-                  Component: (
-                    await import("./pages/admin/ImportResultsFromFile.tsx")
-                  ).ImportResultsFromFile,
-                }),
-              },
-              {
                 path: "admin/resultater/:uuid",
                 lazy: async () => ({
                   Component: (

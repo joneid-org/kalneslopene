@@ -153,6 +153,12 @@ export type RaceStatisticsDTO = {
   courseRecordMale?: CourseRecordDTO;
   courseRecordFemale?: CourseRecordDTO;
   monthlyParticipation: MonthlyParticipationDTO[];
+  topParticipants: TopParticipantDTO[];
+};
+
+export type TopParticipantDTO = {
+  runner: RunnerDTO;
+  races: number;
 };
 
 export type MonthlyParticipationDTO = {

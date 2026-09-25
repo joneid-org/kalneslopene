@@ -66,8 +66,17 @@ class StatisticsService(
             courseRecordMale = courseRecord(allRunners, Gender.MALE, includeHistoricRecords),
             courseRecordFemale = courseRecord(allRunners, Gender.FEMALE, includeHistoricRecords),
             monthlyParticipation = monthlyParticipation(publishedRaces),
+            topParticipants = topParticipants(allRunners),
         )
     }
+
+    private fun topParticipants(raceRunners: List<RaceRunnerEntity>): List<TopParticipantDto> =
+        raceRunners
+            .groupBy { it.runner.uuid }
+            .values
+            .map { entries -> TopParticipantDto(runner = entries.first().runner.toDto(), races = entries.size) }
+            .sortedWith(compareByDescending<TopParticipantDto> { it.races }.thenBy { it.runner.name })
+            .take(TOP_PARTICIPANTS_LIMIT)
 
     private fun monthlyParticipation(races: List<RaceEntity>): List<MonthlyParticipationDto> =
         races
@@ -123,3 +132,5 @@ class StatisticsService(
                 }
             }
 }
+
+private const val TOP_PARTICIPANTS_LIMIT = 10

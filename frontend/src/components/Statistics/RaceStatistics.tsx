@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
 import { AttendanceChart } from "@/components/Statistics/AttendanceChart.tsx";
 import { MonthlyParticipationTable } from "@/components/Statistics/MonthlyParticipationTable.tsx";
+import { TopParticipantsTable } from "@/components/Statistics/TopParticipantsTable.tsx";
 import { StatTile } from "@/components/StatTile.tsx";
 import { YearSelector } from "@/components/YearSelector.tsx";
 import { getFastestRunner } from "@/lib/statisticsUtils.ts";
@@ -14,8 +15,13 @@ import {
   startOfYearString,
 } from "@/lib/timeUtils.ts";
 import { getYears } from "@/lib/utils.ts";
+import type { RunnerDTO } from "@/model/DTO.ts";
 
-export default function RaceStatistics() {
+type Props = {
+  onSelectRunner: (runner: RunnerDTO) => void;
+};
+
+export default function RaceStatistics({ onSelectRunner }: Props) {
   const [selectedYear, setSelectedYear] = useState<number | undefined>(
     undefined,
   );
@@ -176,6 +182,13 @@ export default function RaceStatistics() {
 
       {yearStatistics && (
         <MonthlyParticipationTable statistics={yearStatistics} />
+      )}
+
+      {yearStatistics && (
+        <TopParticipantsTable
+          participants={yearStatistics.topParticipants}
+          onSelectRunner={onSelectRunner}
+        />
       )}
     </section>
   );

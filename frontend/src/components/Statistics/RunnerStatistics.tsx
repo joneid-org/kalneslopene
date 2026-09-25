@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { lazy, Suspense, useMemo, useState } from "react";
+import { lazy, type Ref, Suspense, useMemo } from "react";
 import { QUERIES } from "@/api/queries.ts";
 import RunnerSearchBox from "@/components/RunnerSearchBox.tsx";
 import RunnerRaceResults from "@/components/Statistics/RunnerRaceResults.tsx";
@@ -16,9 +16,17 @@ const RunnerTimeChart = lazy(
 
 const EMPTY_RACE_HISTORY: RaceRunnerDTO[] = [];
 
-export default function RunnerStatistics() {
-  const [selectedRunner, setSelectedRunner] = useState<RunnerDTO | null>(null);
+type Props = {
+  ref?: Ref<HTMLElement>;
+  selectedRunner: RunnerDTO | null;
+  onSelectRunner: (runner: RunnerDTO) => void;
+};
 
+export default function RunnerStatistics({
+  ref,
+  selectedRunner,
+  onSelectRunner,
+}: Props) {
   const { data, isPending } = useQuery({
     ...QUERIES.runner.getAllRacesByRunner(selectedRunner?.uuid ?? ""),
     enabled: !!selectedRunner?.uuid,
@@ -42,12 +50,18 @@ export default function RunnerStatistics() {
   }, [raceHistory]);
 
   return (
-    <section className="flex flex-col gap-3">
+    <section
+      ref={ref}
+      className="flex scroll-mt-20 flex-col gap-3 md:scroll-mt-24"
+    >
       <h2 className="font-display text-xl font-extrabold tracking-tight md:text-2xl">
         Løperstatistikk
       </h2>
 
-      <RunnerSearchBox onSelect={setSelectedRunner} />
+      <RunnerSearchBox
+        onSelect={onSelectRunner}
+        selectedName={selectedRunner?.name}
+      />
 
       {selectedRunner && (
         <div className="flex flex-col gap-3">

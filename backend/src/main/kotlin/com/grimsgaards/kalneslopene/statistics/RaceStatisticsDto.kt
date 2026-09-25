@@ -13,6 +13,12 @@ data class RaceStatisticsDto(
     val courseRecordMale: CourseRecordDto?,
     val courseRecordFemale: CourseRecordDto?,
     val monthlyParticipation: List<MonthlyParticipationDto>,
+    val topParticipants: List<TopParticipantDto>,
+)
+
+data class TopParticipantDto(
+    val runner: RunnerDTO,
+    val races: Int,
 )
 
 data class MonthlyParticipationDto(

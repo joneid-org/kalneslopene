@@ -48,11 +48,11 @@ export default function RunnerTimeChart({
   const selectedYears = range === "all" ? availableYears : [range];
   const selectedYearsSet = new Set(selectedYears);
 
-  const filtered = raceHistory.filter(
-    (rr) =>
-      !rr.hideTime &&
-      rr.resultTime &&
-      selectedYearsSet.has(extractYear(rr.raceInfo.raceDate)),
+  const racesInSelection = raceHistory.filter((rr) =>
+    selectedYearsSet.has(extractYear(rr.raceInfo.raceDate)),
+  );
+  const filtered = racesInSelection.filter(
+    (rr) => !rr.hideTime && rr.resultTime,
   );
 
   const byDate = new Map<string, ChartPoint>();
@@ -147,6 +147,14 @@ export default function RunnerTimeChart({
           </LineChart>
         </ChartContainer>
       )}
+      <div className="mt-3 flex items-center justify-between border-t pt-3 text-sm">
+        <span className="text-muted-foreground">
+          {range === "all" ? "Antall løp totalt" : `Antall løp i ${range}`}
+        </span>
+        <span className="font-display text-[17px] font-extrabold tabular-nums">
+          {racesInSelection.length}
+        </span>
+      </div>
     </div>
   );
 }

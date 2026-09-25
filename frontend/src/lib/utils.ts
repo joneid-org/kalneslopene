@@ -164,7 +164,8 @@ export function buildTableRows(runners: RaceRunnerDTO[]): RowData[] {
     if (a.hideTime !== b.hideTime) return a.hideTime ? 1 : -1;
     return (
       mapResultTimeToNumber(a.resultTime ?? "") -
-      mapResultTimeToNumber(b.resultTime ?? "")
+        mapResultTimeToNumber(b.resultTime ?? "") ||
+      a.runner.name.localeCompare(b.runner.name, "nb")
     );
   });
 

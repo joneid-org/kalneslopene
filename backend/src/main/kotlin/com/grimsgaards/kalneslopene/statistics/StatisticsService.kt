@@ -2,6 +2,7 @@ package com.grimsgaards.kalneslopene.statistics
 
 import com.grimsgaards.kalneslopene.race.dto.RaceFilter
 import com.grimsgaards.kalneslopene.race.dto.RaceInfoDto
+import com.grimsgaards.kalneslopene.race.model.RaceEntity
 import com.grimsgaards.kalneslopene.race.model.RaceRepository
 import com.grimsgaards.kalneslopene.race.model.RaceRunnerEntity
 import com.grimsgaards.kalneslopene.runner.Gender
@@ -64,8 +65,36 @@ class StatisticsService(
             averageRunnersPerRace = averageRunnersPerRace,
             courseRecordMale = courseRecord(allRunners, Gender.MALE, includeHistoricRecords),
             courseRecordFemale = courseRecord(allRunners, Gender.FEMALE, includeHistoricRecords),
+            monthlyParticipation = monthlyParticipation(publishedRaces),
+            topParticipants = topParticipants(allRunners),
         )
     }
+
+    private fun topParticipants(raceRunners: List<RaceRunnerEntity>): List<TopParticipantDto> =
+        raceRunners
+            .groupBy { it.runner.uuid }
+            .values
+            .map { entries -> TopParticipantDto(runner = entries.first().runner.toDto(), races = entries.size) }
+            .sortedWith(compareByDescending<TopParticipantDto> { it.races }.thenBy { it.runner.name })
+            .take(TOP_PARTICIPANTS_LIMIT)
+
+    private fun monthlyParticipation(races: List<RaceEntity>): List<MonthlyParticipationDto> =
+        races
+            .groupBy { it.raceDate.monthValue }
+            .toSortedMap()
+            .map { (month, monthRaces) ->
+                val runners = monthRaces.flatMap { it.runners }
+                val male = runners.count { it.runner.gender == Gender.MALE }
+                val female = runners.count { it.runner.gender == Gender.FEMALE }
+                MonthlyParticipationDto(
+                    month = month,
+                    races = monthRaces.size,
+                    male = male,
+                    female = female,
+                    total = runners.size,
+                    averageRunnersPerRace = runners.size.toDouble() / monthRaces.size,
+                )
+            }
 
     private fun courseRecord(
         raceRunners: List<RaceRunnerEntity>,
@@ -103,3 +132,5 @@ class StatisticsService(
                 }
             }
 }
+
+private const val TOP_PARTICIPANTS_LIMIT = 10

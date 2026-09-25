@@ -16,6 +16,7 @@ type Props = {
   isVerifiedOnly?: boolean;
   excludeUuids?: Set<string>;
   placeholder?: string;
+  selectedName?: string;
   className?: string;
 };
 
@@ -24,10 +25,12 @@ export default function RunnerSearchBox({
   isVerifiedOnly,
   excludeUuids,
   placeholder = "Søk etter løper...",
+  selectedName: controlledSelectedName,
   className,
 }: Props) {
   const [query, setQuery] = useState("");
-  const [selectedName, setSelectedName] = useState<string | null>(null);
+  const [internalSelectedName, setSelectedName] = useState<string | null>(null);
+  const selectedName = controlledSelectedName ?? internalSelectedName;
 
   const { runners, isLoading } = useRunnerSearch(query, {
     isVerifiedOnly,

@@ -57,6 +57,7 @@ export type NewsFeedDTO = {
   headerImage?: S3FileDto;
   images?: string[];
   connectedRace?: RaceDTO;
+  isPublished: boolean;
 };
 export type NewsFeedInput = Omit<NewsFeedDTO, "uuid">;
 

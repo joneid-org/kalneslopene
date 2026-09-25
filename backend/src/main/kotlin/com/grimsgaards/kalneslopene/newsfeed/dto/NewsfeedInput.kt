@@ -11,4 +11,5 @@ data class NewsfeedInput(
     val date: OffsetDateTime,
     val headerImageUuid: UUID? = null,
     val images: List<String> = emptyList(),
+    val isPublished: Boolean = true,
 )

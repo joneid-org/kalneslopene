@@ -15,13 +15,26 @@ interface NewsfeedRepository : JpaRepository<NewsfeedEntity, UUID> {
 
     fun findAllByOrderByDateDesc(): List<NewsfeedEntity>
 
+    @Query("SELECT n FROM NewsfeedEntity n WHERE :publishedOnly = false OR n.isPublished = true")
+    fun findAllByPublished(
+        @Param("publishedOnly") publishedOnly: Boolean,
+        pageable: Pageable,
+    ): Page<NewsfeedEntity>
+
     @Query(
-        value = "SELECT * FROM newsfeed WHERE EXISTS (SELECT 1 FROM unnest(tags) tag WHERE lower(tag) = lower(:tag))",
-        countQuery = "SELECT count(*) FROM newsfeed WHERE EXISTS (SELECT 1 FROM unnest(tags) tag WHERE lower(tag) = lower(:tag))",
+        value = TAG_FILTER_QUERY,
+        countQuery = "SELECT count(*) FROM ($TAG_FILTER_QUERY) filtered",
         nativeQuery = true,
     )
     fun findByTagIgnoreCase(
         @Param("tag") tag: String,
+        @Param("publishedOnly") publishedOnly: Boolean,
         pageable: Pageable,
     ): Page<NewsfeedEntity>
+
+    companion object {
+        private const val TAG_FILTER_QUERY =
+            "SELECT * FROM newsfeed WHERE (:publishedOnly = false OR is_published) " +
+                "AND EXISTS (SELECT 1 FROM unnest(tags) tag WHERE lower(tag) = lower(:tag))"
+    }
 }

@@ -6,7 +6,7 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card.tsx";
 type PhotoHeaderProps = {
   title: string;
   photoCount: number;
-  photographers: string[];
+  photographer?: string;
   resultsPath?: string;
   isAdmin?: boolean;
   isEditing?: boolean;
@@ -16,7 +16,7 @@ type PhotoHeaderProps = {
 export default function PhotoHeader({
   title,
   photoCount,
-  photographers,
+  photographer,
   resultsPath,
   isAdmin,
   isEditing,
@@ -32,10 +32,10 @@ export default function PhotoHeader({
               <p className="text-xs text-muted-foreground">
                 {photoCount} bilder
               </p>
-              {photographers.length > 0 && (
+              {photographer && (
                 <p className="text-xs text-muted-foreground flex items-center gap-1">
                   <Camera className="size-3 shrink-0" />
-                  Foto: {photographers.join(", ")}
+                  Foto: {photographer}
                 </p>
               )}
             </div>

@@ -239,6 +239,18 @@ class RaceService(
         return (others + moved).sortedBy { it.orderIndex }.mapNotNull { it.file.toDto() }
     }
 
+    @Transactional
+    fun updatePhotographer(
+        raceUuid: UUID,
+        photographer: String?,
+    ): RaceDTO {
+        val race =
+            raceRepository.findByIdOrNull(raceUuid)
+                ?: throw NoSuchElementException("Race $raceUuid not found")
+        race.photographer = photographer?.trim()?.ifEmpty { null }
+        return race.toDto()
+    }
+
     fun updateRunnerInRace(
         raceUuid: UUID,
         runnerUuid: UUID,

@@ -218,4 +218,10 @@ databaseChangeLog:
         - sqlFile:
             path: db/changelog/sql/create/create_user_invite.sql
             relativeToChangelogFile: false
-
+  - changeSet:
+      id: migrate_race_add_photographer
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_race_add_photographer.sql
+            relativeToChangelogFile: false

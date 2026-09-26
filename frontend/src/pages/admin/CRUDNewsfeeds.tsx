@@ -40,10 +40,11 @@ export function CRUDNewsfeeds() {
   const navigate = useNavigate();
 
   const [page, setPage] = useState(1);
-  const { data } = useQuery(QUERIES.newsfeed.getNewsFeed(page - 1, PAGE_SIZE));
+  const { data } = useQuery(
+    QUERIES.newsfeed.getNewsFeed(page - 1, PAGE_SIZE, undefined, true),
+  );
 
-  const invalidate = () =>
-    qc.invalidateQueries({ queryKey: ["newsfeed", "page"] });
+  const invalidate = () => qc.invalidateQueries({ queryKey: ["newsfeed"] });
 
   const [showAdd, setShowAdd] = useState(false);
   const addMutation = useMutation({

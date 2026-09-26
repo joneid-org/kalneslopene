@@ -25,6 +25,7 @@ data class NewsfeedEntity(
     var headerImage: FileEntity? = null,
     @Column(name = "images", columnDefinition = "TEXT[]")
     var images: List<String> = emptyList(),
+    var isPublished: Boolean = true,
 ) {
     @Id
     val uuid: UUID = UUID.randomUUID()
@@ -38,5 +39,6 @@ data class NewsfeedEntity(
             date,
             headerImage?.toDto(),
             images,
+            isPublished = isPublished,
         )
 }

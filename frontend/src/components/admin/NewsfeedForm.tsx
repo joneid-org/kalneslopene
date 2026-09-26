@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
+import { Switch } from "@/components/ui/switch.tsx";
 import { tagColor, useTags } from "@/lib/newsUtils.ts";
 import { convertImageToWebp } from "@/lib/photoUtils.ts";
 import type { NewsFeedDTO, NewsfeedTagDTO, S3FileDto } from "@/model/DTO.ts";
@@ -40,6 +41,7 @@ export function NewsfeedForm({
   const [headerImage, setHeaderImage] = useState<S3FileDto | undefined>(
     initial.headerImage,
   );
+  const [isPublished, setIsPublished] = useState(initial.isPublished ?? true);
   const [uploading, setUploading] = useState(false);
   const availableTags = useTags();
   const selectedTagsSet = useMemo(() => new Set(selectedTags), [selectedTags]);
@@ -80,6 +82,7 @@ export function NewsfeedForm({
       date: new Date(date) as unknown as Date,
       headerImage,
       images: [],
+      isPublished,
     });
   };
 
@@ -195,6 +198,22 @@ export function NewsfeedForm({
             {uploading ? "Laster opp..." : "Velg header-bilde fra fil"}
           </Button>
         )}
+      </div>
+
+      <div className="flex items-center justify-between gap-4 rounded-md border p-3">
+        <div className="space-y-0.5">
+          <Label htmlFor="newsfeed-published">Publisert</Label>
+          <p className="text-xs text-muted-foreground">
+            {isPublished
+              ? "Nyheten er synlig for alle."
+              : "Lagres som utkast og er kun synlig for administratorer."}
+          </p>
+        </div>
+        <Switch
+          id="newsfeed-published"
+          checked={isPublished}
+          onCheckedChange={setIsPublished}
+        />
       </div>
 
       <FormFooter

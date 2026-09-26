@@ -1,4 +1,9 @@
-import { NewspaperIcon } from "lucide-react";
+import {
+  CheckCircle2Icon,
+  CircleDashedIcon,
+  NewspaperIcon,
+} from "lucide-react";
+import { Link } from "react-router";
 import { AdminCard } from "@/components/admin/AdminCard.tsx";
 import { RowActions } from "@/components/admin/RowActions.tsx";
 import { TableCell } from "@/components/ui/table.tsx";
@@ -31,9 +36,31 @@ export function NewsfeedsCard({
       renderRow={(feed) => (
         <>
           <TableCell className="text-muted-foreground tabular-nums whitespace-nowrap">
-            {formatDateFull(feed.date)}
+            <span className="inline-flex items-center gap-2">
+              {feed.isPublished ? (
+                <CheckCircle2Icon
+                  className="size-3.5 shrink-0 text-green-600"
+                  aria-label="Publisert"
+                />
+              ) : (
+                <CircleDashedIcon
+                  className="size-3.5 shrink-0 text-red-600"
+                  aria-label="Utkast"
+                />
+              )}
+              {formatDateFull(feed.date)}
+            </span>
           </TableCell>
-          <TableCell className="font-medium">{feed.header}</TableCell>
+          <TableCell className="font-medium">
+            <Link to={`/nyheter/${feed.uuid}`} className="hover:underline">
+              {feed.header}
+            </Link>
+            {!feed.isPublished && (
+              <span className="ml-2 text-xs font-normal text-muted-foreground">
+                Utkast
+              </span>
+            )}
+          </TableCell>
           <TableCell className="hidden sm:table-cell">
             <div className="flex flex-wrap gap-1">
               {feed.tags.map((tag) => (

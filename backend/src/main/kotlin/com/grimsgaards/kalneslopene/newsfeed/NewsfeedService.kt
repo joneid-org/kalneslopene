@@ -10,8 +10,10 @@ import com.grimsgaards.kalneslopene.race.dto.RaceDTO
 import com.grimsgaards.kalneslopene.race.dto.RaceFilter
 import com.grimsgaards.kalneslopene.s3.PhotoUploadInfo
 import com.grimsgaards.kalneslopene.s3.S3Service
+import com.grimsgaards.kalneslopene.security.AuthenticatedUserProvider
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.util.UUID
 
@@ -20,18 +22,21 @@ class NewsfeedService(
     val newsfeedRepository: NewsfeedRepository,
     val s3Service: S3Service,
     private val raceService: RaceService,
+    private val authenticatedUserProvider: AuthenticatedUserProvider,
 ) {
     fun getNewsfeedPage(
         page: Int,
         pageSize: Int,
         tag: String? = null,
+        includeUnpublished: Boolean = false,
     ): PagedResponse<NewsfeedDTO> {
         val pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "date"))
+        val publishedOnly = !(includeUnpublished && authenticatedUserProvider.isAdmin())
         val result =
             if (tag.isNullOrBlank()) {
-                newsfeedRepository.findAll(pageable)
+                newsfeedRepository.findAllByPublished(publishedOnly, pageable)
             } else {
-                newsfeedRepository.findByTagIgnoreCase(tag, pageable)
+                newsfeedRepository.findByTagIgnoreCase(tag, publishedOnly, pageable)
             }
         return PagedResponse(
             content = result.content.map { it.toDto() },
@@ -43,7 +48,12 @@ class NewsfeedService(
     }
 
     fun findByUuid(uuid: UUID): NewsfeedDTO {
-        val newsfeed = newsfeedRepository.findById(uuid).get().toDto()
+        val entity =
+            newsfeedRepository
+                .findByIdOrNull(uuid)
+                ?.takeIf { it.isPublished || authenticatedUserProvider.isAdmin() }
+                ?: throw NoSuchElementException("Newsfeed with uuid $uuid not found")
+        val newsfeed = entity.toDto()
         return newsfeed.copy(connectedRace = findConnectedRace(newsfeed))
     }
 
@@ -97,6 +107,7 @@ class NewsfeedService(
                         date = newsfeed.date,
                         headerImage = headerImage,
                         images = newsfeed.images,
+                        isPublished = newsfeed.isPublished,
                     ),
                 ).toDto()
         s3Service.confirmUploadsByUrl(s3Service.extractBucketImageUrls(newsfeed.content))
@@ -128,6 +139,7 @@ class NewsfeedService(
             content = updatedNewsfeed.content
             date = updatedNewsfeed.date
             images = updatedNewsfeed.images
+            isPublished = updatedNewsfeed.isPublished
         }
 
         val saved = newsfeedRepository.save(existingNews).toDto()

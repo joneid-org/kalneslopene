@@ -14,4 +14,5 @@ data class RaceDTO(
     val runnerCount: Int,
     val isPublished: Boolean,
     val photos: List<FileDto>,
+    val photographer: String? = null,
 )

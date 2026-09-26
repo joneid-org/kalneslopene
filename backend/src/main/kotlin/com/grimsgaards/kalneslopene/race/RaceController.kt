@@ -2,6 +2,7 @@ package com.grimsgaards.kalneslopene.race
 
 import com.grimsgaards.kalneslopene.common.PagedResponse
 import com.grimsgaards.kalneslopene.common.toPagedResponse
+import com.grimsgaards.kalneslopene.race.dto.PhotographerInput
 import com.grimsgaards.kalneslopene.race.dto.RaceDTO
 import com.grimsgaards.kalneslopene.race.dto.RaceFilter
 import com.grimsgaards.kalneslopene.race.dto.RaceInfoDto
@@ -109,6 +110,12 @@ class RaceController(
         @PathVariable uuid: UUID,
         @RequestBody input: ReorderPhotoInput,
     ): List<FileDto> = raceService.reorderPhotoInRace(uuid, input)
+
+    @PatchMapping("$RACE_API/{uuid}/photographer")
+    fun updatePhotographer(
+        @PathVariable uuid: UUID,
+        @RequestBody input: PhotographerInput,
+    ): RaceDTO = raceService.updatePhotographer(uuid, input.photographer)
 
     @PatchMapping("$RACE_API/{uuid}/runners/{runnerUuid}")
     fun updateRunnerInRace(

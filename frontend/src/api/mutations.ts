@@ -54,6 +54,12 @@ export const MUTATIONS = {
       kyClient
         .patch(`/api/races/${raceUuid}/photos/order`, { json: input })
         .json<S3FileDto[]>(),
+    updatePhotographer: (raceUuid: string, photographer: string) =>
+      kyClient
+        .patch(`/api/races/${raceUuid}/photographer`, {
+          json: { photographer },
+        })
+        .json<RaceDTO>(),
   },
   organizer: {
     createOrganizer: (organizer: OrganizerInput) =>

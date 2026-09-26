@@ -37,6 +37,7 @@ class RaceEntity(
     var weatherPrecipitation: Double? = null
     var weatherUpdatedAt: Instant? = null
     var weatherManuallyEdited: Boolean = false
+    var photographer: String? = null
 
     @OneToMany(mappedBy = "race", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     val racePhotos: MutableList<RacePhotoEntity> = mutableListOf()
@@ -71,6 +72,7 @@ class RaceEntity(
             runnerCount = runnerCount,
             isPublished = isPublished,
             photos = racePhotos.sortedBy { it.orderIndex }.mapNotNull { it.file.toDto() },
+            photographer = photographer,
         )
 
     fun toInfoDto(): RaceInfoDto = RaceInfoDto(uuid = uuid, raceDate = raceDate)

@@ -159,7 +159,7 @@ export function NewsArticle() {
             <img
               src={headerImage}
               alt={post.header}
-              className="max-w-full w-auto h-auto max-h-[80dvh] mx-auto rounded-lg block cursor-zoom-in hover:opacity-90 transition object-contain"
+              className="max-w-full w-auto h-auto max-h-[80dvh] rounded-lg block cursor-zoom-in hover:opacity-90 transition object-contain"
             />
           </button>
         )}

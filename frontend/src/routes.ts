@@ -8,6 +8,11 @@ const results = async () => ({
   Component: (await import("./pages/Results.tsx")).Results,
 });
 
+const runnerStatistics = async () => ({
+  Component: (await import("./pages/statistics/RunnerStatistics.tsx"))
+    .RunnerStatistics,
+});
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -40,6 +45,20 @@ export const router = createBrowserRouter([
             lazy: async () => ({
               Component: (await import("./pages/Statistics.tsx")).Statistics,
             }),
+            children: [
+              {
+                index: true,
+                lazy: async () => ({
+                  Component: (
+                    await import("./pages/statistics/RaceStatistics.tsx")
+                  ).RaceStatistics,
+                }),
+              },
+              {
+                path: "løpere/:uuid?",
+                lazy: runnerStatistics,
+              },
+            ],
           },
           {
             path: "historie",

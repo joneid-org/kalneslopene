@@ -1,12 +1,13 @@
-import { useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
+import { StatCard } from "@/components/Statistics/StatCard.tsx";
 import {
   type ChartConfig,
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart.tsx";
-import { YearSelector, type YearValue } from "@/components/YearSelector.tsx";
 import {
   extractYear,
   formatDDMMYYYY,
@@ -37,22 +38,24 @@ type ChartPoint = {
   [year: string]: number | string;
 };
 
-type Props = { raceHistory: RaceRunnerDTO[]; availableYears: number[] };
+type Props = {
+  raceHistory: RaceRunnerDTO[];
+  availableYears: number[];
+  selectedYears: number[];
+};
 
 export default function RunnerTimeChart({
   raceHistory,
   availableYears,
+  selectedYears,
 }: Props) {
-  const [range, setRange] = useState<YearValue>(availableYears[0] ?? "all");
-
-  const selectedYears = range === "all" ? availableYears : [range];
   const selectedYearsSet = new Set(selectedYears);
 
-  const racesInSelection = raceHistory.filter((rr) =>
-    selectedYearsSet.has(extractYear(rr.raceInfo.raceDate)),
-  );
-  const filtered = racesInSelection.filter(
-    (rr) => !rr.hideTime && rr.resultTime,
+  const filtered = raceHistory.filter(
+    (rr) =>
+      selectedYearsSet.has(extractYear(rr.raceInfo.raceDate)) &&
+      !rr.hideTime &&
+      rr.resultTime,
   );
 
   const byDate = new Map<string, ChartPoint>();
@@ -78,23 +81,16 @@ export default function RunnerTimeChart({
   );
 
   return (
-    <div className="rounded-2xl border bg-card p-5">
-      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-        <span className="text-sm font-bold">Utvikling over tid</span>
-        <YearSelector
-          tone="primary"
-          includeAll
-          years={availableYears}
-          value={range}
-          onChange={setRange}
-        />
-      </div>
+    <StatCard
+      title="Utvikling over tid"
+      subtitle="Trykk på et punkt for å se tiden"
+    >
       {points.length < 2 ? (
         <p className="py-10 text-center text-sm text-muted-foreground">
           Ikke nok data for valgte sesonger.
         </p>
       ) : (
-        <ChartContainer config={chartConfig} className="h-52 w-full">
+        <ChartContainer config={chartConfig} className="h-56 w-full">
           <LineChart
             data={points}
             margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
@@ -129,8 +125,11 @@ export default function RunnerTimeChart({
                 />
               }
             />
-            {selectedYears.map((y, i) => {
-              const color = yearColor(y, i);
+            {selectedYears.length > 1 && (
+              <ChartLegend content={<ChartLegendContent />} />
+            )}
+            {selectedYears.map((y) => {
+              const color = yearColor(y, availableYears.indexOf(y));
               return (
                 <Line
                   key={y}
@@ -147,14 +146,6 @@ export default function RunnerTimeChart({
           </LineChart>
         </ChartContainer>
       )}
-      <div className="mt-3 flex items-center justify-between border-t pt-3 text-sm">
-        <span className="text-muted-foreground">
-          {range === "all" ? "Antall løp totalt" : `Antall løp i ${range}`}
-        </span>
-        <span className="font-display text-[17px] font-extrabold tabular-nums">
-          {racesInSelection.length}
-        </span>
-      </div>
-    </div>
+    </StatCard>
   );
 }

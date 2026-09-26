@@ -2,6 +2,7 @@ package com.grimsgaards.kalneslopene.statistics
 
 import com.grimsgaards.kalneslopene.race.dto.RaceFilter
 import com.grimsgaards.kalneslopene.race.dto.RaceInfoDto
+import com.grimsgaards.kalneslopene.race.model.RaceEntity
 import com.grimsgaards.kalneslopene.race.model.RaceRepository
 import com.grimsgaards.kalneslopene.race.model.RaceRunnerEntity
 import com.grimsgaards.kalneslopene.runner.Gender
@@ -64,8 +65,27 @@ class StatisticsService(
             averageRunnersPerRace = averageRunnersPerRace,
             courseRecordMale = courseRecord(allRunners, Gender.MALE, includeHistoricRecords),
             courseRecordFemale = courseRecord(allRunners, Gender.FEMALE, includeHistoricRecords),
+            monthlyParticipation = monthlyParticipation(publishedRaces),
         )
     }
+
+    private fun monthlyParticipation(races: List<RaceEntity>): List<MonthlyParticipationDto> =
+        races
+            .groupBy { it.raceDate.monthValue }
+            .toSortedMap()
+            .map { (month, monthRaces) ->
+                val runners = monthRaces.flatMap { it.runners }
+                val male = runners.count { it.runner.gender == Gender.MALE }
+                val female = runners.count { it.runner.gender == Gender.FEMALE }
+                MonthlyParticipationDto(
+                    month = month,
+                    races = monthRaces.size,
+                    male = male,
+                    female = female,
+                    total = runners.size,
+                    averageRunnersPerRace = runners.size.toDouble() / monthRaces.size,
+                )
+            }
 
     private fun courseRecord(
         raceRunners: List<RaceRunnerEntity>,

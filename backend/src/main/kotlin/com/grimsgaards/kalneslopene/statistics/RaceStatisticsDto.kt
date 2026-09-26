@@ -12,6 +12,16 @@ data class RaceStatisticsDto(
     val averageRunnersPerRace: Double,
     val courseRecordMale: CourseRecordDto?,
     val courseRecordFemale: CourseRecordDto?,
+    val monthlyParticipation: List<MonthlyParticipationDto>,
+)
+
+data class MonthlyParticipationDto(
+    val month: Int,
+    val races: Int,
+    val male: Int,
+    val female: Int,
+    val total: Int,
+    val averageRunnersPerRace: Double,
 )
 
 /** [raceInfo] is null when the record is a historic one, set before the earliest race we have results for. */

@@ -215,10 +215,12 @@ export function ReviewStep({
   const sortedEntries = entries.toSorted((a, b) => {
     const secondsA = entrySeconds(a);
     const secondsB = entrySeconds(b);
-    if (secondsA != null && secondsB != null) return secondsA - secondsB;
-    if (secondsA != null) return -1;
-    if (secondsB != null) return 1;
-    return a.runner.name.localeCompare(b.runner.name, "nb");
+    if (secondsA != null && secondsB == null) return -1;
+    if (secondsA == null && secondsB != null) return 1;
+    return (
+      (secondsA ?? 0) - (secondsB ?? 0) ||
+      a.runner.name.localeCompare(b.runner.name, "nb")
+    );
   });
 
   return (

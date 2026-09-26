@@ -87,6 +87,13 @@ export function NewsArticle() {
           </Button>
         </Link>
 
+        {!post.isPublished && (
+          <div className="mb-4 rounded-md border border-dashed border-red-600/50 bg-red-600/5 px-3 py-2 text-sm text-red-700 dark:text-red-400">
+            Utkast – denne nyheten er ikke publisert og er kun synlig for
+            administratorer.
+          </div>
+        )}
+
         <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
           <div className="flex flex-wrap gap-1.5 text-xs">
             {post.tags.map((tag) => (

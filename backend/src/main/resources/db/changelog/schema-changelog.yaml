@@ -219,3 +219,10 @@ databaseChangeLog:
             path: db/changelog/sql/create/create_user_invite.sql
             relativeToChangelogFile: false
 
+  - changeSet:
+      id: migrate_newsfeed_add_is_published
+      author: emilie
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_newsfeed_add_is_published.sql
+            relativeToChangelogFile: false

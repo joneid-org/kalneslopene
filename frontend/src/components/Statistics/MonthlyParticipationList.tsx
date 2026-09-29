@@ -1,23 +1,45 @@
 import { StatCard } from "@/components/Statistics/StatCard.tsx";
 import { NORWEGIAN_MONTH_NAMES } from "@/lib/constants.ts";
+import { cn } from "@/lib/utils.ts";
 import type { RaceStatisticsDTO } from "@/model/DTO.ts";
 
 type Props = {
   statistics: RaceStatisticsDTO;
 };
 
-function Legend() {
+const COLUMNS = ["Løp", "Menn", "Kvinner", "Snitt", "Totalt"];
+
+function Row({
+  label,
+  shortLabel,
+  values,
+  className,
+}: {
+  label: string;
+  shortLabel: string;
+  values: number[];
+  className?: string;
+}) {
   return (
-    <div className="flex gap-3 text-[11px] font-semibold text-muted-foreground">
-      <span className="flex items-center gap-1.5">
-        <span className="size-2 rounded-full bg-primary" />
-        Menn
-      </span>
-      <span className="flex items-center gap-1.5">
-        <span className="size-2 rounded-full bg-brand" />
-        Kvinner
-      </span>
-    </div>
+    <tr className={className}>
+      <th scope="row" className="py-2.5 pr-2 text-left font-semibold">
+        <span className="capitalize sm:hidden">{shortLabel}</span>
+        <span className="hidden capitalize sm:inline">{label}</span>
+      </th>
+      {values.map((value, i) => (
+        <td
+          key={COLUMNS[i]}
+          className={cn(
+            "py-2.5 pl-2 text-right tabular-nums",
+            i === values.length - 1
+              ? "font-display text-[15px] font-extrabold"
+              : "text-muted-foreground",
+          )}
+        >
+          {value}
+        </td>
+      ))}
+    </tr>
   );
 }
 
@@ -25,52 +47,59 @@ export function MonthlyParticipationList({ statistics }: Props) {
   const { monthlyParticipation, totalParticipations } = statistics;
   if (monthlyParticipation.length === 0) return null;
 
-  const maxTotal = Math.max(...monthlyParticipation.map((m) => m.total), 1);
-
   return (
-    <StatCard
-      title="Deltakelse per måned"
-      subtitle={`${statistics.completedRaces} løp · ${
-        totalParticipations.male + totalParticipations.female
-      } deltakelser · snitt ${Math.round(statistics.averageRunnersPerRace)}`}
-      action={<Legend />}
-    >
-      <ul className="flex flex-col gap-3.5">
-        {monthlyParticipation.map((m) => (
-          <li key={m.month}>
-            <div className="flex items-baseline justify-between gap-3">
-              <span className="text-sm font-semibold capitalize">
-                {NORWEGIAN_MONTH_NAMES[m.month - 1]}
-              </span>
-              <span className="font-display text-[17px] font-extrabold tabular-nums">
-                {m.total}
-              </span>
-            </div>
-            <div
-              className="mt-1.5 flex h-2 overflow-hidden rounded-full bg-muted"
-              role="img"
-              aria-label={`${m.male} menn og ${m.female} kvinner`}
-            >
-              <div
-                className="bg-primary"
-                style={{ width: `${(m.male / maxTotal) * 100}%` }}
+    <StatCard title="Deltakelse per måned">
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="border-b text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+            <th scope="col" className="pb-2 text-left font-semibold">
+              Måned
+            </th>
+            {COLUMNS.map((column) => (
+              <th
+                key={column}
+                scope="col"
+                className="pb-2 pl-2 text-right font-semibold"
+              >
+                {column}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-border">
+          {monthlyParticipation.map((m) => {
+            const name = NORWEGIAN_MONTH_NAMES[m.month - 1];
+            return (
+              <Row
+                key={m.month}
+                label={name}
+                shortLabel={name.slice(0, 3)}
+                values={[
+                  m.races,
+                  m.male,
+                  m.female,
+                  Math.round(m.averageRunnersPerRace),
+                  m.total,
+                ]}
               />
-              <div
-                className="bg-brand"
-                style={{ width: `${(m.female / maxTotal) * 100}%` }}
-              />
-            </div>
-            <div className="mt-1 flex justify-between gap-3 text-xs tabular-nums text-muted-foreground">
-              <span>
-                {m.races} løp · snitt {Math.round(m.averageRunnersPerRace)}
-              </span>
-              <span>
-                {m.male} M · {m.female} K
-              </span>
-            </div>
-          </li>
-        ))}
-      </ul>
+            );
+          })}
+        </tbody>
+        <tfoot>
+          <Row
+            className="border-t-2"
+            label="Totalt"
+            shortLabel="Totalt"
+            values={[
+              statistics.completedRaces,
+              totalParticipations.male,
+              totalParticipations.female,
+              Math.round(statistics.averageRunnersPerRace),
+              totalParticipations.male + totalParticipations.female,
+            ]}
+          />
+        </tfoot>
+      </table>
     </StatCard>
   );
 }

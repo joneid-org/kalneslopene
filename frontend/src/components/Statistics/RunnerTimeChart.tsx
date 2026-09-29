@@ -102,7 +102,7 @@ export default function RunnerTimeChart({
         <ChartContainer config={config} className="h-56 w-full">
           <LineChart
             data={points}
-            margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
+            margin={{ top: 8, right: 16, left: 0, bottom: 0 }}
           >
             <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
             <XAxis

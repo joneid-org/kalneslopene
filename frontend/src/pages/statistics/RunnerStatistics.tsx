@@ -192,7 +192,7 @@ function RunnerProfile({ runner }: { runner: RunnerDTO }) {
             </div>
           )}
 
-          <div className="grid grid-cols-1 gap-3 *:min-w-0 md:grid-cols-2 md:items-start">
+          <div className="flex flex-col gap-3 *:min-w-0">
             <Suspense fallback={null}>
               <RunnerTimeChart
                 raceHistory={raceHistory}

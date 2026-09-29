@@ -1,11 +1,7 @@
 import { ChevronRight, Trophy } from "lucide-react";
 import { Link } from "react-router";
 import { runnerStatisticsPath } from "@/lib/constants.ts";
-import {
-  extractYear,
-  formatSecondsToTime,
-  mapResultTimeToNumber,
-} from "@/lib/timeUtils.ts";
+import { formatSecondsToTime, mapResultTimeToNumber } from "@/lib/timeUtils.ts";
 import type { CourseRecordDTO } from "@/model/DTO.ts";
 
 type Props = {
@@ -26,9 +22,8 @@ function RecordRow({
       className="flex items-center gap-3 rounded-xl bg-white/10 px-3 py-2.5 transition-colors hover:bg-white/15"
     >
       <div className="min-w-0 flex-1">
-        <div className="text-[10px] font-bold uppercase tracking-wider text-white/60">
+        <div className="text-[10px] font-bold tracking-wider text-white/60">
           {label}
-          {record.raceInfo && ` · ${extractYear(record.raceInfo.raceDate)}`}
         </div>
         <div className="truncate text-sm font-semibold">
           {record.runner.name}

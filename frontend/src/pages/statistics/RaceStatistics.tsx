@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { QUERIES } from "@/api/queries.ts";
+import { AllTimeStatsCard } from "@/components/Statistics/AllTimeStatsCard.tsx";
 import { AttendanceChart } from "@/components/Statistics/AttendanceChart.tsx";
 import { CourseRecordCard } from "@/components/Statistics/CourseRecordCard.tsx";
 import { MonthlyParticipationList } from "@/components/Statistics/MonthlyParticipationList.tsx";
@@ -24,7 +25,7 @@ export function RaceStatistics() {
 
   const { data: races } = useQuery(QUERIES.race.getAllRaceInfos());
   const { data: allTimeStatistics } = useQuery(QUERIES.statistics.race());
-  const { data: runnerOverview, isPending: isPendingOverview } = useQuery(
+  const { data: runnerOverview } = useQuery(
     QUERIES.statistics.runnerOverview(),
   );
 
@@ -60,29 +61,15 @@ export function RaceStatistics() {
 
   return (
     <div className="flex flex-col gap-6 md:gap-8">
-      <section className="flex flex-col gap-2 md:grid md:grid-cols-[2fr_1fr_1fr] md:gap-3">
+      <section className="grid grid-cols-1 gap-3 *:min-w-0 md:grid-cols-2">
         <CourseRecordCard
           male={allTimeStatistics?.courseRecordMale}
           female={allTimeStatistics?.courseRecordFemale}
         />
-        <div className="grid grid-cols-2 gap-2 md:contents">
-          <StatTile
-            value={runnerOverview?.totalRunners}
-            label="Unike løpere siden 1978"
-            tone="primary"
-            isLoading={isPendingOverview}
-          />
-          <StatTile
-            value={runnerOverview?.runnersInRaces}
-            label={
-              runnerOverview?.firstRaceYear
-                ? `Unike løpere siden ${runnerOverview.firstRaceYear}`
-                : "Unike løpere"
-            }
-            tone="primary"
-            isLoading={isPendingOverview}
-          />
-        </div>
+        <AllTimeStatsCard
+          statistics={allTimeStatistics}
+          runnerOverview={runnerOverview}
+        />
       </section>
 
       {availableYears.length > 0 && (
@@ -133,7 +120,7 @@ export function RaceStatistics() {
           <AttendanceChart races={yearRaces} />
 
           {yearStatistics && (
-            <div className="grid gap-3 md:grid-cols-2 md:items-start">
+            <div className="grid grid-cols-1 gap-3 *:min-w-0 md:grid-cols-2 md:items-start">
               <MonthlyParticipationList statistics={yearStatistics} />
               <TopParticipantsList
                 title="Flest løp"

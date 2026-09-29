@@ -192,12 +192,12 @@ function RunnerProfile({ runner }: { runner: RunnerDTO }) {
             </div>
           )}
 
-          <div className="grid gap-3 md:grid-cols-2 md:items-start">
+          <div className="grid grid-cols-1 gap-3 *:min-w-0 md:grid-cols-2 md:items-start">
             <Suspense fallback={null}>
               <RunnerTimeChart
                 raceHistory={raceHistory}
                 availableYears={availableYears}
-                selectedYears={season === "all" ? availableYears : [season]}
+                season={season}
               />
             </Suspense>
 

@@ -75,13 +75,13 @@ export function RunnerProfileCard({
       <div className="mt-4 grid grid-cols-3 gap-2">
         <ProfileStat
           value={personalRecord}
-          label="Pers"
+          label="Personlig rekord"
           highlight
           isLoading={isLoading}
         />
         <ProfileStat
           value={totalRaces}
-          label="Løp siden 2019"
+          label="Løp fullført siden 2019"
           isLoading={isLoading}
         />
         <ProfileStat value={seasons} label="Sesonger" isLoading={isLoading} />

@@ -211,6 +211,7 @@ function RunnerProfile({ runner }: { runner: RunnerDTO }) {
               <RunnerRaceResults
                 year={season}
                 results={seasonResults}
+                raceHistory={raceHistory}
                 personalRecord={personalRecord}
                 seasonBest={getBestTimeThisYear(raceHistory, season)}
               />

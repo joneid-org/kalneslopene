@@ -8,21 +8,30 @@ type Props = {
 };
 
 const COLUMNS = ["Løp", "Menn", "Kvinner", "Snitt", "Totalt"];
+const TOTAL_STYLE = "font-display text-[15px] font-extrabold";
 
 function Row({
   label,
   shortLabel,
   values,
   className,
+  bold,
 }: {
   label: string;
   shortLabel: string;
   values: number[];
   className?: string;
+  bold?: boolean;
 }) {
   return (
     <tr className={className}>
-      <th scope="row" className="py-2.5 pr-2 text-left font-semibold">
+      <th
+        scope="row"
+        className={cn(
+          "py-2.5 pr-2 text-left",
+          bold ? TOTAL_STYLE : "font-semibold",
+        )}
+      >
         <span className="capitalize sm:hidden">{shortLabel}</span>
         <span className="hidden capitalize sm:inline">{label}</span>
       </th>
@@ -30,9 +39,9 @@ function Row({
         <td
           key={COLUMNS[i]}
           className={cn(
-            "py-2.5 pl-2 text-right tabular-nums",
-            i === values.length - 1
-              ? "font-display text-[15px] font-extrabold"
+            "px-1 py-2.5 text-center tabular-nums",
+            bold || i === values.length - 1
+              ? TOTAL_STYLE
               : "text-muted-foreground",
           )}
         >
@@ -59,7 +68,7 @@ export function MonthlyParticipationList({ statistics }: Props) {
               <th
                 key={column}
                 scope="col"
-                className="pb-2 pl-2 text-right font-semibold"
+                className="px-1 pb-2 text-center font-semibold"
               >
                 {column}
               </th>
@@ -88,6 +97,7 @@ export function MonthlyParticipationList({ statistics }: Props) {
         <tfoot>
           <Row
             className="border-t-2"
+            bold
             label="Totalt"
             shortLabel="Totalt"
             values={[

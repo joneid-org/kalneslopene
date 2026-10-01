@@ -41,9 +41,6 @@ export function TopParticipantsList({ title, subtitle, participants }: Props) {
                 </span>
                 <span className="font-display text-[15px] font-extrabold tabular-nums">
                   {p.races}
-                  <span className="ml-1 text-xs font-semibold text-muted-foreground">
-                    løp
-                  </span>
                 </span>
                 <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
               </Link>

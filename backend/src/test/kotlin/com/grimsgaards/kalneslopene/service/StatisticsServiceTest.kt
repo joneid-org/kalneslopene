@@ -298,6 +298,93 @@ class StatisticsServiceTest {
     }
 
     @Nested
+    inner class MonthlyParticipation {
+        @Test
+        fun `groups published completed races by month in calendar order`() {
+            val june = race(LocalDateTime.parse("2025-06-05T18:00:00"))
+            addRunner(june, runner(Gender.MALE))
+            addRunner(june, runner(Gender.FEMALE))
+            val mayA = race(LocalDateTime.parse("2025-05-08T18:00:00"))
+            addRunner(mayA, runner(Gender.MALE))
+            addRunner(mayA, runner(Gender.MALE))
+            addRunner(mayA, runner(Gender.FEMALE))
+            val mayB = race(LocalDateTime.parse("2025-05-15T18:00:00"))
+            addRunner(mayB, runner(Gender.FEMALE))
+            stubRaces(june, mayA, mayB)
+
+            val monthly = service.getRaceStatistics(Year.of(2025)).monthlyParticipation
+
+            assertThat(monthly.map { it.month }).containsExactly(5, 6)
+            with(monthly.first()) {
+                assertThat(races).isEqualTo(2)
+                assertThat(male).isEqualTo(2)
+                assertThat(female).isEqualTo(2)
+                assertThat(total).isEqualTo(4)
+                assertThat(averageRunnersPerRace).isEqualTo(2.0)
+            }
+        }
+
+        @Test
+        fun `excludes unpublished and upcoming races`() {
+            val published = race(past)
+            addRunner(published, runner(Gender.MALE))
+            val unpublished = race(past, published = false)
+            addRunner(unpublished, runner(Gender.MALE))
+            stubRaces(published, unpublished, race(future))
+
+            val monthly = service.getRaceStatistics(null).monthlyParticipation
+
+            assertThat(monthly.sumOf { it.races }).isEqualTo(1)
+            assertThat(monthly.sumOf { it.total }).isEqualTo(1)
+        }
+    }
+
+    @Nested
+    inner class TopParticipants {
+        @Test
+        fun `ranks runners by number of races with name as tiebreaker`() {
+            val anna = RunnerEntity(name = "Anna", gender = Gender.FEMALE)
+            val bjorn = RunnerEntity(name = "Bjørn", gender = Gender.MALE)
+            val carl = RunnerEntity(name = "Carl", gender = Gender.MALE)
+            val races = List(3) { race(past) }
+            races.forEach { addRunner(it, carl) }
+            races.take(2).forEach { addRunner(it, bjorn) }
+            races.take(2).forEach { addRunner(it, anna) }
+            stubRaces(*races.toTypedArray())
+
+            val top = service.getRaceStatistics(null).topParticipants
+
+            assertThat(top.map { it.runner.name }).containsExactly("Carl", "Anna", "Bjørn")
+            assertThat(top.map { it.races }).containsExactly(3, 2, 2)
+        }
+
+        @Test
+        fun `is limited to ten runners`() {
+            val race = race(past)
+            repeat(15) { addRunner(race, runner(Gender.MALE)) }
+            stubRaces(race)
+
+            val top = service.getRaceStatistics(null).topParticipants
+
+            assertThat(top).hasSize(10)
+        }
+
+        @Test
+        fun `only counts published completed races`() {
+            val runner = runner(Gender.FEMALE)
+            val published = race(past)
+            addRunner(published, runner)
+            val unpublished = race(past, published = false)
+            addRunner(unpublished, runner)
+            stubRaces(published, unpublished)
+
+            val top = service.getRaceStatistics(null).topParticipants
+
+            assertThat(top.single().races).isEqualTo(1)
+        }
+    }
+
+    @Nested
     inner class SeasonFilter {
         @Test
         fun `passes the year bounds to the repository filter`() {

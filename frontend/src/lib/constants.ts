@@ -126,3 +126,8 @@ export const ORGANIZER_DESCRIPTION =
   "Torsdagsløpet er et frivillig drevet mosjonsløp som har arrangert " +
   "ukentlige løp siden 1978. Vi er en gjeng entusiaster som brenner for " +
   "løping og fellesskap.";
+
+export const RUNNER_STATISTICS_PATH = "/statistikk/løpere";
+
+export const runnerStatisticsPath = (uuid: string) =>
+  `${RUNNER_STATISTICS_PATH}/${uuid}`;

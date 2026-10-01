@@ -152,6 +152,22 @@ export type RaceStatisticsDTO = {
   averageRunnersPerRace: number;
   courseRecordMale?: CourseRecordDTO;
   courseRecordFemale?: CourseRecordDTO;
+  monthlyParticipation: MonthlyParticipationDTO[];
+  topParticipants: TopParticipantDTO[];
+};
+
+export type TopParticipantDTO = {
+  runner: RunnerDTO;
+  races: number;
+};
+
+export type MonthlyParticipationDTO = {
+  month: number;
+  races: number;
+  male: number;
+  female: number;
+  total: number;
+  averageRunnersPerRace: number;
 };
 
 export type CourseRecordDTO = {

@@ -9,6 +9,7 @@ import {
 import { Fragment, type ReactNode } from "react";
 import { QUERIES } from "@/api/queries.ts";
 import { DeleteButton } from "@/components/admin/DeleteButton.tsx";
+import ResultsTable from "@/components/Results/ResultsTable.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Table,
@@ -19,12 +20,8 @@ import {
   TableRow,
 } from "@/components/ui/table.tsx";
 import { WeatherLine } from "@/components/Weather/WeatherLine.tsx";
-import {
-  formatDDMonth,
-  formatSecondsToTime,
-  formatTimeStamp,
-  mapResultTimeToNumber,
-} from "@/lib/timeUtils.ts";
+import { formatDDMonth, formatTimeStamp } from "@/lib/timeUtils.ts";
+import { buildTableRows } from "@/lib/utils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 
 export function PastRacesTable({
@@ -144,7 +141,7 @@ export function PastRacesTable({
 
 const Shell = ({ children }: { children: ReactNode }) => (
   <TableRow className="bg-muted/30 hover:bg-muted/30">
-    <TableCell colSpan={5} className="py-2 px-4">
+    <TableCell colSpan={5} className="whitespace-normal py-2 px-4">
       {children}
     </TableCell>
   </TableRow>
@@ -180,34 +177,13 @@ const ExpandedTableRow = ({ raceUuid }: { raceUuid: string }) => {
 
   return (
     <Shell>
-      <div className="divide-y rounded-md border bg-background">
-        {runners.length === 0 ? (
-          <p className="text-xs text-muted-foreground italic py-2 px-3">
-            Ingen løpere registrert.
-          </p>
-        ) : (
-          runners.map((rr, i) => (
-            <div
-              key={rr.runner.uuid}
-              className="flex items-center justify-between px-3 py-1.5 text-sm"
-            >
-              <div className="flex items-center gap-2">
-                <span className="text-xs tabular-nums text-muted-foreground w-5 text-right">
-                  {i + 1}.
-                </span>
-                <span className="font-medium">{rr.runner.name}</span>
-              </div>
-              <span className="tabular-nums font-mono text-xs text-muted-foreground">
-                {rr.hideTime
-                  ? "Kun deltatt"
-                  : formatSecondsToTime(
-                      mapResultTimeToNumber(String(rr.resultTime)),
-                    )}
-              </span>
-            </div>
-          ))
-        )}
-      </div>
+      {runners.length === 0 ? (
+        <p className="text-xs text-muted-foreground italic py-2 px-3">
+          Ingen løpere registrert.
+        </p>
+      ) : (
+        <ResultsTable tableData={buildTableRows(runners)} />
+      )}
     </Shell>
   );
 };

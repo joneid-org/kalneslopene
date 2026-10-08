@@ -53,3 +53,12 @@ export function getBestTimeThisYear(
   }
   return Number.isFinite(bestSeconds) ? formatSecondsToTime(bestSeconds) : "-";
 }
+
+export function getAverageTime(raceRunners: RaceRunnerDTO[]): string {
+  const seconds = raceRunners
+    .filter((rr) => !rr.hideTime && rr.resultTime)
+    .map((rr) => mapResultTimeToNumber(rr.resultTime));
+  if (seconds.length === 0) return "-";
+  const average = seconds.reduce((sum, s) => sum + s, 0) / seconds.length;
+  return formatSecondsToTime(average);
+}

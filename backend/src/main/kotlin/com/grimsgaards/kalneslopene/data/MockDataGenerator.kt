@@ -141,7 +141,7 @@ class MockDataGenerator(
 
     private fun generateNewsfeed() {
         newsfeedTagRepository.saveAll(newsfeedTagSeed)
-        newsfeedRepository.saveAll(newsfeedSeed)
+        newsfeedRepository.saveAll(newsfeedSeed.onEach { it.publishedAt = it.date })
     }
 
     private fun generateOrganizers() {

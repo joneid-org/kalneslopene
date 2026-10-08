@@ -187,7 +187,7 @@ class NewsfeedServiceTest {
 
         @Test
         fun `hides an unpublished newsfeed from non-admins`() {
-            val draft = newsfeed(headerImage = null, isPublished = false)
+            val draft = newsfeed(headerImage = null, publishedAt = null)
             whenever(newsfeedRepository.findById(draft.uuid)).thenReturn(Optional.of(draft))
             whenever(authenticatedUserProvider.isAdmin()).thenReturn(false)
 
@@ -197,18 +197,18 @@ class NewsfeedServiceTest {
 
         @Test
         fun `shows an unpublished newsfeed to admins`() {
-            val draft = newsfeed(headerImage = null, isPublished = false)
+            val draft = newsfeed(headerImage = null, publishedAt = null)
             whenever(newsfeedRepository.findById(draft.uuid)).thenReturn(Optional.of(draft))
             whenever(authenticatedUserProvider.isAdmin()).thenReturn(true)
 
             val result = service.findByUuid(draft.uuid)
 
-            assertThat(result.isPublished).isFalse()
+            assertThat(result.publishedAt).isNull()
         }
 
         @Test
         fun `hides a newsfeed scheduled for the future from non-admins`() {
-            val scheduled = newsfeed(headerImage = null, publishAt = OffsetDateTime.now().plusDays(1))
+            val scheduled = newsfeed(headerImage = null, publishedAt = OffsetDateTime.now().plusDays(1))
             whenever(newsfeedRepository.findById(scheduled.uuid)).thenReturn(Optional.of(scheduled))
             whenever(authenticatedUserProvider.isAdmin()).thenReturn(false)
 
@@ -217,29 +217,8 @@ class NewsfeedServiceTest {
         }
 
         @Test
-        fun `hides a newsfeed dated in the future from non-admins`() {
-            val future = newsfeed(headerImage = null, date = OffsetDateTime.now().plusDays(1))
-            whenever(newsfeedRepository.findById(future.uuid)).thenReturn(Optional.of(future))
-            whenever(authenticatedUserProvider.isAdmin()).thenReturn(false)
-
-            assertThatThrownBy { service.findByUuid(future.uuid) }
-                .isInstanceOf(NoSuchElementException::class.java)
-        }
-
-        @Test
-        fun `shows a newsfeed dated later today to non-admins`() {
-            val today = newsfeed(headerImage = null, date = OffsetDateTime.now().plusSeconds(1))
-            whenever(newsfeedRepository.findById(today.uuid)).thenReturn(Optional.of(today))
-            whenever(authenticatedUserProvider.isAdmin()).thenReturn(false)
-
-            val result = service.findByUuid(today.uuid)
-
-            assertThat(result.uuid).isEqualTo(today.uuid)
-        }
-
-        @Test
         fun `shows a newsfeed whose scheduled time has passed to non-admins`() {
-            val due = newsfeed(headerImage = null, publishAt = OffsetDateTime.now().minusMinutes(1))
+            val due = newsfeed(headerImage = null, publishedAt = OffsetDateTime.now().minusMinutes(1))
             whenever(newsfeedRepository.findById(due.uuid)).thenReturn(Optional.of(due))
             whenever(authenticatedUserProvider.isAdmin()).thenReturn(false)
 
@@ -250,14 +229,14 @@ class NewsfeedServiceTest {
 
         @Test
         fun `shows a newsfeed scheduled for the future to admins`() {
-            val publishAt = OffsetDateTime.now().plusDays(1)
-            val scheduled = newsfeed(headerImage = null, publishAt = publishAt)
+            val publishedAt = OffsetDateTime.now().plusDays(1)
+            val scheduled = newsfeed(headerImage = null, publishedAt = publishedAt)
             whenever(newsfeedRepository.findById(scheduled.uuid)).thenReturn(Optional.of(scheduled))
             whenever(authenticatedUserProvider.isAdmin()).thenReturn(true)
 
             val result = service.findByUuid(scheduled.uuid)
 
-            assertThat(result.publishAt).isEqualTo(publishAt)
+            assertThat(result.publishedAt).isEqualTo(publishedAt)
         }
 
         @Test
@@ -274,18 +253,18 @@ class NewsfeedServiceTest {
     inner class CreateNewsfeed {
         @Test
         fun `can save a newsfeed as an unpublished draft`() {
-            val result = service.createNewsfeed(input(isPublished = false))
+            val result = service.createNewsfeed(input(publishedAt = null))
 
-            assertThat(result.isPublished).isFalse()
+            assertThat(result.publishedAt).isNull()
         }
 
         @Test
         fun `stores the scheduled publish time`() {
-            val publishAt = OffsetDateTime.parse("2026-10-09T18:00:00+02:00")
+            val publishedAt = OffsetDateTime.parse("2026-10-09T18:00:00+02:00")
 
-            val result = service.createNewsfeed(input(publishAt = publishAt))
+            val result = service.createNewsfeed(input(publishedAt = publishedAt))
 
-            assertThat(result.publishAt).isEqualTo(publishAt)
+            assertThat(result.publishedAt).isEqualTo(publishedAt)
         }
 
         @Test
@@ -324,22 +303,23 @@ class NewsfeedServiceTest {
     inner class UpdateNewsfeed {
         @Test
         fun `publishes a draft`() {
-            val draft = newsfeed(headerImage = null, isPublished = false)
+            val draft = newsfeed(headerImage = null, publishedAt = null)
             whenever(newsfeedRepository.findById(draft.uuid)).thenReturn(Optional.of(draft))
+            val publishedAt = OffsetDateTime.parse("2026-10-08T12:00:00Z")
 
-            val result = service.updateNewsfeed(draft.uuid, input(isPublished = true))
+            val result = service.updateNewsfeed(draft.uuid, input(publishedAt = publishedAt))
 
-            assertThat(result.isPublished).isTrue()
+            assertThat(result.publishedAt).isEqualTo(publishedAt)
         }
 
         @Test
-        fun `clears a scheduled publish time`() {
-            val scheduled = newsfeed(headerImage = null, publishAt = OffsetDateTime.now().plusDays(1))
+        fun `turns a scheduled newsfeed back into a draft`() {
+            val scheduled = newsfeed(headerImage = null, publishedAt = OffsetDateTime.now().plusDays(1))
             whenever(newsfeedRepository.findById(scheduled.uuid)).thenReturn(Optional.of(scheduled))
 
-            val result = service.updateNewsfeed(scheduled.uuid, input(publishAt = null))
+            val result = service.updateNewsfeed(scheduled.uuid, input(publishedAt = null))
 
-            assertThat(result.publishAt).isNull()
+            assertThat(result.publishedAt).isNull()
         }
 
         @Test
@@ -548,17 +528,14 @@ class NewsfeedServiceTest {
         headerImage: FileEntity?,
         content: String = "Innhold",
         tags: List<String> = listOf("nyhet"),
-        isPublished: Boolean = true,
-        publishAt: OffsetDateTime? = null,
-        date: OffsetDateTime = OffsetDateTime.parse("2026-06-14T10:00:00Z"),
+        publishedAt: OffsetDateTime? = OffsetDateTime.parse("2026-06-14T10:00:00Z"),
     ) = NewsfeedEntity(
         tags = tags,
         header = "Tittel",
         content = content,
-        date = date,
+        date = OffsetDateTime.parse("2026-06-14T10:00:00Z"),
         headerImage = headerImage,
-        isPublished = isPublished,
-        publishAt = publishAt,
+        publishedAt = publishedAt,
     )
 
     private fun confirmedFile() =
@@ -580,16 +557,14 @@ class NewsfeedServiceTest {
     private fun input(
         headerImageUuid: UUID? = null,
         content: String = "Innhold",
-        isPublished: Boolean = true,
-        publishAt: OffsetDateTime? = null,
+        publishedAt: OffsetDateTime? = OffsetDateTime.parse("2026-06-14T10:00:00Z"),
     ) = NewsfeedInput(
         tags = listOf("nyhet"),
         header = "Tittel",
         content = content,
         date = OffsetDateTime.parse("2026-06-14T10:00:00Z"),
         headerImageUuid = headerImageUuid,
-        isPublished = isPublished,
-        publishAt = publishAt,
+        publishedAt = publishedAt,
     )
 
     private fun <T> whenever(call: T): OngoingStubbing<T> = Mockito.`when`(call)

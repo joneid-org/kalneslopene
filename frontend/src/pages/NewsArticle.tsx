@@ -93,7 +93,7 @@ export function NewsArticle() {
           </Button>
         </Link>
 
-        {!post.isPublished && (
+        {!post.publishedAt && (
           <div className="mb-4 rounded-md border border-dashed border-red-600/50 bg-red-600/5 px-3 py-2 text-sm text-red-700 dark:text-red-400">
             Utkast – denne nyheten er ikke publisert og er kun synlig for
             administratorer.

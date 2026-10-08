@@ -40,7 +40,7 @@ export function NewsfeedsCard({
           <>
             <TableCell className="text-muted-foreground tabular-nums whitespace-nowrap">
               <span className="inline-flex items-center gap-2">
-                {!feed.isPublished ? (
+                {!feed.publishedAt ? (
                   <CircleDashedIcon
                     className="size-3.5 shrink-0 text-red-600"
                     aria-label="Utkast"
@@ -63,7 +63,7 @@ export function NewsfeedsCard({
               <Link to={`/nyheter/${feed.uuid}`} className="hover:underline">
                 {feed.header}
               </Link>
-              {!feed.isPublished && (
+              {!feed.publishedAt && (
                 <span className="ml-2 text-xs font-normal text-muted-foreground">
                   Utkast
                 </span>

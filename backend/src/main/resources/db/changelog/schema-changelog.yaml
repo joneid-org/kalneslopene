@@ -220,16 +220,9 @@ databaseChangeLog:
             relativeToChangelogFile: false
 
   - changeSet:
-      id: migrate_newsfeed_add_is_published
+      id: migrate_newsfeed_add_published_at
       author: emilie
       changes:
         - sqlFile:
-            path: db/changelog/sql/migrate/migrate_newsfeed_add_is_published.sql
-            relativeToChangelogFile: false
-  - changeSet:
-      id: migrate_newsfeed_add_publish_at
-      author: emilie
-      changes:
-        - sqlFile:
-            path: db/changelog/sql/migrate/migrate_newsfeed_add_publish_at.sql
+            path: db/changelog/sql/migrate/migrate_newsfeed_add_published_at.sql
             relativeToChangelogFile: false

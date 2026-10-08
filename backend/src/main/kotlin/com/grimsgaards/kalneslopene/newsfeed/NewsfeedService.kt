@@ -107,8 +107,7 @@ class NewsfeedService(
                         date = newsfeed.date,
                         headerImage = headerImage,
                         images = newsfeed.images,
-                        isPublished = newsfeed.isPublished,
-                        publishAt = newsfeed.publishAt,
+                        publishedAt = newsfeed.publishedAt,
                     ),
                 ).toDto()
         s3Service.confirmUploadsByUrl(s3Service.extractBucketImageUrls(newsfeed.content))
@@ -140,8 +139,7 @@ class NewsfeedService(
             content = updatedNewsfeed.content
             date = updatedNewsfeed.date
             images = updatedNewsfeed.images
-            isPublished = updatedNewsfeed.isPublished
-            publishAt = updatedNewsfeed.publishAt
+            publishedAt = updatedNewsfeed.publishedAt
         }
 
         val saved = newsfeedRepository.save(existingNews).toDto()

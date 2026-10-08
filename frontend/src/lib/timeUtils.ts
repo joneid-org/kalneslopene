@@ -15,7 +15,7 @@ export function toLocalDateTimeString(date: Date): string {
   return `${y}-${mo}-${d}T${h}:${mi}:${s}`;
 }
 
-// For timezone-aware instants (e.g. newsfeed publishAt), shown in the viewer's local time.
+// For timezone-aware instants (e.g. newsfeed publishedAt), shown in the viewer's local time.
 export function formatInstantDateTime(instant: string): string {
   const local = toLocalDateTimeString(new Date(instant));
   return `${formatDateFull(local)} kl. ${formatTimeStamp(local)}`;

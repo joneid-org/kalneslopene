@@ -16,9 +16,7 @@ interface NewsfeedRepository : JpaRepository<NewsfeedEntity, UUID> {
     fun findAllByOrderByDateDesc(): List<NewsfeedEntity>
 
     @Query(
-        "SELECT n FROM NewsfeedEntity n WHERE :publishedOnly = false " +
-            "OR (n.isPublished = true AND CAST(n.date AS LocalDate) <= CURRENT_DATE " +
-            "AND (n.publishAt IS NULL OR n.publishAt <= CURRENT_TIMESTAMP))",
+        "SELECT n FROM NewsfeedEntity n WHERE :publishedOnly = false OR n.publishedAt <= CURRENT_TIMESTAMP",
     )
     fun findAllByPublished(
         @Param("publishedOnly") publishedOnly: Boolean,
@@ -38,9 +36,7 @@ interface NewsfeedRepository : JpaRepository<NewsfeedEntity, UUID> {
 
     companion object {
         private const val TAG_FILTER_QUERY =
-            "SELECT * FROM newsfeed WHERE (:publishedOnly = false " +
-                "OR (is_published AND date::date <= current_date " +
-                "AND (publish_at IS NULL OR publish_at <= now()))) " +
+            "SELECT * FROM newsfeed WHERE (:publishedOnly = false OR published_at <= now()) " +
                 "AND EXISTS (SELECT 1 FROM unnest(tags) tag WHERE lower(tag) = lower(:tag))"
     }
 }

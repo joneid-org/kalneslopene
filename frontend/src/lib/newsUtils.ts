@@ -1,10 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { QUERIES } from "@/api/queries.ts";
-import {
-  formatDateFull,
-  formatInstantDateTime,
-  toLocalDateString,
-} from "@/lib/timeUtils.ts";
+import { formatInstantDateTime } from "@/lib/timeUtils.ts";
 import type { NewsFeedDTO, NewsfeedTagDTO } from "@/model/DTO.ts";
 
 export const PREDEFINED_TAGS: NewsfeedTagDTO[] = [
@@ -22,19 +18,14 @@ export function tagColor(tag: string, tags?: NewsfeedTagDTO[]): string {
   );
 }
 
-// Mirrors the backend's public visibility rule: a published article is hidden until its
-// scheduled time, or until its date if that is later than today.
+export function isScheduled(publishedAt?: string | null): boolean {
+  return !!publishedAt && new Date(publishedAt) > new Date();
+}
+
 export function upcomingPublishLabel(feed: NewsFeedDTO): string | undefined {
-  if (!feed.isPublished) return undefined;
-  const now = new Date();
-  if (feed.publishAt && new Date(feed.publishAt) > now) {
-    return formatInstantDateTime(feed.publishAt);
-  }
-  const localDate = toLocalDateString(new Date(feed.date));
-  if (localDate > toLocalDateString(now)) {
-    return formatDateFull(localDate);
-  }
-  return undefined;
+  return feed.publishedAt && isScheduled(feed.publishedAt)
+    ? formatInstantDateTime(feed.publishedAt)
+    : undefined;
 }
 
 export function useTags(): NewsfeedTagDTO[] {

@@ -13,7 +13,11 @@ import {
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { Switch } from "@/components/ui/switch.tsx";
-import { tagColor, useTags } from "@/lib/newsUtils.ts";
+import {
+  isScheduled as isScheduledFor,
+  tagColor,
+  useTags,
+} from "@/lib/newsUtils.ts";
 import { convertImageToWebp } from "@/lib/photoUtils.ts";
 import { toDateTimeInputValue, toLocalDateString } from "@/lib/timeUtils.ts";
 import type { NewsFeedDTO, NewsfeedTagDTO, S3FileDto } from "@/model/DTO.ts";
@@ -40,11 +44,15 @@ export function NewsfeedForm({
   const [headerImage, setHeaderImage] = useState<S3FileDto | undefined>(
     initial.headerImage,
   );
-  const [isPublished, setIsPublished] = useState(initial.isPublished ?? true);
-  const [isScheduled, setIsScheduled] = useState(!!initial.publishAt);
-  const [publishAt, setPublishAt] = useState(() =>
-    toDateTimeInputValue(initial.publishAt),
+  const initiallyScheduled = isScheduledFor(initial.publishedAt);
+  const [isPublished, setIsPublished] = useState(
+    !initial.uuid || !!initial.publishedAt,
   );
+  const [isScheduled, setIsScheduled] = useState(initiallyScheduled);
+  const [publishAt, setPublishAt] = useState(() =>
+    toDateTimeInputValue(initiallyScheduled ? initial.publishedAt : null),
+  );
+  const alreadyPublishedAt = initiallyScheduled ? null : initial.publishedAt;
   const schedule = isPublished && isScheduled;
   const effectiveDate = schedule ? publishAt : date;
   const [uploading, setUploading] = useState(false);
@@ -87,8 +95,11 @@ export function NewsfeedForm({
       date: new Date(effectiveDate) as unknown as Date,
       headerImage,
       images: [],
-      isPublished,
-      publishAt: schedule ? new Date(publishAt).toISOString() : null,
+      publishedAt: !isPublished
+        ? null
+        : schedule
+          ? new Date(publishAt).toISOString()
+          : (alreadyPublishedAt ?? new Date().toISOString()),
     });
   };
 

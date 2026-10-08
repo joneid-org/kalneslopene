@@ -25,8 +25,7 @@ data class NewsfeedEntity(
     var headerImage: FileEntity? = null,
     @Column(name = "images", columnDefinition = "TEXT[]")
     var images: List<String> = emptyList(),
-    var isPublished: Boolean = true,
-    var publishAt: OffsetDateTime? = null,
+    var publishedAt: OffsetDateTime? = null,
 ) {
     @Id
     val uuid: UUID = UUID.randomUUID()
@@ -40,12 +39,8 @@ data class NewsfeedEntity(
             date,
             headerImage?.toDto(),
             images,
-            isPublished = isPublished,
-            publishAt = publishAt,
+            publishedAt = publishedAt,
         )
 
-    fun isVisibleToPublic(now: OffsetDateTime = OffsetDateTime.now()): Boolean =
-        isPublished &&
-            !date.toLocalDate().isAfter(now.toLocalDate()) &&
-            publishAt?.isAfter(now) != true
+    fun isVisibleToPublic(now: OffsetDateTime = OffsetDateTime.now()): Boolean = publishedAt?.isAfter(now) == false
 }

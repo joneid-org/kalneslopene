@@ -155,13 +155,12 @@ export function CRUDNewsfeeds() {
       )}
 
       <Dialog open={showAdd} onOpenChange={setShowAdd}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto">
+        <DialogContent className="flex max-h-[90vh] flex-col">
           <DialogHeader>
             <DialogTitle>Legg til nyhet</DialogTitle>
           </DialogHeader>
           <NewsfeedForm
             initial={{}}
-            submitLabel="Legg til"
             onCancel={() => setShowAdd(false)}
             onSubmit={(n) => addMutation.mutate(n)}
           />
@@ -174,14 +173,13 @@ export function CRUDNewsfeeds() {
           if (!o) setEditing(null);
         }}
       >
-        <DialogContent className="max-h-[90vh] overflow-y-auto">
+        <DialogContent className="flex max-h-[90vh] flex-col">
           <DialogHeader>
             <DialogTitle>Rediger nyhet</DialogTitle>
           </DialogHeader>
           {editing && (
             <NewsfeedForm
               initial={editing}
-              submitLabel="Lagre"
               onCancel={() => setEditing(null)}
               onSubmit={(n) => editMutation.mutate({ ...editing, ...n })}
             />

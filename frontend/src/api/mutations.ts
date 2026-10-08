@@ -57,7 +57,8 @@ export const MUTATIONS = {
     updatePhotographer: (raceUuid: string, photographer: string) =>
       kyClient
         .patch(`/api/races/${raceUuid}/photographer`, {
-          json: { photographer },
+          body: photographer,
+          headers: { "Content-Type": "text/plain" },
         })
         .json<RaceDTO>(),
   },

@@ -7,12 +7,12 @@ import com.grimsgaards.kalneslopene.race.model.RaceRepository
 import com.grimsgaards.kalneslopene.race.model.RaceRunnerEntity
 import com.grimsgaards.kalneslopene.runner.Gender
 import com.grimsgaards.kalneslopene.runner.RunnerRepository
-import org.springframework.data.domain.Pageable
-import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.MonthDay
 import java.time.Year
+import org.springframework.data.domain.Pageable
+import org.springframework.stereotype.Service
 
 @Service
 class StatisticsService(
@@ -91,7 +91,6 @@ class StatisticsService(
                     races = monthRaces.size,
                     male = male,
                     female = female,
-                    total = runners.size,
                     averageRunnersPerRace = runners.size.toDouble() / monthRaces.size,
                 )
             }

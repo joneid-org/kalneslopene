@@ -88,7 +88,7 @@ export function MonthlyParticipationList({ statistics }: Props) {
                   m.male,
                   m.female,
                   Math.round(m.averageRunnersPerRace),
-                  m.total,
+                  m.male + m.female,
                 ]}
               />
             );

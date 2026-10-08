@@ -166,7 +166,6 @@ export type MonthlyParticipationDTO = {
   races: number;
   male: number;
   female: number;
-  total: number;
   averageRunnersPerRace: number;
 };
 

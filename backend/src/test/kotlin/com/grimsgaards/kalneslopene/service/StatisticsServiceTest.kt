@@ -8,6 +8,9 @@ import com.grimsgaards.kalneslopene.runner.Gender
 import com.grimsgaards.kalneslopene.runner.RunnerEntity
 import com.grimsgaards.kalneslopene.runner.RunnerRepository
 import com.grimsgaards.kalneslopene.statistics.StatisticsService
+import java.time.Duration
+import java.time.LocalDateTime
+import java.time.Year
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -19,9 +22,6 @@ import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.quality.Strictness
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
-import java.time.Duration
-import java.time.LocalDateTime
-import java.time.Year
 
 @MockitoSettings(strictness = Strictness.LENIENT)
 class StatisticsServiceTest {
@@ -319,7 +319,6 @@ class StatisticsServiceTest {
                 assertThat(races).isEqualTo(2)
                 assertThat(male).isEqualTo(2)
                 assertThat(female).isEqualTo(2)
-                assertThat(total).isEqualTo(4)
                 assertThat(averageRunnersPerRace).isEqualTo(2.0)
             }
         }
@@ -335,7 +334,6 @@ class StatisticsServiceTest {
             val monthly = service.getRaceStatistics(null).monthlyParticipation
 
             assertThat(monthly.sumOf { it.races }).isEqualTo(1)
-            assertThat(monthly.sumOf { it.total }).isEqualTo(1)
         }
     }
 

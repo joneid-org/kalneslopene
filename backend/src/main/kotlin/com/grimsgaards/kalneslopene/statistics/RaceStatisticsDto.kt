@@ -26,7 +26,6 @@ data class MonthlyParticipationDto(
     val races: Int,
     val male: Int,
     val female: Int,
-    val total: Int,
     val averageRunnersPerRace: Double,
 )
 

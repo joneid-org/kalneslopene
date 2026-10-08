@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { StatCard } from "@/components/Statistics/StatCard.tsx";
 import {
   formatDayMonthShort,
   formatDDMonth,
@@ -70,11 +71,10 @@ export function AttendanceChart({ races }: Props) {
   ];
 
   return (
-    <div className="rounded-2xl border bg-card p-5">
-      <h3 className="mb-4 font-display text-base font-extrabold tracking-tight">
-        Deltakelse gjennom sesongen
-      </h3>
-
+    <StatCard
+      title="Deltakelse gjennom sesongen"
+      subtitle="Trykk på en stolpe for å se antall deltakere"
+    >
       <div className="flex gap-2">
         <div className="flex h-32 flex-col justify-between text-[10px] tabular-nums text-muted-foreground">
           {ticks.map((t) => (
@@ -166,6 +166,6 @@ export function AttendanceChart({ races }: Props) {
           </div>
         </div>
       </div>
-    </div>
+    </StatCard>
   );
 }

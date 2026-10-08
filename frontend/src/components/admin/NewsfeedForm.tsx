@@ -99,6 +99,14 @@ export function NewsfeedForm({
         : (alreadyPublishedAt ?? new Date().toISOString()),
     );
 
+  const handleDateChange = (value: string) => {
+    setDate(value);
+    if (value > toLocalDateString(new Date())) {
+      setIsScheduled(true);
+      setPublishAt(`${value}T00:00`);
+    }
+  };
+
   const isValid =
     header.trim() &&
     content.replace(/<[^>]+>/g, "").trim() &&
@@ -126,7 +134,7 @@ export function NewsfeedForm({
             <Input
               type="date"
               value={date}
-              onChange={(e) => setDate(e.target.value)}
+              onChange={(e) => handleDateChange(e.target.value)}
             />
           </div>
         )}

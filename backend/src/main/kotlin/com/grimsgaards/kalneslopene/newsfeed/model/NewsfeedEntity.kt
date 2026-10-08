@@ -42,5 +42,5 @@ data class NewsfeedEntity(
             publishedAt = publishedAt,
         )
 
-    fun isVisibleToPublic(now: OffsetDateTime = OffsetDateTime.now()): Boolean = publishedAt?.isAfter(now) == false
+    fun isVisibleToPublic(now: OffsetDateTime = OffsetDateTime.now()): Boolean = publishedAt?.isAfter(now) == false && !date.isAfter(now)
 }

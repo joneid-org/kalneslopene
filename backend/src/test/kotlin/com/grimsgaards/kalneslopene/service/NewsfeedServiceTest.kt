@@ -240,6 +240,27 @@ class NewsfeedServiceTest {
         }
 
         @Test
+        fun `hides a published newsfeed dated in the future from non-admins`() {
+            val futureDated = newsfeed(headerImage = null, date = OffsetDateTime.now().plusDays(1))
+            whenever(newsfeedRepository.findById(futureDated.uuid)).thenReturn(Optional.of(futureDated))
+            whenever(authenticatedUserProvider.isAdmin()).thenReturn(false)
+
+            assertThatThrownBy { service.findByUuid(futureDated.uuid) }
+                .isInstanceOf(NoSuchElementException::class.java)
+        }
+
+        @Test
+        fun `shows a newsfeed dated in the future to admins`() {
+            val futureDated = newsfeed(headerImage = null, date = OffsetDateTime.now().plusDays(1))
+            whenever(newsfeedRepository.findById(futureDated.uuid)).thenReturn(Optional.of(futureDated))
+            whenever(authenticatedUserProvider.isAdmin()).thenReturn(true)
+
+            val result = service.findByUuid(futureDated.uuid)
+
+            assertThat(result.uuid).isEqualTo(futureDated.uuid)
+        }
+
+        @Test
         fun `throws when the newsfeed does not exist`() {
             val missing = UUID.randomUUID()
             whenever(newsfeedRepository.findById(missing)).thenReturn(Optional.empty())
@@ -529,11 +550,12 @@ class NewsfeedServiceTest {
         content: String = "Innhold",
         tags: List<String> = listOf("nyhet"),
         publishedAt: OffsetDateTime? = OffsetDateTime.parse("2026-06-14T10:00:00Z"),
+        date: OffsetDateTime = OffsetDateTime.parse("2026-06-14T10:00:00Z"),
     ) = NewsfeedEntity(
         tags = tags,
         header = "Tittel",
         content = content,
-        date = OffsetDateTime.parse("2026-06-14T10:00:00Z"),
+        date = date,
         headerImage = headerImage,
         publishedAt = publishedAt,
     )

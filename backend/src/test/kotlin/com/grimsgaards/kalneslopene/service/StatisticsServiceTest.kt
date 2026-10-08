@@ -8,9 +8,6 @@ import com.grimsgaards.kalneslopene.runner.Gender
 import com.grimsgaards.kalneslopene.runner.RunnerEntity
 import com.grimsgaards.kalneslopene.runner.RunnerRepository
 import com.grimsgaards.kalneslopene.statistics.StatisticsService
-import java.time.Duration
-import java.time.LocalDateTime
-import java.time.Year
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -22,6 +19,9 @@ import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.quality.Strictness
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import java.time.Duration
+import java.time.LocalDateTime
+import java.time.Year
 
 @MockitoSettings(strictness = Strictness.LENIENT)
 class StatisticsServiceTest {

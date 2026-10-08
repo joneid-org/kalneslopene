@@ -51,7 +51,7 @@ class NewsfeedService(
         val entity =
             newsfeedRepository
                 .findByIdOrNull(uuid)
-                ?.takeIf { it.isPublished || authenticatedUserProvider.isAdmin() }
+                ?.takeIf { it.isVisibleToPublic() || authenticatedUserProvider.isAdmin() }
                 ?: throw NoSuchElementException("Newsfeed with uuid $uuid not found")
         val newsfeed = entity.toDto()
         return newsfeed.copy(connectedRace = findConnectedRace(newsfeed))
@@ -108,6 +108,7 @@ class NewsfeedService(
                         headerImage = headerImage,
                         images = newsfeed.images,
                         isPublished = newsfeed.isPublished,
+                        publishAt = newsfeed.publishAt,
                     ),
                 ).toDto()
         s3Service.confirmUploadsByUrl(s3Service.extractBucketImageUrls(newsfeed.content))
@@ -140,6 +141,7 @@ class NewsfeedService(
             date = updatedNewsfeed.date
             images = updatedNewsfeed.images
             isPublished = updatedNewsfeed.isPublished
+            publishAt = updatedNewsfeed.publishAt
         }
 
         val saved = newsfeedRepository.save(existingNews).toDto()

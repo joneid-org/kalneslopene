@@ -58,6 +58,7 @@ export type NewsFeedDTO = {
   images?: string[];
   connectedRace?: RaceDTO;
   isPublished: boolean;
+  publishAt?: string | null;
 };
 export type NewsFeedInput = Omit<NewsFeedDTO, "uuid">;
 

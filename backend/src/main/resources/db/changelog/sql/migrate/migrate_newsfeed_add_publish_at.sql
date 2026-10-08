@@ -1,0 +1,2 @@
+ALTER TABLE newsfeed
+    ADD COLUMN publish_at TIMESTAMP WITH TIME ZONE;

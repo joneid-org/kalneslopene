@@ -7,6 +7,7 @@ import {
   formatSecondsToTime,
   mapResultTimeToNumber,
   raceDateToSortKey,
+  toLocalDateTimeString,
 } from "@/lib/timeUtils.ts";
 import type {
   OrganizerDTO,
@@ -29,7 +30,7 @@ export function genderLabel(gender: string): string {
 export function getYears(races: RaceDTO[]): number[];
 export function getYears(races: RaceInfoDTO[]): number[];
 export function getYears(races: RaceDTO[] | RaceInfoDTO[]): number[] {
-  const now = new Date().toISOString();
+  const now = toLocalDateTimeString(new Date());
   const years = new Set<number>();
   for (const race of races) {
     if (raceDateToSortKey(race.raceDate) <= now) {
@@ -48,7 +49,7 @@ export function getRacesDTOByYear(
   races: RaceDTO[] | RaceInfoDTO[],
   year: number,
 ): RaceDTO[] | RaceInfoDTO[] {
-  const now = new Date().toISOString();
+  const now = toLocalDateTimeString(new Date());
   return races
     .filter(
       (race) =>
@@ -106,7 +107,7 @@ export function getMostRecentRace(
 export function getMostRecentRace(
   races: RaceDTO[] | RaceInfoDTO[],
 ): RaceDTO | RaceInfoDTO | null {
-  const now = new Date().toISOString();
+  const now = toLocalDateTimeString(new Date());
   let best: RaceDTO | RaceInfoDTO | null = null;
   let bestKey = "";
   for (const race of races) {
@@ -128,7 +129,7 @@ export function getNextRace(
   races: RaceDTO[] | RaceInfoDTO[],
   uuid?: string,
 ): RaceDTO | RaceInfoDTO | null {
-  const now = new Date().toISOString();
+  const now = toLocalDateTimeString(new Date());
   const currentRace = races.find((race) => race.uuid === uuid);
   if (!currentRace) return null;
   const currentKey = raceDateToSortKey(currentRace.raceDate);
@@ -236,7 +237,7 @@ export function getBestRaceThisYearFromRunner(
 }
 
 export function isPast(race: RaceInfoDTO): boolean {
-  return raceDateToSortKey(race.raceDate) < new Date().toISOString();
+  return raceDateToSortKey(race.raceDate) < toLocalDateTimeString(new Date());
 }
 
 export function readFileAsDataURL(file: File): Promise<string> {

@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label.tsx";
 import { Switch } from "@/components/ui/switch.tsx";
 import { tagColor, useTags } from "@/lib/newsUtils.ts";
 import { convertImageToWebp } from "@/lib/photoUtils.ts";
+import { toDateTimeInputValue, toLocalDateString } from "@/lib/timeUtils.ts";
 import type { NewsFeedDTO, NewsfeedTagDTO, S3FileDto } from "@/model/DTO.ts";
 
 export function NewsfeedForm({
@@ -33,15 +34,19 @@ export function NewsfeedForm({
   const [selectedTags, setSelectedTags] = useState<string[]>(
     initial.tags ?? [],
   );
-  const [date, setDate] = useState(
-    initial.date
-      ? new Date(initial.date).toISOString().slice(0, 10)
-      : new Date().toISOString().slice(0, 10),
+  const [date, setDate] = useState(() =>
+    toLocalDateString(new Date(initial.date ?? Date.now())),
   );
   const [headerImage, setHeaderImage] = useState<S3FileDto | undefined>(
     initial.headerImage,
   );
   const [isPublished, setIsPublished] = useState(initial.isPublished ?? true);
+  const [isScheduled, setIsScheduled] = useState(!!initial.publishAt);
+  const [publishAt, setPublishAt] = useState(() =>
+    toDateTimeInputValue(initial.publishAt),
+  );
+  const schedule = isPublished && isScheduled;
+  const effectiveDate = schedule ? publishAt : date;
   const [uploading, setUploading] = useState(false);
   const availableTags = useTags();
   const selectedTagsSet = useMemo(() => new Set(selectedTags), [selectedTags]);
@@ -79,17 +84,18 @@ export function NewsfeedForm({
       header: header.trim(),
       content: content.trim(),
       tags: selectedTags,
-      date: new Date(date) as unknown as Date,
+      date: new Date(effectiveDate) as unknown as Date,
       headerImage,
       images: [],
       isPublished,
+      publishAt: schedule ? new Date(publishAt).toISOString() : null,
     });
   };
 
   const isValid =
     header.trim() &&
     content.replace(/<[^>]+>/g, "").trim() &&
-    date &&
+    effectiveDate &&
     !uploading;
 
   return (
@@ -106,14 +112,16 @@ export function NewsfeedForm({
         <Label>Innhold</Label>
         <RichTextEditor value={content} onChange={setContent} />
       </div>
-      <div className="space-y-1.5">
-        <Label>Dato</Label>
-        <Input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-        />
-      </div>
+      {!schedule && (
+        <div className="space-y-1.5">
+          <Label>Dato</Label>
+          <Input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
+        </div>
+      )}
       <div className="space-y-1.5">
         <Label>Tagger</Label>
         <DropdownMenu>
@@ -200,21 +208,14 @@ export function NewsfeedForm({
         )}
       </div>
 
-      <div className="flex items-center justify-between gap-4 rounded-md border p-3">
-        <div className="space-y-0.5">
-          <Label htmlFor="newsfeed-published">Publisert</Label>
-          <p className="text-xs text-muted-foreground">
-            {isPublished
-              ? "Nyheten er synlig for alle."
-              : "Lagres som utkast og er kun synlig for administratorer."}
-          </p>
-        </div>
-        <Switch
-          id="newsfeed-published"
-          checked={isPublished}
-          onCheckedChange={setIsPublished}
-        />
-      </div>
+      <PublishSettings
+        isPublished={isPublished}
+        onPublishedChange={setIsPublished}
+        isScheduled={isScheduled}
+        onScheduledChange={setIsScheduled}
+        publishAt={publishAt}
+        onPublishAtChange={setPublishAt}
+      />
 
       <FormFooter
         submitLabel={submitLabel}
@@ -222,6 +223,64 @@ export function NewsfeedForm({
         onCancel={onCancel}
         onSubmit={handleSubmit}
       />
+    </div>
+  );
+}
+
+function PublishSettings({
+  isPublished,
+  onPublishedChange,
+  isScheduled,
+  onScheduledChange,
+  publishAt,
+  onPublishAtChange,
+}: {
+  isPublished: boolean;
+  onPublishedChange: (value: boolean) => void;
+  isScheduled: boolean;
+  onScheduledChange: (value: boolean) => void;
+  publishAt: string;
+  onPublishAtChange: (value: string) => void;
+}) {
+  return (
+    <div className="space-y-3 rounded-md border p-3">
+      <div className="flex items-center justify-between gap-4">
+        <div className="space-y-0.5">
+          <Label htmlFor="newsfeed-published">Publisert</Label>
+          <p className="text-xs text-muted-foreground">
+            {!isPublished
+              ? "Lagres som utkast og er kun synlig for administratorer."
+              : isScheduled
+                ? "Nyheten blir synlig for alle på valgt tidspunkt."
+                : "Nyheten er synlig for alle."}
+          </p>
+        </div>
+        <Switch
+          id="newsfeed-published"
+          checked={isPublished}
+          onCheckedChange={onPublishedChange}
+        />
+      </div>
+      {isPublished && (
+        <>
+          <div className="flex items-center justify-between gap-4 border-t pt-3">
+            <Label htmlFor="newsfeed-scheduled">Planlagt publisering</Label>
+            <Switch
+              id="newsfeed-scheduled"
+              checked={isScheduled}
+              onCheckedChange={onScheduledChange}
+            />
+          </div>
+          {isScheduled && (
+            <Input
+              type="datetime-local"
+              aria-label="Publiseringstidspunkt"
+              value={publishAt}
+              onChange={(e) => onPublishAtChange(e.target.value)}
+            />
+          )}
+        </>
+      )}
     </div>
   );
 }

@@ -9,6 +9,7 @@ import { QUERIES } from "@/api/queries.ts";
 import { queryClient } from "@/api/queryClient.ts";
 import { IMMUTABLE_CACHE_CONTROL, uploadToS3 } from "@/api/s3.ts";
 import { AdminPhotoGrid } from "@/components/admin/AdminPhotoGrid.tsx";
+import { PhotographerField } from "@/components/admin/PhotographerField.tsx";
 import { UploadDropzone } from "@/components/Pictures/UploadDropzone.tsx";
 import {
   Accordion,
@@ -201,6 +202,15 @@ export function ImagesPage() {
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="space-y-3">
+                  <PhotographerField
+                    raceUuid={race.uuid}
+                    photographer={race.photographer}
+                    onSaved={() =>
+                      queryClient.invalidateQueries({
+                        queryKey: query.queryKey,
+                      })
+                    }
+                  />
                   <UploadDropzone
                     onFilesSelected={(fileList) =>
                       uploadMutation.mutate({ raceUuid: race.uuid, fileList })

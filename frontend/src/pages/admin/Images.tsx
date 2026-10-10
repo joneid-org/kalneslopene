@@ -153,6 +153,8 @@ export function ImagesPage() {
         }),
       );
     },
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: query.queryKey }),
   });
 
   const deleteMutation = useMutation({

@@ -341,6 +341,50 @@ class RaceServiceTest {
     }
 
     @Nested
+    inner class ConfirmPhotosOnRead {
+        private fun raceWithPhoto(file: FileEntity) =
+            existingRace().apply {
+                isPublished = true
+                racePhotos.add(RacePhotoEntity(race = this, file = file, orderIndex = 1.0))
+            }
+
+        @Test
+        fun `confirms pending photos under the race prefix before returning`() {
+            val file = FileEntity("pending")
+            val race = raceWithPhoto(file)
+            Mockito.`when`(raceRepository.findById(race.uuid)).thenReturn(Optional.of(race))
+
+            service.findByUuid(race.uuid)
+
+            Mockito.verify(s3Service).confirmUploadedFiles(listOf(file), "race-photos/${race.uuid}/")
+        }
+
+        @Test
+        fun `does not touch the bucket when no photos are pending`() {
+            val race = raceWithPhoto(FileEntity("confirmed").apply { uploadConfirmedAt = OffsetDateTime.now() })
+            Mockito.`when`(raceRepository.findById(race.uuid)).thenReturn(Optional.of(race))
+
+            service.findByUuid(race.uuid)
+
+            Mockito.verifyNoInteractions(s3Service)
+        }
+
+        @Test
+        fun `still returns the race when the bucket cannot be reached`() {
+            val file = FileEntity("pending")
+            val race = raceWithPhoto(file)
+            Mockito.`when`(raceRepository.findById(race.uuid)).thenReturn(Optional.of(race))
+            Mockito
+                .`when`(s3Service.confirmUploadedFiles(listOf(file), "race-photos/${race.uuid}/"))
+                .thenThrow(IllegalStateException("bucket down"))
+
+            val dto = service.findByUuid(race.uuid)
+
+            assertThat(dto.photos).isEmpty()
+        }
+    }
+
+    @Nested
     inner class ReorderPhoto {
         private fun confirmedFile(url: String) = FileEntity(url).apply { uploadConfirmedAt = OffsetDateTime.now() }
 

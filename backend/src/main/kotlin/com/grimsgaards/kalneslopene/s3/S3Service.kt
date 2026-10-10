@@ -4,10 +4,9 @@ import com.grimsgaards.kalneslopene.common.logger
 import com.grimsgaards.kalneslopene.race.RACE_INFO_CACHE
 import io.minio.GetPresignedObjectUrlArgs
 import io.minio.Http
+import io.minio.ListObjectsArgs
 import io.minio.MinioClient
 import io.minio.RemoveObjectsArgs
-import io.minio.StatObjectArgs
-import io.minio.errors.ErrorResponseException
 import io.minio.messages.DeleteRequest
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Value
@@ -122,31 +121,46 @@ class S3Service(
 
     private fun FileEntity.objectKey() = url.substringAfter("$baseUrl/$minioBucketName/")
 
-    private fun objectExists(file: FileEntity): Boolean =
-        try {
-            minioClient.statObject(
-                StatObjectArgs
+    private fun listObjectKeys(prefix: String): Set<String> =
+        minioClient
+            .listObjects(
+                ListObjectsArgs
                     .builder()
                     .bucket(minioBucketName)
-                    .`object`(file.objectKey())
+                    .prefix(prefix)
+                    .recursive(true)
                     .build(),
-            )
-            true
-        } catch (e: ErrorResponseException) {
-            if (e.errorResponse().code() == "NoSuchKey") false else throw e
+            ).map { it.get().objectName() }
+            .toSet()
+
+    /** Confirms the files under [keyPrefix] that have landed in the bucket, using one LIST request. */
+    @Transactional
+    fun confirmUploadedFiles(
+        files: Collection<FileEntity>,
+        keyPrefix: String,
+    ): Int {
+        val pending = files.filter { it.uploadConfirmedAt == null }
+        if (pending.isEmpty()) return 0
+        val keys = listObjectKeys(keyPrefix)
+        val uploaded = pending.filter { it.objectKey() in keys }
+        if (uploaded.isNotEmpty()) {
+            val now = OffsetDateTime.now()
+            uploaded.forEach { it.uploadConfirmedAt = now }
+            fileRepository.saveAll(uploaded)
         }
+        return uploaded.size
+    }
 
     @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
     @Transactional
     fun confirmUploadedRacePhotos() {
-        val pending =
-            fileRepository.findAllByUploadConfirmedAtIsNullAndUrlStartingWith("$baseUrl/$minioBucketName/race-photos/")
-        val uploaded = pending.filter(::objectExists)
-        if (uploaded.isEmpty()) return
-        val now = OffsetDateTime.now()
-        uploaded.forEach { it.uploadConfirmedAt = now }
-        fileRepository.saveAll(uploaded)
-        logger.info("Confirmed ${uploaded.size} uploaded race photos")
+        val confirmed =
+            fileRepository
+                .findAllByUploadConfirmedAtIsNullAndUrlStartingWith("$baseUrl/$minioBucketName/race-photos/")
+                .groupBy { it.objectKey().substringBeforeLast('/') + "/" }
+                .entries
+                .sumOf { (prefix, files) -> confirmUploadedFiles(files, prefix) }
+        if (confirmed > 0) logger.info("Confirmed $confirmed uploaded race photos")
     }
 
     @Scheduled(cron = "0 0 * * * *")

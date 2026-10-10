@@ -8,7 +8,7 @@ export type AuthUser = {
 export type AuthContextType = {
   user: AuthUser | null;
   login: (user: AuthUser) => void;
-  logout: () => Promise<void>;
+  logout: () => void;
   isAuthenticated: boolean;
   /** True until the initial session probe settles. Guard redirects on this. */
   isLoading: boolean;

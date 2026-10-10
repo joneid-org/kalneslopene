@@ -1,4 +1,5 @@
 import { infiniteQueryOptions } from "@tanstack/react-query";
+import { HTTPError } from "ky";
 import { kyClient } from "@/api/queryClient.ts";
 import type { RaceFilter } from "@/api/types.ts";
 import type {
@@ -240,7 +241,16 @@ export const QUERIES = {
     },
     me: {
       queryKey: ["auth", "me"],
-      queryFn: () => kyClient.get("/api/auth/me").json<LoginResponse>(),
+      queryFn: async (): Promise<LoginResponse | null> => {
+        try {
+          return await kyClient.get("/api/auth/me").json<LoginResponse>();
+        } catch (error) {
+          if (error instanceof HTTPError && error.response.status === 401) {
+            return null;
+          }
+          throw error;
+        }
+      },
     },
   },
   user: {

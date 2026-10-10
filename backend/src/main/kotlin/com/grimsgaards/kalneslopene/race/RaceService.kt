@@ -213,15 +213,16 @@ class RaceService(
     ): Map<String, PhotoUploadInfo> {
         val race = raceRepository.findById(raceUuid).orElseThrow { NoSuchElementException("Race $raceUuid not found") }
         val prefix = racePhotoPrefix(raceUuid)
-        val s3FileEntitiesMap = s3Service.createFileEntities(photoNames.map { "$prefix$it" })
+        val keysByName = photoNames.associateWith { "$prefix${UUID.randomUUID()}-$it" }
+        val s3FileEntitiesMap = s3Service.createFileEntities(keysByName.values.toList())
         var nextOrderIndex = (race.racePhotos.maxOfOrNull { it.orderIndex } ?: 0.0) + 1
         s3FileEntitiesMap.values.forEach { file ->
             race.racePhotos.add(RacePhotoEntity(race = race, file = file, orderIndex = nextOrderIndex++))
         }
-        return photoNames.associateWith {
+        return keysByName.mapValues { (_, key) ->
             PhotoUploadInfo(
-                uploadUrl = s3Service.getPresignedUrl("$prefix$it", immutable = true),
-                s3File = s3FileEntitiesMap["$prefix$it"]!!.toDtoDangerously(),
+                uploadUrl = s3Service.getPresignedUrl(key, immutable = true),
+                s3File = s3FileEntitiesMap.getValue(key).toDtoDangerously(),
             )
         }
     }

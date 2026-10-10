@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { QUERIES } from "@/api/queries.ts";
-import type { NewsfeedTagDTO } from "@/model/DTO.ts";
+import { formatInstantDateTime } from "@/lib/timeUtils.ts";
+import type { NewsFeedDTO, NewsfeedTagDTO } from "@/model/DTO.ts";
 
 export const PREDEFINED_TAGS: NewsfeedTagDTO[] = [
   { value: "resultater", color: "#2563eb" },
@@ -15,6 +16,16 @@ export function tagColor(tag: string, tags?: NewsfeedTagDTO[]): string {
     list.find((t) => t.value.toLowerCase() === tag.toLowerCase())?.color ??
     "#000000"
   );
+}
+
+export function isScheduled(publishedAt?: string | null): boolean {
+  return !!publishedAt && new Date(publishedAt) > new Date();
+}
+
+export function upcomingPublishLabel(feed: NewsFeedDTO): string | undefined {
+  return feed.publishedAt && isScheduled(feed.publishedAt)
+    ? formatInstantDateTime(feed.publishedAt)
+    : undefined;
 }
 
 export function useTags(): NewsfeedTagDTO[] {

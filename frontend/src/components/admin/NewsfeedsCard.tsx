@@ -1,8 +1,14 @@
-import { NewspaperIcon } from "lucide-react";
+import {
+  CheckCircle2Icon,
+  CircleDashedIcon,
+  ClockIcon,
+  NewspaperIcon,
+} from "lucide-react";
+import { Link } from "react-router";
 import { AdminCard } from "@/components/admin/AdminCard.tsx";
 import { RowActions } from "@/components/admin/RowActions.tsx";
 import { TableCell } from "@/components/ui/table.tsx";
-import { tagColor, useTags } from "@/lib/newsUtils.ts";
+import { tagColor, upcomingPublishLabel, useTags } from "@/lib/newsUtils.ts";
 import { formatDateFull } from "@/lib/timeUtils.ts";
 import type { NewsFeedDTO } from "@/model/DTO.ts";
 
@@ -28,31 +34,66 @@ export function NewsfeedsCard({
         { label: "", className: "w-20" },
       ]}
       emptyText="Ingen nyheter registrert."
-      renderRow={(feed) => (
-        <>
-          <TableCell className="text-muted-foreground tabular-nums whitespace-nowrap">
-            {formatDateFull(feed.date)}
-          </TableCell>
-          <TableCell className="font-medium">{feed.header}</TableCell>
-          <TableCell className="hidden sm:table-cell">
-            <div className="flex flex-wrap gap-1">
-              {feed.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="tag-pill"
-                  style={{ color: tagColor(tag, tags) }}
-                >
-                  {tag}
+      renderRow={(feed) => {
+        const upcoming = upcomingPublishLabel(feed);
+        return (
+          <>
+            <TableCell className="text-muted-foreground tabular-nums whitespace-nowrap">
+              <span className="inline-flex items-center gap-2">
+                {!feed.publishedAt ? (
+                  <CircleDashedIcon
+                    className="size-3.5 shrink-0 text-red-600"
+                    aria-label="Utkast"
+                  />
+                ) : upcoming ? (
+                  <ClockIcon
+                    className="size-3.5 shrink-0 text-amber-600"
+                    aria-label="Planlagt"
+                  />
+                ) : (
+                  <CheckCircle2Icon
+                    className="size-3.5 shrink-0 text-green-600"
+                    aria-label="Publisert"
+                  />
+                )}
+                {formatDateFull(feed.date)}
+              </span>
+            </TableCell>
+            <TableCell className="font-medium">
+              <Link to={`/nyheter/${feed.uuid}`} className="hover:underline">
+                {feed.header}
+              </Link>
+              {!feed.publishedAt && (
+                <span className="ml-2 text-xs font-normal text-muted-foreground">
+                  Utkast
                 </span>
-              ))}
-            </div>
-          </TableCell>
-          <RowActions
-            onEdit={() => onEdit(feed)}
-            onDelete={() => onDelete(feed)}
-          />
-        </>
-      )}
+              )}
+              {upcoming && (
+                <span className="ml-2 text-xs font-normal text-muted-foreground">
+                  Planlagt {upcoming}
+                </span>
+              )}
+            </TableCell>
+            <TableCell className="hidden sm:table-cell">
+              <div className="flex flex-wrap gap-1">
+                {feed.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="tag-pill"
+                    style={{ color: tagColor(tag, tags) }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </TableCell>
+            <RowActions
+              onEdit={() => onEdit(feed)}
+              onDelete={() => onDelete(feed)}
+            />
+          </>
+        );
+      }}
     />
   );
 }

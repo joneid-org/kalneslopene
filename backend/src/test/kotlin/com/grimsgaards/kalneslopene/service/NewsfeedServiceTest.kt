@@ -9,6 +9,7 @@ import com.grimsgaards.kalneslopene.race.dto.RaceDTO
 import com.grimsgaards.kalneslopene.race.dto.RaceFilter
 import com.grimsgaards.kalneslopene.s3.FileEntity
 import com.grimsgaards.kalneslopene.s3.S3Service
+import com.grimsgaards.kalneslopene.security.AuthenticatedUserProvider
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
@@ -48,6 +49,9 @@ class NewsfeedServiceTest {
     @Mock
     lateinit var raceService: RaceService
 
+    @Mock
+    lateinit var authenticatedUserProvider: AuthenticatedUserProvider
+
     private lateinit var service: NewsfeedService
 
     @BeforeEach
@@ -62,7 +66,7 @@ class NewsfeedServiceTest {
             ),
         ).thenReturn(PageImpl(emptyList()))
 
-        service = NewsfeedService(newsfeedRepository, s3Service, raceService)
+        service = NewsfeedService(newsfeedRepository, s3Service, raceService, authenticatedUserProvider)
     }
 
     @Nested
@@ -71,38 +75,71 @@ class NewsfeedServiceTest {
         private val pageable = PageRequest.of(0, 6, Sort.by(Sort.Direction.DESC, "date"))
 
         @Test
-        fun `without a tag lists every newsfeed`() {
-            whenever(newsfeedRepository.findAll(pageable))
+        fun `without a tag lists published newsfeeds`() {
+            whenever(newsfeedRepository.findAllByPublished(true, pageable))
                 .thenReturn(PageImpl(listOf(newsfeed(headerImage = null))))
 
             val result = service.getNewsfeedPage(0, 6)
 
             assertThat(result.content).hasSize(1)
-            verify(newsfeedRepository).findAll(pageable)
+            verify(newsfeedRepository).findAllByPublished(true, pageable)
             verifyNoMoreInteractions(newsfeedRepository)
         }
 
         @Test
         fun `with a tag filters through the repository`() {
-            whenever(newsfeedRepository.findByTagIgnoreCase("nyhet", pageable))
+            whenever(newsfeedRepository.findByTagIgnoreCase("nyhet", true, pageable))
                 .thenReturn(PageImpl(listOf(newsfeed(headerImage = null))))
 
             val result = service.getNewsfeedPage(0, 6, "nyhet")
 
             assertThat(result.content).hasSize(1)
-            verify(newsfeedRepository).findByTagIgnoreCase("nyhet", pageable)
+            verify(newsfeedRepository).findByTagIgnoreCase("nyhet", true, pageable)
             verifyNoMoreInteractions(newsfeedRepository)
         }
 
         @Test
         fun `treats a blank tag as no filter`() {
-            whenever(newsfeedRepository.findAll(pageable))
+            whenever(newsfeedRepository.findAllByPublished(true, pageable))
                 .thenReturn(PageImpl(emptyList()))
 
             service.getNewsfeedPage(0, 6, "  ")
 
-            verify(newsfeedRepository).findAll(pageable)
+            verify(newsfeedRepository).findAllByPublished(true, pageable)
             verifyNoMoreInteractions(newsfeedRepository)
+        }
+
+        @Test
+        fun `includes unpublished newsfeeds for admins who ask for them`() {
+            whenever(authenticatedUserProvider.isAdmin()).thenReturn(true)
+            whenever(newsfeedRepository.findAllByPublished(false, pageable))
+                .thenReturn(PageImpl(emptyList()))
+
+            service.getNewsfeedPage(0, 6, includeUnpublished = true)
+
+            verify(newsfeedRepository).findAllByPublished(false, pageable)
+        }
+
+        @Test
+        fun `ignores includeUnpublished for non-admins`() {
+            whenever(authenticatedUserProvider.isAdmin()).thenReturn(false)
+            whenever(newsfeedRepository.findAllByPublished(true, pageable))
+                .thenReturn(PageImpl(emptyList()))
+
+            service.getNewsfeedPage(0, 6, includeUnpublished = true)
+
+            verify(newsfeedRepository).findAllByPublished(true, pageable)
+        }
+
+        @Test
+        fun `admins still see only published newsfeeds unless they ask`() {
+            whenever(authenticatedUserProvider.isAdmin()).thenReturn(true)
+            whenever(newsfeedRepository.findAllByPublished(true, pageable))
+                .thenReturn(PageImpl(emptyList()))
+
+            service.getNewsfeedPage(0, 6)
+
+            verify(newsfeedRepository).findAllByPublished(true, pageable)
         }
     }
 
@@ -147,10 +184,110 @@ class NewsfeedServiceTest {
 
             assertThat(result.connectedRace).isNull()
         }
+
+        @Test
+        fun `hides an unpublished newsfeed from non-admins`() {
+            val draft = newsfeed(headerImage = null, publishedAt = null)
+            whenever(newsfeedRepository.findById(draft.uuid)).thenReturn(Optional.of(draft))
+            whenever(authenticatedUserProvider.isAdmin()).thenReturn(false)
+
+            assertThatThrownBy { service.findByUuid(draft.uuid) }
+                .isInstanceOf(NoSuchElementException::class.java)
+        }
+
+        @Test
+        fun `shows an unpublished newsfeed to admins`() {
+            val draft = newsfeed(headerImage = null, publishedAt = null)
+            whenever(newsfeedRepository.findById(draft.uuid)).thenReturn(Optional.of(draft))
+            whenever(authenticatedUserProvider.isAdmin()).thenReturn(true)
+
+            val result = service.findByUuid(draft.uuid)
+
+            assertThat(result.publishedAt).isNull()
+        }
+
+        @Test
+        fun `hides a newsfeed scheduled for the future from non-admins`() {
+            val scheduled = newsfeed(headerImage = null, publishedAt = OffsetDateTime.now().plusDays(1))
+            whenever(newsfeedRepository.findById(scheduled.uuid)).thenReturn(Optional.of(scheduled))
+            whenever(authenticatedUserProvider.isAdmin()).thenReturn(false)
+
+            assertThatThrownBy { service.findByUuid(scheduled.uuid) }
+                .isInstanceOf(NoSuchElementException::class.java)
+        }
+
+        @Test
+        fun `shows a newsfeed whose scheduled time has passed to non-admins`() {
+            val due = newsfeed(headerImage = null, publishedAt = OffsetDateTime.now().minusMinutes(1))
+            whenever(newsfeedRepository.findById(due.uuid)).thenReturn(Optional.of(due))
+            whenever(authenticatedUserProvider.isAdmin()).thenReturn(false)
+
+            val result = service.findByUuid(due.uuid)
+
+            assertThat(result.uuid).isEqualTo(due.uuid)
+        }
+
+        @Test
+        fun `shows a newsfeed scheduled for the future to admins`() {
+            val publishedAt = OffsetDateTime.now().plusDays(1)
+            val scheduled = newsfeed(headerImage = null, publishedAt = publishedAt)
+            whenever(newsfeedRepository.findById(scheduled.uuid)).thenReturn(Optional.of(scheduled))
+            whenever(authenticatedUserProvider.isAdmin()).thenReturn(true)
+
+            val result = service.findByUuid(scheduled.uuid)
+
+            assertThat(result.publishedAt).isEqualTo(publishedAt)
+        }
+
+        @Test
+        fun `hides a published newsfeed dated in the future from non-admins`() {
+            val futureDated = newsfeed(headerImage = null, date = OffsetDateTime.now().plusDays(1))
+            whenever(newsfeedRepository.findById(futureDated.uuid)).thenReturn(Optional.of(futureDated))
+            whenever(authenticatedUserProvider.isAdmin()).thenReturn(false)
+
+            assertThatThrownBy { service.findByUuid(futureDated.uuid) }
+                .isInstanceOf(NoSuchElementException::class.java)
+        }
+
+        @Test
+        fun `shows a newsfeed dated in the future to admins`() {
+            val futureDated = newsfeed(headerImage = null, date = OffsetDateTime.now().plusDays(1))
+            whenever(newsfeedRepository.findById(futureDated.uuid)).thenReturn(Optional.of(futureDated))
+            whenever(authenticatedUserProvider.isAdmin()).thenReturn(true)
+
+            val result = service.findByUuid(futureDated.uuid)
+
+            assertThat(result.uuid).isEqualTo(futureDated.uuid)
+        }
+
+        @Test
+        fun `throws when the newsfeed does not exist`() {
+            val missing = UUID.randomUUID()
+            whenever(newsfeedRepository.findById(missing)).thenReturn(Optional.empty())
+
+            assertThatThrownBy { service.findByUuid(missing) }
+                .isInstanceOf(NoSuchElementException::class.java)
+        }
     }
 
     @Nested
     inner class CreateNewsfeed {
+        @Test
+        fun `can save a newsfeed as an unpublished draft`() {
+            val result = service.createNewsfeed(input(publishedAt = null))
+
+            assertThat(result.publishedAt).isNull()
+        }
+
+        @Test
+        fun `stores the scheduled publish time`() {
+            val publishedAt = OffsetDateTime.parse("2026-10-09T18:00:00+02:00")
+
+            val result = service.createNewsfeed(input(publishedAt = publishedAt))
+
+            assertThat(result.publishedAt).isEqualTo(publishedAt)
+        }
+
         @Test
         fun `confirms the referenced header image upload`() {
             val fileUuid = UUID.randomUUID()
@@ -185,6 +322,27 @@ class NewsfeedServiceTest {
 
     @Nested
     inner class UpdateNewsfeed {
+        @Test
+        fun `publishes a draft`() {
+            val draft = newsfeed(headerImage = null, publishedAt = null)
+            whenever(newsfeedRepository.findById(draft.uuid)).thenReturn(Optional.of(draft))
+            val publishedAt = OffsetDateTime.parse("2026-10-08T12:00:00Z")
+
+            val result = service.updateNewsfeed(draft.uuid, input(publishedAt = publishedAt))
+
+            assertThat(result.publishedAt).isEqualTo(publishedAt)
+        }
+
+        @Test
+        fun `turns a scheduled newsfeed back into a draft`() {
+            val scheduled = newsfeed(headerImage = null, publishedAt = OffsetDateTime.now().plusDays(1))
+            whenever(newsfeedRepository.findById(scheduled.uuid)).thenReturn(Optional.of(scheduled))
+
+            val result = service.updateNewsfeed(scheduled.uuid, input(publishedAt = null))
+
+            assertThat(result.publishedAt).isNull()
+        }
+
         @Test
         fun `leaves an unchanged header image untouched`() {
             val existing = newsfeed(headerImage = confirmedFile())
@@ -391,12 +549,15 @@ class NewsfeedServiceTest {
         headerImage: FileEntity?,
         content: String = "Innhold",
         tags: List<String> = listOf("nyhet"),
+        publishedAt: OffsetDateTime? = OffsetDateTime.parse("2026-06-14T10:00:00Z"),
+        date: OffsetDateTime = OffsetDateTime.parse("2026-06-14T10:00:00Z"),
     ) = NewsfeedEntity(
         tags = tags,
         header = "Tittel",
         content = content,
-        date = OffsetDateTime.parse("2026-06-14T10:00:00Z"),
+        date = date,
         headerImage = headerImage,
+        publishedAt = publishedAt,
     )
 
     private fun confirmedFile() =
@@ -418,12 +579,14 @@ class NewsfeedServiceTest {
     private fun input(
         headerImageUuid: UUID? = null,
         content: String = "Innhold",
+        publishedAt: OffsetDateTime? = OffsetDateTime.parse("2026-06-14T10:00:00Z"),
     ) = NewsfeedInput(
         tags = listOf("nyhet"),
         header = "Tittel",
         content = content,
         date = OffsetDateTime.parse("2026-06-14T10:00:00Z"),
         headerImageUuid = headerImageUuid,
+        publishedAt = publishedAt,
     )
 
     private fun <T> whenever(call: T): OngoingStubbing<T> = Mockito.`when`(call)

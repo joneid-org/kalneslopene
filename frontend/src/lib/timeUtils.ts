@@ -15,6 +15,21 @@ export function toLocalDateTimeString(date: Date): string {
   return `${y}-${mo}-${d}T${h}:${mi}:${s}`;
 }
 
+// For timezone-aware instants (e.g. newsfeed publishedAt), shown in the viewer's local time.
+export function formatInstantDateTime(instant: string): string {
+  const local = toLocalDateTimeString(new Date(instant));
+  return `${formatDateFull(local)} kl. ${formatTimeStamp(local)}`;
+}
+
+export function toLocalDateString(date: Date): string {
+  return toLocalDateTimeString(date).slice(0, 10);
+}
+
+// "YYYY-MM-DDTHH:MM" in local time, the value format of <input type="datetime-local">.
+export function toDateTimeInputValue(instant?: string | null): string {
+  return instant ? toLocalDateTimeString(new Date(instant)).slice(0, 16) : "";
+}
+
 export function startOfYearString(
   year: number | undefined,
 ): string | undefined {
@@ -59,7 +74,7 @@ export function raceDateToSortKey(raceDate: unknown): string {
     const [y, mo, d, h = 0, mi = 0] = raceDate as number[];
     return `${y}-${String(mo).padStart(2, "0")}-${String(d).padStart(2, "0")}T${String(h).padStart(2, "0")}:${String(mi).padStart(2, "0")}`;
   }
-  if (raceDate instanceof Date) return raceDate.toISOString();
+  if (raceDate instanceof Date) return toLocalDateTimeString(raceDate);
   return String(raceDate);
 }
 

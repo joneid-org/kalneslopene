@@ -8,7 +8,12 @@ import PhotoDialog from "@/components/PhotoDialog.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import type { StaticS3File } from "@/data/loypekartData.ts";
-import { NEWS_IMAGES, tagColor, useTags } from "@/lib/newsUtils.ts";
+import {
+  NEWS_IMAGES,
+  tagColor,
+  upcomingPublishLabel,
+  useTags,
+} from "@/lib/newsUtils.ts";
 import { formatDateFull } from "@/lib/timeUtils.ts";
 
 export function NewsArticle() {
@@ -66,6 +71,7 @@ export function NewsArticle() {
     throw new Response("Fant ikke artikkelen", { status: 404 });
   }
 
+  const upcoming = upcomingPublishLabel(post);
   const imgIndex = [...post.uuid].reduce((sum, c) => sum + c.charCodeAt(0), 0);
   const fallbackImg = NEWS_IMAGES[imgIndex % NEWS_IMAGES.length] ?? "";
   const headerImage = post.headerImage?.url ?? fallbackImg;
@@ -86,6 +92,20 @@ export function NewsArticle() {
             Tilbake
           </Button>
         </Link>
+
+        {!post.publishedAt && (
+          <div className="mb-4 rounded-md border border-dashed border-red-600/50 bg-red-600/5 px-3 py-2 text-sm text-red-700 dark:text-red-400">
+            Utkast – denne nyheten er ikke publisert og er kun synlig for
+            administratorer.
+          </div>
+        )}
+
+        {upcoming && (
+          <div className="mb-4 rounded-md border border-dashed border-amber-600/50 bg-amber-600/5 px-3 py-2 text-sm text-amber-700 dark:text-amber-400">
+            Planlagt – denne nyheten publiseres {upcoming} og er frem til da kun
+            synlig for administratorer.
+          </div>
+        )}
 
         <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
           <div className="flex flex-wrap gap-1.5 text-xs">

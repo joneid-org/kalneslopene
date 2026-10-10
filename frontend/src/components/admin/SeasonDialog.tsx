@@ -11,14 +11,18 @@ import {
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
-import { formatDateFull, generateRaceDates } from "@/lib/timeUtils.ts";
+import {
+  formatDateFull,
+  generateRaceDates,
+  toLocalDateString,
+} from "@/lib/timeUtils.ts";
 import type { RaceInput } from "@/model/DTO.ts";
 
 type PreviewRace = { date: string; time: string };
 
 export function SeasonDialog({ onClose }: { onClose: () => void }) {
   const qc = useQueryClient();
-  const todayStr = new Date().toISOString().slice(0, 10);
+  const todayStr = toLocalDateString(new Date());
 
   const [startDate, setStartDate] = useState(todayStr);
   const [endDate, setEndDate] = useState("");

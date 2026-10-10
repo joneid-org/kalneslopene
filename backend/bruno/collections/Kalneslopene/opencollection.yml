@@ -14,11 +14,19 @@ config:
         password: ""
       bypassProxy: ""
 
+# HTTP Basic is no longer accepted. Run Auth/Get CSRF token, then Auth/Login — the session
+# cookie is then reused from Bruno's cookie jar for every later request.
 request:
   auth:
-    type: basic
-    username: user
-    password: ourpassword
+    type: none
+
+script:
+  req: |-
+    // Spring rejects writing requests without this header. Auth/Get CSRF token populates the var.
+    const csrfToken = bru.getVar("csrfToken");
+    if (csrfToken) {
+      req.setHeader("X-XSRF-TOKEN", csrfToken);
+    }
 bundled: false
 extensions:
   bruno:

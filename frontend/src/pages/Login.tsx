@@ -28,7 +28,7 @@ export function Login() {
   const loginMutation = useMutation({
     mutationFn: () => MUTATIONS.auth.login({ username, password }),
     onSuccess: (result) => {
-      login(username, password, result.roles);
+      login({ username: result.username, roles: result.roles });
       navigate("/admin");
     },
     meta: { showsOwnError: true },
@@ -38,7 +38,7 @@ export function Login() {
     mutationFn: () => MUTATIONS.auth.setup({ username, password }),
     onSuccess: (result) => {
       qc.setQueryData(QUERIES.auth.isSetupNeeded.queryKey, { needed: false });
-      login(username, password, result.roles);
+      login({ username: result.username, roles: result.roles });
       navigate("/admin");
     },
     meta: { showsOwnError: true },

@@ -47,8 +47,8 @@ export function RedeemInvite() {
       password,
     }: Pick<RedeemInviteValues, "username" | "password">) =>
       MUTATIONS.auth.registerWithInvite(token ?? "", { username, password }),
-    onSuccess: (result, { username, password }) => {
-      login(username, password, result.roles);
+    onSuccess: (result) => {
+      login({ username: result.username, roles: result.roles });
       navigate("/admin");
     },
     onError: () =>

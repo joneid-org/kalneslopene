@@ -55,6 +55,8 @@ export function SortablePhotoGrid({
                 <img
                   src={photo.url}
                   alt={photo.description}
+                  loading="lazy"
+                  decoding="async"
                   draggable={false}
                   className="w-full h-full object-cover"
                 />

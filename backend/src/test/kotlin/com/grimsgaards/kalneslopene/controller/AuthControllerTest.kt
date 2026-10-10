@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.mock.web.MockHttpSession
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
@@ -48,13 +49,15 @@ class AuthControllerTest {
 
     private val rawPassword = "hemmelig"
 
-    private fun existingUser(banned: Boolean = false) =
-        UserEntity(
-            username = "kari",
-            password = BCryptPasswordEncoder().encode(rawPassword) ?: error("encoding failed"),
-            roles = mutableSetOf(UserRole.ADMIN),
-            banned = banned,
-        )
+    private fun existingUser(
+        banned: Boolean = false,
+        roles: Set<UserRole> = setOf(UserRole.ADMIN),
+    ) = UserEntity(
+        username = "kari",
+        password = BCryptPasswordEncoder().encode(rawPassword) ?: error("encoding failed"),
+        roles = roles.toMutableSet(),
+        banned = banned,
+    )
 
     private fun loginBody(password: String = rawPassword) = """{"username":"kari","password":"$password"}"""
 
@@ -129,8 +132,9 @@ class AuthControllerTest {
         }
 
         @Test
-        @WithMockUser(authorities = ["ADMIN"])
+        @WithMockUser(username = "kari", authorities = ["ADMIN"])
         fun `returns the current user when authenticated`() {
+            whenever(userRepository.findByUsername("kari")).thenReturn(existingUser())
             whenever(authenticatedUserProvider.authenticatedUser())
                 .thenReturn(UserDto(UUID.randomUUID(), "kari", setOf(UserRole.ADMIN), banned = false))
 
@@ -145,8 +149,9 @@ class AuthControllerTest {
     @Nested
     inner class Logout {
         @Test
-        @WithMockUser(authorities = ["ADMIN"])
+        @WithMockUser(username = "kari", authorities = ["ADMIN"])
         fun `invalidates the session`() {
+            whenever(userRepository.findByUsername("kari")).thenReturn(existingUser())
             val result =
                 mockMvc
                     .post("/api/auth/logout") { with(csrf()) }
@@ -154,6 +159,49 @@ class AuthControllerTest {
                     .andReturn()
 
             assertThat(result.request.getSession(false)).isNull()
+        }
+    }
+
+    @Nested
+    inner class SessionRefresh {
+        private fun loggedInSession(): MockHttpSession {
+            whenever(userRepository.findByUsername("kari")).thenReturn(existingUser())
+            val result =
+                mockMvc
+                    .post("/api/auth/login") {
+                        with(csrf())
+                        contentType = MediaType.APPLICATION_JSON
+                        content = loginBody()
+                    }.andExpect { status { isOk() } }
+                    .andReturn()
+            return result.request.getSession(false) as MockHttpSession
+        }
+
+        @Test
+        fun `logs out an existing session once the user is banned`() {
+            val session = loggedInSession()
+            whenever(userRepository.findByUsername("kari")).thenReturn(existingUser(banned = true))
+
+            mockMvc.get("/api/auth/me") { this.session = session }.andExpect { status { isUnauthorized() } }
+            assertThat(session.isInvalid).isTrue()
+        }
+
+        @Test
+        fun `logs out an existing session once the user is deleted`() {
+            val session = loggedInSession()
+            whenever(userRepository.findByUsername("kari")).thenReturn(null)
+
+            mockMvc.get("/api/auth/me") { this.session = session }.andExpect { status { isUnauthorized() } }
+            assertThat(session.isInvalid).isTrue()
+        }
+
+        @Test
+        fun `applies a role change to an existing session`() {
+            val session = loggedInSession()
+            whenever(userRepository.findByUsername("kari")).thenReturn(existingUser(roles = setOf(UserRole.EDITOR)))
+
+            mockMvc.get("/api/users") { this.session = session }.andExpect { status { isForbidden() } }
+            assertThat(session.isInvalid).isFalse()
         }
     }
 

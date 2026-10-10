@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.HttpStatusEntryPoint
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository
+import org.springframework.security.web.context.SecurityContextHolderFilter
 import org.springframework.security.web.context.SecurityContextRepository
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository
 
@@ -25,9 +26,16 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository
 @EnableWebSecurity
 class SecurityConfig {
     @Bean
-    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
+    fun securityFilterChain(
+        http: HttpSecurity,
+        userRepository: UserRepository,
+        securityContextRepository: SecurityContextRepository,
+    ): SecurityFilterChain {
         http
-            .csrf {
+            .addFilterAfter(
+                SessionUserRefreshFilter(userRepository, securityContextRepository),
+                SecurityContextHolderFilter::class.java,
+            ).csrf {
                 // spa() sets the XSRF-TOKEN cookie repository and the plain/XOR hybrid request handler,
                 // which also renders the token eagerly. Overriding the repository afterwards keeps that
                 // handler while adding SameSite=Strict.

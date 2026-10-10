@@ -9,5 +9,7 @@ import java.util.UUID
 interface FileRepository : JpaRepository<FileEntity, UUID> {
     fun findAllByUploadConfirmedAtIsNullAndCreatedAtBefore(cutoff: OffsetDateTime): List<FileEntity>
 
+    fun findAllByUploadConfirmedAtIsNullAndUrlStartingWith(prefix: String): List<FileEntity>
+
     fun findAllByUrlIn(urls: Collection<String>): List<FileEntity>
 }

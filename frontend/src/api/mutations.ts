@@ -71,10 +71,6 @@ export const MUTATIONS = {
         .json<{ [key in string]: PresignedUpload }>(),
   },
   s3: {
-    confirmUploads: (fileUuids: string[]) =>
-      kyClient
-        .patch("/api/s3/files/confirm-uploads", { json: fileUuids })
-        .json<void>(),
     deleteFiles: (fileUuids: string[]) =>
       kyClient.delete("/api/s3/files", { json: fileUuids }).json<void>(),
   },

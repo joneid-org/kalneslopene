@@ -1,6 +1,7 @@
 import {
   keepPreviousData,
   MutationCache,
+  type MutationMeta,
   QueryCache,
   QueryClient,
 } from "@tanstack/react-query";
@@ -15,7 +16,7 @@ function handleRateLimit(error: unknown) {
   }
 }
 
-function handleMutationError(error: unknown) {
+function handleMutationError(error: unknown, meta: MutationMeta | undefined) {
   if (!navigator.onLine) {
     toast.error("Ingen internettforbindelse. Sjekk tilkoblingen din.", {
       id: "network-error",
@@ -28,6 +29,9 @@ function handleMutationError(error: unknown) {
     });
     return;
   }
+  // Mutations that render their own inline message would otherwise get a
+  // vaguer toast stacked on top of it.
+  if (meta?.showsOwnError) return;
   toast.error("Noe gikk galt. Prøv igjen.", { id: "mutation-error" });
 }
 
@@ -47,7 +51,10 @@ export const queryClient = new QueryClient({
     },
   },
   queryCache: new QueryCache({ onError: handleRateLimit }),
-  mutationCache: new MutationCache({ onError: handleMutationError }),
+  mutationCache: new MutationCache({
+    onError: (error, _variables, _context, mutation) =>
+      handleMutationError(error, mutation.meta),
+  }),
 });
 
 export const kyClient = ky.create({

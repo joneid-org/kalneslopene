@@ -1,3 +1,4 @@
+import { useMutation } from "@tanstack/react-query";
 import { Color } from "@tiptap/extension-color";
 import Highlight from "@tiptap/extension-highlight";
 import Image from "@tiptap/extension-image";
@@ -22,7 +23,7 @@ import {
   Unlink,
 } from "lucide-react";
 import { useRef, useState } from "react";
-import { requestNewsfeedContentUpload } from "@/api/queries.ts";
+import { MUTATIONS } from "@/api/mutations.ts";
 import { uploadToS3 } from "@/api/s3.ts";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -66,7 +67,6 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
   const [linkDialogOpen, setLinkDialogOpen] = useState(false);
   const [linkUrl, setLinkUrl] = useState("");
   const [linkText, setLinkText] = useState("");
-  const [uploading, setUploading] = useState(false);
 
   const editor = useEditor({
     extensions: [
@@ -92,22 +92,25 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
     },
   });
 
+  const imageUploadMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const { uploadUrl, s3File } =
+        await MUTATIONS.newsfeed.requestContentImageUpload(file.name);
+      await uploadToS3(file, uploadUrl);
+      return s3File;
+    },
+    onSuccess: (s3File) => {
+      editor?.chain().focus().setImage({ src: s3File.url }).run();
+    },
+  });
+  const uploading = imageUploadMutation.isPending;
+
   if (!editor) return null;
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     e.target.value = "";
-    if (!file) return;
-    setUploading(true);
-    try {
-      const { uploadUrl, s3File } = await requestNewsfeedContentUpload(
-        file.name,
-      );
-      await uploadToS3(file, uploadUrl);
-      editor.chain().focus().setImage({ src: s3File.url }).run();
-    } finally {
-      setUploading(false);
-    }
+    if (file) imageUploadMutation.mutate(file);
   };
 
   const openLinkDialog = () => {

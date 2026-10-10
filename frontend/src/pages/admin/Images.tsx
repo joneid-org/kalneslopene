@@ -94,7 +94,7 @@ export function ImagesPage() {
     file: File,
     uploadUrl: string,
     s3FileDto: S3FileDto,
-  ): Promise<string | null> => {
+  ) => {
     const id = crypto.randomUUID();
     const previewUrl = URL.createObjectURL(file);
 
@@ -123,13 +123,11 @@ export function ImagesPage() {
       );
       addPhotoToCache(raceUuid, s3FileDto);
       removeUpload(raceUuid, id);
-      return s3FileDto.uuid;
     } catch (error) {
       updateUpload(raceUuid, id, {
         status: "error",
         error: error instanceof Error ? error.message : "Upload failed",
       });
-      return null;
     }
   };
 
@@ -148,17 +146,12 @@ export function ImagesPage() {
         raceUuid,
         files.map((file) => file.name),
       );
-      const results = await Promise.all(
+      await Promise.all(
         files.map((file) => {
           const { uploadUrl, s3File } = urlMap[file.name];
           return startUpload(raceUuid, file, uploadUrl, s3File);
         }),
       );
-
-      const uploadedUuids = results.filter((uuid) => uuid !== null);
-      if (uploadedUuids.length === 0) return;
-
-      await MUTATIONS.s3.confirmUploads(uploadedUuids);
     },
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: query.queryKey }),

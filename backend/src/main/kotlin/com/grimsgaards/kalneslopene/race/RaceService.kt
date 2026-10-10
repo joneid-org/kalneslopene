@@ -1,5 +1,6 @@
 package com.grimsgaards.kalneslopene.race
 
+import com.grimsgaards.kalneslopene.common.logger
 import com.grimsgaards.kalneslopene.race.dto.RaceDTO
 import com.grimsgaards.kalneslopene.race.dto.RaceFilter
 import com.grimsgaards.kalneslopene.race.dto.RaceInfoDto
@@ -44,6 +45,8 @@ class RaceService(
     val s3Service: S3Service,
     val authenticatedUserProvider: AuthenticatedUserProvider,
 ) {
+    private val logger = logger()
+
     @Cacheable(RACE_INFO_CACHE)
     fun getAllInfo(
         isPublished: Boolean?,
@@ -59,6 +62,7 @@ class RaceService(
         val effectiveFilter = if (authenticatedUserProvider.isAdmin()) filter else filter.copy(isPublished = true)
         return raceRepository
             .findAllByFilter(effectiveFilter, resolvePageable(filter, page, pageSize, sortDirection))
+            .also { confirmPendingPhotos(it.content) }
             .map { it.toDto() }
     }
 
@@ -91,8 +95,20 @@ class RaceService(
         if (!authenticatedUserProvider.isAdmin() && !race.isPublished) {
             throw NoSuchElementException("Race with id $uuid not found")
         }
+        confirmPendingPhotos(listOf(race))
         return race.toDto()
     }
+
+    private fun confirmPendingPhotos(races: Collection<RaceEntity>) {
+        races.forEach { race ->
+            val pending = race.racePhotos.map { it.file }.filter { it.uploadConfirmedAt == null }
+            if (pending.isEmpty()) return@forEach
+            runCatching { s3Service.confirmUploadedFiles(pending, racePhotoPrefix(race.uuid)) }
+                .onFailure { logger.warn("Could not confirm pending photos for race ${race.uuid}", it) }
+        }
+    }
+
+    private fun racePhotoPrefix(raceUuid: UUID) = "race-photos/$raceUuid/"
 
     @CacheEvict(RACE_INFO_CACHE, allEntries = true)
     fun createRaces(races: List<RaceInput>): List<RaceDTO> =
@@ -196,15 +212,16 @@ class RaceService(
         photoNames: List<String>,
     ): Map<String, PhotoUploadInfo> {
         val race = raceRepository.findById(raceUuid).orElseThrow { NoSuchElementException("Race $raceUuid not found") }
-        val s3FileEntitiesMap = s3Service.createFileEntities(photoNames.map { "race-photos/$raceUuid/$it" })
+        val prefix = racePhotoPrefix(raceUuid)
+        val s3FileEntitiesMap = s3Service.createFileEntities(photoNames.map { "$prefix$it" })
         var nextOrderIndex = (race.racePhotos.maxOfOrNull { it.orderIndex } ?: 0.0) + 1
         s3FileEntitiesMap.values.forEach { file ->
             race.racePhotos.add(RacePhotoEntity(race = race, file = file, orderIndex = nextOrderIndex++))
         }
         return photoNames.associateWith {
             PhotoUploadInfo(
-                uploadUrl = s3Service.getPresignedUrl("race-photos/$raceUuid/$it", immutable = true),
-                s3File = s3FileEntitiesMap["race-photos/$raceUuid/$it"]!!.toDtoDangerously(),
+                uploadUrl = s3Service.getPresignedUrl("$prefix$it", immutable = true),
+                s3File = s3FileEntitiesMap["$prefix$it"]!!.toDtoDangerously(),
             )
         }
     }

@@ -4,6 +4,7 @@ import com.grimsgaards.kalneslopene.common.logger
 import com.grimsgaards.kalneslopene.race.RACE_INFO_CACHE
 import io.minio.GetPresignedObjectUrlArgs
 import io.minio.Http
+import io.minio.ListObjectsArgs
 import io.minio.MinioClient
 import io.minio.RemoveObjectsArgs
 import io.minio.messages.DeleteRequest
@@ -25,24 +26,14 @@ const val IMMUTABLE_CACHE_CONTROL = "public, max-age=31536000, immutable"
 @Suppress("TooManyFunctions")
 class S3Service(
     @Value("\${minio.endpoint}")
-    private val minioEndpoint: String,
-    @Value("\${minio.access-key}")
-    private val minioAccessKey: String,
-    @Value("\${minio.secret-key}")
-    private val minioSecretKey: String,
+    minioEndpoint: String,
     @Value("\${minio.bucket-name}")
     private val minioBucketName: String,
+    private val minioClient: MinioClient,
     private val fileRepository: FileRepository,
 ) {
     private val logger = logger()
     private val baseUrl = minioEndpoint.let { if (it.startsWith("http")) it else "https://$it" }
-
-    private val minioClient: MinioClient =
-        MinioClient
-            .builder()
-            .endpoint(minioEndpoint)
-            .credentials(minioAccessKey, minioSecretKey)
-            .build()
 
     /** Public base URL of the bucket, e.g. `https://<endpoint>/<bucket>`, for composing static image URLs. */
     fun getPublicBaseUrl(): String = "$baseUrl/$minioBucketName"
@@ -76,15 +67,6 @@ class S3Service(
             fileRepository.findById(fileUuid).orElseThrow { NoSuchElementException("File with id $fileUuid not found") }
         fileEntity.uploadConfirmedAt = OffsetDateTime.now()
         return fileRepository.save(fileEntity)
-    }
-
-    @Transactional
-    fun confirmUploads(fileUuids: List<UUID>) {
-        val fileEntities = fileRepository.findAllById(fileUuids).filter { it.uploadConfirmedAt == null }
-        if (fileEntities.isEmpty()) return
-        val now = OffsetDateTime.now()
-        fileEntities.forEach { it.uploadConfirmedAt = now }
-        fileRepository.saveAll(fileEntities)
     }
 
     @Transactional
@@ -125,8 +107,7 @@ class S3Service(
     }
 
     private fun deleteFiles(fileEntities: List<FileEntity>) {
-        val objectsToDelete =
-            fileEntities.map { DeleteRequest.Object(it.url.substringAfter("$baseUrl/$minioBucketName/")) }
+        val objectsToDelete = fileEntities.map { DeleteRequest.Object(it.objectKey()) }
         minioClient
             .removeObjects(
                 RemoveObjectsArgs
@@ -138,10 +119,55 @@ class S3Service(
         fileRepository.deleteAll(fileEntities)
     }
 
+    private fun FileEntity.objectKey() = url.substringAfter("$baseUrl/$minioBucketName/")
+
+    private fun listObjectKeys(prefix: String): Set<String> =
+        minioClient
+            .listObjects(
+                ListObjectsArgs
+                    .builder()
+                    .bucket(minioBucketName)
+                    .prefix(prefix)
+                    .recursive(true)
+                    .build(),
+            ).map { it.get().objectName() }
+            .toSet()
+
+    /** Confirms the files under [keyPrefix] that have landed in the bucket, using one LIST request. */
+    @Transactional
+    fun confirmUploadedFiles(
+        files: Collection<FileEntity>,
+        keyPrefix: String,
+    ): Int {
+        val pending = files.filter { it.uploadConfirmedAt == null }
+        if (pending.isEmpty()) return 0
+        val keys = listObjectKeys(keyPrefix)
+        val uploaded = pending.filter { it.objectKey() in keys }
+        if (uploaded.isNotEmpty()) {
+            val now = OffsetDateTime.now()
+            uploaded.forEach { it.uploadConfirmedAt = now }
+            fileRepository.saveAll(uploaded)
+        }
+        return uploaded.size
+    }
+
+    @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
+    @Transactional
+    fun confirmUploadedRacePhotos() {
+        val confirmed =
+            fileRepository
+                .findAllByUploadConfirmedAtIsNullAndUrlStartingWith("$baseUrl/$minioBucketName/race-photos/")
+                .groupBy { it.objectKey().substringBeforeLast('/') + "/" }
+                .entries
+                .sumOf { (prefix, files) -> confirmUploadedFiles(files, prefix) }
+        if (confirmed > 0) logger.info("Confirmed $confirmed uploaded race photos")
+    }
+
     @Scheduled(cron = "0 0 * * * *")
     @Transactional
     @CacheEvict(RACE_INFO_CACHE, allEntries = true)
     fun deleteExpiredUnconfirmedUploads() {
+        confirmUploadedRacePhotos()
         logger.info("Running scheduled task to delete expired unconfirmed uploads")
         val expiredFiles =
             fileRepository.findAllByUploadConfirmedAtIsNullAndCreatedAtBefore(OffsetDateTime.now().minusHours(1))

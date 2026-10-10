@@ -1,4 +1,5 @@
-import { useCallback, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
 import { requestStaticPresignedUrl, uploadToS3 } from "@/api/s3.ts";
 import { useApplicationContext } from "@/hooks/useApplicationContext.ts";
 import { convertImageToWebp } from "@/lib/photoUtils.ts";
@@ -27,17 +28,26 @@ export function useStaticPhotos() {
       : base;
   }
 
-  const handleReplacePhoto = useCallback(
-    async (fileName: string, file: File) => {
+  const replacePhotoMutation = useMutation({
+    mutationFn: async ({
+      fileName,
+      file,
+    }: {
+      fileName: string;
+      file: File;
+    }) => {
       const [webpFile, uploadUrl] = await Promise.all([
         convertImageToWebp(file),
         requestStaticPresignedUrl(fileName),
       ]);
       await uploadToS3(webpFile, uploadUrl);
-      setPhotoVersions((prev) => ({ ...prev, [fileName]: Date.now() }));
     },
-    [],
-  );
+    onSuccess: (_, { fileName }) =>
+      setPhotoVersions((prev) => ({ ...prev, [fileName]: Date.now() })),
+  });
+
+  const handleReplacePhoto = (fileName: string, file: File) =>
+    replacePhotoMutation.mutateAsync({ fileName, file });
 
   return { resolvePhotoUrl, handleReplacePhoto };
 }

@@ -58,6 +58,13 @@ export const MUTATIONS = {
       kyClient
         .patch(`/api/races/${raceUuid}/photos/order`, { json: input })
         .json<S3FileDto[]>(),
+    updatePhotographer: (raceUuid: string, photographer: string) =>
+      kyClient
+        .patch(`/api/races/${raceUuid}/photographer`, {
+          body: photographer,
+          headers: { "Content-Type": "text/plain" },
+        })
+        .json<RaceDTO>(),
     requestPhotoUploads: (raceUuid: string, fileNames: string[]) =>
       kyClient
         .post(`/api/races/${raceUuid}/photos`, { json: fileNames })

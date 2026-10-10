@@ -110,6 +110,12 @@ class RaceController(
         @RequestBody input: ReorderPhotoInput,
     ): List<FileDto> = raceService.reorderPhotoInRace(uuid, input)
 
+    @PatchMapping("$RACE_API/{uuid}/photographer")
+    fun updatePhotographer(
+        @PathVariable uuid: UUID,
+        @RequestBody(required = false) photographer: String?,
+    ): RaceDTO = raceService.updatePhotographer(uuid, photographer)
+
     @PatchMapping("$RACE_API/{uuid}/runners/{runnerUuid}")
     fun updateRunnerInRace(
         @PathVariable uuid: UUID,

@@ -105,7 +105,7 @@ export function Pictures() {
       <PhotoHeader
         title={title ?? ""}
         photoCount={racePhotos.length}
-        photographers={[]}
+        photographer={race?.photographer}
         resultsPath={race ? `/resultater/${race.uuid}` : undefined}
         isAdmin={isAuthenticated}
         isEditing={isEditing}

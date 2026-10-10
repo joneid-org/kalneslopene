@@ -30,10 +30,16 @@ export type RaceDTO = {
   runnerCount: number;
   isPublished: boolean;
   photos: S3FileDto[];
+  photographer?: string;
 };
 export type RaceInput = Omit<
   RaceDTO,
-  "uuid" | "runnerCount" | "isPublished" | "photos" | "weatherManuallyEdited"
+  | "uuid"
+  | "runnerCount"
+  | "isPublished"
+  | "photos"
+  | "weatherManuallyEdited"
+  | "photographer"
 >;
 
 export type ReorderPhotoInput = {

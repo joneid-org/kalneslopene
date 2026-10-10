@@ -58,6 +58,8 @@ export function AdminPhotoGrid({
       await onBulkDelete([...selected]);
       setSelected(new Set());
       setConfirmOpen(false);
+    } catch {
+      // Keeps the dialog open so the user can retry; the error is toasted globally.
     } finally {
       setIsDeleting(false);
     }

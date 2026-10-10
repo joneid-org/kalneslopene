@@ -1,6 +1,8 @@
+import { useMutation } from "@tanstack/react-query";
 import { ImagePlus, Loader2, X } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
-import { requestNewsfeedHeaderUpload } from "@/api/queries.ts";
+import { MUTATIONS } from "@/api/mutations.ts";
+import { uploadToS3 } from "@/api/s3.ts";
 import { FormFooter } from "@/components/admin/FormFooter.tsx";
 import { RichTextEditor } from "@/components/admin/RichTextEditor.tsx";
 import { Button } from "@/components/ui/button.tsx";
@@ -40,7 +42,6 @@ export function NewsfeedForm({
   const [headerImage, setHeaderImage] = useState<S3FileDto | undefined>(
     initial.headerImage,
   );
-  const [uploading, setUploading] = useState(false);
   const availableTags = useTags();
   const selectedTagsSet = useMemo(() => new Set(selectedTags), [selectedTags]);
 
@@ -52,24 +53,24 @@ export function NewsfeedForm({
     );
   };
 
-  const handleHeaderImageChange = async (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const original = e.target.files?.[0];
-    if (!original) return;
-    setUploading(true);
-    try {
+  const headerImageMutation = useMutation({
+    mutationFn: async (original: File) => {
       const file = await convertImageToWebp(original);
-      const { uploadUrl, s3File } = await requestNewsfeedHeaderUpload(
-        file.name,
-      );
-      const res = await fetch(uploadUrl, { method: "PUT", body: file });
-      if (!res.ok) throw new Error(`Opplasting feilet (${res.status})`);
-      setHeaderImage(s3File);
-    } finally {
-      setUploading(false);
+      const { uploadUrl, s3File } =
+        await MUTATIONS.newsfeed.requestHeaderImageUpload(file.name);
+      await uploadToS3(file, uploadUrl);
+      return s3File;
+    },
+    onSuccess: setHeaderImage,
+    onSettled: () => {
       if (headerImageRef.current) headerImageRef.current.value = "";
-    }
+    },
+  });
+  const uploading = headerImageMutation.isPending;
+
+  const handleHeaderImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const original = e.target.files?.[0];
+    if (original) headerImageMutation.mutate(original);
   };
 
   const handleSubmit = () => {

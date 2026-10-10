@@ -15,10 +15,12 @@ function PhotoButton({
   photo,
   onClick,
   className,
+  eager = false,
 }: {
   photo: S3FileDto;
   onClick: () => void;
   className?: string;
+  eager?: boolean;
 }) {
   return (
     <button
@@ -32,6 +34,8 @@ function PhotoButton({
       <img
         src={photo.url}
         alt={photo.description}
+        loading={eager ? "eager" : "lazy"}
+        decoding="async"
         className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
       />
     </button>
@@ -75,6 +79,7 @@ export function RacePhotoGrid({
             photo={first}
             onClick={() => onPhotoClick(0)}
             className="col-span-2 aspect-2/1 md:row-span-2 md:aspect-square"
+            eager
           />
         )}
         {rest.map((photo, idx) => (
@@ -93,6 +98,8 @@ export function RacePhotoGrid({
             <img
               src={overflowPhoto.url}
               alt=""
+              loading="lazy"
+              decoding="async"
               className="size-full object-cover opacity-60 transition-transform duration-300 group-hover:scale-105"
             />
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-0.5 text-white">

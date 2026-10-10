@@ -136,6 +136,8 @@ export function AdminPhotoGrid({
                 <img
                   src={photo.url}
                   alt="Løpsbilde"
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover"
                 />
                 {isSelected && (

@@ -31,6 +31,8 @@ export default function PhotoGrid({ photos, onPhotoClick }: PhotoGridProps) {
               <img
                 src={photo.url}
                 alt={photo.description}
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover hover:opacity-90 transition-opacity"
               />
             </button>

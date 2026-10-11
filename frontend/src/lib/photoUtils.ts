@@ -1,8 +1,25 @@
 const MAX_DIMENSION = 2048;
 const WEBP_QUALITY = 0.8;
 
-function toWebpFileName(name: string): string {
-  return `${name.replace(/\.[^/.]+$/, "")}.webp`;
+const EXTENSIONS: Record<string, string> = {
+  "image/webp": "webp",
+  "image/jpeg": "jpg",
+};
+
+export class UnsupportedImageError extends Error {
+  readonly fileName: string;
+
+  constructor(fileName: string) {
+    super(
+      `Kunne ikke lese «${fileName}». HEIC-bilder fra iPhone støttes ikke i denne nettleseren – eksporter som JPEG først.`,
+    );
+    this.name = "UnsupportedImageError";
+    this.fileName = fileName;
+  }
+}
+
+function withExtension(name: string, extension: string): string {
+  return `${name.replace(/\.[^/.]+$/, "")}.${extension}`;
 }
 
 function scaledSize(width: number, height: number, maxDimension: number) {
@@ -15,10 +32,19 @@ function scaledSize(width: number, height: number, maxDimension: number) {
   };
 }
 
+function canvasToBlob(
+  canvas: HTMLCanvasElement,
+  type: string,
+  quality: number,
+): Promise<Blob | null> {
+  return new Promise((resolve) => canvas.toBlob(resolve, type, quality));
+}
+
 /**
  * Resizes an image so its longest edge is at most `maxDimension` px and
- * re-encodes it as WebP. Returns the original file untouched if it is not a
- * raster image or if the browser cannot produce a WebP blob.
+ * re-encodes it as WebP, or as JPEG in browsers that cannot encode WebP
+ * (they silently return PNG instead). Throws `UnsupportedImageError` if the
+ * browser cannot decode the file, e.g. HEIC outside Safari.
  */
 export async function convertImageToWebp(
   file: File,
@@ -27,13 +53,11 @@ export async function convertImageToWebp(
     quality = WEBP_QUALITY,
   }: { maxDimension?: number; quality?: number } = {},
 ): Promise<File> {
-  if (!file.type.startsWith("image/")) return file;
-
   let bitmap: ImageBitmap;
   try {
     bitmap = await createImageBitmap(file);
   } catch {
-    return file;
+    throw new UnsupportedImageError(file.name);
   }
 
   try {
@@ -46,16 +70,23 @@ export async function convertImageToWebp(
     canvas.width = width;
     canvas.height = height;
     const ctx = canvas.getContext("2d");
-    if (!ctx) return file;
+    if (!ctx) throw new UnsupportedImageError(file.name);
     ctx.drawImage(bitmap, 0, 0, width, height);
 
-    const blob = await new Promise<Blob | null>((resolve) =>
-      canvas.toBlob(resolve, "image/webp", quality),
-    );
-    if (!blob) return file;
+    let blob = await canvasToBlob(canvas, "image/webp", quality);
+    if (blob?.type !== "image/webp") {
+      // JPEG has no alpha channel, so transparent areas would turn black.
+      ctx.globalCompositeOperation = "destination-over";
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, width, height);
+      blob = await canvasToBlob(canvas, "image/jpeg", quality);
+    }
+    if (!blob || !(blob.type in EXTENSIONS)) {
+      throw new UnsupportedImageError(file.name);
+    }
 
-    return new File([blob], toWebpFileName(file.name), {
-      type: "image/webp",
+    return new File([blob], withExtension(file.name, EXTENSIONS[blob.type]), {
+      type: blob.type,
       lastModified: file.lastModified,
     });
   } finally {

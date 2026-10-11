@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/dialog.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
+import { convertImageToWebp } from "@/lib/photoUtils.ts";
 
 const COLORS = [
   "#000000",
@@ -93,7 +94,8 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
   });
 
   const imageUploadMutation = useMutation({
-    mutationFn: async (file: File) => {
+    mutationFn: async (original: File) => {
+      const file = await convertImageToWebp(original);
       const { uploadUrl, s3File } =
         await MUTATIONS.newsfeed.requestContentImageUpload(file.name);
       await uploadToS3(file, uploadUrl);

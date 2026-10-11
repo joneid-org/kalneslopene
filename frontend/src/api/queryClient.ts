@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-query";
 import ky, { HTTPError } from "ky";
 import { toast } from "sonner";
+import { UnsupportedImageError } from "@/lib/photoUtils.ts";
 
 function handleRateLimit(error: unknown) {
   if (error instanceof HTTPError && error.response.status === 429) {
@@ -32,6 +33,10 @@ function handleMutationError(error: unknown, meta: MutationMeta | undefined) {
   // Mutations that render their own inline message would otherwise get a
   // vaguer toast stacked on top of it.
   if (meta?.showsOwnError) return;
+  if (error instanceof UnsupportedImageError) {
+    toast.error(error.message);
+    return;
+  }
   // The afterResponse hook already redirects to login; a generic error toast on top would be noise.
   if (error instanceof HTTPError && error.response.status === 401) {
     return;

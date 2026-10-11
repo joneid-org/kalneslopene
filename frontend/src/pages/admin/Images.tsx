@@ -4,6 +4,7 @@ import {
   useMutation,
 } from "@tanstack/react-query";
 import { useState } from "react";
+import { toast } from "sonner";
 import { MUTATIONS } from "@/api/mutations.ts";
 import { QUERIES } from "@/api/queries.ts";
 import { queryClient } from "@/api/queryClient.ts";
@@ -19,7 +20,7 @@ import {
 } from "@/components/ui/accordion.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { convertImageToWebp } from "@/lib/photoUtils.ts";
+import { convertImageToWebp, UnsupportedImageError } from "@/lib/photoUtils.ts";
 import {
   extractYear,
   formatDDMonth,
@@ -139,9 +140,23 @@ export function ImagesPage() {
       raceUuid: string;
       fileList: FileList;
     }) => {
-      const files = await Promise.all(
+      const results = await Promise.allSettled(
         Array.from(fileList).map((file) => convertImageToWebp(file)),
       );
+      const files: File[] = [];
+      const skipped: UnsupportedImageError[] = [];
+      for (const result of results) {
+        if (result.status === "fulfilled") files.push(result.value);
+        else if (result.reason instanceof UnsupportedImageError)
+          skipped.push(result.reason);
+        else throw result.reason;
+      }
+      if (files.length === 0 && skipped.length > 0) throw skipped[0];
+      if (skipped.length > 0) {
+        toast.warning(
+          `Hoppet over ${skipped.length} bilde(r) som ikke kunne leses: ${skipped.map((error) => error.fileName).join(", ")}`,
+        );
+      }
       const urlMap = await MUTATIONS.race.requestPhotoUploads(
         raceUuid,
         files.map((file) => file.name),

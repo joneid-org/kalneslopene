@@ -232,3 +232,10 @@ databaseChangeLog:
         - sqlFile:
             path: db/changelog/sql/migrate/migrate_newsfeed_add_published_at.sql
             relativeToChangelogFile: false
+  - changeSet:
+      id: migrate_add_photo
+      author: ejoneid
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/migrate/migrate_add_photo.sql
+            relativeToChangelogFile: false

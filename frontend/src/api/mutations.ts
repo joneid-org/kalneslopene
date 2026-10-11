@@ -12,6 +12,7 @@ import type {
   NewsfeedTagInput,
   OrganizerDTO,
   OrganizerInput,
+  PhotoDTO,
   RaceDTO,
   RaceInput,
   RaceRunnerDTO,
@@ -25,6 +26,12 @@ import type {
 } from "../model/DTO.ts";
 
 export type PresignedUpload = { uploadUrl: string; s3File: S3FileDto };
+export type RacePhotoUpload = {
+  uploadUrl: string;
+  thumbnailUploadUrl: string;
+  photo: PhotoDTO;
+};
+export type ThumbnailUpload = { photo: PhotoDTO; uploadUrl: string };
 
 export const MUTATIONS = {
   race: {
@@ -57,7 +64,7 @@ export const MUTATIONS = {
     reorderPhoto: (raceUuid: string, input: ReorderPhotoInput) =>
       kyClient
         .patch(`/api/races/${raceUuid}/photos/order`, { json: input })
-        .json<S3FileDto[]>(),
+        .json<PhotoDTO[]>(),
     updatePhotographer: (raceUuid: string, photographer: string) =>
       kyClient
         .patch(`/api/races/${raceUuid}/photographer`, {
@@ -68,11 +75,15 @@ export const MUTATIONS = {
     requestPhotoUploads: (raceUuid: string, fileNames: string[]) =>
       kyClient
         .post(`/api/races/${raceUuid}/photos`, { json: fileNames })
-        .json<{ [key in string]: PresignedUpload }>(),
-  },
-  s3: {
-    deleteFiles: (fileUuids: string[]) =>
-      kyClient.delete("/api/s3/files", { json: fileUuids }).json<void>(),
+        .json<{ [key in string]: RacePhotoUpload }>(),
+    requestThumbnailUploads: (raceUuid: string) =>
+      kyClient
+        .post(`/api/races/${raceUuid}/photos/thumbnails`)
+        .json<ThumbnailUpload[]>(),
+    deletePhotos: (raceUuid: string, photoUuids: string[]) =>
+      kyClient
+        .delete(`/api/races/${raceUuid}/photos`, { json: photoUuids })
+        .json<void>(),
   },
   organizer: {
     createOrganizer: (organizer: OrganizerInput) =>

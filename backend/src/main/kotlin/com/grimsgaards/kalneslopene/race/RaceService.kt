@@ -16,9 +16,11 @@ import com.grimsgaards.kalneslopene.race.model.RaceRunnerEntity
 import com.grimsgaards.kalneslopene.race.model.RaceRunnerRepository
 import com.grimsgaards.kalneslopene.runner.Gender
 import com.grimsgaards.kalneslopene.runner.RunnerRepository
-import com.grimsgaards.kalneslopene.s3.FileDto
-import com.grimsgaards.kalneslopene.s3.PhotoUploadInfo
+import com.grimsgaards.kalneslopene.s3.PhotoDto
+import com.grimsgaards.kalneslopene.s3.PhotoEntity
+import com.grimsgaards.kalneslopene.s3.RacePhotoUploadInfo
 import com.grimsgaards.kalneslopene.s3.S3Service
+import com.grimsgaards.kalneslopene.s3.ThumbnailUploadInfo
 import com.grimsgaards.kalneslopene.security.AuthenticatedUserProvider
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
@@ -101,7 +103,10 @@ class RaceService(
 
     private fun confirmPendingPhotos(races: Collection<RaceEntity>) {
         races.forEach { race ->
-            val pending = race.racePhotos.map { it.file }.filter { it.uploadConfirmedAt == null }
+            val pending =
+                race.racePhotos
+                    .flatMap { listOfNotNull(it.photo.photoFile, it.photo.thumbnailFile) }
+                    .filter { it.uploadConfirmedAt == null }
             if (pending.isEmpty()) return@forEach
             runCatching { s3Service.confirmUploadedFiles(pending, racePhotoPrefix(race.uuid)) }
                 .onFailure { logger.warn("Could not confirm pending photos for race ${race.uuid}", it) }
@@ -109,6 +114,8 @@ class RaceService(
     }
 
     private fun racePhotoPrefix(raceUuid: UUID) = "race-photos/$raceUuid/"
+
+    private fun thumbnailKey(objectKey: String) = "${objectKey.substringBeforeLast('/')}/thumbs/${objectKey.substringAfterLast('/')}"
 
     @CacheEvict(RACE_INFO_CACHE, allEntries = true)
     fun createRaces(races: List<RaceInput>): List<RaceDTO> =
@@ -210,40 +217,65 @@ class RaceService(
     fun addPhotosToRace(
         raceUuid: UUID,
         photoNames: List<String>,
-    ): Map<String, PhotoUploadInfo> {
+    ): Map<String, RacePhotoUploadInfo> {
         val race = raceRepository.findById(raceUuid).orElseThrow { NoSuchElementException("Race $raceUuid not found") }
         val prefix = racePhotoPrefix(raceUuid)
         val keysByName = photoNames.associateWith { "$prefix${UUID.randomUUID()}-$it" }
-        val s3FileEntitiesMap = s3Service.createFileEntities(keysByName.values.toList())
+        val files = s3Service.createFileEntities(keysByName.values.flatMap { listOf(it, thumbnailKey(it)) })
         var nextOrderIndex = (race.racePhotos.maxOfOrNull { it.orderIndex } ?: 0.0) + 1
-        s3FileEntitiesMap.values.forEach { file ->
-            race.racePhotos.add(RacePhotoEntity(race = race, file = file, orderIndex = nextOrderIndex++))
-        }
         return keysByName.mapValues { (_, key) ->
-            PhotoUploadInfo(
+            val photo = PhotoEntity(photoFile = files.getValue(key), thumbnailFile = files.getValue(thumbnailKey(key)))
+            race.racePhotos.add(RacePhotoEntity(race = race, photo = photo, orderIndex = nextOrderIndex++))
+            RacePhotoUploadInfo(
                 uploadUrl = s3Service.getPresignedUrl(key, immutable = true),
-                s3File = s3FileEntitiesMap.getValue(key).toDtoDangerously(),
+                thumbnailUploadUrl = s3Service.getPresignedUrl(thumbnailKey(key), immutable = true),
+                photo = photo.toDtoDangerously(),
             )
         }
     }
 
     @Transactional
+    fun requestThumbnailUploads(raceUuid: UUID): List<ThumbnailUploadInfo> {
+        val race = raceRepository.findByIdOrNull(raceUuid) ?: throw NoSuchElementException("Race $raceUuid not found")
+        val missing =
+            race.racePhotos
+                .map { it.photo }
+                .filter { it.photoFile.uploadConfirmedAt != null && it.thumbnailFile == null }
+        if (missing.isEmpty()) return emptyList()
+        val keysByPhoto = missing.associateWith { thumbnailKey(s3Service.objectKeyOf(it.photoFile.url)) }
+        val files = s3Service.createFileEntities(keysByPhoto.values.toList())
+        return keysByPhoto.map { (photo, key) ->
+            photo.thumbnailFile = files.getValue(key)
+            ThumbnailUploadInfo(
+                photo = photo.toDtoDangerously(),
+                uploadUrl = s3Service.getPresignedUrl(key, immutable = true),
+            )
+        }
+    }
+
+    // Deleting the files cascades to photo and race_photo in the database.
+    fun deletePhotos(
+        raceUuid: UUID,
+        photoUuids: List<UUID>,
+    ) = s3Service.deleteFilesByUuid(racePhotoRepository.findFileUuidsOfPhotos(raceUuid, photoUuids))
+
+    @Transactional
     fun reorderPhotoInRace(
         raceUuid: UUID,
         input: ReorderPhotoInput,
-    ): List<FileDto> {
+    ): List<PhotoDto> {
         val photos = racePhotoRepository.findAllByRaceUuidOrderByOrderIndexAsc(raceUuid)
         val moved =
-            photos.find { it.file.uuid == input.fileUuid }
-                ?: throw NoSuchElementException("Photo ${input.fileUuid} not found in race $raceUuid")
-        val others = photos.filter { it.file.uuid != input.fileUuid }
+            photos.find { it.photo.uuid == input.photoUuid }
+                ?: throw NoSuchElementException("Photo ${input.photoUuid} not found in race $raceUuid")
+        val others = photos.filter { it.photo.uuid != input.photoUuid }
 
-        val anchorUuid = input.beforeFileUuid ?: input.afterFileUuid!!
-        val anchorIndex = others.indexOfFirst { it.file.uuid == anchorUuid }
+        val anchorUuid = input.beforePhotoUuid ?: input.afterPhotoUuid!!
+        val anchorIndex = others.indexOfFirst { it.photo.uuid == anchorUuid }
         require(anchorIndex >= 0) { "Photo $anchorUuid not found in race $raceUuid" }
 
         moved.orderIndex =
-            if (input.beforeFileUuid != null) {
+            if (input.beforePhotoUuid != null) {
                 val prev = others.getOrNull(anchorIndex - 1)
                 val next = others[anchorIndex]
                 if (prev != null) (prev.orderIndex + next.orderIndex) / 2 else next.orderIndex - 1
@@ -254,7 +286,7 @@ class RaceService(
             }
         racePhotoRepository.save(moved)
 
-        return (others + moved).sortedBy { it.orderIndex }.mapNotNull { it.file.toDto() }
+        return (others + moved).sortedBy { it.orderIndex }.mapNotNull { it.photo.toDto() }
     }
 
     @Transactional

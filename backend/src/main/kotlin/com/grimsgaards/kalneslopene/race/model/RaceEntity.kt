@@ -71,7 +71,7 @@ class RaceEntity(
             weatherManuallyEdited = weatherManuallyEdited,
             runnerCount = runnerCount,
             isPublished = isPublished,
-            photos = racePhotos.sortedBy { it.orderIndex }.mapNotNull { it.file.toDto() },
+            photos = racePhotos.sortedBy { it.orderIndex }.mapNotNull { it.photo.toDto() },
             photographer = photographer,
         )
 

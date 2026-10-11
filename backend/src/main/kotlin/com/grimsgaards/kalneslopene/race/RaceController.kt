@@ -9,8 +9,9 @@ import com.grimsgaards.kalneslopene.race.dto.RaceInput
 import com.grimsgaards.kalneslopene.race.dto.RaceResultSummaryDto
 import com.grimsgaards.kalneslopene.race.dto.RaceRunnerDTO
 import com.grimsgaards.kalneslopene.race.dto.ReorderPhotoInput
-import com.grimsgaards.kalneslopene.s3.FileDto
-import com.grimsgaards.kalneslopene.s3.PhotoUploadInfo
+import com.grimsgaards.kalneslopene.s3.PhotoDto
+import com.grimsgaards.kalneslopene.s3.RacePhotoUploadInfo
+import com.grimsgaards.kalneslopene.s3.ThumbnailUploadInfo
 import org.springframework.data.domain.Sort
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -102,13 +103,24 @@ class RaceController(
     fun addPhotoToRace(
         @PathVariable uuid: UUID,
         @RequestBody photos: List<String>,
-    ): Map<String, PhotoUploadInfo> = raceService.addPhotosToRace(uuid, photos)
+    ): Map<String, RacePhotoUploadInfo> = raceService.addPhotosToRace(uuid, photos)
+
+    @DeleteMapping("$RACE_API/{uuid}/photos")
+    fun deletePhotos(
+        @PathVariable uuid: UUID,
+        @RequestBody photoUuids: List<UUID>,
+    ) = raceService.deletePhotos(uuid, photoUuids)
+
+    @PostMapping("$RACE_API/{uuid}/photos/thumbnails")
+    fun requestThumbnailUploads(
+        @PathVariable uuid: UUID,
+    ): List<ThumbnailUploadInfo> = raceService.requestThumbnailUploads(uuid)
 
     @PatchMapping("$RACE_API/{uuid}/photos/order")
     fun reorderPhoto(
         @PathVariable uuid: UUID,
         @RequestBody input: ReorderPhotoInput,
-    ): List<FileDto> = raceService.reorderPhotoInRace(uuid, input)
+    ): List<PhotoDto> = raceService.reorderPhotoInRace(uuid, input)
 
     @PatchMapping("$RACE_API/{uuid}/photographer")
     fun updatePhotographer(

@@ -117,17 +117,25 @@ class S3ServiceTest {
         private val racePhotoUrlPrefix = "http://localhost:9000/bucket/race-photos/"
 
         @Test
-        fun `lists the bucket once per race`() {
+        fun `lists the bucket once per race, including its thumbnails`() {
             val files =
                 listOf(
                     FileEntity(url = "${racePhotoUrlPrefix}a/1.webp"),
                     FileEntity(url = "${racePhotoUrlPrefix}a/2.webp"),
+                    FileEntity(url = "${racePhotoUrlPrefix}a/thumbs/1.webp"),
                     FileEntity(url = "${racePhotoUrlPrefix}b/1.webp"),
                 )
             whenever(fileRepository.findAllByUploadConfirmedAtIsNullAndUrlStartingWith(racePhotoUrlPrefix))
                 .thenReturn(files)
             whenever(minioClient.listObjects(any<ListObjectsArgs>()))
-                .thenReturn(bucketListing("race-photos/a/1.webp", "race-photos/a/2.webp", "race-photos/b/1.webp"))
+                .thenReturn(
+                    bucketListing(
+                        "race-photos/a/1.webp",
+                        "race-photos/a/2.webp",
+                        "race-photos/a/thumbs/1.webp",
+                        "race-photos/b/1.webp",
+                    ),
+                )
 
             service().confirmUploadedRacePhotos()
 

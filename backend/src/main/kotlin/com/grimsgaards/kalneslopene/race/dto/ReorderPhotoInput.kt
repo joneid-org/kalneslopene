@@ -3,13 +3,13 @@ package com.grimsgaards.kalneslopene.race.dto
 import java.util.UUID
 
 data class ReorderPhotoInput(
-    val fileUuid: UUID,
-    val beforeFileUuid: UUID? = null,
-    val afterFileUuid: UUID? = null,
+    val photoUuid: UUID,
+    val beforePhotoUuid: UUID? = null,
+    val afterPhotoUuid: UUID? = null,
 ) {
     init {
-        require((beforeFileUuid == null) != (afterFileUuid == null)) {
-            "Exactly one of beforeFileUuid or afterFileUuid must be set"
+        require((beforePhotoUuid == null) != (afterPhotoUuid == null)) {
+            "Exactly one of beforePhotoUuid or afterPhotoUuid must be set"
         }
     }
 }

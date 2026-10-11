@@ -4,6 +4,10 @@ export interface S3FileDto {
   description?: string;
 }
 
+export interface PhotoDTO extends S3FileDto {
+  thumbnailUrl?: string;
+}
+
 export interface ConfigDTO {
   s3BaseUrl: string;
   sentryDsn: string | null;
@@ -29,7 +33,7 @@ export type RaceDTO = {
   weatherManuallyEdited: boolean;
   runnerCount: number;
   isPublished: boolean;
-  photos: S3FileDto[];
+  photos: PhotoDTO[];
   photographer?: string;
 };
 export type RaceInput = Omit<
@@ -43,9 +47,9 @@ export type RaceInput = Omit<
 >;
 
 export type ReorderPhotoInput = {
-  fileUuid: string;
-  beforeFileUuid?: string;
-  afterFileUuid?: string;
+  photoUuid: string;
+  beforePhotoUuid?: string;
+  afterPhotoUuid?: string;
 };
 
 export type ReorderOrganizerInput = {

@@ -1,9 +1,9 @@
 import { Card, CardContent } from "@/components/ui/card.tsx";
 
-import type { S3FileDto } from "@/model/DTO.ts";
+import type { PhotoDTO } from "@/model/DTO.ts";
 
 type PhotoGridProps = {
-  photos: S3FileDto[];
+  photos: PhotoDTO[];
   onPhotoClick: (idx: number) => void;
 };
 
@@ -29,7 +29,7 @@ export default function PhotoGrid({ photos, onPhotoClick }: PhotoGridProps) {
               data-umami-event="bilde-apnet"
             >
               <img
-                src={photo.url}
+                src={photo.thumbnailUrl ?? photo.url}
                 alt={photo.description}
                 loading="lazy"
                 decoding="async"

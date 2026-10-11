@@ -119,7 +119,9 @@ class S3Service(
         fileRepository.deleteAll(fileEntities)
     }
 
-    private fun FileEntity.objectKey() = url.substringAfter("$baseUrl/$minioBucketName/")
+    fun objectKeyOf(url: String): String = url.substringAfter("$baseUrl/$minioBucketName/")
+
+    private fun FileEntity.objectKey() = objectKeyOf(url)
 
     private fun listObjectKeys(prefix: String): Set<String> =
         minioClient
@@ -157,8 +159,14 @@ class S3Service(
         val confirmed =
             fileRepository
                 .findAllByUploadConfirmedAtIsNullAndUrlStartingWith("$baseUrl/$minioBucketName/race-photos/")
-                .groupBy { it.objectKey().substringBeforeLast('/') + "/" }
-                .entries
+                // race-photos/<race>/, so a race's thumbs/ share its single listing
+                .groupBy {
+                    it
+                        .objectKey()
+                        .split('/')
+                        .take(2)
+                        .joinToString("/") + "/"
+                }.entries
                 .sumOf { (prefix, files) -> confirmUploadedFiles(files, prefix) }
         if (confirmed > 0) logger.info("Confirmed $confirmed uploaded race photos")
     }

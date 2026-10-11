@@ -385,6 +385,43 @@ class RaceServiceTest {
     }
 
     @Nested
+    inner class AddPhotosToRace {
+        private val race = existingRace()
+        private val keyPattern = Regex("""race-photos/${race.uuid}/[0-9a-f-]{36}-pic\.webp""")
+
+        @BeforeEach
+        fun stubS3() {
+            Mockito.`when`(raceRepository.findById(race.uuid)).thenReturn(Optional.of(race))
+            Mockito.`when`(s3Service.createFileEntities(anyList())).thenAnswer { invocation ->
+                invocation.getArgument<List<String>>(0).associateWith { FileEntity("http://bucket/$it") }
+            }
+            Mockito
+                .`when`(s3Service.getPresignedUrl(Mockito.anyString(), Mockito.anyInt(), Mockito.anyBoolean()))
+                .thenAnswer { "https://presigned/${it.getArgument<String>(0)}" }
+        }
+
+        @Test
+        fun `stores each photo under a unique key so immutable caching is safe`() {
+            val first = service.addPhotosToRace(race.uuid, listOf("pic.webp"))
+            val second = service.addPhotosToRace(race.uuid, listOf("pic.webp"))
+
+            val firstKey = first.getValue("pic.webp").uploadUrl.removePrefix("https://presigned/")
+            val secondKey = second.getValue("pic.webp").uploadUrl.removePrefix("https://presigned/")
+            assertThat(firstKey).matches(keyPattern.pattern)
+            assertThat(secondKey).matches(keyPattern.pattern)
+            assertThat(firstKey).isNotEqualTo(secondKey)
+        }
+
+        @Test
+        fun `presigns the same key the file entity points at`() {
+            val info = service.addPhotosToRace(race.uuid, listOf("pic.webp")).getValue("pic.webp")
+
+            val key = info.uploadUrl.removePrefix("https://presigned/")
+            assertThat(info.s3File.url).isEqualTo("http://bucket/$key")
+        }
+    }
+
+    @Nested
     inner class ReorderPhoto {
         private fun confirmedFile(url: String) = FileEntity(url).apply { uploadConfirmedAt = OffsetDateTime.now() }
 

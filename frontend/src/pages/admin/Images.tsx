@@ -5,12 +5,13 @@ import {
 } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
-import { MUTATIONS } from "@/api/mutations.ts";
+import { MUTATIONS, type RacePhotoUpload } from "@/api/mutations.ts";
 import { QUERIES } from "@/api/queries.ts";
 import { queryClient } from "@/api/queryClient.ts";
 import { IMMUTABLE_CACHE_CONTROL, uploadToS3 } from "@/api/s3.ts";
 import { AdminPhotoGrid } from "@/components/admin/AdminPhotoGrid.tsx";
 import { PhotographerField } from "@/components/admin/PhotographerField.tsx";
+import { ThumbnailBackfillButton } from "@/components/admin/ThumbnailBackfillButton.tsx";
 import { UploadDropzone } from "@/components/Pictures/UploadDropzone.tsx";
 import {
   Accordion,
@@ -20,13 +21,17 @@ import {
 } from "@/components/ui/accordion.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { convertImageToWebp, UnsupportedImageError } from "@/lib/photoUtils.ts";
+import {
+  type ConvertedPhoto,
+  convertPhotoWithThumbnail,
+  UnsupportedImageError,
+} from "@/lib/photoUtils.ts";
 import {
   extractYear,
   formatDDMonth,
   toLocalDateTimeString,
 } from "@/lib/timeUtils.ts";
-import type { PagedResponse, RaceDTO, S3FileDto } from "@/model/DTO.ts";
+import type { PagedResponse, PhotoDTO, RaceDTO } from "@/model/DTO.ts";
 
 const NOW = toLocalDateTimeString(new Date());
 
@@ -72,7 +77,7 @@ export function ImagesPage() {
     });
   };
 
-  const addPhotoToCache = (raceUuid: string, photo: S3FileDto) => {
+  const addPhotoToCache = (raceUuid: string, photo: PhotoDTO) => {
     queryClient.setQueryData<InfiniteData<PagedResponse<RaceDTO>>>(
       query.queryKey,
       (data) =>
@@ -92,12 +97,11 @@ export function ImagesPage() {
 
   const startUpload = async (
     raceUuid: string,
-    file: File,
-    uploadUrl: string,
-    s3FileDto: S3FileDto,
+    { full, thumbnail }: ConvertedPhoto,
+    { uploadUrl, thumbnailUploadUrl, photo }: RacePhotoUpload,
   ) => {
     const id = crypto.randomUUID();
-    const previewUrl = URL.createObjectURL(file);
+    const previewUrl = URL.createObjectURL(thumbnail);
 
     setUploads((prev) => ({
       ...prev,
@@ -105,7 +109,7 @@ export function ImagesPage() {
         ...(prev[raceUuid] ?? []),
         {
           id,
-          name: file.name,
+          name: full.name,
           previewUrl,
           progress: 0,
           status: "uploading",
@@ -115,14 +119,27 @@ export function ImagesPage() {
 
     try {
       await uploadToS3(
-        file,
+        full,
         uploadUrl,
         (progress) => {
           updateUpload(raceUuid, id, { progress });
         },
         IMMUTABLE_CACHE_CONTROL,
       );
-      addPhotoToCache(raceUuid, s3FileDto);
+      // A missing thumbnail is not fatal: it expires server-side and the grid falls back to the full photo.
+      const thumbnailUploaded = await uploadToS3(
+        thumbnail,
+        thumbnailUploadUrl,
+        undefined,
+        IMMUTABLE_CACHE_CONTROL,
+      ).then(
+        () => true,
+        () => false,
+      );
+      addPhotoToCache(
+        raceUuid,
+        thumbnailUploaded ? photo : { ...photo, thumbnailUrl: undefined },
+      );
       removeUpload(raceUuid, id);
     } catch (error) {
       updateUpload(raceUuid, id, {
@@ -141,17 +158,17 @@ export function ImagesPage() {
       fileList: FileList;
     }) => {
       const results = await Promise.allSettled(
-        Array.from(fileList).map((file) => convertImageToWebp(file)),
+        Array.from(fileList).map((file) => convertPhotoWithThumbnail(file)),
       );
-      const files: File[] = [];
+      const photos: ConvertedPhoto[] = [];
       const skipped: UnsupportedImageError[] = [];
       for (const result of results) {
-        if (result.status === "fulfilled") files.push(result.value);
+        if (result.status === "fulfilled") photos.push(result.value);
         else if (result.reason instanceof UnsupportedImageError)
           skipped.push(result.reason);
         else throw result.reason;
       }
-      if (files.length === 0 && skipped.length > 0) throw skipped[0];
+      if (photos.length === 0 && skipped.length > 0) throw skipped[0];
       if (skipped.length > 0) {
         toast.warning(
           `Hoppet over ${skipped.length} bilde(r) som ikke kunne leses: ${skipped.map((error) => error.fileName).join(", ")}`,
@@ -159,13 +176,12 @@ export function ImagesPage() {
       }
       const urlMap = await MUTATIONS.race.requestPhotoUploads(
         raceUuid,
-        files.map((file) => file.name),
+        photos.map((photo) => photo.full.name),
       );
       await Promise.all(
-        files.map((file) => {
-          const { uploadUrl, s3File } = urlMap[file.name];
-          return startUpload(raceUuid, file, uploadUrl, s3File);
-        }),
+        photos.map((photo) =>
+          startUpload(raceUuid, photo, urlMap[photo.full.name]),
+        ),
       );
     },
     onSuccess: () =>
@@ -173,7 +189,13 @@ export function ImagesPage() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (fileUuids: string[]) => MUTATIONS.s3.deleteFiles(fileUuids),
+    mutationFn: ({
+      raceUuid,
+      photoUuids,
+    }: {
+      raceUuid: string;
+      photoUuids: string[];
+    }) => MUTATIONS.race.deletePhotos(raceUuid, photoUuids),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: query.queryKey }),
   });
@@ -196,6 +218,9 @@ export function ImagesPage() {
       ) : (
         <Accordion type="single" collapsible className="w-full">
           {races.map((race) => {
+            const missingThumbnails = race.photos.filter(
+              (photo) => !photo.thumbnailUrl,
+            ).length;
             return (
               <AccordionItem key={race.uuid} value={race.uuid}>
                 <AccordionTrigger>
@@ -219,6 +244,17 @@ export function ImagesPage() {
                       })
                     }
                   />
+                  {missingThumbnails > 0 && (
+                    <ThumbnailBackfillButton
+                      raceUuid={race.uuid}
+                      missingCount={missingThumbnails}
+                      onDone={() =>
+                        queryClient.invalidateQueries({
+                          queryKey: query.queryKey,
+                        })
+                      }
+                    />
+                  )}
                   <UploadDropzone
                     onFilesSelected={(fileList) =>
                       uploadMutation.mutate({ raceUuid: race.uuid, fileList })
@@ -227,7 +263,12 @@ export function ImagesPage() {
                   <AdminPhotoGrid
                     photos={race.photos}
                     uploads={uploads[race.uuid] ?? []}
-                    onBulkDelete={(ids) => deleteMutation.mutateAsync(ids)}
+                    onBulkDelete={(ids) =>
+                      deleteMutation.mutateAsync({
+                        raceUuid: race.uuid,
+                        photoUuids: ids,
+                      })
+                    }
                     onDismissUpload={(uploadId) =>
                       removeUpload(race.uuid, uploadId)
                     }

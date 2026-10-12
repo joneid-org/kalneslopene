@@ -1,10 +1,10 @@
 import { Images } from "lucide-react";
 import { Link } from "react-router";
 import { cn } from "@/lib/utils.ts";
-import type { S3FileDto } from "@/model/DTO.ts";
+import type { PhotoDTO } from "@/model/DTO.ts";
 
 type RacePhotoGridProps = {
-  photos: S3FileDto[];
+  photos: PhotoDTO[];
   uuid: string;
   onPhotoClick: (idx: number) => void;
 };
@@ -17,7 +17,7 @@ function PhotoButton({
   className,
   eager = false,
 }: {
-  photo: S3FileDto;
+  photo: PhotoDTO;
   onClick: () => void;
   className?: string;
   eager?: boolean;
@@ -32,7 +32,7 @@ function PhotoButton({
       )}
     >
       <img
-        src={photo.url}
+        src={photo.thumbnailUrl ?? photo.url}
         alt={photo.description}
         loading={eager ? "eager" : "lazy"}
         decoding="async"
@@ -96,7 +96,7 @@ export function RacePhotoGrid({
             className="group relative aspect-square overflow-hidden rounded-2xl bg-brand-ink"
           >
             <img
-              src={overflowPhoto.url}
+              src={overflowPhoto.thumbnailUrl ?? overflowPhoto.url}
               alt=""
               loading="lazy"
               decoding="async"

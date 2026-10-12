@@ -3,6 +3,7 @@ package com.grimsgaards.kalneslopene.model.entities
 import com.grimsgaards.kalneslopene.race.model.RaceEntity
 import com.grimsgaards.kalneslopene.race.model.RacePhotoEntity
 import com.grimsgaards.kalneslopene.s3.FileEntity
+import com.grimsgaards.kalneslopene.s3.PhotoEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
@@ -52,14 +53,14 @@ class RaceEntityToDtoTest {
         race.racePhotos.add(
             RacePhotoEntity(
                 race = race,
-                file = confirmedFile("https://minio.local/bucket/confirmed.jpg"),
+                photo = PhotoEntity(photoFile = confirmedFile("https://minio.local/bucket/confirmed.jpg")),
                 orderIndex = 1.0,
             ),
         )
         race.racePhotos.add(
             RacePhotoEntity(
                 race = race,
-                file = FileEntity(url = "https://minio.local/bucket/pending.jpg"),
+                photo = PhotoEntity(photoFile = FileEntity(url = "https://minio.local/bucket/pending.jpg")),
                 orderIndex = 2.0,
             ),
         )
@@ -77,14 +78,14 @@ class RaceEntityToDtoTest {
         race.racePhotos.add(
             RacePhotoEntity(
                 race = race,
-                file = FileEntity(url = "https://minio.local/bucket/pending-a.jpg"),
+                photo = PhotoEntity(photoFile = FileEntity(url = "https://minio.local/bucket/pending-a.jpg")),
                 orderIndex = 1.0,
             ),
         )
         race.racePhotos.add(
             RacePhotoEntity(
                 race = race,
-                file = FileEntity(url = "https://minio.local/bucket/pending-b.jpg"),
+                photo = PhotoEntity(photoFile = FileEntity(url = "https://minio.local/bucket/pending-b.jpg")),
                 orderIndex = 2.0,
             ),
         )
@@ -99,8 +100,8 @@ class RaceEntityToDtoTest {
         val race = race()
         val second = confirmedFile("https://minio.local/bucket/second.jpg")
         val first = confirmedFile("https://minio.local/bucket/first.jpg")
-        race.racePhotos.add(RacePhotoEntity(race = race, file = second, orderIndex = 2.0))
-        race.racePhotos.add(RacePhotoEntity(race = race, file = first, orderIndex = 1.0))
+        race.racePhotos.add(RacePhotoEntity(race = race, photo = PhotoEntity(photoFile = second), orderIndex = 2.0))
+        race.racePhotos.add(RacePhotoEntity(race = race, photo = PhotoEntity(photoFile = first), orderIndex = 1.0))
 
         val dto = race.toDto()
 
@@ -108,5 +109,27 @@ class RaceEntityToDtoTest {
             "https://minio.local/bucket/first.jpg",
             "https://minio.local/bucket/second.jpg",
         )
+    }
+
+    @Test
+    fun `exposes the thumbnail only once it is confirmed`() {
+        val race = race()
+        val confirmed =
+            PhotoEntity(
+                photoFile = confirmedFile("https://minio.local/bucket/a.jpg"),
+                thumbnailFile = confirmedFile("https://minio.local/bucket/thumbs/a.jpg"),
+            )
+        val pending =
+            PhotoEntity(
+                photoFile = confirmedFile("https://minio.local/bucket/b.jpg"),
+                thumbnailFile = FileEntity(url = "https://minio.local/bucket/thumbs/b.jpg"),
+            )
+        race.racePhotos.add(RacePhotoEntity(race = race, photo = confirmed, orderIndex = 1.0))
+        race.racePhotos.add(RacePhotoEntity(race = race, photo = pending, orderIndex = 2.0))
+
+        val dto = race.toDto()
+
+        assertThat(dto.photos.map { it.uuid }).containsExactly(confirmed.uuid, pending.uuid)
+        assertThat(dto.photos.map { it.thumbnailUrl }).containsExactly("https://minio.local/bucket/thumbs/a.jpg", null)
     }
 }

@@ -7,11 +7,11 @@ import {
   SortableItemHandle,
 } from "@/components/reui/sortable.tsx";
 import { Card, CardContent } from "@/components/ui/card.tsx";
-import type { S3FileDto } from "@/model/DTO.ts";
+import type { PhotoDTO } from "@/model/DTO.ts";
 
 type SortablePhotoGridProps = {
-  photos: S3FileDto[];
-  onReorder: (movedUuid: string, newOrder: S3FileDto[]) => void;
+  photos: PhotoDTO[];
+  onReorder: (movedUuid: string, newOrder: PhotoDTO[]) => void;
 };
 
 export function SortablePhotoGrid({
@@ -53,7 +53,7 @@ export function SortablePhotoGrid({
             <SortableItem key={photo.uuid} value={photo.uuid}>
               <div className="relative aspect-video sm:aspect-square overflow-hidden rounded-md">
                 <img
-                  src={photo.url}
+                  src={photo.thumbnailUrl ?? photo.url}
                   alt={photo.description}
                   loading="lazy"
                   decoding="async"

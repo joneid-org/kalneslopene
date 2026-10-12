@@ -1,5 +1,6 @@
 const MAX_DIMENSION = 2048;
 const WEBP_QUALITY = 0.8;
+export const THUMBNAIL_DIMENSION = 800;
 
 const EXTENSIONS: Record<string, string> = {
   "image/webp": "webp",
@@ -40,6 +41,50 @@ function canvasToBlob(
   return new Promise((resolve) => canvas.toBlob(resolve, type, quality));
 }
 
+async function decode(file: File): Promise<ImageBitmap> {
+  try {
+    return await createImageBitmap(file);
+  } catch {
+    throw new UnsupportedImageError(file.name);
+  }
+}
+
+async function encodeBitmap(
+  bitmap: ImageBitmap,
+  file: File,
+  maxDimension: number,
+  quality: number,
+): Promise<File> {
+  const { width, height } = scaledSize(
+    bitmap.width,
+    bitmap.height,
+    maxDimension,
+  );
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new UnsupportedImageError(file.name);
+  ctx.drawImage(bitmap, 0, 0, width, height);
+
+  let blob = await canvasToBlob(canvas, "image/webp", quality);
+  if (blob?.type !== "image/webp") {
+    // JPEG has no alpha channel, so transparent areas would turn black.
+    ctx.globalCompositeOperation = "destination-over";
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(0, 0, width, height);
+    blob = await canvasToBlob(canvas, "image/jpeg", quality);
+  }
+  if (!blob || !(blob.type in EXTENSIONS)) {
+    throw new UnsupportedImageError(file.name);
+  }
+
+  return new File([blob], withExtension(file.name, EXTENSIONS[blob.type]), {
+    type: blob.type,
+    lastModified: file.lastModified,
+  });
+}
+
 /**
  * Resizes an image so its longest edge is at most `maxDimension` px and
  * re-encodes it as WebP, or as JPEG in browsers that cannot encode WebP
@@ -53,42 +98,30 @@ export async function convertImageToWebp(
     quality = WEBP_QUALITY,
   }: { maxDimension?: number; quality?: number } = {},
 ): Promise<File> {
-  let bitmap: ImageBitmap;
+  const bitmap = await decode(file);
   try {
-    bitmap = await createImageBitmap(file);
-  } catch {
-    throw new UnsupportedImageError(file.name);
+    return await encodeBitmap(bitmap, file, maxDimension, quality);
+  } finally {
+    bitmap.close();
   }
+}
 
+export type ConvertedPhoto = { full: File; thumbnail: File };
+
+/** Like `convertImageToWebp`, but also returns a grid thumbnail, decoding the original only once. */
+export async function convertPhotoWithThumbnail(
+  file: File,
+): Promise<ConvertedPhoto> {
+  const bitmap = await decode(file);
   try {
-    const { width, height } = scaledSize(
-      bitmap.width,
-      bitmap.height,
-      maxDimension,
+    const full = await encodeBitmap(bitmap, file, MAX_DIMENSION, WEBP_QUALITY);
+    const thumbnail = await encodeBitmap(
+      bitmap,
+      file,
+      THUMBNAIL_DIMENSION,
+      WEBP_QUALITY,
     );
-    const canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) throw new UnsupportedImageError(file.name);
-    ctx.drawImage(bitmap, 0, 0, width, height);
-
-    let blob = await canvasToBlob(canvas, "image/webp", quality);
-    if (blob?.type !== "image/webp") {
-      // JPEG has no alpha channel, so transparent areas would turn black.
-      ctx.globalCompositeOperation = "destination-over";
-      ctx.fillStyle = "#fff";
-      ctx.fillRect(0, 0, width, height);
-      blob = await canvasToBlob(canvas, "image/jpeg", quality);
-    }
-    if (!blob || !(blob.type in EXTENSIONS)) {
-      throw new UnsupportedImageError(file.name);
-    }
-
-    return new File([blob], withExtension(file.name, EXTENSIONS[blob.type]), {
-      type: blob.type,
-      lastModified: file.lastModified,
-    });
+    return { full, thumbnail };
   } finally {
     bitmap.close();
   }

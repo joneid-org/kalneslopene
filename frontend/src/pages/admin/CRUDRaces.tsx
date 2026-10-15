@@ -15,7 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog.tsx";
-import { formatDDMonth, raceDateToSortKey } from "@/lib/timeUtils.ts";
+import { formatDayMonth, raceDateToSortKey } from "@/lib/timeUtils.ts";
 import { isPast } from "@/lib/utils.ts";
 import type { RaceDTO, RaceInfoDTO } from "@/model/DTO.ts";
 
@@ -159,7 +159,7 @@ export function CRUDRaces() {
               <>
                 Er du sikker på at du vil slette løpet{" "}
                 <span className="font-semibold text-foreground">
-                  {formatDDMonth(deleting.raceDate)}
+                  {formatDayMonth(deleting.raceDate)}
                 </span>
                 ? Dette kan ikke angres.
               </>

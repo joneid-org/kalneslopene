@@ -23,7 +23,7 @@ import { Button } from "@/components/ui/button.tsx";
 import { convertImageToWebp, UnsupportedImageError } from "@/lib/photoUtils.ts";
 import {
   extractYear,
-  formatDDMonth,
+  formatDayMonth,
   toLocalDateTimeString,
 } from "@/lib/timeUtils.ts";
 import type { PagedResponse, RaceDTO, S3FileDto } from "@/model/DTO.ts";
@@ -201,7 +201,7 @@ export function ImagesPage() {
                 <AccordionTrigger>
                   <div className="flex items-center gap-3">
                     <span className="font-medium">
-                      {formatDDMonth(race.raceDate)}{" "}
+                      {formatDayMonth(race.raceDate)}{" "}
                       {extractYear(race.raceDate)}
                     </span>
                     <Badge variant="secondary">

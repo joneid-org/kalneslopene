@@ -10,7 +10,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer.tsx";
-import { formatDDMonth } from "@/lib/timeUtils.ts";
+import { formatDayMonth } from "@/lib/timeUtils.ts";
 import { cn, getRacesDTOByYear, getYears } from "@/lib/utils.ts";
 
 export type RacePickerBasePath = "/resultater" | "/bilder";
@@ -69,7 +69,7 @@ export function RacePickerDrawer({
                 to={`${basePath}/${race.uuid}`}
                 className="rounded-xl border bg-card px-1 py-3 text-center text-sm font-semibold whitespace-no text-foreground/80 transition-colors hover:bg-accent"
               >
-                {formatDDMonth(race.raceDate)}
+                {formatDayMonth(race.raceDate)}
               </Link>
             </DrawerClose>
           ))}

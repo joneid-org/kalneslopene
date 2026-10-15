@@ -35,7 +35,7 @@ export default function PhotoHeader({
               {photographer && (
                 <p className="text-xs text-muted-foreground flex items-center gap-1">
                   <Camera className="size-3 shrink-0" />
-                  Foto: {photographer}
+                  {photographer}
                 </p>
               )}
             </div>

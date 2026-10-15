@@ -14,7 +14,7 @@ import { YearSelector } from "@/components/YearSelector.tsx";
 import {
   addHoursToDate,
   endOfYearString,
-  formatDDMonth,
+  formatDayMonth,
   startOfYearString,
   toLocalDateTimeString,
 } from "@/lib/timeUtils.ts";
@@ -143,7 +143,7 @@ export function RegisterResults() {
               <>
                 Er du sikker på at du vil slette løpet{" "}
                 <span className="font-semibold text-foreground">
-                  {formatDDMonth(deleting.raceDate)}
+                  {formatDayMonth(deleting.raceDate)}
                 </span>
                 ? Dette kan ikke angres.
               </>

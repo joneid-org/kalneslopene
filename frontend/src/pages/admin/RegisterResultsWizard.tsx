@@ -26,7 +26,7 @@ import { RegisterTimesStep } from "@/components/admin/registerResults/RegisterTi
 import { ReviewStep } from "@/components/admin/registerResults/ReviewStep.tsx";
 import { SegmentedControl } from "@/components/SegmentedControl.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { formatDDMonth } from "@/lib/timeUtils.ts";
+import { formatDayMonth } from "@/lib/timeUtils.ts";
 import type {
   RaceDTO,
   RaceRunnerDTO,
@@ -233,7 +233,7 @@ function Wizard({
         <h1 className="text-2xl font-semibold tracking-tight">
           Registrer resultater
         </h1>
-        <p className="text-muted-foreground">{formatDDMonth(race.raceDate)}</p>
+        <p className="text-muted-foreground">{formatDayMonth(race.raceDate)}</p>
       </div>
 
       {isPublished ? (

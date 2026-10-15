@@ -11,8 +11,8 @@ import {
 import type { YearValue } from "@/components/YearSelector.tsx";
 import {
   extractYear,
+  formatDayMonth,
   formatDDMMYYYY,
-  formatDDMonth,
   formatSecondsToTime,
   mapResultTimeToNumber,
   raceDateToSortKey,
@@ -43,7 +43,7 @@ function seasonPoints(timed: RaceRunnerDTO[], year: number): ChartPoint[] {
       ),
     )
     .map((rr) => ({
-      label: formatDDMonth(rr.raceInfo.raceDate),
+      label: formatDayMonth(rr.raceInfo.raceDate),
       tooltipLabel: formatDDMMYYYY(rr.raceInfo.raceDate),
       time: mapResultTimeToNumber(rr.resultTime),
     }));

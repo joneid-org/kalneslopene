@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { StatCard } from "@/components/Statistics/StatCard.tsx";
 import {
-  formatDDMonth,
+  formatDayMonth,
   formatSecondsToTime,
   mapResultTimeToNumber,
   raceDateToSortKey,
@@ -68,7 +68,7 @@ export default function RunnerRaceResults({
               >
                 <div className="flex flex-1 flex-col">
                   <span className="text-sm tabular-nums text-foreground">
-                    {formatDDMonth(rr.raceInfo.raceDate)}
+                    {formatDayMonth(rr.raceInfo.raceDate)}
                   </span>
                   <span className="text-xs tabular-nums text-muted-foreground">
                     {results.length - i}. løp i sesongen ·{" "}

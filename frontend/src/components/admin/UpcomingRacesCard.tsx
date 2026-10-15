@@ -2,7 +2,7 @@ import { CalendarClockIcon } from "lucide-react";
 import { AdminCard } from "@/components/admin/AdminCard.tsx";
 import { RowActions } from "@/components/admin/RowActions.tsx";
 import { TableCell } from "@/components/ui/table.tsx";
-import { formatDDMonth, formatTimeStamp } from "@/lib/timeUtils.ts";
+import { formatDayMonth, formatTimeStamp } from "@/lib/timeUtils.ts";
 import type { RaceInfoDTO } from "@/model/DTO.ts";
 
 export function UpcomingRacesCard({
@@ -29,7 +29,7 @@ export function UpcomingRacesCard({
         <>
           <TableCell className="flex items-center gap-2">
             <CalendarClockIcon className="size-3.5 text-primary shrink-0" />
-            <span className="font-medium">{formatDDMonth(race.raceDate)}</span>
+            <span className="font-medium">{formatDayMonth(race.raceDate)}</span>
           </TableCell>
           <TableCell className="tabular-nums text-muted-foreground">
             {formatTimeStamp(race.raceDate)}

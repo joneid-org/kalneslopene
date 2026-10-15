@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
-import { formatDDMonth } from "@/lib/timeUtils.ts";
+import { formatDayMonth } from "@/lib/timeUtils.ts";
 import { buildTableRows, formatResultsAsText } from "@/lib/utils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 
@@ -38,7 +38,7 @@ export function ExportResultsDialog({
   return (
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>Resultatliste {formatDDMonth(race.raceDate)}</DialogTitle>
+        <DialogTitle>Resultatliste {formatDayMonth(race.raceDate)}</DialogTitle>
       </DialogHeader>
       <p className="text-sm text-muted-foreground">
         Kopier listen og lim den inn i e-post eller melding.

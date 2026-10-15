@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { LucideIcon } from "lucide-react";
 import { CalendarDays, Footprints } from "lucide-react";
 import { QUERIES } from "@/api/queries.ts";
-import { formatDDMonth, formatRaceDateTime } from "@/lib/timeUtils.ts";
+import { formatDayMonth, formatRaceDateTime } from "@/lib/timeUtils.ts";
 import { cn } from "@/lib/utils.ts";
 import { weatherItems } from "@/lib/weatherDisplay.ts";
 import type { RaceDTO, WeatherDto } from "@/model/DTO.ts";
@@ -98,7 +98,7 @@ type NextRaceVariantProps = {
 // Mobile: full-rounded card tucked under the hero, weather-forward
 function NextRaceStacked({ isPending, race, weather }: NextRaceVariantProps) {
   const [day, month] = race
-    ? formatDDMonth(race.raceDate).split(". ")
+    ? formatDayMonth(race.raceDate).split(". ")
     : ["", ""];
   const items = weatherItems(weather);
 
@@ -165,7 +165,7 @@ function NextRaceStacked({ isPending, race, weather }: NextRaceVariantProps) {
 // Desktop: top-rounded card overlapping the base of the full-bleed hero
 function NextRaceOverlay({ isPending, race, weather }: NextRaceVariantProps) {
   const [day, month] = race
-    ? formatDDMonth(race.raceDate).split(". ")
+    ? formatDayMonth(race.raceDate).split(". ")
     : ["", ""];
   const items = weatherItems(weather);
 

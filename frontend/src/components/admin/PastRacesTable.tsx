@@ -20,7 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table.tsx";
 import { WeatherLine } from "@/components/Weather/WeatherLine.tsx";
-import { formatDDMonth, formatTimeStamp } from "@/lib/timeUtils.ts";
+import { formatDayMonth, formatTimeStamp } from "@/lib/timeUtils.ts";
 import { buildTableRows } from "@/lib/utils.ts";
 import type { RaceDTO } from "@/model/DTO.ts";
 
@@ -71,7 +71,7 @@ export function PastRacesTable({
                       <CircleDashedIcon className="size-3.5 shrink-0 text-red-600" />
                     )}
                     <span className="font-medium">
-                      {formatDDMonth(race.raceDate)}
+                      {formatDayMonth(race.raceDate)}
                     </span>
                   </span>
                 </TableCell>

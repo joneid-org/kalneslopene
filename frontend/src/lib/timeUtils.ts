@@ -78,10 +78,10 @@ export function raceDateToSortKey(raceDate: unknown): string {
   return String(raceDate);
 }
 
-export function formatDDMonth(raceDate: unknown): string {
+export function formatDayMonth(raceDate: unknown): string {
   const { day, month } = parseDateParts(raceDate);
   const monthName = NORWEGIAN_MONTH_NAMES[(month ?? 1) - 1];
-  return `${String(day).padStart(2, "0")}. ${monthName}`;
+  return `${day}. ${monthName}`;
 }
 
 export function formatDayMonthShort(raceDate: unknown): string {
@@ -96,14 +96,14 @@ export function formatDDMMYYYY(raceDate: unknown): string {
 
 export function formatDate(raceDate: unknown): string | undefined {
   if (!raceDate) return undefined;
-  return formatDDMonth(raceDate);
+  return formatDayMonth(raceDate);
 }
 
 export function formatDateFull(raceDate: unknown): string | undefined {
   if (!raceDate) return undefined;
   const { day, month, year } = parseDateParts(raceDate);
   const monthName = NORWEGIAN_MONTH_NAMES[(month ?? 1) - 1];
-  return `${String(day).padStart(2)}. ${monthName} ${year}`;
+  return `${day}. ${monthName} ${year}`;
 }
 
 const NORWEGIAN_WEEKDAYS = [

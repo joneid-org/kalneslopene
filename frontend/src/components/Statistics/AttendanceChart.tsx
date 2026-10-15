@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { StatCard } from "@/components/Statistics/StatCard.tsx";
 import {
+  formatDayMonth,
   formatDayMonthShort,
-  formatDDMonth,
   raceDateToSortKey,
 } from "@/lib/timeUtils.ts";
 import { cn } from "@/lib/utils.ts";
@@ -124,7 +124,7 @@ export function AttendanceChart({ races }: Props) {
                       )}
                     >
                       <div className="font-medium">
-                        {formatDDMonth(race.raceDate)}
+                        {formatDayMonth(race.raceDate)}
                       </div>
                       <div className="font-mono font-medium tabular-nums">
                         {race.runnerCount} deltakere
@@ -158,7 +158,7 @@ export function AttendanceChart({ races }: Props) {
                     {formatDayMonthShort(orderedRaces[i].raceDate)}
                   </span>
                   <span className="hidden sm:inline">
-                    {formatDDMonth(orderedRaces[i].raceDate)}
+                    {formatDayMonth(orderedRaces[i].raceDate)}
                   </span>
                 </span>
               );

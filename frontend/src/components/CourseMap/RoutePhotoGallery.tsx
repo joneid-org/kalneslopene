@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
+import { LoadingImage } from "@/components/LoadingImage.tsx";
 import PhotoDialog from "@/components/PhotoDialog.tsx";
 import { ReplacePhotoButton } from "@/components/ReplacePhotoButton.tsx";
 import { routeDetails } from "@/data/200m200mData.ts";
@@ -40,10 +41,10 @@ export function RoutePhotoGallery() {
             aria-label="Åpne bilde i fullskjerm"
             onClick={() => setLightboxIndex(0)}
           >
-            <img
+            <LoadingImage
               src={photoUrl}
               alt={routeSection.photo.description ?? routeSection.title}
-              className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+              className="size-full object-cover group-hover:scale-105"
             />
             <div className="absolute inset-0 hidden items-center justify-center bg-black/0 transition-colors duration-300 group-hover:bg-black/10 sm:flex">
               <span className="rounded-full bg-black/50 px-3 py-1.5 text-xs font-medium text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">

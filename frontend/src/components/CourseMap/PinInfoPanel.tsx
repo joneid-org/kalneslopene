@@ -1,11 +1,11 @@
-import { Loader2, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { useState } from "react";
+import { LoadingImage } from "@/components/LoadingImage.tsx";
 import PhotoDialog from "@/components/PhotoDialog.tsx";
 import { ReplacePhotoButton } from "@/components/ReplacePhotoButton.tsx";
 import type { Pin } from "@/data/loypekartData.ts";
 import { useAuth } from "@/hooks/useAuth.ts";
 import { useStaticPhotos } from "@/hooks/useStaticPhotos.tsx";
-import { cn } from "@/lib/utils.ts";
 
 type Props = {
   pin: Pin;
@@ -16,11 +16,9 @@ export function PinInfoPanel({ pin, loadPhoto }: Props) {
   const { isAuthenticated } = useAuth();
   const { resolvePhotoUrl, handleReplacePhoto } = useStaticPhotos();
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-  const [loadedUrl, setLoadedUrl] = useState<string>();
   const photo = pin.photo;
   const photoUrl = resolvePhotoUrl(photo.fileName, photo.fallback);
   const onReplacePhoto = isAuthenticated ? handleReplacePhoto : undefined;
-  const isPhotoLoading = loadedUrl !== photoUrl;
 
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-2xl border bg-card shadow-sm">
@@ -32,27 +30,13 @@ export function PinInfoPanel({ pin, loadPhoto }: Props) {
           onClick={() => setLightboxIndex(0)}
         >
           {loadPhoto && (
-            <img
+            <LoadingImage
               src={photoUrl}
               alt={pin.label}
-              onLoad={() => setLoadedUrl(photoUrl)}
-              onError={() => setLoadedUrl(photoUrl)}
-              className={cn(
-                "size-full object-cover transition-[transform,opacity] duration-300 group-hover:scale-105",
-                isPhotoLoading && "opacity-0",
-              )}
+              className="size-full object-cover group-hover:scale-105"
             />
           )}
         </button>
-        {isPhotoLoading && (
-          <div
-            role="status"
-            aria-label="Laster bilde"
-            className="pointer-events-none absolute inset-0 flex items-center justify-center"
-          >
-            <Loader2 className="size-6 animate-spin text-muted-foreground" />
-          </div>
-        )}
         {onReplacePhoto && photo?.fileName && (
           <ReplacePhotoButton
             fileName={photo.fileName}

@@ -3,6 +3,11 @@ name: "Release"
 on:
   release:
     types: [published]
+  workflow_call:
+    inputs:
+      tag:
+        required: true
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}
@@ -12,8 +17,8 @@ jobs:
   build-and-push:
     uses: ./.github/workflows/build-and-push.yml
     with:
-      tag: ${{ github.event.release.tag_name }}
-      ref: ${{ github.event.release.tag_name }}
+      tag: ${{ inputs.tag || github.event.release.tag_name }}
+      ref: ${{ inputs.tag || github.event.release.tag_name }}
     secrets: inherit
 
   deploy:
@@ -21,5 +26,5 @@ jobs:
     uses: ./.github/workflows/deploy.yml
     with:
       environment: test
-      tag: ${{ github.event.release.tag_name }}
+      tag: ${{ inputs.tag || github.event.release.tag_name }}
     secrets: inherit

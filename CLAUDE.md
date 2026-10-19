@@ -75,7 +75,9 @@ Controller → Service → Repository (Spring Data JPA). Entities live in `model
 
 - `pr-check.yml` — on every PR (and reused by workflows below): frontend `check` + `tsc` + `react-doctor`, backend `./gradlew check`. Both jobs skipped for Dependabot.
 - `merge-to-main.yml` — on push to `main`: reruns `pr-check`, then `build-and-push` (tag = commit SHA), then **auto-deploys to `dev`**.
-- `release.yml` — on a published GitHub release: `build-and-push` (tag = release tag), then **auto-deploys to `test`**.
+- `pr-title.yml` — on every PR (incl. title edits): the title must be a conventional commit with type `feat`, `fix` or `chore`. With squash merges the title becomes the commit on `main`, which release-please reads.
+- `release-please.yml` — on push to `main`: maintains the release PR (version bump in `.release-please-manifest.json` + `CHANGELOG.md`). Merging that PR tags `vX.Y.Z`, creates the GitHub release and calls `release.yml` directly (releases made with `GITHUB_TOKEN` don't fire `release: published`). Config is `release-please-config.json`.
+- `release.yml` — on a published GitHub release (manual) or called from `release-please.yml`: `build-and-push` (tag = release tag), then **auto-deploys to `test`**.
 - `build-and-push.yml` — reusable. Builds the multi-stage Docker image and pushes `${REGISTRY_HOST}/joneid-org/torsdagslopet:<tag>`.
 - `deploy.yml` — reusable, and manually dispatchable (choose `dev`/`test`/`prod` + an already-pushed tag). Sets `IMAGE_TAG` on the target Dokploy compose app via the Dokploy API and triggers a redeploy. **`prod` only ever deploys via manual dispatch** — nothing in the automated pipeline targets it.
 - Hosting is a Dokploy-managed Hetzner Cloud server provisioned by `infra/` (see `servers.tf`, `dns.tf`, `buckets.tf`).

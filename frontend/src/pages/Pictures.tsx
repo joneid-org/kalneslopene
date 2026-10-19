@@ -11,11 +11,11 @@ import NavigationButtons from "@/components/Results/NavigationButtons.tsx";
 import { useAuth } from "@/hooks/useAuth.ts";
 import { formatDateFull } from "@/lib/timeUtils.ts";
 import { getNextRace, getPreviousRace } from "@/lib/utils.ts";
-import type { RaceDTO, ReorderPhotoInput, S3FileDto } from "@/model/DTO.ts";
+import type { PhotoDTO, RaceDTO, ReorderPhotoInput } from "@/model/DTO.ts";
 
 type ReorderVariables = ReorderPhotoInput & {
   raceUuid: string;
-  newOrder: S3FileDto[];
+  newOrder: PhotoDTO[];
 };
 
 export function Pictures() {
@@ -70,7 +70,7 @@ export function Pictures() {
     throw new Response("Fant ikke løpet", { status: 404 });
   }
 
-  function handleReorder(movedUuid: string, newOrder: S3FileDto[]) {
+  function handleReorder(movedUuid: string, newOrder: PhotoDTO[]) {
     if (!race) return;
     const idx = newOrder.findIndex((p) => p.uuid === movedUuid);
     const nextPhoto = newOrder[idx + 1];
@@ -78,15 +78,15 @@ export function Pictures() {
     if (nextPhoto) {
       reorderMutation.mutate({
         raceUuid: race.uuid,
-        fileUuid: movedUuid,
-        beforeFileUuid: nextPhoto.uuid,
+        photoUuid: movedUuid,
+        beforePhotoUuid: nextPhoto.uuid,
         newOrder,
       });
     } else if (prevPhoto) {
       reorderMutation.mutate({
         raceUuid: race.uuid,
-        fileUuid: movedUuid,
-        afterFileUuid: prevPhoto.uuid,
+        photoUuid: movedUuid,
+        afterPhotoUuid: prevPhoto.uuid,
         newOrder,
       });
     }

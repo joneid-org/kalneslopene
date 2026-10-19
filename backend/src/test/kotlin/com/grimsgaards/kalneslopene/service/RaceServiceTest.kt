@@ -16,6 +16,7 @@ import com.grimsgaards.kalneslopene.runner.Gender
 import com.grimsgaards.kalneslopene.runner.RunnerEntity
 import com.grimsgaards.kalneslopene.runner.RunnerRepository
 import com.grimsgaards.kalneslopene.s3.FileEntity
+import com.grimsgaards.kalneslopene.s3.PhotoEntity
 import com.grimsgaards.kalneslopene.s3.S3Service
 import com.grimsgaards.kalneslopene.security.AuthenticatedUserProvider
 import com.grimsgaards.kalneslopene.weather.WeatherDto
@@ -342,11 +343,13 @@ class RaceServiceTest {
 
     @Nested
     inner class ConfirmPhotosOnRead {
-        private fun raceWithPhoto(file: FileEntity) =
-            existingRace().apply {
-                isPublished = true
-                racePhotos.add(RacePhotoEntity(race = this, file = file, orderIndex = 1.0))
-            }
+        private fun raceWithPhoto(
+            file: FileEntity,
+            thumbnail: FileEntity? = null,
+        ) = existingRace().apply {
+            isPublished = true
+            racePhotos.add(racePhoto(this, PhotoEntity(photoFile = file, thumbnailFile = thumbnail)))
+        }
 
         @Test
         fun `confirms pending photos under the race prefix before returning`() {
@@ -360,8 +363,20 @@ class RaceServiceTest {
         }
 
         @Test
+        fun `confirms pending thumbnails in the same call`() {
+            val file = confirmedFile("photo")
+            val thumbnail = FileEntity("thumbnail")
+            val race = raceWithPhoto(file, thumbnail)
+            Mockito.`when`(raceRepository.findById(race.uuid)).thenReturn(Optional.of(race))
+
+            service.findByUuid(race.uuid)
+
+            Mockito.verify(s3Service).confirmUploadedFiles(listOf(thumbnail), "race-photos/${race.uuid}/")
+        }
+
+        @Test
         fun `does not touch the bucket when no photos are pending`() {
-            val race = raceWithPhoto(FileEntity("confirmed").apply { uploadConfirmedAt = OffsetDateTime.now() })
+            val race = raceWithPhoto(confirmedFile("confirmed"), confirmedFile("thumbnail"))
             Mockito.`when`(raceRepository.findById(race.uuid)).thenReturn(Optional.of(race))
 
             service.findByUuid(race.uuid)
@@ -392,12 +407,7 @@ class RaceServiceTest {
         @BeforeEach
         fun stubS3() {
             Mockito.`when`(raceRepository.findById(race.uuid)).thenReturn(Optional.of(race))
-            Mockito.`when`(s3Service.createFileEntities(anyList())).thenAnswer { invocation ->
-                invocation.getArgument<List<String>>(0).associateWith { FileEntity("http://bucket/$it") }
-            }
-            Mockito
-                .`when`(s3Service.getPresignedUrl(Mockito.anyString(), Mockito.anyInt(), Mockito.anyBoolean()))
-                .thenAnswer { "https://presigned/${it.getArgument<String>(0)}" }
+            stubS3Files()
         }
 
         @Test
@@ -413,78 +423,173 @@ class RaceServiceTest {
         }
 
         @Test
-        fun `presigns the same key the file entity points at`() {
+        fun `presigns the same keys the photo's files point at`() {
             val info = service.addPhotosToRace(race.uuid, listOf("pic.webp")).getValue("pic.webp")
 
             val key = info.uploadUrl.removePrefix("https://presigned/")
-            assertThat(info.s3File.url).isEqualTo("http://bucket/$key")
+            val thumbnailKey = info.thumbnailUploadUrl.removePrefix("https://presigned/")
+            assertThat(info.photo.url).isEqualTo("http://bucket/$key")
+            assertThat(info.photo.thumbnailUrl).isEqualTo("http://bucket/$thumbnailKey")
+        }
+
+        @Test
+        fun `stores the thumbnail as its own file next to the photo`() {
+            val info = service.addPhotosToRace(race.uuid, listOf("pic.webp")).getValue("pic.webp")
+
+            val key = info.uploadUrl.removePrefix("https://presigned/")
+            val thumbnailKey = key.replace("race-photos/${race.uuid}/", "race-photos/${race.uuid}/thumbs/")
+            val photo = race.racePhotos.single().photo
+            assertThat(photo.uuid).isEqualTo(info.photo.uuid)
+            assertThat(photo.photoFile.url).isEqualTo("http://bucket/$key")
+            assertThat(photo.thumbnailFile?.url).isEqualTo("http://bucket/$thumbnailKey")
+            Mockito.verify(s3Service).getPresignedUrl(key, 1, true)
+            Mockito.verify(s3Service).getPresignedUrl(thumbnailKey, 1, true)
+        }
+    }
+
+    @Nested
+    inner class ThumbnailBackfill {
+        private val race = existingRace()
+        private val prefix = "race-photos/${race.uuid}/"
+
+        private fun addPhotos(vararg photos: PhotoEntity) =
+            photos.forEachIndexed { idx, photo -> race.racePhotos.add(racePhoto(race, photo, idx.toDouble())) }
+
+        @BeforeEach
+        fun stubS3() {
+            Mockito.`when`(raceRepository.findById(race.uuid)).thenReturn(Optional.of(race))
+            stubS3Files()
+        }
+
+        @Test
+        fun `creates thumbnails only for confirmed photos without one`() {
+            val missing = PhotoEntity(photoFile = confirmedFile("http://bucket/${prefix}missing.webp"))
+            addPhotos(
+                missing,
+                PhotoEntity(
+                    photoFile = confirmedFile("http://bucket/${prefix}done.webp"),
+                    thumbnailFile = FileEntity("http://bucket/${prefix}thumbs/done.webp"),
+                ),
+                PhotoEntity(photoFile = FileEntity("http://bucket/${prefix}pending.webp")),
+            )
+
+            val uploads = service.requestThumbnailUploads(race.uuid)
+
+            assertThat(uploads).hasSize(1)
+            assertThat(uploads.single().photo.uuid).isEqualTo(missing.uuid)
+            assertThat(uploads.single().uploadUrl).isEqualTo("https://presigned/${prefix}thumbs/missing.webp")
+            Mockito.verify(s3Service).getPresignedUrl("${prefix}thumbs/missing.webp", 1, true)
+        }
+
+        @Test
+        fun `links an unconfirmed thumbnail file so the normal confirmation picks it up`() {
+            val photo = PhotoEntity(photoFile = confirmedFile("http://bucket/${prefix}pic.webp"))
+            addPhotos(photo)
+
+            service.requestThumbnailUploads(race.uuid)
+
+            assertThat(photo.thumbnailFile?.url).isEqualTo("http://bucket/${prefix}thumbs/pic.webp")
+            assertThat(photo.thumbnailFile?.uploadConfirmedAt).isNull()
+        }
+
+        @Test
+        fun `does not create files when every photo already has a thumbnail`() {
+            addPhotos(
+                PhotoEntity(
+                    photoFile = confirmedFile("http://bucket/${prefix}done.webp"),
+                    thumbnailFile = confirmedFile("http://bucket/${prefix}thumbs/done.webp"),
+                ),
+            )
+
+            assertThat(service.requestThumbnailUploads(race.uuid)).isEmpty()
+            Mockito.verify(s3Service, Mockito.never()).createFileEntities(anyList())
+        }
+    }
+
+    @Nested
+    inner class DeletePhotos {
+        @Test
+        fun `deletes the photo and thumbnail files of the given photos`() {
+            val photoUuids = listOf(UUID.randomUUID())
+            val fileUuids = listOf(UUID.randomUUID(), UUID.randomUUID())
+            Mockito.`when`(racePhotoRepository.findFileUuidsOfPhotos(uuid, photoUuids)).thenReturn(fileUuids)
+
+            service.deletePhotos(uuid, photoUuids)
+
+            Mockito.verify(s3Service).deleteFilesByUuid(fileUuids)
         }
     }
 
     @Nested
     inner class ReorderPhoto {
-        private fun confirmedFile(url: String) = FileEntity(url).apply { uploadConfirmedAt = OffsetDateTime.now() }
+        private val race = existingRace()
+        private val photoA = PhotoEntity(photoFile = confirmedFile("a"))
+        private val photoB = PhotoEntity(photoFile = confirmedFile("b"))
+        private val photoC = PhotoEntity(photoFile = confirmedFile("c"))
 
         @BeforeEach
-        fun stubSave() {
+        fun stubPhotos() {
             Mockito
                 .`when`(racePhotoRepository.save(any(RacePhotoEntity::class.java)))
                 .thenAnswer { it.getArgument<RacePhotoEntity>(0) }
+            Mockito
+                .`when`(racePhotoRepository.findAllByRaceUuidOrderByOrderIndexAsc(uuid))
+                .thenReturn(listOf(racePhoto(race, photoA, 1.0), racePhoto(race, photoB, 2.0), racePhoto(race, photoC, 3.0)))
         }
 
         @Test
         fun `moves a photo before the first photo`() {
-            val race = existingRace()
-            val fileA = confirmedFile("a")
-            val fileB = confirmedFile("b")
-            val fileC = confirmedFile("c")
-            val photos =
-                listOf(
-                    RacePhotoEntity(race = race, file = fileA, orderIndex = 1.0),
-                    RacePhotoEntity(race = race, file = fileB, orderIndex = 2.0),
-                    RacePhotoEntity(race = race, file = fileC, orderIndex = 3.0),
-                )
-            Mockito.`when`(racePhotoRepository.findAllByRaceUuidOrderByOrderIndexAsc(uuid)).thenReturn(photos)
+            val result = service.reorderPhotoInRace(uuid, ReorderPhotoInput(photoUuid = photoC.uuid, beforePhotoUuid = photoA.uuid))
 
-            val result = service.reorderPhotoInRace(uuid, ReorderPhotoInput(fileUuid = fileC.uuid, beforeFileUuid = fileA.uuid))
-
-            assertThat(result.map { it.uuid }).containsExactly(fileC.uuid, fileA.uuid, fileB.uuid)
+            assertThat(result.map { it.uuid }).containsExactly(photoC.uuid, photoA.uuid, photoB.uuid)
         }
 
         @Test
         fun `moves a photo after the last photo`() {
-            val race = existingRace()
-            val fileA = confirmedFile("a")
-            val fileB = confirmedFile("b")
-            val fileC = confirmedFile("c")
-            val photos =
-                listOf(
-                    RacePhotoEntity(race = race, file = fileA, orderIndex = 1.0),
-                    RacePhotoEntity(race = race, file = fileB, orderIndex = 2.0),
-                    RacePhotoEntity(race = race, file = fileC, orderIndex = 3.0),
-                )
-            Mockito.`when`(racePhotoRepository.findAllByRaceUuidOrderByOrderIndexAsc(uuid)).thenReturn(photos)
+            val result = service.reorderPhotoInRace(uuid, ReorderPhotoInput(photoUuid = photoA.uuid, afterPhotoUuid = photoC.uuid))
 
-            val result = service.reorderPhotoInRace(uuid, ReorderPhotoInput(fileUuid = fileA.uuid, afterFileUuid = fileC.uuid))
-
-            assertThat(result.map { it.uuid }).containsExactly(fileB.uuid, fileC.uuid, fileA.uuid)
+            assertThat(result.map { it.uuid }).containsExactly(photoB.uuid, photoC.uuid, photoA.uuid)
         }
 
         @Test
-        fun `throws when both beforeFileUuid and afterFileUuid are set`() {
+        fun `throws when both beforePhotoUuid and afterPhotoUuid are set`() {
             assertThatThrownBy {
                 service.reorderPhotoInRace(
                     uuid,
-                    ReorderPhotoInput(fileUuid = UUID.randomUUID(), beforeFileUuid = UUID.randomUUID(), afterFileUuid = UUID.randomUUID()),
+                    ReorderPhotoInput(
+                        photoUuid = UUID.randomUUID(),
+                        beforePhotoUuid = UUID.randomUUID(),
+                        afterPhotoUuid = UUID.randomUUID(),
+                    ),
                 )
             }.isInstanceOf(IllegalArgumentException::class.java)
         }
 
         @Test
-        fun `throws when neither beforeFileUuid nor afterFileUuid are set`() {
+        fun `throws when neither beforePhotoUuid nor afterPhotoUuid are set`() {
             assertThatThrownBy {
-                service.reorderPhotoInRace(uuid, ReorderPhotoInput(fileUuid = UUID.randomUUID()))
+                service.reorderPhotoInRace(uuid, ReorderPhotoInput(photoUuid = UUID.randomUUID()))
             }.isInstanceOf(IllegalArgumentException::class.java)
         }
+    }
+
+    private fun confirmedFile(url: String) = FileEntity(url).apply { uploadConfirmedAt = OffsetDateTime.now() }
+
+    private fun racePhoto(
+        race: RaceEntity,
+        photo: PhotoEntity,
+        orderIndex: Double = 1.0,
+    ) = RacePhotoEntity(race = race, photo = photo, orderIndex = orderIndex)
+
+    private fun stubS3Files() {
+        Mockito.`when`(s3Service.createFileEntities(anyList())).thenAnswer { invocation ->
+            invocation.getArgument<List<String>>(0).associateWith { FileEntity("http://bucket/$it") }
+        }
+        Mockito
+            .`when`(s3Service.getPresignedUrl(Mockito.anyString(), Mockito.anyInt(), Mockito.anyBoolean()))
+            .thenAnswer { "https://presigned/${it.getArgument<String>(0)}" }
+        Mockito
+            .`when`(s3Service.objectKeyOf(Mockito.anyString()))
+            .thenAnswer { it.getArgument<String>(0).removePrefix("http://bucket/") }
     }
 }

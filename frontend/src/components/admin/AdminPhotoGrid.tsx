@@ -10,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog.tsx";
-import type { S3FileDto } from "@/model/DTO.ts";
+import type { PhotoDTO } from "@/model/DTO.ts";
 import type { UploadItem } from "@/pages/admin/Images.tsx";
 
 export function AdminPhotoGrid({
@@ -19,7 +19,7 @@ export function AdminPhotoGrid({
   onBulkDelete,
   onDismissUpload,
 }: {
-  photos: S3FileDto[];
+  photos: PhotoDTO[];
   uploads?: UploadItem[];
   onBulkDelete: (photoIds: string[]) => Promise<void>;
   onDismissUpload?: (uploadId: string) => void;
@@ -134,7 +134,7 @@ export function AdminPhotoGrid({
                 className="relative aspect-video sm:aspect-square overflow-hidden rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               >
                 <img
-                  src={photo.url}
+                  src={photo.thumbnailUrl ?? photo.url}
                   alt="Løpsbilde"
                   loading="lazy"
                   decoding="async"

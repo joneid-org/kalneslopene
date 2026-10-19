@@ -18,6 +18,13 @@ const ACTIVE_PIN_COLOR = "#f2a33c";
 
 export function CourseMapPins() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [visitedIndices, setVisitedIndices] = useState(() => new Set([0]));
+
+  const selectPin = (index: number) => {
+    setCurrentIndex(index);
+    setVisitedIndices((prev) => new Set(prev).add(index));
+  };
+
   return (
     <div className="grid gap-4 md:grid-cols-[1.55fr_1fr] md:items-stretch">
       <div
@@ -46,7 +53,7 @@ export function CourseMapPins() {
                   active,
                 )}
                 zIndexOffset={active ? 1000 : 0}
-                eventHandlers={{ click: () => setCurrentIndex(i) }}
+                eventHandlers={{ click: () => selectPin(i) }}
               >
                 <Tooltip direction="top" offset={[0, -16]} opacity={0.9}>
                   {pin.label}
@@ -75,7 +82,7 @@ export function CourseMapPins() {
             aria-hidden={i !== currentIndex}
             className={cn("[grid-area:1/1]", i !== currentIndex && "invisible")}
           >
-            <PinInfoPanel pin={pin} />
+            <PinInfoPanel pin={pin} loadPhoto={visitedIndices.has(i)} />
           </div>
         ))}
       </div>

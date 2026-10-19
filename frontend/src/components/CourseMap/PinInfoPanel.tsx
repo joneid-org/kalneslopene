@@ -1,5 +1,6 @@
 import { MapPin } from "lucide-react";
 import { useState } from "react";
+import { LoadingImage } from "@/components/LoadingImage.tsx";
 import PhotoDialog from "@/components/PhotoDialog.tsx";
 import { ReplacePhotoButton } from "@/components/ReplacePhotoButton.tsx";
 import type { Pin } from "@/data/loypekartData.ts";
@@ -8,9 +9,10 @@ import { useStaticPhotos } from "@/hooks/useStaticPhotos.tsx";
 
 type Props = {
   pin: Pin;
+  loadPhoto: boolean;
 };
 
-export function PinInfoPanel({ pin }: Props) {
+export function PinInfoPanel({ pin, loadPhoto }: Props) {
   const { isAuthenticated } = useAuth();
   const { resolvePhotoUrl, handleReplacePhoto } = useStaticPhotos();
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -27,11 +29,13 @@ export function PinInfoPanel({ pin }: Props) {
           aria-label="Åpne bilde i fullskjerm"
           onClick={() => setLightboxIndex(0)}
         >
-          <img
-            src={photoUrl}
-            alt={pin.label}
-            className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
-          />
+          {loadPhoto && (
+            <LoadingImage
+              src={photoUrl}
+              alt={pin.label}
+              className="size-full object-cover group-hover:scale-105"
+            />
+          )}
         </button>
         {onReplacePhoto && photo?.fileName && (
           <ReplacePhotoButton

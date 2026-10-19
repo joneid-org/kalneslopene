@@ -5,6 +5,8 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 2
+    commit-message:
+      prefix: "chore"
     groups:
       frontend-group:
         patterns:
@@ -17,6 +19,8 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 2
+    commit-message:
+      prefix: "chore"
     groups:
       backend-group:
         patterns:

@@ -5,9 +5,11 @@ create table photo (
 );
 
 insert into photo (uuid, photo_file_uuid)
-select file_uuid, file_uuid from race_photo;
+select gen_random_uuid(), file_uuid from race_photo;
 
 alter table race_photo drop constraint race_photo_file_uuid_fkey;
+update race_photo rp set file_uuid = p.uuid
+from photo p where p.photo_file_uuid = rp.file_uuid;
 alter table race_photo rename column file_uuid to photo_uuid;
 alter table race_photo add constraint race_photo_photo_uuid_fkey
     foreign key (photo_uuid) references photo(uuid) on delete cascade;

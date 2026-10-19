@@ -48,10 +48,15 @@ Requires a local PostgreSQL at `localhost:5432/torsdagslopet` (user `postgres` /
 | Trigger | Environment | Automatic? |
 |---|---|---|
 | Merge to `main` | `dev` | ✅ |
-| Publish a GitHub release | `test` | ✅ |
+| Merge the release-please PR | `test` | ✅ |
 | Run `deploy.yml` manually (Actions tab) | `dev` / `test` / `prod` | ❌ manual only |
 
-- Merging to `main` and publishing a release are all you need for `dev`/`test` — no manual steps.
+- Merging to `main` and merging the release-please PR are all you need for `dev`/`test` — no manual steps.
+- Releases are handled by [release-please](https://github.com/googleapis/release-please): it keeps an open
+  `chore(main): release X.Y.Z` PR that bumps the version and updates `CHANGELOG.md`. Merging it tags
+  `vX.Y.Z`, creates the GitHub release, builds the image and deploys it to `test`. Don't create releases by hand.
+- The version bump comes from PR titles, which must follow [Conventional Commits](https://www.conventionalcommits.org/)
+  (enforced by the `PR Title` check): `fix:` → patch, `feat:` → minor, `feat!:` / `fix!:` → major, `chore:` → no release.
 - `prod` **never** deploys automatically. Ship it by running `deploy.yml` from the Actions tab, choosing
   `prod` and a tag that's already been built (normally one already verified in `dev` and `test`).
 - The same workflow also does rollbacks — run it again with an older tag.

@@ -28,5 +28,24 @@ services:
       mc anonymous set download local/torsdagslopet
       "
 
+  mock-static-photos:
+    image: curlimages/curl:latest
+    depends_on:
+      minio-init:
+        condition: service_completed_successfully
+    volumes:
+      - ./frontend/src/data:/data:ro
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        for name in $$(grep -ohE 'fileName: "[^"]+"' /data/*.ts | cut -d '"' -f 2 | sort -u); do
+          url=http://minio:9000/torsdagslopet/static/$$name
+          curl -sfI -o /dev/null "$$url" && continue
+          curl -sfL -o /tmp/photo.webp "https://picsum.photos/seed/$${name%.*}/900/600.webp" &&
+            curl -sf --aws-sigv4 aws:amz:us-east-1:s3 -u minioadmin:minioadmin \
+              -H "Content-Type: image/webp" -T /tmp/photo.webp "$$url" &&
+            echo "Uploaded $$name" || echo "Failed $$name"
+        done
+
 volumes:
   minio_data:

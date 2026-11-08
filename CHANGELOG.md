@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.1](https://github.com/joneid-org/kalneslopene/compare/v1.10.0...v1.10.1) (2026-11-08)
+
+
+### Bug Fixes
+
+* isDebutant uses historicPersonalRecord ([#526](https://github.com/joneid-org/kalneslopene/issues/526)) ([d4a60e2](https://github.com/joneid-org/kalneslopene/commit/d4a60e2bb01c31d2f6899169a0eefc2d8d17902b))
+
 ## [1.10.0](https://github.com/joneid-org/kalneslopene/compare/v1.9.0...v1.10.0) (2026-10-19)
 
 

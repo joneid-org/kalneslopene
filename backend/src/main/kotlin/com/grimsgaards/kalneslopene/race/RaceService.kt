@@ -181,7 +181,7 @@ class RaceService(
             female = runners.count { it.runner.gender == Gender.FEMALE },
             seasonBestCount = runners.count { it.isNewSeasonBest() },
             personalBestCount = runners.count { it.isNewPersonalRecord() },
-            debutantCount = runners.count { it.totalRaces == 1 },
+            debutantCount = runners.count { it.isDebutant() },
         )
     }
 

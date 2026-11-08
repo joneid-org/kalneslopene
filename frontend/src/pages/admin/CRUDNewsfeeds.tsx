@@ -1,10 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  ChevronLeft,
-  ChevronLeftIcon,
-  ChevronRight,
-  PlusIcon,
-} from "lucide-react";
+import { ChevronLeftIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { MUTATIONS } from "@/api/mutations.ts";
@@ -12,6 +7,7 @@ import { QUERIES } from "@/api/queries.ts";
 import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog.tsx";
 import { NewsfeedForm } from "@/components/admin/NewsfeedForm.tsx";
 import { NewsfeedsCard } from "@/components/admin/NewsfeedsCard.tsx";
+import { Pagination } from "@/components/Pagination.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Dialog,
@@ -22,18 +18,6 @@ import {
 import type { NewsFeedDTO } from "@/model/DTO.ts";
 
 const PAGE_SIZE = 10;
-
-function pageItems(current: number, total: number): (number | "...")[] {
-  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
-  const items: (number | "...")[] = [1];
-  const left = Math.max(2, current - 1);
-  const right = Math.min(total - 1, current + 1);
-  if (left > 2) items.push("...");
-  for (let i = left; i <= right; i++) items.push(i);
-  if (right < total - 1) items.push("...");
-  items.push(total);
-  return items;
-}
 
 export function CRUDNewsfeeds() {
   const qc = useQueryClient();
@@ -77,7 +61,6 @@ export function CRUDNewsfeeds() {
 
   const displayed = data?.content ?? [];
   const totalPages = Math.max(1, data?.totalPages ?? 1);
-  const items = pageItems(page, totalPages);
 
   const goToPage = (next: number) =>
     setPage(Math.min(Math.max(1, next), totalPages));
@@ -108,51 +91,7 @@ export function CRUDNewsfeeds() {
         onDelete={setDeleting}
       />
 
-      {totalPages > 1 && (
-        <nav
-          className="flex items-center justify-center gap-1.5 pt-2"
-          aria-label="Paginering"
-        >
-          <Button
-            variant="outline"
-            size="icon-sm"
-            onClick={() => goToPage(page - 1)}
-            disabled={page === 1}
-            aria-label="Forrige side"
-          >
-            <ChevronLeft className="size-4" />
-          </Button>
-          {items.map((item, idx) =>
-            item === "..." ? (
-              <span
-                key={`ellipsis-${items[idx - 1]}`}
-                className="px-1.5 text-muted-foreground"
-              >
-                …
-              </span>
-            ) : (
-              <Button
-                key={item}
-                variant={item === page ? "default" : "outline"}
-                size="icon-sm"
-                onClick={() => goToPage(item)}
-                aria-current={item === page ? "page" : undefined}
-              >
-                {item}
-              </Button>
-            ),
-          )}
-          <Button
-            variant="outline"
-            size="icon-sm"
-            onClick={() => goToPage(page + 1)}
-            disabled={page === totalPages}
-            aria-label="Neste side"
-          >
-            <ChevronRight className="size-4" />
-          </Button>
-        </nav>
-      )}
+      <Pagination page={page} totalPages={totalPages} onPageChange={goToPage} />
 
       <Dialog open={showAdd} onOpenChange={setShowAdd}>
         <DialogContent className="flex max-h-[90vh] flex-col">

@@ -174,7 +174,7 @@ function RunnerProfile({ runner }: { runner: RunnerDTO }) {
           >
             <YearSelector
               includeAll
-              years={availableYears}
+              years={availableYears.toReversed()}
               value={season}
               onChange={setSeason}
             />

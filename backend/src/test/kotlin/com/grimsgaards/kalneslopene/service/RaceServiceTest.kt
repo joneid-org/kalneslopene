@@ -297,6 +297,45 @@ class RaceServiceTest {
     }
 
     @Nested
+    inner class ResultSummary {
+        private fun stubPublishedRace(vararg entries: Pair<RunnerEntity, Int>) =
+            stubExisting(
+                existingRace().apply {
+                    isPublished = true
+                    entries.forEach { (runner, totalRaces) ->
+                        runners.add(
+                            RaceRunnerEntity(
+                                runner = runner,
+                                race = this,
+                                resultTime = Duration.ofMinutes(20),
+                                totalRaces = totalRaces,
+                            ),
+                        )
+                    }
+                },
+            )
+
+        @Test
+        fun `counts runners in their first race as debutants`() {
+            stubPublishedRace(
+                RunnerEntity(name = "Ny Løper", gender = Gender.FEMALE) to 1,
+                RunnerEntity(name = "Erfaren Løper", gender = Gender.MALE) to 2,
+            )
+
+            assertThat(service.getResultSummary(uuid).debutantCount).isEqualTo(1)
+        }
+
+        @Test
+        fun `does not count a runner with a historic personal record as a debutant`() {
+            stubPublishedRace(
+                RunnerEntity(name = "Gammel Løper", gender = Gender.MALE, historicPersonalRecord = Duration.ofMinutes(19)) to 1,
+            )
+
+            assertThat(service.getResultSummary(uuid).debutantCount).isEqualTo(0)
+        }
+    }
+
+    @Nested
     inner class AddRunnersToRace {
         @Test
         fun `stores no time for a runner who only participated`() {

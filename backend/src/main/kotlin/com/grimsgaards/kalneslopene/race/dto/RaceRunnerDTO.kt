@@ -19,4 +19,7 @@ data class RaceRunnerDTO(
 
     @JsonIgnore
     fun isNewSeasonBest(): Boolean = resultTime != null && (previousSeasonBest == null || resultTime < previousSeasonBest)
+
+    @JsonIgnore
+    fun isDebutant(): Boolean = totalRaces == 1 && runner.historicPersonalRecord == null
 }

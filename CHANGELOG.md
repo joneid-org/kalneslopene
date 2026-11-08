@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.0](https://github.com/joneid-org/kalneslopene/compare/v1.10.1...v1.11.0) (2026-11-08)
+
+
+### Features
+
+* reverse year selectors ([#530](https://github.com/joneid-org/kalneslopene/issues/530)) ([26c3984](https://github.com/joneid-org/kalneslopene/commit/26c39845a38dc9c854e88b530f4d6c89dcc45a58))
+
 ## [1.10.1](https://github.com/joneid-org/kalneslopene/compare/v1.10.0...v1.10.1) (2026-11-08)
 
 

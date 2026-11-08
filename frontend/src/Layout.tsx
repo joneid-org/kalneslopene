@@ -11,7 +11,7 @@ export function Layout() {
     <div className="min-h-screen bg-gray-50 flex flex-col pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">
       <ScrollRestoration />
       <Header ref={headerRef} />
-      <main className="flex-1 w-full">
+      <main className="flex-1 w-full pb-6">
         <Outlet />
       </main>
       <HomeFooter />

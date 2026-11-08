@@ -76,7 +76,7 @@ export function RaceStatistics() {
         <section className="flex flex-col gap-3">
           <StickySeasonBar title={`Sesongen ${effectiveYear}`}>
             <YearSelector
-              years={availableYears}
+              years={availableYears.toReversed()}
               value={effectiveYear}
               onChange={(v) => setSelectedYear(v === "all" ? undefined : v)}
             />

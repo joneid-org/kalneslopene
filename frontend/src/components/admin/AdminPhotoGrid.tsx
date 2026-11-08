@@ -1,5 +1,5 @@
 import { Check, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import { Card, CardContent } from "@/components/ui/card.tsx";
 import {
@@ -28,17 +28,12 @@ export function AdminPhotoGrid({
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  useEffect(() => {
-    const existing = new Set(photos.map((p) => p.uuid));
-    setSelected((prev) => {
-      const next = new Set([...prev].filter((id) => existing.has(id)));
-      return next.size === prev.size ? prev : next;
-    });
-  }, [photos]);
-
   if (photos.length === 0 && uploads.length === 0) {
     return null;
   }
+
+  const photoIds = new Set(photos.map((p) => p.uuid));
+  const selectedIds = [...selected].filter((id) => photoIds.has(id));
 
   const toggle = (id: string) => {
     setSelected((prev) => {
@@ -55,7 +50,7 @@ export function AdminPhotoGrid({
   const handleConfirmDelete = async () => {
     setIsDeleting(true);
     try {
-      await onBulkDelete([...selected]);
+      await onBulkDelete(selectedIds);
       setSelected(new Set());
       setConfirmOpen(false);
     } catch {
@@ -65,7 +60,7 @@ export function AdminPhotoGrid({
     }
   };
 
-  const selectedCount = selected.size;
+  const selectedCount = selectedIds.length;
   const allSelected = photos.length > 0 && selectedCount === photos.length;
 
   const toggleSelectAll = () => {
@@ -94,7 +89,7 @@ export function AdminPhotoGrid({
                 <>
                   <div className="absolute inset-x-0 bottom-0 h-1 bg-muted">
                     <div
-                      className="h-full bg-primary transition-all"
+                      className="h-full bg-primary transition-[width]"
                       style={{ width: `${upload.progress}%` }}
                     />
                   </div>

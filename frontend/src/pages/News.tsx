@@ -1,24 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, ChevronLeft, ChevronRight, Newspaper } from "lucide-react";
+import { ArrowLeft, Newspaper } from "lucide-react";
 import { Link, useSearchParams } from "react-router";
 import { QUERIES } from "@/api/queries.ts";
 import { NewsCard } from "@/components/News/NewsCard.tsx";
+import { Pagination } from "@/components/Pagination.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { NEWS_IMAGES } from "@/lib/newsUtils.ts";
 
 const PAGE_SIZE = 9;
-
-function pageItems(current: number, total: number): (number | "...")[] {
-  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
-  const items: (number | "...")[] = [1];
-  const left = Math.max(2, current - 1);
-  const right = Math.min(total - 1, current + 1);
-  if (left > 2) items.push("...");
-  for (let i = left; i <= right; i++) items.push(i);
-  if (right < total - 1) items.push("...");
-  items.push(total);
-  return items;
-}
 
 export function News() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -31,7 +20,6 @@ export function News() {
   const totalPages = Math.max(1, data?.totalPages ?? 1);
 
   const start = (page - 1) * PAGE_SIZE;
-  const items = pageItems(page, totalPages);
 
   const goToPage = (next: number) => {
     setSearchParams(
@@ -76,51 +64,11 @@ export function News() {
             ))}
           </div>
 
-          {totalPages > 1 && (
-            <nav
-              className="flex items-center justify-center gap-1.5 pt-2"
-              aria-label="Paginering"
-            >
-              <Button
-                variant="outline"
-                size="icon-sm"
-                onClick={() => goToPage(page - 1)}
-                disabled={page === 1}
-                aria-label="Forrige side"
-              >
-                <ChevronLeft className="size-4" />
-              </Button>
-              {items.map((item, idx) =>
-                item === "..." ? (
-                  <span
-                    key={`ellipsis-${items[idx - 1]}`}
-                    className="px-1.5 text-muted-foreground"
-                  >
-                    …
-                  </span>
-                ) : (
-                  <Button
-                    key={item}
-                    variant={item === page ? "default" : "outline"}
-                    size="icon-sm"
-                    onClick={() => goToPage(item)}
-                    aria-current={item === page ? "page" : undefined}
-                  >
-                    {item}
-                  </Button>
-                ),
-              )}
-              <Button
-                variant="outline"
-                size="icon-sm"
-                onClick={() => goToPage(page + 1)}
-                disabled={page === totalPages}
-                aria-label="Neste side"
-              >
-                <ChevronRight className="size-4" />
-              </Button>
-            </nav>
-          )}
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            onPageChange={goToPage}
+          />
         </div>
       )}
     </div>
